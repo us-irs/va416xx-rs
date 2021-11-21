@@ -1,0 +1,73 @@
+#[doc = "Register `FIFO_DATA` reader"]
+pub struct R(crate::R<FIFO_DATA_SPEC>);
+impl core::ops::Deref for R {
+    type Target = crate::R<FIFO_DATA_SPEC>;
+    #[inline(always)]
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+impl From<crate::R<FIFO_DATA_SPEC>> for R {
+    #[inline(always)]
+    fn from(reader: crate::R<FIFO_DATA_SPEC>) -> Self {
+        R(reader)
+    }
+}
+#[doc = "Field `CHAN_TAG` reader - If enabled, this will include the number of the channel corresponding to the measurement"]
+pub struct CHAN_TAG_R(crate::FieldReader<u8, u8>);
+impl CHAN_TAG_R {
+    #[inline(always)]
+    pub(crate) fn new(bits: u8) -> Self {
+        CHAN_TAG_R(crate::FieldReader::new(bits))
+    }
+}
+impl core::ops::Deref for CHAN_TAG_R {
+    type Target = crate::FieldReader<u8, u8>;
+    #[inline(always)]
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+#[doc = "Field `ADC_DATA` reader - ADC acquisition data from the FIFO"]
+pub struct ADC_DATA_R(crate::FieldReader<u16, u16>);
+impl ADC_DATA_R {
+    #[inline(always)]
+    pub(crate) fn new(bits: u16) -> Self {
+        ADC_DATA_R(crate::FieldReader::new(bits))
+    }
+}
+impl core::ops::Deref for ADC_DATA_R {
+    type Target = crate::FieldReader<u16, u16>;
+    #[inline(always)]
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+impl R {
+    #[doc = "Bits 12:15 - If enabled, this will include the number of the channel corresponding to the measurement"]
+    #[inline(always)]
+    pub fn chan_tag(&self) -> CHAN_TAG_R {
+        CHAN_TAG_R::new(((self.bits >> 12) & 0x0f) as u8)
+    }
+    #[doc = "Bits 0:11 - ADC acquisition data from the FIFO"]
+    #[inline(always)]
+    pub fn adc_data(&self) -> ADC_DATA_R {
+        ADC_DATA_R::new((self.bits & 0x0fff) as u16)
+    }
+}
+#[doc = "FIFO data\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [fifo_data](index.html) module"]
+pub struct FIFO_DATA_SPEC;
+impl crate::RegisterSpec for FIFO_DATA_SPEC {
+    type Ux = u32;
+}
+#[doc = "`read()` method returns [fifo_data::R](R) reader structure"]
+impl crate::Readable for FIFO_DATA_SPEC {
+    type Reader = R;
+}
+#[doc = "`reset()` method sets FIFO_DATA to value 0"]
+impl crate::Resettable for FIFO_DATA_SPEC {
+    #[inline(always)]
+    fn reset_value() -> Self::Ux {
+        0
+    }
+}

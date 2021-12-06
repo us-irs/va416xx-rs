@@ -1,0 +1,34 @@
+[package]
+name = "vorago-peb1"
+version = "0.1.0"
+authors = ["Robin Mueller <muellerr@irs.uni-stuttgart.de>"]
+edition = "2021"
+description = "Board Support Crate for the Vorago PEB1 development board"
+homepage = "https://egit.irs.uni-stuttgart.de/rust/vorago-peb1"
+repository = "https://egit.irs.uni-stuttgart.de/rust/vorago-peb1"
+license = "Apache-2.0"
+keywords = ["no-std", "peb1", "cortex-m", "vorago", "va416xx"]
+categories = ["embedded", "no-std", "hardware-support"]
+
+[dependencies]
+cortex-m = "0.7"
+cortex-m-rt = "0.7"
+embedded-hal = "1"
+
+[dependencies.va416xx-hal]
+path = "../va416xx-hal"
+version = "0.1.0"
+
+[dependencies.lis2dh12]
+git = "https://github.com/us-irs/lis2dh12.git"
+# path = "../../lis2dh12"
+branch = "all-features"
+version = "0.7"
+features = ["out_f32"]
+
+[features]
+rt = ["va416xx-hal/rt"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--generate-link-to-definition"]

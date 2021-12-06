@@ -1,0 +1,43 @@
+[package]
+name = "va416xx-hal"
+version = "0.1.0"
+authors = ["Robin Mueller <muellerr@irs.uni-stuttgart.de>"]
+edition = "2021"
+description = "HAL for the Vorago VA416xx family of MCUs"
+homepage = "https://egit.irs.uni-stuttgart.de/rust/va416xx-hal"
+repository = "https://egit.irs.uni-stuttgart.de/rust/va416xx-hal"
+license = "Apache-2.0"
+keywords = ["no-std", "hal", "cortex-m", "vorago", "va416xx"]
+categories = ["embedded", "no-std", "hardware-support"]
+
+[dependencies]
+cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
+nb = "1"
+paste = "1"
+embedded-hal-nb = "1"
+embedded-hal = "1"
+embedded-io = "0.6"
+typenum = "1"
+defmt = { version = "0.3", optional = true }
+fugit = "0.3"
+delegate = "0.12"
+
+[dependencies.void]
+version = "1"
+default-features = false
+
+[dependencies.va416xx]
+path = "../va416xx"
+default-features = false
+version = "0.1.0"
+features = ["critical-section"]
+
+[features]
+default = ["rt", "revb"]
+rt = ["va416xx/rt"]
+defmt = ["dep:defmt", "fugit/defmt"]
+revb = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--generate-link-to-definition"]

@@ -1,0 +1,28 @@
+#[doc = "Register `DATAMASKBYTE[%s]` reader"]
+pub type R = crate::R<DatamaskbyteSpec>;
+#[doc = "Register `DATAMASKBYTE[%s]` writer"]
+pub type W = crate::W<DatamaskbyteSpec>;
+impl core::fmt::Debug for R {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        write!(f, "{}", self.bits())
+    }
+}
+impl W {}
+#[doc = "Data Out Register by Byte\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`datamaskbyte::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`datamaskbyte::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct DatamaskbyteSpec;
+impl crate::RegisterSpec for DatamaskbyteSpec {
+    type Ux = u8;
+}
+#[doc = "`read()` method returns [`datamaskbyte::R`](R) reader structure"]
+impl crate::Readable for DatamaskbyteSpec {}
+#[doc = "`write(|w| ..)` method takes [`datamaskbyte::W`](W) writer structure"]
+impl crate::Writable for DatamaskbyteSpec {
+    type Safety = crate::Unsafe;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u8 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u8 = 0;
+}
+#[doc = "`reset()` method sets DATAMASKBYTE[%s]
+to value 0"]
+impl crate::Resettable for DatamaskbyteSpec {
+    const RESET_VALUE: u8 = 0;
+}

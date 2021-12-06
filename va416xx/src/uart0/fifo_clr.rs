@@ -1,0 +1,35 @@
+#[doc = "Register `FIFO_CLR` writer"]
+pub type W = crate::W<FifoClrSpec>;
+#[doc = "Field `RXFIFO` writer - Clear Rx FIFO"]
+pub type RxfifoW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `TXFIFO` writer - Clear Tx FIFO"]
+pub type TxfifoW<'a, REG> = crate::BitWriter<'a, REG>;
+impl W {
+    #[doc = "Bit 0 - Clear Rx FIFO"]
+    #[inline(always)]
+    #[must_use]
+    pub fn rxfifo(&mut self) -> RxfifoW<FifoClrSpec> {
+        RxfifoW::new(self, 0)
+    }
+    #[doc = "Bit 1 - Clear Tx FIFO"]
+    #[inline(always)]
+    #[must_use]
+    pub fn txfifo(&mut self) -> TxfifoW<FifoClrSpec> {
+        TxfifoW::new(self, 1)
+    }
+}
+#[doc = "Clear FIFO Register\n\nYou can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`fifo_clr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct FifoClrSpec;
+impl crate::RegisterSpec for FifoClrSpec {
+    type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`fifo_clr::W`](W) writer structure"]
+impl crate::Writable for FifoClrSpec {
+    type Safety = crate::Unsafe;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+}
+#[doc = "`reset()` method sets FIFO_CLR to value 0"]
+impl crate::Resettable for FifoClrSpec {
+    const RESET_VALUE: u32 = 0;
+}

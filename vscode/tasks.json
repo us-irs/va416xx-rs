@@ -1,0 +1,86 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "blinky-pac-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--example",
+                "blinky-pac"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "rtt-log-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--example",
+                "rtt-log"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "blinky-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--example",
+                "blinky-hal"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "uart-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--example",
+                "uart"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "wdt-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--example",
+                "wdt"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "spi-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--example",
+                "spi"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+    ]
+}

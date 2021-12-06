@@ -1,0 +1,40 @@
+#[doc = "Register `SUBSEC_INC` reader"]
+pub type R = crate::R<SubsecIncSpec>;
+#[doc = "Register `SUBSEC_INC` writer"]
+pub type W = crate::W<SubsecIncSpec>;
+#[doc = "Field `SSINC` reader - Sub-Second Increment Valuee"]
+pub type SsincR = crate::FieldReader;
+#[doc = "Field `SSINC` writer - Sub-Second Increment Valuee"]
+pub type SsincW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
+impl R {
+    #[doc = "Bits 0:7 - Sub-Second Increment Valuee"]
+    #[inline(always)]
+    pub fn ssinc(&self) -> SsincR {
+        SsincR::new((self.bits & 0xff) as u8)
+    }
+}
+impl W {
+    #[doc = "Bits 0:7 - Sub-Second Increment Valuee"]
+    #[inline(always)]
+    #[must_use]
+    pub fn ssinc(&mut self) -> SsincW<SubsecIncSpec> {
+        SsincW::new(self, 0)
+    }
+}
+#[doc = "Holds the 8-bit value by which the Sub-Second register is incremented\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`subsec_inc::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`subsec_inc::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct SubsecIncSpec;
+impl crate::RegisterSpec for SubsecIncSpec {
+    type Ux = u32;
+}
+#[doc = "`read()` method returns [`subsec_inc::R`](R) reader structure"]
+impl crate::Readable for SubsecIncSpec {}
+#[doc = "`write(|w| ..)` method takes [`subsec_inc::W`](W) writer structure"]
+impl crate::Writable for SubsecIncSpec {
+    type Safety = crate::Unsafe;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+}
+#[doc = "`reset()` method sets SUBSEC_INC to value 0"]
+impl crate::Resettable for SubsecIncSpec {
+    const RESET_VALUE: u32 = 0;
+}

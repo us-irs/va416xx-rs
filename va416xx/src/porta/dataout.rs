@@ -1,0 +1,23 @@
+#[doc = "Register `DATAOUT` writer"]
+pub type W = crate::W<DataoutSpec>;
+impl core::fmt::Debug for crate::generic::Reg<DataoutSpec> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "(not readable)")
+    }
+}
+impl W {}
+#[doc = "Data Out Register\n\nYou can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dataout::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct DataoutSpec;
+impl crate::RegisterSpec for DataoutSpec {
+    type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`dataout::W`](W) writer structure"]
+impl crate::Writable for DataoutSpec {
+    type Safety = crate::Unsafe;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+}
+#[doc = "`reset()` method sets DATAOUT to value 0"]
+impl crate::Resettable for DataoutSpec {
+    const RESET_VALUE: u32 = 0;
+}

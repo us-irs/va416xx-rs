@@ -1,0 +1,26 @@
+[workspace]
+resolver = "2"
+members = [
+  "examples/simple",
+	"va416xx",
+	"va416xx-hal",
+	"vorago-peb1"
+]
+
+[profile.dev]
+codegen-units = 1
+debug = 2
+debug-assertions = true # <-
+incremental = false
+opt-level = 'z'         # <-
+overflow-checks = true  # <-
+
+# cargo build/run --release
+[profile.release]
+codegen-units = 1
+debug = 2
+debug-assertions = false # <-
+incremental = false
+lto = 'fat'
+opt-level = 3            # <-
+overflow-checks = false  # <-

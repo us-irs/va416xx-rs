@@ -1,0 +1,43 @@
+pipeline {
+    agent {
+        dockerfile {
+            dir 'automation'
+            reuseNode true
+        }
+    }
+
+    stages {
+        stage('Rust Toolchain Info') {
+          steps {
+            sh 'rustc --version'
+          }
+        }
+        stage('Clippy') {
+          steps {
+            sh 'cargo clippy --target thumbv7em-none-eabihf'
+          }
+        }
+        stage('Rustfmt') {
+          steps {
+            sh 'cargo fmt'
+          }
+        }
+        stage('Docs') {
+          steps {
+            sh """
+              RUSTDOCFLAGS="--cfg docsrs --generate-link-to-definition -Z unstable-options" cargo +nightly doc --all-features
+            """
+          }
+        }
+        stage('Check') {
+          steps {
+            sh 'cargo check --target thumbv7em-none-eabihf'
+          }
+        }
+        stage('Check Examples') {
+          steps {
+            sh 'cargo check --target thumbv7em-none-eabihf --examples'
+          }
+        }
+    }
+}

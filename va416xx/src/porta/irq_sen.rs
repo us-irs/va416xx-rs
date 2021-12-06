@@ -1,0 +1,27 @@
+#[doc = "Register `IRQ_SEN` reader"]
+pub type R = crate::R<IrqSenSpec>;
+#[doc = "Register `IRQ_SEN` writer"]
+pub type W = crate::W<IrqSenSpec>;
+impl core::fmt::Debug for R {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        write!(f, "{}", self.bits())
+    }
+}
+impl W {}
+#[doc = "Interrupt Sense Register (1:Level Sensitive, 0:Edge Sensitive)\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`irq_sen::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`irq_sen::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IrqSenSpec;
+impl crate::RegisterSpec for IrqSenSpec {
+    type Ux = u32;
+}
+#[doc = "`read()` method returns [`irq_sen::R`](R) reader structure"]
+impl crate::Readable for IrqSenSpec {}
+#[doc = "`write(|w| ..)` method takes [`irq_sen::W`](W) writer structure"]
+impl crate::Writable for IrqSenSpec {
+    type Safety = crate::Unsafe;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+}
+#[doc = "`reset()` method sets IRQ_SEN to value 0"]
+impl crate::Resettable for IrqSenSpec {
+    const RESET_VALUE: u32 = 0;
+}

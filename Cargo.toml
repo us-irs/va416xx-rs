@@ -1,7 +1,7 @@
 [package]
 name = "va416xx"
 version = "0.1.0"
-authors = ["Robin Mueller <robin.mueller.m@gmail.com>"]
+authors = ["Robin Mueller <muellerr@irs.uni-stuttgart.de>"]
 edition = "2021"
 description = "PAC for the Vorago VA416xx family of MCUs"
 homepage = "https://egit.irs.uni-stuttgart.de/rust/va416xx"

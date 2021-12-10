@@ -57,7 +57,7 @@ impl<'a> TSTR_W<'a> {
     #[doc = r"Writes raw bits to the field"]
     #[inline(always)]
     pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff_ffff) | (value as u32 & 0xffff_ffff);
+        self.w.bits = value as u32;
         self.w
     }
 }
@@ -65,7 +65,7 @@ impl R {
     #[doc = "Bits 0:31 - Target Time Seconds Registe"]
     #[inline(always)]
     pub fn tstr(&self) -> TSTR_R {
-        TSTR_R::new((self.bits & 0xffff_ffff) as u32)
+        TSTR_R::new(self.bits as u32)
     }
 }
 impl W {

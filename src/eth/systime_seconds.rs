@@ -32,7 +32,7 @@ impl R {
     #[doc = "Bits 0:31 - Timestamp Second"]
     #[inline(always)]
     pub fn tss(&self) -> TSS_R {
-        TSS_R::new((self.bits & 0xffff_ffff) as u32)
+        TSS_R::new(self.bits as u32)
     }
 }
 #[doc = "Holds the lower 32 bits of the second field of the system time\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [systime_seconds](index.html) module"]

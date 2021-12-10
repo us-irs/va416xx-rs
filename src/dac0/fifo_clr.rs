@@ -1,3 +1,18 @@
+#[doc = "Register `FIFO_CLR` reader"]
+pub struct R(crate::R<FIFO_CLR_SPEC>);
+impl core::ops::Deref for R {
+    type Target = crate::R<FIFO_CLR_SPEC>;
+    #[inline(always)]
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+impl From<crate::R<FIFO_CLR_SPEC>> for R {
+    #[inline(always)]
+    fn from(reader: crate::R<FIFO_CLR_SPEC>) -> Self {
+        R(reader)
+    }
+}
 #[doc = "Register `FIFO_CLR` writer"]
 pub struct W(crate::W<FIFO_CLR_SPEC>);
 impl core::ops::Deref for W {
@@ -54,10 +69,14 @@ impl W {
         self
     }
 }
-#[doc = "FIFO Clear\n\nThis register you can [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [fifo_clr](index.html) module"]
+#[doc = "FIFO Clear\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [fifo_clr](index.html) module"]
 pub struct FIFO_CLR_SPEC;
 impl crate::RegisterSpec for FIFO_CLR_SPEC {
     type Ux = u32;
+}
+#[doc = "`read()` method returns [fifo_clr::R](R) reader structure"]
+impl crate::Readable for FIFO_CLR_SPEC {
+    type Reader = R;
 }
 #[doc = "`write(|w| ..)` method takes [fifo_clr::W](W) writer structure"]
 impl crate::Writable for FIFO_CLR_SPEC {

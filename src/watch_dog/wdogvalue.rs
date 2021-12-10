@@ -32,7 +32,7 @@ impl R {
     #[doc = "Bits 0:31 - Actual Count"]
     #[inline(always)]
     pub fn cnt(&self) -> CNT_R {
-        CNT_R::new((self.bits & 0xffff_ffff) as u32)
+        CNT_R::new(self.bits as u32)
     }
 }
 #[doc = "Down Counter Value\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [wdogvalue](index.html) module"]

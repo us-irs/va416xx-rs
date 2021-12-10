@@ -53,7 +53,7 @@ impl R {
     #[doc = "Bits 0:31 - MAC Address0\\[31:0\\]"]
     #[inline(always)]
     pub fn addrlo(&self) -> ADDRLO_R {
-        ADDRLO_R::new((self.bits & 0xffff_ffff) as u32)
+        ADDRLO_R::new(self.bits as u32)
     }
 }
 impl W {

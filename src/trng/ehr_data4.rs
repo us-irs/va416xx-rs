@@ -32,7 +32,7 @@ impl R {
     #[doc = "Bits 0:31 - 32 Bits of Entropy Holding Register"]
     #[inline(always)]
     pub fn ehr_data(&self) -> EHR_DATA_R {
-        EHR_DATA_R::new((self.bits & 0xffff_ffff) as u32)
+        EHR_DATA_R::new(self.bits as u32)
     }
 }
 #[doc = "Entropy Holding Register Data Register\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ehr_data4](index.html) module"]

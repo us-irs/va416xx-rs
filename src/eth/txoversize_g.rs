@@ -32,7 +32,7 @@ impl R {
     #[doc = "Bits 0:31 - Number of frames"]
     #[inline(always)]
     pub fn count(&self) -> COUNT_R {
-        COUNT_R::new((self.bits & 0xffff_ffff) as u32)
+        COUNT_R::new(self.bits as u32)
     }
 }
 #[doc = "MMC Number of frames transmitted without errors\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [txoversize_g](index.html) module"]

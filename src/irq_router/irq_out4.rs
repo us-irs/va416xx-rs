@@ -32,7 +32,7 @@ impl R {
     #[doc = "Bits 0:31 - IRQ_OUT\\[159:128\\]"]
     #[inline(always)]
     pub fn irq_out4(&self) -> IRQ_OUT4_R {
-        IRQ_OUT4_R::new((self.bits & 0xffff_ffff) as u32)
+        IRQ_OUT4_R::new(self.bits as u32)
     }
 }
 #[doc = "DEBUG IRQ_OUT\\[159:128\\]\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [irq_out4](index.html) module"]

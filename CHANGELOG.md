@@ -10,4 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v0.1.0]
 
+- Clippy currently complains about unsound code which should still work.
+  Related issue: https://github.com/rust-embedded/svd2rust/issues/557
+  Clippy is disabled in CI/CD for now.
 - Initial release

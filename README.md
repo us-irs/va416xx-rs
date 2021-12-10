@@ -1,3 +1,7 @@
+[![Crates.io](https://img.shields.io/crates/v/va416xx)](https://crates.io/crates/va416xx)
+[![build](https://github.com/us-irs/va416xx-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/us-irs/va416xx-rs/actions/workflows/ci.yml)
+[![docs.rs](https://img.shields.io/docsrs/va416xx)](https://docs.rs/va416xx)
+
 # PAC for the Vorago VA416xx microcontroller family
 
 This repository contains the Peripheral Access Crate (PAC) for

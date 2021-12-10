@@ -14,7 +14,7 @@ The crate was generated using [`svd2rust`](https://github.com/rust-embedded/svd2
 To use this crate, add this to your `Cargo.toml`
 
 ```toml
-[dependencies.va108xx]
+[dependencies.va416xx]
 version = "<MostRecentVersion>"
 features = ["rt"]
 ```

@@ -2,17 +2,17 @@ pipeline {
     agent any
 
     stages {
-        stage('Clippy') {
-            agent {
-                dockerfile {
-                    dir 'automation'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh 'cargo clippy'
-            }
-        }
+        // stage('Clippy') {
+        //    agent {
+        //        dockerfile {
+        //            dir 'automation'
+        //            reuseNode true
+        //        }
+        //    }
+        //    steps {
+        //        sh 'cargo clippy'
+        //    }
+        // }
         stage('Rustfmt') {
             agent {
                 dockerfile {

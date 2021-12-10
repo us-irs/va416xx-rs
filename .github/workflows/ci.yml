@@ -57,7 +57,7 @@ jobs:
   ci:
       if: ${{ success() }}
       # all new jobs must be added to this list
-      needs: [check, fmt, clippy]
+      needs: [check, fmt] # , clippy
       runs-on: ubuntu-latest
       steps:
         - name: CI succeeded

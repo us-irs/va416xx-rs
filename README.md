@@ -15,7 +15,7 @@ To use this crate, add this to your `Cargo.toml`
 
 ```toml
 [dependencies.va108xx]
-version = "0.1"
+version = "<MostRecentVersion>"
 features = ["rt"]
 ```
 

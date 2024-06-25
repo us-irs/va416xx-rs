@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## [v0.2.0] 2024-06-25
+
+- Re-Generated PAC with `svd2rust` v0.33.3
+- Improve documentation for generation of PAC.
+
 ## [v0.1.1]
 
 - Clippy issue fixed by regenerating PAC with patched `svd2rust`:

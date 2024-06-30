@@ -513,6 +513,7 @@ impl<Tim: ValidTim> CountdownTimer<Tim> {
 
     /// Listen for events. Depending on the IRQ configuration, this also activates the IRQ in the
     /// IRQSEL peripheral for the provided interrupt and unmasks the interrupt
+    #[inline]
     pub fn listen(&mut self) {
         self.listening = true;
         self.enable_interrupt();
@@ -532,10 +533,12 @@ impl<Tim: ValidTim> CountdownTimer<Tim> {
         }
     }
 
+    #[inline]
     pub fn stop(&mut self) {
         self.tim.reg().ctrl().write(|w| w.enable().clear_bit());
     }
 
+    #[inline]
     pub fn unlisten(&mut self) {
         self.listening = true;
         self.disable_interrupt();
@@ -552,6 +555,7 @@ impl<Tim: ValidTim> CountdownTimer<Tim> {
         self.tim.reg().ctrl().modify(|_, w| w.irq_enb().clear_bit());
     }
 
+    #[inline]
     pub fn release(self, syscfg: &mut pac::Sysconfig) -> Tim {
         self.tim.reg().ctrl().write(|w| w.enable().clear_bit());
         syscfg

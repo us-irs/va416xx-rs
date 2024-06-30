@@ -36,7 +36,7 @@
             "args": [
                 "build",
                 "--example",
-                "blinky-hal"
+                "blinky"
             ],
             "group": {
                 "kind": "build",
@@ -77,6 +77,32 @@
                 "build",
                 "--example",
                 "spi"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "dac-adc-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--example",
+                "dac-adc"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "adc-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--example",
+                "adc"
             ],
             "group": {
                 "kind": "build",

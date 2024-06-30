@@ -10,6 +10,7 @@
 //! # Examples
 //!
 //! - [UART example on the PEB1 board](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/uart.rs)
+use crate::adc::ADC_MAX_CLK;
 use crate::pac;
 
 use crate::time::Hertz;
@@ -52,7 +53,7 @@ pub enum PeripheralSelect {
     PortG = 30,
 }
 
-pub type PeripheralClocks = PeripheralSelect;
+pub type PeripheralClock = PeripheralSelect;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum FilterClkSel {
@@ -94,24 +95,34 @@ pub fn deassert_periph_reset(syscfg: &mut pac::Sysconfig, periph: PeripheralSele
         .modify(|r, w| unsafe { w.bits(r.bits() | (1 << periph as u8)) });
 }
 
+#[inline(always)]
+fn assert_periph_reset_for_two_cycles(syscfg: &mut pac::Sysconfig, periph: PeripheralSelect) {
+    assert_periph_reset(syscfg, periph);
+    cortex_m::asm::nop();
+    cortex_m::asm::nop();
+    deassert_periph_reset(syscfg, periph);
+}
+
 pub trait SyscfgExt {
-    fn enable_peripheral_clock(&mut self, clock: PeripheralClocks);
+    fn enable_peripheral_clock(&mut self, clock: PeripheralClock);
 
-    fn disable_peripheral_clock(&mut self, clock: PeripheralClocks);
+    fn disable_peripheral_clock(&mut self, clock: PeripheralClock);
 
-    fn assert_periph_reset(&mut self, clock: PeripheralSelect);
+    fn assert_periph_reset(&mut self, periph: PeripheralSelect);
 
-    fn deassert_periph_reset(&mut self, clock: PeripheralSelect);
+    fn deassert_periph_reset(&mut self, periph: PeripheralSelect);
+
+    fn assert_periph_reset_for_two_cycles(&mut self, periph: PeripheralSelect);
 }
 
 impl SyscfgExt for pac::Sysconfig {
     #[inline(always)]
-    fn enable_peripheral_clock(&mut self, clock: PeripheralClocks) {
+    fn enable_peripheral_clock(&mut self, clock: PeripheralClock) {
         enable_peripheral_clock(self, clock)
     }
 
     #[inline(always)]
-    fn disable_peripheral_clock(&mut self, clock: PeripheralClocks) {
+    fn disable_peripheral_clock(&mut self, clock: PeripheralClock) {
         disable_peripheral_clock(self, clock)
     }
 
@@ -123,6 +134,11 @@ impl SyscfgExt for pac::Sysconfig {
     #[inline(always)]
     fn deassert_periph_reset(&mut self, clock: PeripheralSelect) {
         deassert_periph_reset(self, clock)
+    }
+
+    #[inline(always)]
+    fn assert_periph_reset_for_two_cycles(&mut self, periph: PeripheralSelect) {
+        assert_periph_reset_for_two_cycles(self, periph)
     }
 }
 
@@ -435,20 +451,23 @@ impl ClkgenCfgr {
         // ADC clock (must be 2-12.5 MHz)
         // NOTE: Not using divide by 1 or /2 ratio in REVA silicon because of triggering issue
         // For this reason, keep SYSCLK above 8MHz to have the ADC /4 ratio in range)
-        if final_sysclk.raw() <= 50_000_000 {
+        let adc_clk = if final_sysclk.raw() <= ADC_MAX_CLK.raw() * 4 {
             self.clkgen
                 .ctrl1()
                 .modify(|_, w| unsafe { w.adc_clk_div_sel().bits(AdcClkDivSel::Div4 as u8) });
+            final_sysclk / 4
         } else {
             self.clkgen
                 .ctrl1()
                 .modify(|_, w| unsafe { w.adc_clk_div_sel().bits(AdcClkDivSel::Div8 as u8) });
-        }
+            final_sysclk / 8
+        };
 
         Ok(Clocks {
             sysclk: final_sysclk,
             apb1: final_sysclk / 2,
             apb2: final_sysclk / 4,
+            adc_clk,
         })
     }
 }
@@ -464,6 +483,7 @@ pub struct Clocks {
     sysclk: Hertz,
     apb1: Hertz,
     apb2: Hertz,
+    adc_clk: Hertz,
 }
 
 impl Clocks {
@@ -490,6 +510,11 @@ impl Clocks {
     /// Returns the system (core) frequency
     pub fn sysclk(&self) -> Hertz {
         self.sysclk
+    }
+
+    /// Returns the ADC clock frequency which has a separate divider.
+    pub fn adc_clk(&self) -> Hertz {
+        self.adc_clk
     }
 }
 

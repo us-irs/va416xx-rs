@@ -4,11 +4,9 @@
 //!
 //! - [PEB1 accelerometer example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/peb1-accelerometer.rs)
 use crate::{
-    clock::{
-        assert_periph_reset, deassert_periph_reset, enable_peripheral_clock, Clocks,
-        PeripheralSelect,
-    },
+    clock::{Clocks, PeripheralSelect},
     pac,
+    prelude::SyscfgExt,
     time::Hertz,
     typelevel::Sealed,
 };
@@ -125,6 +123,7 @@ impl Instance for pac::I2c0 {
     const IDX: u8 = 0;
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::I2c0;
 
+    #[inline(always)]
     fn ptr() -> *const I2cRegBlock {
         Self::ptr()
     }
@@ -134,6 +133,7 @@ impl Instance for pac::I2c1 {
     const IDX: u8 = 1;
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::I2c1;
 
+    #[inline(always)]
     fn ptr() -> *const I2cRegBlock {
         Self::ptr()
     }
@@ -143,6 +143,7 @@ impl Instance for pac::I2c2 {
     const IDX: u8 = 2;
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::I2c2;
 
+    #[inline(always)]
     fn ptr() -> *const I2cRegBlock {
         Self::ptr()
     }
@@ -312,17 +313,13 @@ impl<I2C> I2cBase<I2C> {
 impl<I2c: Instance> I2cBase<I2c> {
     pub fn new(
         i2c: I2c,
-        sys_cfg: &mut pac::Sysconfig,
+        syscfg: &mut pac::Sysconfig,
         clocks: &Clocks,
         speed_mode: I2cSpeed,
         ms_cfg: Option<&MasterConfig>,
         sl_cfg: Option<&SlaveConfig>,
     ) -> Result<Self, ClockTooSlowForFastI2c> {
-        enable_peripheral_clock(sys_cfg, I2c::PERIPH_SEL);
-        assert_periph_reset(sys_cfg, I2c::PERIPH_SEL);
-        cortex_m::asm::nop();
-        cortex_m::asm::nop();
-        deassert_periph_reset(sys_cfg, I2c::PERIPH_SEL);
+        syscfg.enable_peripheral_clock(I2c::PERIPH_SEL);
 
         let mut i2c_base = I2cBase {
             i2c,

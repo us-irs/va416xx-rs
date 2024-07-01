@@ -22,7 +22,6 @@ variants:
     range:
       start: 0x0
       end: 0x40000
-        # is_boot_memory: true
     access:
       boot: true
     cores:

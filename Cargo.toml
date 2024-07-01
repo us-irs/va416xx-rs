@@ -12,7 +12,8 @@ codegen-units = 1
 debug = 2
 debug-assertions = true # <-
 incremental = false
-opt-level = 'z'         # <-
+# This is problematic for stepping..
+# opt-level = 'z'         # <-
 overflow-checks = true  # <-
 
 # cargo build/run --release

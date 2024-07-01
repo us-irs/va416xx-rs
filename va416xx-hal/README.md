@@ -1,3 +1,6 @@
+[![Crates.io](https://img.shields.io/crates/v/va416xx-hal)](https://crates.io/crates/va416xx-hal)
+[![docs.rs](https://img.shields.io/docsrs/va416xx-hal)](https://docs.rs/va416xx-hal)
+
 # HAL for the Vorago VA416xx MCU family
 
 This repository contains the **H**ardware **A**bstraction **L**ayer (HAL), which is an additional

@@ -29,9 +29,8 @@ version = "1"
 default-features = false
 
 [dependencies.va416xx]
-path = "../va416xx"
 default-features = false
-version = "0.2.0"
+version = "0.2"
 features = ["critical-section"]
 
 [features]

@@ -1,0 +1,5 @@
+[default.general]
+chip = "VA416xx"
+
+[default.rtt]
+enabled = true

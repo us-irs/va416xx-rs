@@ -8,7 +8,7 @@ use core::{convert::Infallible, marker::PhantomData, ops::Deref};
 use embedded_hal::spi::Mode;
 
 use crate::{
-    clock::PeripheralSelect,
+    clock::{PeripheralSelect, SyscfgExt},
     gpio::{
         AltFunc1, AltFunc2, AltFunc3, Pin, PA0, PA1, PA2, PA3, PA4, PA5, PA6, PA7, PA8, PA9, PB0,
         PB1, PB10, PB11, PB12, PB13, PB14, PB15, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9, PC0, PC1,
@@ -365,6 +365,7 @@ impl Instance for pac::Spi0 {
     const IDX: u8 = 0;
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi0;
 
+    #[inline(always)]
     fn ptr() -> *const SpiRegBlock {
         Self::ptr()
     }
@@ -374,6 +375,7 @@ impl Instance for pac::Spi1 {
     const IDX: u8 = 1;
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi1;
 
+    #[inline(always)]
     fn ptr() -> *const SpiRegBlock {
         Self::ptr()
     }
@@ -383,6 +385,7 @@ impl Instance for pac::Spi2 {
     const IDX: u8 = 2;
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi2;
 
+    #[inline(always)]
     fn ptr() -> *const SpiRegBlock {
         Self::ptr()
     }
@@ -472,6 +475,7 @@ where
         self.cfg_hw_cs(HwCs::CS_ID);
     }
 
+    #[inline]
     pub fn cfg_hw_cs_disable(&mut self) {
         self.spi.ctrl1().modify(|_, w| {
             w.sod().set_bit();
@@ -571,99 +575,6 @@ where
     }
 }
 
-/*
-macro_rules! spi_ctor {
-    ($spiI:ident, $PeriphSel: path) => {
-        /// Create a new SPI struct
-        ///
-        /// You can delete the pin type information by calling the
-        /// [`downgrade`](Self::downgrade) function
-        ///
-        /// ## Arguments
-        /// * `spi` - SPI bus to use
-        /// * `pins` - Pins to be used for SPI transactions. These pins are consumed
-        ///     to ensure the pins can not be used for other purposes anymore
-        /// * `spi_cfg` - Configuration specific to the SPI bus
-        /// * `transfer_cfg` - Optional initial transfer configuration which includes
-        ///     configuration which can change across individual SPI transfers like SPI mode
-        ///     or SPI clock. If only one device is connected, this configuration only needs
-        ///     to be done once.
-        /// * `syscfg` - Can be passed optionally to enable the peripheral clock
-        pub fn $spiI(
-            spi: SpiI,
-            pins: (Sck, Miso, Mosi),
-            clocks: &crate::clock::Clocks,
-            spi_cfg: SpiConfig,
-            syscfg: &mut pac::Sysconfig,
-            transfer_cfg: Option<&ErasedTransferConfig>,
-        ) -> Self {
-            crate::clock::enable_peripheral_clock(syscfg, $PeriphSel);
-            let SpiConfig {
-                ser_clock_rate_div,
-                ms,
-                slave_output_disable,
-                loopback_mode,
-                master_delayer_capture,
-            } = spi_cfg;
-            let mut mode = embedded_hal::spi::MODE_0;
-            let mut clk_prescale = 0x02;
-            let mut ss = 0;
-            let mut init_blockmode = false;
-            let apb1_clk = clocks.apb1();
-            if let Some(transfer_cfg) = transfer_cfg {
-                mode = transfer_cfg.mode;
-                clk_prescale =
-                    apb1_clk.raw() / (transfer_cfg.spi_clk.raw() * (ser_clock_rate_div as u32 + 1));
-                if transfer_cfg.hw_cs != HwChipSelectId::Invalid {
-                    ss = transfer_cfg.hw_cs as u8;
-                }
-                init_blockmode = transfer_cfg.blockmode;
-            }
-
-            let (cpo_bit, cph_bit) = mode_to_cpo_cph_bit(mode);
-            spi.ctrl0().write(|w| {
-                unsafe {
-                    w.size().bits(Word::word_reg());
-                    w.scrdv().bits(ser_clock_rate_div);
-                    // Clear clock phase and polarity. Will be set to correct value for each
-                    // transfer
-                    w.spo().bit(cpo_bit);
-                    w.sph().bit(cph_bit)
-                }
-            });
-            spi.ctrl1().write(|w| {
-                w.lbm().bit(loopback_mode);
-                w.sod().bit(slave_output_disable);
-                w.ms().bit(ms);
-                w.mdlycap().bit(master_delayer_capture);
-                w.blockmode().bit(init_blockmode);
-                unsafe { w.ss().bits(ss) }
-            });
-
-            spi.fifo_clr().write(|w| {
-                w.rxfifo().set_bit();
-                w.txfifo().set_bit()
-            });
-            spi.clkprescale().write(|w| unsafe { w.bits(clk_prescale) });
-            // Enable the peripheral as the last step as recommended in the
-            // programmers guide
-            spi.ctrl1().modify(|_, w| w.enable().set_bit());
-            Spi {
-                inner: SpiBase {
-                    spi,
-                    cfg: spi_cfg,
-                    apb1_clk,
-                    fill_word: Default::default(),
-                    blockmode: init_blockmode,
-                    word: PhantomData,
-                },
-                pins,
-            }
-        }
-    };
-}
-*/
-
 impl<
         SpiI: Instance,
         Sck: PinSck<SpiI>,
@@ -698,6 +609,8 @@ where
         transfer_cfg: Option<&ErasedTransferConfig>,
     ) -> Self {
         crate::clock::enable_peripheral_clock(syscfg, SpiI::PERIPH_SEL);
+        // This is done in the C HAL.
+        syscfg.assert_periph_reset_for_two_cycles(SpiI::PERIPH_SEL);
         let SpiConfig {
             ser_clock_rate_div,
             ms,

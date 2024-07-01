@@ -16,7 +16,6 @@ fn main() -> ! {
     let mut dp = pac::Peripherals::take().unwrap();
     let portg = PinsG::new(&mut dp.sysconfig, dp.portg);
     let mut led = portg.pg5.into_readable_push_pull_output();
-    //let mut delay = CountDownTimer::new(&mut dp.SYSCONFIG, 50.mhz(), dp.TIM0);
     loop {
         cortex_m::asm::delay(2_000_000);
         led.toggle().ok();

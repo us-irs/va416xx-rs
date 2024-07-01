@@ -5,6 +5,56 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "preLaunchTask": "blinky-example",
+            "type": "probe-rs-debug",
+            "request": "launch",
+            "name": "probe-rs Debug Blinky",
+            "flashingConfig": {
+                "flashingEnabled": true,
+                "haltAfterReset": true
+            },
+            "chip": "VA416xx",
+            "coreConfigs": [
+                {
+                    "programBinary": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/examples/blinky",
+                    "rttEnabled": true,
+                    "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched"
+                }
+            ]
+        },
+        {
+            "preLaunchTask": "rtt-log-example",
+            "type": "probe-rs-debug",
+            "request": "launch",
+            "name": "probe-rs Debug RTT",
+            "flashingConfig": {
+                "flashingEnabled": true,
+                "haltAfterReset": false
+            },
+            "chip": "VA416xx",
+            "coreConfigs": [
+                {
+                    "programBinary": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/examples/rtt-log",
+                    "rttEnabled": true,
+                    "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched"
+                }
+            ]
+        },
+        {
+            "preLaunchTask": "rtt-log-example",
+            "type": "probe-rs-debug",
+            "request": "attach",
+            "name": "probe-rs Attach RTT",
+            "chip": "VA416xx",
+            "coreConfigs": [
+                {
+                    "programBinary": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/examples/rtt-log",
+                    "rttEnabled": true,
+                    "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd"
+                }
+            ]
+        },
+        {
             "type": "cortex-debug",
             "request": "launch",
             "name": "Debug LED Blinky",
@@ -19,7 +69,7 @@
                 "monitor reset",
                 "load",
             ],
-            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/examples/blinky-hal",
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/examples/blinky",
             "interface": "swd",
             "runToEntryPoint": "main",
             "rttConfig": {
@@ -170,6 +220,68 @@
                 "load",
             ],
             "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/examples/timer-ticks",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                // Have to use exact address unfortunately. "auto" does not work for some reason..
+                "address": "0x1fff8000",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Debug DAC/ADC Example",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "dac-adc-example",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/examples/dac-adc",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                // Have to use exact address unfortunately. "auto" does not work for some reason..
+                "address": "0x1fff8000",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Debug ADC Example",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "adc-example",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/examples/adc",
             "interface": "swd",
             "runToEntryPoint": "main",
             "rttConfig": {

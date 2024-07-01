@@ -51,12 +51,7 @@ impl WdtController {
         wdt_freq_ms: u32,
     ) -> Self {
         syscfg.enable_peripheral_clock(PeripheralSelect::Watchdog);
-        // It's done like that in Vorago examples. Not exactly sure why the reset is necessary
-        // though..
-        syscfg.assert_periph_reset(PeripheralSelect::Watchdog);
-        cortex_m::asm::nop();
-        cortex_m::asm::nop();
-        syscfg.deassert_periph_reset(PeripheralSelect::Watchdog);
+        syscfg.assert_periph_reset_for_two_cycles(PeripheralSelect::Watchdog);
 
         let wdt_clock = clocks.apb2();
         let mut wdt_ctrl = Self {

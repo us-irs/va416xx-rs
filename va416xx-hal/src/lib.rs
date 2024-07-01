@@ -8,7 +8,9 @@ pub use va416xx as pac;
 
 pub mod prelude;
 
+pub mod adc;
 pub mod clock;
+pub mod dac;
 pub mod gpio;
 pub mod i2c;
 pub mod pwm;

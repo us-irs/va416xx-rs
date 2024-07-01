@@ -9,7 +9,7 @@ use core::ops::Deref;
 use embedded_hal_nb::serial::Read;
 use fugit::RateExtU32;
 
-use crate::clock::{Clocks, PeripheralSelect};
+use crate::clock::{Clocks, PeripheralSelect, SyscfgExt};
 use crate::gpio::{AltFunc1, Pin, PD11, PD12, PE2, PE3, PF11, PF12, PF8, PF9, PG0, PG1};
 use crate::time::Hertz;
 use crate::{disable_interrupt, enable_interrupt};
@@ -520,6 +520,8 @@ impl<UartInstance: Instance, Pins> Uart<UartInstance, Pins> {
         clocks: &Clocks,
     ) -> Self {
         crate::clock::enable_peripheral_clock(syscfg, UartInstance::PERIPH_SEL);
+        // This is done in the C HAL.
+        syscfg.assert_periph_reset_for_two_cycles(UartInstance::PERIPH_SEL);
         Uart {
             inner: UartBase {
                 uart,

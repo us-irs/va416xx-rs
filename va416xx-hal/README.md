@@ -8,12 +8,6 @@ raw PAC. This crate also implements traits specified by the
 [embedded-hal](https://github.com/rust-embedded/embedded-hal) project, making it compatible with
 various drivers in the embedded rust ecosystem.
 
-## Supported Boards
-
- The first way to use this HAL will probably be with the
- [PEB1 development board](https://www.voragotech.com/products/peb1va416x0-development-kit).
- The BSP provided for this board also contains instructions how to flash the board.
-
 ## Building
 
 Building an application requires the `thumbv7em-none-eabihf` cross-compiler toolchain.
@@ -44,7 +38,8 @@ is contained within the
 1. Set up your Rust cross-compiler if you have not done so yet. See more in the [build chapter](#Building)
 2. Create a new binary crate with `cargo init`
 3. To ensure that `cargo build` cross-compiles, it is recommended to create a `.cargo/config.toml`
-   file. A sample `.cargo/config.toml` file is provided in this repository as well
+   file. You can use [this](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/.cargo/def-config.toml)
+   sample file as a starting point.
 4. Copy the `memory.x` file into your project. This file contains information required by the linker.
 5. Copy the `blinky.rs` file to the `src/main.rs` file in your binary crate
 6. You need to add some dependencies to your `Cargo.toml` file

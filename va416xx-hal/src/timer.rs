@@ -2,7 +2,7 @@
 //!
 //! ## Examples
 //!
-//! TODO.
+//! - [Timer MS and Second Tick Example](https://github.com/us-irs/va416xx-rs/blob/main/examples/simple/examples/timer-ticks.rs)
 use core::cell::Cell;
 
 use cortex_m::interrupt::Mutex;
@@ -459,7 +459,10 @@ unsafe impl TimRegInterface for TimDynRegister {
 // Timers
 //==================================================================================================
 
-/// Hardware timers
+/// Hardware timers.
+///
+/// These timers also implement the [embedded_hal::delay::DelayNs] trait and can be used to delay
+/// with a higher resolution compared to the Cortex-M systick delays.
 pub struct CountdownTimer<TIM: ValidTim> {
     tim: TimRegister<TIM>,
     curr_freq: Hertz,

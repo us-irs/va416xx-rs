@@ -88,25 +88,25 @@ bitfield::bitfield! {
     u32;
     pub raw, set_raw: 31,0;
     u8;
-    dst_inc, set_dst_inc: 31, 30;
+    pub dst_inc, set_dst_inc: 31, 30;
     u8;
-    dst_size, set_dst_size: 29, 28;
+    pub dst_size, set_dst_size: 29, 28;
     u8;
-    src_inc, set_src_inc: 27, 26;
+    pub src_inc, set_src_inc: 27, 26;
     u8;
-    src_size, set_src_size: 25, 24;
+    pub src_size, set_src_size: 25, 24;
     u8;
-    dest_prot_ctrl, set_dest_prot_ctrl: 23, 21;
+    pub dest_prot_ctrl, set_dest_prot_ctrl: 23, 21;
     u8;
-    src_prot_ctrl, set_src_prot_ctrl: 20, 18;
+    pub src_prot_ctrl, set_src_prot_ctrl: 20, 18;
     u8;
-    r_power, set_r_power: 17, 14;
+    pub r_power, set_r_power: 17, 14;
     u16;
-    n_minus_1, set_n_minus_1: 13, 4;
+    pub n_minus_1, set_n_minus_1: 13, 4;
     bool;
-    next_useburst, set_next_useburst: 3;
+    pub next_useburst, set_next_useburst: 3;
     u8;
-    cycle_ctrl, set_cycle_ctr: 2, 0;
+    pub cycle_ctrl, set_cycle_ctr: 2, 0;
 }
 
 #[repr(C)]
@@ -183,7 +183,7 @@ pub struct DmaCfg {
 }
 
 pub struct DmaChannel {
-    idx: u8,
+    channel: u8,
     done_interrupt: pac::Interrupt,
     active_interrupt: pac::Interrupt,
     pub dma: pac::Dma,
@@ -193,29 +193,34 @@ pub struct DmaChannel {
 
 impl DmaChannel {
     #[inline(always)]
+    pub fn channel(&self) -> u8 {
+        self.channel
+    }
+
+    #[inline(always)]
     pub fn enable(&mut self) {
         self.dma
             .chnl_enable_set()
-            .write(|w| unsafe { w.bits(1 << self.idx) });
+            .write(|w| unsafe { w.bits(1 << self.channel) });
     }
 
     #[inline(always)]
     pub fn is_enabled(&mut self) -> bool {
-        ((self.dma.chnl_enable_set().read().bits() >> self.idx) & 0b1) != 0
+        ((self.dma.chnl_enable_set().read().bits() >> self.channel) & 0b1) != 0
     }
 
     #[inline(always)]
     pub fn disable(&mut self) {
         self.dma
             .chnl_enable_clr()
-            .write(|w| unsafe { w.bits(1 << self.idx) });
+            .write(|w| unsafe { w.bits(1 << self.channel) });
     }
 
     #[inline(always)]
     pub fn trigger_with_sw_request(&mut self) {
         self.dma
             .chnl_sw_request()
-            .write(|w| unsafe { w.bits(1 << self.idx) });
+            .write(|w| unsafe { w.bits(1 << self.channel) });
     }
 
     #[inline(always)]
@@ -227,14 +232,14 @@ impl DmaChannel {
     pub fn select_primary_structure(&self) {
         self.dma
             .chnl_pri_alt_clr()
-            .write(|w| unsafe { w.bits(1 << self.idx) });
+            .write(|w| unsafe { w.bits(1 << self.channel) });
     }
 
     #[inline(always)]
     pub fn select_alternate_structure(&self) {
         self.dma
             .chnl_pri_alt_set()
-            .write(|w| unsafe { w.bits(1 << self.idx) });
+            .write(|w| unsafe { w.bits(1 << self.channel) });
     }
 
     /// Enables the DMA_DONE interrupt for the DMA channel.
@@ -258,7 +263,8 @@ impl DmaChannel {
     /// Prepares a 8-bit DMA transfer from memory to memory.
     ///
     /// This function does not enable the DMA channel and interrupts and only prepares
-    /// the DMA control block parameters for the transfer.
+    /// the DMA control block parameters for the transfer. It configures the primary channel control
+    /// structure to perform the transfer.
     ///
     /// You can use [Self::enable], [Self::enable_done_interrupt], [Self::enable_active_interrupt]
     /// to finish the transfer preparation and then use [Self::trigger_with_sw_request] to
@@ -286,7 +292,8 @@ impl DmaChannel {
     /// Prepares a 16-bit DMA transfer from memory to memory.
     ///
     /// This function does not enable the DMA channel and interrupts and only prepares
-    /// the DMA control block parameters for the transfer.
+    /// the DMA control block parameters for the transfer. It configures the primary channel control
+    /// structure to perform the transfer.
     ///
     /// You can use [Self::enable], [Self::enable_done_interrupt], [Self::enable_active_interrupt]
     /// to finish the transfer preparation and then use [Self::trigger_with_sw_request] to
@@ -314,7 +321,8 @@ impl DmaChannel {
     /// Prepares a 32-bit DMA transfer from memory to memory.
     ///
     /// This function does not enable the DMA channel and interrupts and only prepares
-    /// the DMA control block parameters for the transfer.
+    /// the DMA control block parameters for the transfer. It configures the primary channel control
+    /// structure to perform the transfer.
     ///
     /// You can use [Self::enable], [Self::enable_done_interrupt], [Self::enable_active_interrupt]
     /// to finish the transfer preparation and then use [Self::trigger_with_sw_request] to
@@ -373,6 +381,7 @@ impl DmaChannel {
         self.ch_ctrl_pri.cfg.set_dst_inc(addr_incr as u8);
         self.ch_ctrl_pri.cfg.set_n_minus_1(n_minus_one as u16);
         self.ch_ctrl_pri.cfg.set_r_power(RPower::Every4 as u8);
+        self.select_primary_structure();
     }
 }
 
@@ -427,7 +436,7 @@ impl Dma {
         // Safety: The DMA channel API only operates on its respective channels.
         (
             DmaChannel {
-                idx: 0,
+                channel: 0,
                 done_interrupt: pac::Interrupt::DMA_DONE0,
                 active_interrupt: pac::Interrupt::DMA_ACTIVE0,
                 dma: unsafe { pac::Dma::steal() },
@@ -435,7 +444,7 @@ impl Dma {
                 ch_ctrl_alt: unsafe { &mut (*self.ctrl_block).alt[0] },
             },
             DmaChannel {
-                idx: 1,
+                channel: 1,
                 done_interrupt: pac::Interrupt::DMA_DONE1,
                 active_interrupt: pac::Interrupt::DMA_ACTIVE1,
                 dma: unsafe { pac::Dma::steal() },
@@ -443,7 +452,7 @@ impl Dma {
                 ch_ctrl_alt: unsafe { &mut (*self.ctrl_block).alt[1] },
             },
             DmaChannel {
-                idx: 2,
+                channel: 2,
                 done_interrupt: pac::Interrupt::DMA_DONE2,
                 active_interrupt: pac::Interrupt::DMA_ACTIVE2,
                 dma: unsafe { pac::Dma::steal() },
@@ -451,7 +460,7 @@ impl Dma {
                 ch_ctrl_alt: unsafe { &mut (*self.ctrl_block).alt[2] },
             },
             DmaChannel {
-                idx: 3,
+                channel: 3,
                 done_interrupt: pac::Interrupt::DMA_DONE3,
                 active_interrupt: pac::Interrupt::DMA_ACTIVE3,
                 dma: unsafe { pac::Dma::steal() },

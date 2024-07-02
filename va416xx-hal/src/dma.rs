@@ -118,20 +118,40 @@ pub struct DmaChannelControl {
     padding: u32,
 }
 
-impl Default for DmaChannelControl {
-    fn default() -> Self {
+impl DmaChannelControl {
+    const fn new() -> Self {
         Self {
-            src_end_ptr: Default::default(),
-            dest_end_ptr: Default::default(),
+            src_end_ptr: 0,
+            dest_end_ptr: 0,
             cfg: ChannelConfig(0),
-            padding: Default::default(),
+            padding: 0,
         }
     }
 }
+impl Default for DmaChannelControl {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 #[repr(C)]
+#[repr(align(128))]
 pub struct DmaCtrlBlock {
     pub pri: [DmaChannelControl; 4],
     pub alt: [DmaChannelControl; 4],
+}
+
+impl DmaCtrlBlock {
+    pub const fn new() -> Self {
+        Self {
+            pri: [DmaChannelControl::new(); 4],
+            alt: [DmaChannelControl::new(); 4],
+        }
+    }
+}
+impl Default for DmaCtrlBlock {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl DmaCtrlBlock {
@@ -145,15 +165,7 @@ impl DmaCtrlBlock {
             return Err(InvalidCtrlBlockAddr);
         }
         let ctrl_block_ptr = addr as *mut DmaCtrlBlock;
-        unsafe {
-            core::ptr::write(
-                ctrl_block_ptr,
-                DmaCtrlBlock {
-                    pri: [DmaChannelControl::default(); 4],
-                    alt: [DmaChannelControl::default(); 4],
-                },
-            )
-        }
+        unsafe { core::ptr::write(ctrl_block_ptr, DmaCtrlBlock::default()) }
         Ok(ctrl_block_ptr)
     }
 }
@@ -388,7 +400,13 @@ impl DmaChannel {
 impl Dma {
     /// Create a new DMA instance.
     ///
-    /// You can use [DmaCtrlBlock::new_at_addr] to create the DMA control block at a specific address.
+    /// You can also place the [DmaCtrlBlock] statically using a global static mutable
+    /// instance and the [DmaCtrlBlock::new] const constructor This also allows to place the control
+    /// block in a memory section using the [link_section](https://doc.rust-lang.org/reference/abi.html#the-link_section-attribute)
+    /// attribute and then creating a mutable pointer to it using [core::ptr::addr_of_mut].
+    ///
+    /// Alternatively, the [DmaCtrlBlock::new_at_addr] function can be used to create the DMA
+    /// control block at a specific address.
     pub fn new(
         syscfg: &mut pac::Sysconfig,
         dma: pac::Dma,

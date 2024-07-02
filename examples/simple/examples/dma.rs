@@ -17,10 +17,13 @@ use va416xx_hal::{
     prelude::*,
 };
 
-// Place the DMA control block in SRAM1
-const DMA_CTRL_BLOCK_ADDR: u32 = 0x2000_0000;
 static DMA_DONE_FLAG: Mutex<Cell<bool>> = Mutex::new(Cell::new(false));
 static DMA_ACTIVE_FLAG: Mutex<Cell<bool>> = Mutex::new(Cell::new(false));
+
+// Place the DMA control block into SRAM1 statically. This section needs to be defined in
+// memory.x
+#[link_section = ".sram1"]
+static mut DMA_CTRL_BLOCK: DmaCtrlBlock = DmaCtrlBlock::new();
 
 #[entry]
 fn main() -> ! {
@@ -35,10 +38,12 @@ fn main() -> ! {
         .xtal_n_clk_with_src_freq(peb1::EXTCLK_FREQ)
         .freeze(&mut dp.sysconfig)
         .unwrap();
-    let dma_ctrl_block =
-        DmaCtrlBlock::new_at_addr(DMA_CTRL_BLOCK_ADDR).expect("error creating DMA control block");
-    let dma = Dma::new(&mut dp.sysconfig, dp.dma, DmaCfg::default(), dma_ctrl_block)
-        .expect("error creating DMA");
+    // Safety: The DMA control block has an alignment rule of 128 and we constructed it directly
+    // statically.
+    let dma = Dma::new(&mut dp.sysconfig, dp.dma, DmaCfg::default(), unsafe {
+        core::ptr::addr_of_mut!(DMA_CTRL_BLOCK)
+    })
+    .expect("error creating DMA");
     let (mut dma0, _, _, _) = dma.split();
     let mut delay_ms = CountdownTimer::new(&mut dp.sysconfig, dp.tim0, &clocks);
     let mut src_buf_8_bit: [u8; 65] = [0; 65];

@@ -1,3 +1,8 @@
+//! API for the DMA peripheral
+//!
+//! ## Examples
+//!
+//! - [Simple DMA example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/dma.rs)
 use crate::{
     clock::{PeripheralClock, PeripheralSelect},
     enable_interrupt, pac,
@@ -134,6 +139,7 @@ impl DmaCtrlBlock {
     ///
     /// The passed address must be 128-byte aligned. The user must also take care of specifying
     /// a valid memory address for the DMA control block which is accessible by the system as well.
+    /// For example, the control block can be placed in the SRAM1.
     pub fn new_at_addr(addr: u32) -> Result<*mut DmaCtrlBlock, InvalidCtrlBlockAddr> {
         if addr & BASE_PTR_ADDR_MASK > 0 {
             return Err(InvalidCtrlBlockAddr);
@@ -206,7 +212,7 @@ impl DmaChannel {
     }
 
     #[inline(always)]
-    pub fn sw_request(&mut self) {
+    pub fn trigger_with_sw_request(&mut self) {
         self.dma
             .chnl_sw_request()
             .write(|w| unsafe { w.bits(1 << self.idx) });
@@ -249,6 +255,14 @@ impl DmaChannel {
         enable_interrupt(self.active_interrupt);
     }
 
+    /// Prepares a 8-bit DMA transfer from memory to memory.
+    ///
+    /// This function does not enable the DMA channel and interrupts and only prepares
+    /// the DMA control block parameters for the transfer.
+    ///
+    /// You can use [Self::enable], [Self::enable_done_interrupt], [Self::enable_active_interrupt]
+    /// to finish the transfer preparation and then use [Self::trigger_with_sw_request] to
+    /// start the DMA transfer.
     pub fn prepare_mem_to_mem_transfer_8_bit(
         &mut self,
         source: &[u8],
@@ -269,10 +283,18 @@ impl DmaChannel {
         Ok(())
     }
 
+    /// Prepares a 16-bit DMA transfer from memory to memory.
+    ///
+    /// This function does not enable the DMA channel and interrupts and only prepares
+    /// the DMA control block parameters for the transfer.
+    ///
+    /// You can use [Self::enable], [Self::enable_done_interrupt], [Self::enable_active_interrupt]
+    /// to finish the transfer preparation and then use [Self::trigger_with_sw_request] to
+    /// start the DMA transfer.
     pub fn prepare_mem_to_mem_transfer_16_bit(
         &mut self,
-        source: &[u8],
-        dest: &mut [u8],
+        source: &[u16],
+        dest: &mut [u16],
     ) -> Result<(), DmaTransferInitError> {
         let len = Self::common_mem_transfer_checks(source.len(), dest.len())?;
         self.generic_mem_to_mem_transfer_init(
@@ -289,6 +311,14 @@ impl DmaChannel {
         Ok(())
     }
 
+    /// Prepares a 32-bit DMA transfer from memory to memory.
+    ///
+    /// This function does not enable the DMA channel and interrupts and only prepares
+    /// the DMA control block parameters for the transfer.
+    ///
+    /// You can use [Self::enable], [Self::enable_done_interrupt], [Self::enable_active_interrupt]
+    /// to finish the transfer preparation and then use [Self::trigger_with_sw_request] to
+    /// start the DMA transfer.
     pub fn prepare_mem_to_mem_transfer_32_bit(
         &mut self,
         source: &[u32],
@@ -349,8 +379,7 @@ impl DmaChannel {
 impl Dma {
     /// Create a new DMA instance.
     ///
-    /// The user must ensure that the DMA control block is placed statically in some memory
-    /// which can be accessed by the system as well, for example the SRAM1 block.
+    /// You can use [DmaCtrlBlock::new_at_addr] to create the DMA control block at a specific address.
     pub fn new(
         syscfg: &mut pac::Sysconfig,
         dma: pac::Dma,
@@ -392,9 +421,9 @@ impl Dma {
         });
     }
 
-    /// Split the DMA instance into four DMA channels which can be used individually.
+    /// Split the DMA instance into four DMA channels which can be used individually. This allows
+    /// using the inidividual DMA channels in separate tasks.
     pub fn split(self) -> (DmaChannel, DmaChannel, DmaChannel, DmaChannel) {
-        //let (pri, alt) = self.ctrl_block.split();
         // Safety: The DMA channel API only operates on its respective channels.
         (
             DmaChannel {

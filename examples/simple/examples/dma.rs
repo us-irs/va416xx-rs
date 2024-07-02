@@ -10,7 +10,7 @@ use embedded_hal::delay::DelayNs;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
-use va416xx_hal::dma::{Dma, DmaCfg, DmaCtrlBlock};
+use va416xx_hal::dma::{Dma, DmaCfg, DmaChannel, DmaCtrlBlock};
 use va416xx_hal::pwm::CountdownTimer;
 use va416xx_hal::{
     pac::{self, interrupt},
@@ -20,6 +20,7 @@ use va416xx_hal::{
 // Place the DMA control block in SRAM1
 const DMA_CTRL_BLOCK_ADDR: u32 = 0x2000_0000;
 static DMA_DONE_FLAG: Mutex<Cell<bool>> = Mutex::new(Cell::new(false));
+static DMA_ACTIVE_FLAG: Mutex<Cell<bool>> = Mutex::new(Cell::new(false));
 
 #[entry]
 fn main() -> ! {
@@ -40,60 +41,207 @@ fn main() -> ! {
         .expect("error creating DMA");
     let (mut dma0, _, _, _) = dma.split();
     let mut delay_ms = CountdownTimer::new(&mut dp.sysconfig, dp.tim0, &clocks);
-    let mut src_buf: [u8; 64] = [0; 64];
-    let mut dest_buf: [u8; 64] = [0; 64];
-    let dma_ctrl_block_ptr = DMA_CTRL_BLOCK_ADDR as *const DmaCtrlBlock;
-    let dma_ctrl_block_ref = unsafe { &*dma_ctrl_block_ptr };
+    let mut src_buf_8_bit: [u8; 65] = [0; 65];
+    let mut dest_buf_8_bit: [u8; 65] = [0; 65];
+    let mut src_buf_16_bit: [u16; 33] = [0; 33];
+    let mut dest_buf_16_bit: [u16; 33] = [0; 33];
+    let mut src_buf_32_bit: [u32; 17] = [0; 17];
+    let mut dest_buf_32_bit: [u32; 17] = [0; 17];
     loop {
-        (0..64).for_each(|i| {
-            src_buf[i] = i as u8;
-        });
-        cortex_m::interrupt::free(|cs| {
-            DMA_DONE_FLAG.borrow(cs).set(false);
-        });
-        dma0.prepare_mem_to_mem_transfer_8_bit(&src_buf, &mut dest_buf)
-            .expect("error preparing transfer");
-        rprintln!("ch0 cfg: {:?}", dma_ctrl_block_ref.pri[0].cfg);
-        dma0.select_primary_structure();
-        // Safety: Not using mask based critical sections.
-        unsafe {
-            dma0.enable_done_interrupt();
-            dma0.enable_active_interrupt();
-        };
-        dma0.enable();
-        //dma0.sw_request();
-        let state = dma0.state_raw();
-        rprintln!("dma state: {}", state);
-        // Use polling for completion status.
-        loop {
-            let mut dma_done = false;
-            cortex_m::interrupt::free(|cs| {
-                if DMA_DONE_FLAG.borrow(cs).get() {
-                    dma_done = true;
-                }
-            });
-            if dma_done {
-                rprintln!("DMA transfer done");
-                break;
-            }
-            let state = dma0.state_raw();
-            if state != 0 {
-                rprintln!("dma state: {}", state);
-            }
-            delay_ms.delay_ms(1);
-        }
-        (0..64).for_each(|i| {
-            assert_eq!(dest_buf[i], i as u8);
-        });
-        dest_buf.fill(0);
-        delay_ms.delay_ms(200);
+        transfer_example_8_bit(
+            &mut src_buf_8_bit,
+            &mut dest_buf_8_bit,
+            &mut dma0,
+            &mut delay_ms,
+        );
+        delay_ms.delay_ms(500);
+        transfer_example_16_bit(
+            &mut src_buf_16_bit,
+            &mut dest_buf_16_bit,
+            &mut dma0,
+            &mut delay_ms,
+        );
+        delay_ms.delay_ms(500);
+        transfer_example_32_bit(
+            &mut src_buf_32_bit,
+            &mut dest_buf_32_bit,
+            &mut dma0,
+            &mut delay_ms,
+        );
+        delay_ms.delay_ms(500);
     }
+}
+
+fn transfer_example_8_bit(
+    src_buf: &mut [u8; 65],
+    dest_buf: &mut [u8; 65],
+    dma0: &mut DmaChannel,
+    delay_ms: &mut CountdownTimer<pac::Tim0>,
+) {
+    (0..64).for_each(|i| {
+        src_buf[i] = i as u8;
+    });
+    cortex_m::interrupt::free(|cs| {
+        DMA_DONE_FLAG.borrow(cs).set(false);
+    });
+    cortex_m::interrupt::free(|cs| {
+        DMA_ACTIVE_FLAG.borrow(cs).set(false);
+    });
+    dma0.prepare_mem_to_mem_transfer_8_bit(src_buf, dest_buf)
+        .expect("error preparing transfer");
+    // Enable all interrupts.
+    // Safety: Not using mask based critical sections.
+    unsafe {
+        dma0.enable_done_interrupt();
+        dma0.enable_active_interrupt();
+    };
+    // Enable the individual channel.
+    dma0.enable();
+    // We still need to manually trigger the DMA request.
+    dma0.trigger_with_sw_request();
+    // Use polling for completion status.
+    loop {
+        let mut dma_done = false;
+        cortex_m::interrupt::free(|cs| {
+            if DMA_ACTIVE_FLAG.borrow(cs).get() {
+                rprintln!("DMA0 is active with 8 bit transfer");
+                DMA_ACTIVE_FLAG.borrow(cs).set(false);
+            }
+            if DMA_DONE_FLAG.borrow(cs).get() {
+                dma_done = true;
+            }
+        });
+        if dma_done {
+            rprintln!("8-bit transfer done");
+            break;
+        }
+        delay_ms.delay_ms(1);
+    }
+    (0..64).for_each(|i| {
+        assert_eq!(dest_buf[i], i as u8);
+    });
+    // Sentinel value, should be 0.
+    assert_eq!(dest_buf[64], 0);
+    dest_buf.fill(0);
+}
+
+fn transfer_example_16_bit(
+    src_buf: &mut [u16; 33],
+    dest_buf: &mut [u16; 33],
+    dma0: &mut DmaChannel,
+    delay_ms: &mut CountdownTimer<pac::Tim0>,
+) {
+    // Set values scaled from 0 to 65535 to verify this is really a 16-bit transfer.
+    (0..32).for_each(|i| {
+        src_buf[i] = (i as u32 * u16::MAX as u32 / (src_buf.len() - 1) as u32) as u16;
+    });
+    cortex_m::interrupt::free(|cs| {
+        DMA_DONE_FLAG.borrow(cs).set(false);
+    });
+    cortex_m::interrupt::free(|cs| {
+        DMA_ACTIVE_FLAG.borrow(cs).set(false);
+    });
+    dma0.prepare_mem_to_mem_transfer_16_bit(src_buf, dest_buf)
+        .expect("error preparing transfer");
+    // Enable all interrupts.
+    // Safety: Not using mask based critical sections.
+    unsafe {
+        dma0.enable_done_interrupt();
+        dma0.enable_active_interrupt();
+    };
+    // Enable the individual channel.
+    dma0.enable();
+    // We still need to manually trigger the DMA request.
+    dma0.trigger_with_sw_request();
+    // Use polling for completion status.
+    loop {
+        let mut dma_done = false;
+        cortex_m::interrupt::free(|cs| {
+            if DMA_ACTIVE_FLAG.borrow(cs).get() {
+                rprintln!("DMA0 is active with 16-bit transfer");
+                DMA_ACTIVE_FLAG.borrow(cs).set(false);
+            }
+            if DMA_DONE_FLAG.borrow(cs).get() {
+                dma_done = true;
+            }
+        });
+        if dma_done {
+            rprintln!("16-bit transfer done");
+            break;
+        }
+        delay_ms.delay_ms(1);
+    }
+    (0..32).for_each(|i| {
+        assert_eq!(
+            dest_buf[i],
+            (i as u32 * u16::MAX as u32 / (src_buf.len() - 1) as u32) as u16
+        );
+    });
+    // Sentinel value, should be 0.
+    assert_eq!(dest_buf[32], 0);
+    dest_buf.fill(0);
+}
+
+fn transfer_example_32_bit(
+    src_buf: &mut [u32; 17],
+    dest_buf: &mut [u32; 17],
+    dma0: &mut DmaChannel,
+    delay_ms: &mut CountdownTimer<pac::Tim0>,
+) {
+    // Set values scaled from 0 to 65535 to verify this is really a 16-bit transfer.
+    (0..16).for_each(|i| {
+        src_buf[i] = (i as u64 * u32::MAX as u64 / (src_buf.len() - 1) as u64) as u32;
+    });
+    cortex_m::interrupt::free(|cs| {
+        DMA_DONE_FLAG.borrow(cs).set(false);
+    });
+    cortex_m::interrupt::free(|cs| {
+        DMA_ACTIVE_FLAG.borrow(cs).set(false);
+    });
+    dma0.prepare_mem_to_mem_transfer_32_bit(src_buf, dest_buf)
+        .expect("error preparing transfer");
+    // Enable all interrupts.
+    // Safety: Not using mask based critical sections.
+    unsafe {
+        dma0.enable_done_interrupt();
+        dma0.enable_active_interrupt();
+    };
+    // Enable the individual channel.
+    dma0.enable();
+    // We still need to manually trigger the DMA request.
+    dma0.trigger_with_sw_request();
+    // Use polling for completion status.
+    loop {
+        let mut dma_done = false;
+        cortex_m::interrupt::free(|cs| {
+            if DMA_ACTIVE_FLAG.borrow(cs).get() {
+                rprintln!("DMA0 is active with 32-bit transfer");
+                DMA_ACTIVE_FLAG.borrow(cs).set(false);
+            }
+            if DMA_DONE_FLAG.borrow(cs).get() {
+                dma_done = true;
+            }
+        });
+        if dma_done {
+            rprintln!("32-bit transfer done");
+            break;
+        }
+        delay_ms.delay_ms(1);
+    }
+    (0..16).for_each(|i| {
+        assert_eq!(
+            dest_buf[i],
+            (i as u64 * u32::MAX as u64 / (src_buf.len() - 1) as u64) as u32
+        );
+    });
+    // Sentinel value, should be 0.
+    assert_eq!(dest_buf[16], 0);
+    dest_buf.fill(0);
 }
 
 #[interrupt]
 #[allow(non_snake_case)]
 fn DMA_DONE0() {
-    rprintln!("dma done interrupt");
     // Notify the main loop that the DMA transfer is finished.
     cortex_m::interrupt::free(|cs| {
         DMA_DONE_FLAG.borrow(cs).set(true);
@@ -103,5 +251,8 @@ fn DMA_DONE0() {
 #[interrupt]
 #[allow(non_snake_case)]
 fn DMA_ACTIVE0() {
-    rprintln!("dma active interrupt");
+    // Notify the main loop that the DMA 0 is active now.
+    cortex_m::interrupt::free(|cs| {
+        DMA_ACTIVE_FLAG.borrow(cs).set(true);
+    });
 }

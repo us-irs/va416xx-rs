@@ -13,10 +13,15 @@ use crate::{disable_interrupt, enable_interrupt};
 
 pub const WDT_UNLOCK_VALUE: u32 = 0x1ACC_E551;
 
-pub struct WdtController {
+/// Watchdog peripheral driver.
+pub struct Wdt {
     clock_freq: Hertz,
     wdt: pac::WatchDog,
 }
+
+/// Type alias for backwards compatibility
+#[deprecated(since = "0.2.0", note = "Please use `Wdt` instead")]
+pub type WdtController = Wdt;
 
 /// Enable the watchdog interrupt
 ///
@@ -33,7 +38,7 @@ pub fn disable_wdt_interrupts() {
     disable_interrupt(pac::Interrupt::WATCHDOG)
 }
 
-impl WdtController {
+impl Wdt {
     pub fn new(
         &self,
         syscfg: &mut pac::Sysconfig,

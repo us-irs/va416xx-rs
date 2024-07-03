@@ -1,3 +1,9 @@
+//! Analog to Digital Converter (ADC) driver.
+//!
+//! ## Examples
+//!
+//! - [ADC and DAC example](https://github.com/us-irs/va416xx-rs/blob/main/examples/simple/examples/dac-adc.rs)
+//! - [ADC](https://github.com/us-irs/va416xx-rs/blob/main/examples/simple/examples/adc.rs)
 use core::marker::PhantomData;
 
 use crate::clock::Clocks;
@@ -46,6 +52,8 @@ pub enum ChannelSelect {
 }
 
 bitflags::bitflags! {
+    /// This structure is used by the ADC multi-select API to
+    /// allow selecting multiple channels in a convenient manner.
     pub struct MultiChannelSelect: u16 {
         const AnIn0 = 1;
         const AnIn1 = 1 << 1;
@@ -129,6 +137,18 @@ impl ChannelValue {
 pub enum ChannelTagEnabled {}
 pub enum ChannelTagDisabled {}
 
+/// ADC driver structure.
+///
+/// Currently, this structure supports three primary ways to measure channel value(s):
+///
+/// * Trigger and read a single value
+/// * Trigger and read a range of ADC values using the sweep functionality
+/// * Trigger and read multiple ADC values using the sweep functionality
+///
+/// The ADC channel tag feature is enabled or disabled at compile time using the
+/// [ChannelTagEnabled] and [ChannelTagDisabled]. The [Adc::new] method returns a driver instance
+/// with the channel tag enabled, while the [Adc::new_with_channel_tag] method can be used to
+/// return an instance with the channel tag enabled.
 pub struct Adc<TagEnabled = ChannelTagDisabled> {
     adc: pac::Adc,
     phantom: PhantomData<TagEnabled>,
@@ -154,33 +174,43 @@ impl Adc<ChannelTagDisabled> {
         lower_bound_idx: u8,
         upper_bound_idx: u8,
         rx_buf: &mut [u16],
-    ) -> Result<(), AdcRangeReadError> {
+    ) -> Result<usize, AdcRangeReadError> {
         self.generic_prepare_range_sweep_and_wait_until_ready(
             lower_bound_idx,
             upper_bound_idx,
             rx_buf.len(),
         )?;
-        for i in 0..self.adc.status().read().fifo_entry_cnt().bits() {
+        let fifo_entry_count = self.adc.status().read().fifo_entry_cnt().bits();
+        for i in 0..core::cmp::min(fifo_entry_count, rx_buf.len() as u8) {
             rx_buf[i as usize] = self.adc.fifo_data().read().bits() as u16 & 0xfff;
         }
-        Ok(())
+        Ok(fifo_entry_count as usize)
     }
 
+    /// Perform a sweep for selected ADC channels.
+    ///
+    /// Returns the number of read values which were written to the passed RX buffer.
     pub fn sweep_and_read_multiselect(
         &self,
         ch_select: MultiChannelSelect,
         rx_buf: &mut [u16],
-    ) -> Result<(), BufferTooSmallError> {
+    ) -> Result<usize, BufferTooSmallError> {
         self.generic_prepare_multiselect_sweep_and_wait_until_ready(ch_select, rx_buf.len())?;
-        for i in 0..self.adc.status().read().fifo_entry_cnt().bits() {
+        let fifo_entry_count = self.adc.status().read().fifo_entry_cnt().bits();
+        for i in 0..core::cmp::min(fifo_entry_count, rx_buf.len() as u8) {
             rx_buf[i as usize] = self.adc.fifo_data().read().bits() as u16 & 0xfff;
         }
-        Ok(())
+        Ok(fifo_entry_count as usize)
     }
 
     pub fn try_read_single_value(&self) -> nb::Result<Option<u16>, ()> {
         self.generic_try_read_single_value()
             .map(|v| v.map(|v| v & 0xfff))
+    }
+
+    #[inline(always)]
+    pub fn channel_tag_enabled(&self) -> bool {
+        false
     }
 }
 
@@ -230,17 +260,21 @@ impl Adc<ChannelTagEnabled> {
         Ok(fifo_entry_count as usize)
     }
 
+    /// Perform a sweep for selected ADC channels.
+    ///
+    /// Returns the number of read values which were written to the passed RX buffer.
     pub fn sweep_and_read_multiselect(
         &self,
         ch_select: MultiChannelSelect,
         rx_buf: &mut [ChannelValue],
-    ) -> Result<(), BufferTooSmallError> {
+    ) -> Result<usize, BufferTooSmallError> {
         self.generic_prepare_multiselect_sweep_and_wait_until_ready(ch_select, rx_buf.len())?;
-        for i in 0..self.adc.status().read().fifo_entry_cnt().bits() {
+        let fifo_entry_count = self.adc.status().read().fifo_entry_cnt().bits();
+        for i in 0..core::cmp::min(fifo_entry_count, rx_buf.len() as u8) {
             rx_buf[i as usize] =
                 self.create_channel_value(self.adc.fifo_data().read().bits() as u16);
         }
-        Ok(())
+        Ok(fifo_entry_count as usize)
     }
 
     #[inline]
@@ -249,6 +283,11 @@ impl Adc<ChannelTagEnabled> {
             value: raw_value & 0xfff,
             channel: ChannelSelect::try_from(((raw_value >> 12) & 0xf) as u8).unwrap(),
         }
+    }
+
+    #[inline(always)]
+    pub fn channel_tag_enabled(&self) -> bool {
+        true
     }
 }
 
@@ -272,11 +311,6 @@ impl<TagEnabled> Adc<TagEnabled> {
     #[inline(always)]
     fn disable_channel_tag(&mut self) {
         self.adc.ctrl().modify(|_, w| w.chan_tag_en().clear_bit());
-    }
-
-    #[inline(always)]
-    pub fn channel_tag_enabled(&self) -> bool {
-        self.adc.ctrl().read().chan_tag_en().bit_is_set()
     }
 
     #[inline(always)]
@@ -326,8 +360,6 @@ impl<TagEnabled> Adc<TagEnabled> {
             ch_select |= 1 << i;
         }
         self.generic_trigger_sweep(ch_select);
-        cortex_m::asm::nop();
-        cortex_m::asm::nop();
         while self.adc.status().read().adc_busy().bit_is_set() {
             cortex_m::asm::nop();
         }

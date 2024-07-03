@@ -3,6 +3,8 @@
 //! ## Examples
 //!
 //! - [Simple DMA example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/dma.rs)
+use embedded_dma::WriteBuffer;
+
 use crate::{
     clock::{PeripheralClock, PeripheralSelect},
     enable_interrupt, pac,
@@ -203,6 +205,28 @@ pub struct DmaChannel {
     pub ch_ctrl_alt: &'static mut DmaChannelControl,
 }
 
+/// This transfer structure takes ownership of the mutable destination slice.
+///
+/// This avoids accidental violation of the ownership rules because the DMA now has mutable
+/// access to that slice as well. The mutable slice can be retrieved after DMA transfer completion
+/// by using the [Self::release] method.
+pub struct DmaTransfer<W> {
+    buf: W,
+    //ch: DmaChannel
+}
+
+impl<W: WriteBuffer> DmaTransfer<W> {
+    /// Retrieve the mutable destination slice once the DMA transfer has completed.
+    ///
+    /// # Safety
+    ///
+    /// - The user MUST ensure that the DMA transfer has completed, for example by polling a
+    ///   completion flag set by the DMA_DONE ISR.
+    pub unsafe fn release(self) -> W {
+        self.buf
+    }
+}
+
 impl DmaChannel {
     #[inline(always)]
     pub fn channel(&self) -> u8 {
@@ -281,24 +305,25 @@ impl DmaChannel {
     /// You can use [Self::enable], [Self::enable_done_interrupt], [Self::enable_active_interrupt]
     /// to finish the transfer preparation and then use [Self::trigger_with_sw_request] to
     /// start the DMA transfer.
-    pub fn prepare_mem_to_mem_transfer_8_bit(
+    pub fn prepare_mem_to_mem_transfer_8_bit<W: WriteBuffer<Word = u8>>(
         &mut self,
         source: &[u8],
-        dest: &mut [u8],
-    ) -> Result<(), DmaTransferInitError> {
-        let len = Self::common_mem_transfer_checks(source.len(), dest.len())?;
+        mut dest: W,
+    ) -> Result<DmaTransfer<W>, DmaTransferInitError> {
+        let (write_ptr, len) = unsafe { dest.write_buffer() };
+        let len = Self::common_mem_transfer_checks(source.len(), len)?;
         self.generic_mem_to_mem_transfer_init(
             len,
             (source.as_ptr() as u32)
                 .checked_add(len as u32)
                 .ok_or(DmaTransferInitError::AddrOverflow)?,
-            (dest.as_ptr() as u32)
+            (write_ptr as u32)
                 .checked_add(len as u32)
                 .ok_or(DmaTransferInitError::AddrOverflow)?,
             DataSize::Byte,
             AddrIncrement::Byte,
         );
-        Ok(())
+        Ok(DmaTransfer { buf: dest })
     }
 
     /// Prepares a 16-bit DMA transfer from memory to memory.
@@ -310,10 +335,10 @@ impl DmaChannel {
     /// You can use [Self::enable], [Self::enable_done_interrupt], [Self::enable_active_interrupt]
     /// to finish the transfer preparation and then use [Self::trigger_with_sw_request] to
     /// start the DMA transfer.
-    pub fn prepare_mem_to_mem_transfer_16_bit(
+    pub fn prepare_mem_to_mem_transfer_16_bit<'dest>(
         &mut self,
         source: &[u16],
-        dest: &mut [u16],
+        dest: &'dest mut [u16],
     ) -> Result<(), DmaTransferInitError> {
         let len = Self::common_mem_transfer_checks(source.len(), dest.len())?;
         self.generic_mem_to_mem_transfer_init(
@@ -339,10 +364,10 @@ impl DmaChannel {
     /// You can use [Self::enable], [Self::enable_done_interrupt], [Self::enable_active_interrupt]
     /// to finish the transfer preparation and then use [Self::trigger_with_sw_request] to
     /// start the DMA transfer.
-    pub fn prepare_mem_to_mem_transfer_32_bit(
+    pub fn prepare_mem_to_mem_transfer_32_bit<'dest>(
         &mut self,
         source: &[u32],
-        dest: &mut [u32],
+        dest: &'dest mut [u32],
     ) -> Result<(), DmaTransferInitError> {
         let len = Self::common_mem_transfer_checks(source.len(), dest.len())?;
         self.generic_mem_to_mem_transfer_init(

@@ -92,7 +92,8 @@ fn transfer_example_8_bit(
     cortex_m::interrupt::free(|cs| {
         DMA_ACTIVE_FLAG.borrow(cs).set(false);
     });
-    dma0.prepare_mem_to_mem_transfer_8_bit(src_buf, dest_buf)
+    let dma_transfer = dma0
+        .prepare_mem_to_mem_transfer_8_bit(src_buf, dest_buf)
         .expect("error preparing transfer");
     // Enable all interrupts.
     // Safety: Not using mask based critical sections.
@@ -104,6 +105,7 @@ fn transfer_example_8_bit(
     dma0.enable();
     // We still need to manually trigger the DMA request.
     dma0.trigger_with_sw_request();
+    let dest_buf;
     // Use polling for completion status.
     loop {
         let mut dma_done = false;
@@ -118,6 +120,8 @@ fn transfer_example_8_bit(
         });
         if dma_done {
             rprintln!("8-bit transfer done");
+            // Safety: We checked for transfer completion.
+            dest_buf = unsafe { dma_transfer.release() };
             break;
         }
         delay_ms.delay_ms(1);
@@ -146,8 +150,10 @@ fn transfer_example_16_bit(
     cortex_m::interrupt::free(|cs| {
         DMA_ACTIVE_FLAG.borrow(cs).set(false);
     });
-    dma0.prepare_mem_to_mem_transfer_16_bit(src_buf, dest_buf)
+    let dma_transfer = dma0
+        .prepare_mem_to_mem_transfer_16_bit(src_buf, dest_buf)
         .expect("error preparing transfer");
+    dest_buf[5] = 2;
     // Enable all interrupts.
     // Safety: Not using mask based critical sections.
     unsafe {

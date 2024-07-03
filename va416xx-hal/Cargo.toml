@@ -17,6 +17,7 @@ paste = "1"
 embedded-hal-nb = "1"
 embedded-hal = "1"
 embedded-io = "0.6"
+embedded-dma = "0.2"
 num_enum = { version = "0.7", default-features = false }
 typenum = "1"
 bitflags = "2"

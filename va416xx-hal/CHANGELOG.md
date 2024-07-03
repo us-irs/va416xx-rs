@@ -8,10 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
-## [v0.1.1] 2024-07-01
+## [v0.2.0]
 
 - Documentation improvements
 - Small fixes and improvements for ADC drivers
+- Added basic DMA driver
 
 ## [v0.1.0] 2024-07-01
 

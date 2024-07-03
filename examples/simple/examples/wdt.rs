@@ -10,7 +10,7 @@ use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::pac::{self, interrupt};
 use va416xx_hal::prelude::*;
-use va416xx_hal::wdt::WdtController;
+use va416xx_hal::wdt::Wdt;
 
 static WDT_INTRPT_COUNT: Mutex<Cell<u32>> = Mutex::new(Cell::new(0));
 
@@ -43,8 +43,7 @@ fn main() -> ! {
     let mut delay_sysclk = cortex_m::delay::Delay::new(cp.SYST, clocks.apb0().raw());
 
     let mut last_interrupt_counter = 0;
-    let mut wdt_ctrl =
-        WdtController::start(&mut dp.sysconfig, dp.watch_dog, &clocks, WDT_ROLLOVER_MS);
+    let mut wdt_ctrl = Wdt::start(&mut dp.sysconfig, dp.watch_dog, &clocks, WDT_ROLLOVER_MS);
     wdt_ctrl.enable_reset();
     loop {
         if TEST_MODE != TestMode::AllowReset {

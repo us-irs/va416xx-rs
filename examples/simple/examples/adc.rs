@@ -36,9 +36,12 @@ fn main() -> ! {
     let mut read_buf: [ChannelValue; 8] = [ChannelValue::default(); 8];
     loop {
         let single_value = adc
-            .trigger_and_read_single_channel(va416xx_hal::adc::ChannelSelect::AnIn0)
+            .trigger_and_read_single_channel(va416xx_hal::adc::ChannelSelect::TempSensor)
             .expect("reading single channel value failed");
-        rprintln!("Read single ADC value on channel 0: {:?}", single_value);
+        rprintln!(
+            "Read single ADC value on temperature sensor channel: {:?}",
+            single_value
+        );
         let read_num = adc
             .sweep_and_read_range(0, 7, &mut read_buf)
             .expect("ADC range read failed");

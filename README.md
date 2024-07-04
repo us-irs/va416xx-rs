@@ -3,7 +3,7 @@
 Vorago VA416xx Rust Support
 =========
 
-This crate collection provided support to write Rust applications for the VA416XX family
+This crate collection provides support to write Rust applications for the VA416XX family
 of devices.
 
 ## List of crates

@@ -25,7 +25,8 @@ static DMA_ACTIVE_FLAG: Mutex<Cell<bool>> = Mutex::new(Cell::new(false));
 #[link_section = ".sram1"]
 static mut DMA_CTRL_BLOCK: DmaCtrlBlock = DmaCtrlBlock::new();
 
-// We can use statically allocated buffers for DMA transfers as well.
+// We can use statically allocated buffers for DMA transfers as well, and we can also place
+// those into SRAM1.
 #[link_section = ".sram1"]
 static mut DMA_SRC_BUF: [u16; 36] = [0; 36];
 #[link_section = ".sram1"]
@@ -135,10 +136,11 @@ fn transfer_example_8_bit(
 }
 
 fn transfer_example_16_bit(dma0: &mut DmaChannel, delay_ms: &mut CountdownTimer<pac::Tim0>) {
+    let dest_buf_ref = unsafe { &mut *core::ptr::addr_of_mut!(DMA_DEST_BUF[0..33]) };
     unsafe {
         // Set values scaled from 0 to 65535 to verify this is really a 16-bit transfer.
         (0..32).for_each(|i| {
-            DMA_SRC_BUF[i] = (i as u32 * u16::MAX as u32 / (DMA_SRC_BUF.len() - 1) as u32) as u16;
+            DMA_SRC_BUF[i] = (i as u32 * u16::MAX as u32 / (dest_buf_ref.len() as u32 - 1)) as u16;
         });
     }
     cortex_m::interrupt::free(|cs| {
@@ -147,12 +149,11 @@ fn transfer_example_16_bit(dma0: &mut DmaChannel, delay_ms: &mut CountdownTimer<
     cortex_m::interrupt::free(|cs| {
         DMA_ACTIVE_FLAG.borrow(cs).set(false);
     });
-    let dest_buf_ref = unsafe { &mut *core::ptr::addr_of_mut!(DMA_DEST_BUF[0..32]) };
     // Safety: The source and destination buffer are valid for the duration of the DMA transfer.
     unsafe {
         dma0.prepare_mem_to_mem_transfer_16_bit(
             &*core::ptr::addr_of!(DMA_SRC_BUF[0..32]),
-            dest_buf_ref,
+            &mut dest_buf_ref[0..32],
         )
         .expect("error preparing transfer");
     }
@@ -187,7 +188,7 @@ fn transfer_example_16_bit(dma0: &mut DmaChannel, delay_ms: &mut CountdownTimer<
     (0..32).for_each(|i| {
         assert_eq!(
             dest_buf_ref[i],
-            (i as u32 * u16::MAX as u32 / (dest_buf_ref.len() - 1) as u32) as u16
+            (i as u32 * u16::MAX as u32 / (dest_buf_ref.len() as u32 - 1)) as u16
         );
     });
     // Sentinel value, should be 0.

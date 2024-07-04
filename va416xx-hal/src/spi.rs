@@ -27,6 +27,9 @@ use crate::{
 // FIFO has a depth of 16.
 const FILL_DEPTH: usize = 12;
 
+pub const BMSTART_BMSTOP_MASK: u32 = 1 << 31;
+pub const BMSKIPDATA_MASK: u32 = 1 << 30;
+
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub enum HwChipSelectId {
     Id0 = 0,
@@ -99,6 +102,14 @@ impl OptionalHwCs<pac::Spi1> for NoneT {}
 impl OptionalHwCs<pac::Spi2> for NoneT {}
 impl OptionalHwCs<pac::Spi3> for NoneT {}
 
+pub struct RomSpiSck;
+pub struct RomSpiMiso;
+pub struct RomSpiMosi;
+
+impl Sealed for RomSpiSck {}
+impl Sealed for RomSpiMosi {}
+impl Sealed for RomSpiMiso {}
+
 // SPI 0
 
 impl PinSck<pac::Spi0> for Pin<PB15, AltFunc1> {}
@@ -137,6 +148,10 @@ impl PinMosi<pac::Spi2> for Pin<PF7, AltFunc2> {}
 impl PinMiso<pac::Spi2> for Pin<PF6, AltFunc2> {}
 
 // SPI3 is shared with the ROM SPI pins and has its own dedicated pins.
+//
+impl PinSck<pac::Spi3> for RomSpiSck {}
+impl PinMosi<pac::Spi3> for RomSpiMosi {}
+impl PinMiso<pac::Spi3> for RomSpiMiso {}
 
 // SPI 0 HW CS pins
 
@@ -315,6 +330,11 @@ impl SpiConfig {
         self
     }
 
+    pub fn ser_clock_rate_div(mut self, div: u8) -> Self {
+        self.ser_clock_rate_div = div;
+        self
+    }
+
     pub fn master_mode(mut self, master: bool) -> Self {
         self.ms = !master;
         self
@@ -391,6 +411,16 @@ impl Instance for pac::Spi2 {
     }
 }
 
+impl Instance for pac::Spi3 {
+    const IDX: u8 = 3;
+    const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi3;
+
+    #[inline(always)]
+    fn ptr() -> *const SpiRegBlock {
+        Self::ptr()
+    }
+}
+
 //==================================================================================================
 // Spi
 //==================================================================================================
@@ -410,7 +440,7 @@ pub struct Spi<SpiInstance, Pins, Word = u8> {
     pins: Pins,
 }
 
-fn mode_to_cpo_cph_bit(mode: embedded_hal::spi::Mode) -> (bool, bool) {
+pub fn mode_to_cpo_cph_bit(mode: embedded_hal::spi::Mode) -> (bool, bool) {
     match mode {
         embedded_hal::spi::MODE_0 => (false, false),
         embedded_hal::spi::MODE_1 => (false, true),
@@ -439,6 +469,11 @@ where
             w.spo().bit(cpo_bit);
             w.sph().bit(cph_bit)
         });
+    }
+
+    #[inline]
+    pub fn spi_instance(&self) -> &SpiInstance {
+        &self.spi
     }
 
     #[inline]
@@ -601,11 +636,11 @@ where
     ///     to be done once.
     /// * `syscfg` - Can be passed optionally to enable the peripheral clock
     pub fn new(
-        spi: SpiI,
-        pins: (Sck, Miso, Mosi),
-        clocks: &crate::clock::Clocks,
-        spi_cfg: SpiConfig,
         syscfg: &mut pac::Sysconfig,
+        spi: SpiI,
+        clocks: &crate::clock::Clocks,
+        pins: (Sck, Miso, Mosi),
+        spi_cfg: SpiConfig,
         transfer_cfg: Option<&ErasedTransferConfig>,
     ) -> Self {
         crate::clock::enable_peripheral_clock(syscfg, SpiI::PERIPH_SEL);
@@ -674,31 +709,33 @@ where
         }
     }
 
-    #[inline]
-    pub fn cfg_clock(&mut self, spi_clk: impl Into<Hertz>) {
-        self.inner.cfg_clock(spi_clk);
+    delegate::delegate! {
+        to self.inner {
+            #[inline]
+            pub fn cfg_clock(&mut self, spi_clk: impl Into<Hertz>);
+
+            #[inline]
+            pub fn spi_instance(&self) -> &SpiI;
+
+            #[inline]
+            pub fn cfg_mode(&mut self, mode: Mode);
+
+            #[inline]
+            pub fn perid(&self) -> u32;
+
+            pub fn cfg_transfer<HwCs: OptionalHwCs<SpiI>>(&mut self, transfer_cfg: &TransferConfig<HwCs>);
+
+        }
     }
 
     #[inline]
-    pub fn cfg_mode(&mut self, mode: Mode) {
-        self.inner.cfg_mode(mode);
-    }
-
     pub fn set_fill_word(&mut self, fill_word: Word) {
         self.inner.fill_word = fill_word;
     }
 
+    #[inline]
     pub fn fill_word(&self) -> Word {
         self.inner.fill_word
-    }
-
-    #[inline]
-    pub fn perid(&self) -> u32 {
-        self.inner.perid()
-    }
-
-    pub fn cfg_transfer<HwCs: OptionalHwCs<SpiI>>(&mut self, transfer_cfg: &TransferConfig<HwCs>) {
-        self.inner.cfg_transfer(transfer_cfg);
     }
 
     /// Releases the SPI peripheral and associated pins

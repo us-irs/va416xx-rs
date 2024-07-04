@@ -1,0 +1,260 @@
+//! Vorago bootloader which can boot from two images.
+//!
+//! Bootloader memory map
+//!
+//! * <0x0>     Bootloader start                         <code up to 0x3FFE bytes>
+//! * <0x3FFE>  Bootloader CRC                           <halfword>
+//! * <0x4000>  App image A start                        <code up to 0x1DFFC (~120K) bytes>
+//! * <0x21FFC> App image A CRC check length             <halfword>
+//! * <0x21FFE> App image A CRC check value              <halfword>
+//! * <0x22000> App image B start                        <code up to 0x1DFFC (~120K) bytes>
+//! * <0x3FFFC> App image B CRC check length             <halfword>
+//! * <0x3FFFE> App image B CRC check value              <halfword>
+//! * <0x40000>                                          <end>
+//!
+//! As opposed to the Vorago example code, this bootloader assumes a 40 MHz external clock
+//! but does not scale that clock up.
+#![no_main]
+#![no_std]
+
+use cortex_m_rt::entry;
+use crc::{Crc, CRC_16_IBM_3740};
+use panic_rtt_target as _;
+use rtt_target::{rprintln, rtt_init_print};
+use va416xx_hal::{
+    clock::{pll_setup_delay, ClkDivSel, ClkselSys},
+    edac,
+    nvm::Nvm,
+    pac::{self, interrupt},
+    prelude::*,
+    time::Hertz,
+    wdt::Wdt,
+};
+
+const EXTCLK_FREQ: u32 = 40_000_000;
+const WITH_WDT: bool = true;
+const WDT_FREQ_MS: u32 = 50;
+const DEBUG_PRINTOUTS: bool = true;
+
+// Important bootloader addresses and offsets, vector table information.
+
+const BOOTLOADER_START_ADDR: u32 = 0x0;
+const BOOTLOADER_END_ADDR: u32 = 0x4000;
+const BOOTLOADER_CRC_ADDR: u32 = 0x3FFE;
+const APP_A_START_ADDR: u32 = 0x4000;
+pub const APP_A_END_ADDR: u32 = 0x22000;
+// The actual size of the image which is relevant for CRC calculation.
+const APP_A_SIZE_ADDR: u32 = 0x21FF8;
+const APP_A_CRC_ADDR: u32 = 0x21FFC;
+const APP_B_START_ADDR: u32 = 0x22000;
+pub const APP_B_END_ADDR: u32 = 0x40000;
+// The actual size of the image which is relevant for CRC calculation.
+const APP_B_SIZE_ADDR: u32 = 0x3FFF8;
+const APP_B_CRC_ADDR: u32 = 0x3FFFC;
+pub const APP_IMG_SZ: u32 = 0x1E000;
+
+pub const VECTOR_TABLE_OFFSET: u32 = 0x0;
+pub const VECTOR_TABLE_LEN: u32 = 0x350;
+pub const RESET_VECTOR_OFFSET: u32 = 0x4;
+
+const CRC_ALGO: Crc<u16> = Crc::<u16>::new(&CRC_16_IBM_3740);
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+enum AppSel {
+    A,
+    B,
+}
+
+pub trait WdtInterface {
+    fn feed(&self);
+}
+
+pub struct OptWdt(Option<Wdt>);
+
+impl WdtInterface for OptWdt {
+    fn feed(&self) {
+        if self.0.is_some() {
+            self.0.as_ref().unwrap().feed();
+        }
+    }
+}
+
+#[entry]
+fn main() -> ! {
+    rtt_init_print!();
+    rprintln!("-- VA416xx bootloader --");
+    let mut dp = pac::Peripherals::take().unwrap();
+    let cp = cortex_m::Peripherals::take().unwrap();
+    setup_edac(&mut dp.sysconfig);
+    // Use the external clock connected to XTAL_N.
+    let clocks = dp
+        .clkgen
+        .constrain()
+        .xtal_n_clk_with_src_freq(Hertz::from_raw(EXTCLK_FREQ))
+        .freeze(&mut dp.sysconfig)
+        .unwrap();
+    let mut opt_wdt = OptWdt(None);
+    if WITH_WDT {
+        opt_wdt.0 = Some(Wdt::start(
+            &mut dp.sysconfig,
+            dp.watch_dog,
+            &clocks,
+            WDT_FREQ_MS,
+        ));
+    }
+    let nvm = Nvm::new(&mut dp.sysconfig, dp.spi3, &clocks);
+    // Check bootloader's CRC (and write it if blank)
+    check_own_crc(&opt_wdt, &nvm, &cp);
+
+    if check_app_crc(AppSel::A, &opt_wdt) {
+        boot_app(AppSel::A, &cp)
+    } else if check_app_crc(AppSel::B, &opt_wdt) {
+        boot_app(AppSel::B, &cp)
+    } else {
+        if DEBUG_PRINTOUTS {
+            rprintln!("both images corrupt! booting image A");
+        }
+        // TODO: Shift a CCSDS packet out to inform host/OBC about image corruption.
+        // Both images seem to be corrupt. Boot default image A.
+        boot_app(AppSel::A, &cp)
+    }
+}
+
+fn check_own_crc(wdt: &OptWdt, nvm: &Nvm, cp: &cortex_m::Peripherals) {
+    let crc_exp = unsafe { *(BOOTLOADER_CRC_ADDR as *const u16) };
+    wdt.feed();
+    let crc_calc = CRC_ALGO.checksum(unsafe {
+        core::slice::from_raw_parts(
+            BOOTLOADER_START_ADDR as *const u8,
+            (BOOTLOADER_END_ADDR - BOOTLOADER_START_ADDR - 4) as usize,
+        )
+    });
+    wdt.feed();
+    if crc_exp == 0x0000 || crc_exp == 0xffff {
+        if DEBUG_PRINTOUTS {
+            rprintln!("BL CRC blank - prog new CRC");
+        }
+        // Blank CRC, write it to NVM.
+        nvm.write_data(BOOTLOADER_CRC_ADDR, &crc_calc.to_be_bytes());
+        // The Vorago bootloader resets here. I am not sure why this is done, just continue with
+        // the regular boot process..
+    } else if crc_exp != crc_calc {
+        // Bootloader is corrupted. Try to run App A.
+        if DEBUG_PRINTOUTS {
+            rprintln!("bootloader CRC corrupt. booting image A immediately");
+        }
+        // TODO: Shift out minimal CCSDS frame to notify about bootloader corruption.
+        boot_app(AppSel::A, cp);
+    }
+}
+
+fn check_app_crc(app_sel: AppSel, wdt: &OptWdt) -> bool {
+    if app_sel == AppSel::A {
+        check_app_given_addr(APP_A_CRC_ADDR, APP_A_START_ADDR, APP_A_SIZE_ADDR, wdt)
+    } else {
+        check_app_given_addr(APP_B_CRC_ADDR, APP_B_START_ADDR, APP_B_SIZE_ADDR, wdt)
+    }
+}
+
+fn check_app_given_addr(
+    crc_addr: u32,
+    start_addr: u32,
+    image_size_addr: u32,
+    wdt: &OptWdt,
+) -> bool {
+    let crc_exp = unsafe { *(crc_addr as *const u16) };
+    let image_size = unsafe { *(image_size_addr as *const u32) };
+    wdt.feed();
+    let crc_calc = CRC_ALGO.checksum(unsafe {
+        core::slice::from_raw_parts(start_addr as *const u8, image_size as usize)
+    });
+    wdt.feed();
+    if crc_calc == crc_exp {
+        return true;
+    }
+    false
+}
+
+fn boot_app(app_sel: AppSel, cp: &cortex_m::Peripherals) -> ! {
+    let clkgen = unsafe { pac::Clkgen::steal() };
+    clkgen
+        .ctrl0()
+        .modify(|_, w| unsafe { w.clksel_sys().bits(ClkselSys::Hbo as u8) });
+    pll_setup_delay();
+    clkgen
+        .ctrl0()
+        .modify(|_, w| unsafe { w.clk_div_sel().bits(ClkDivSel::Div1 as u8) });
+    // Clear all interrupts set.
+    unsafe {
+        cp.NVIC.icer[0].write(0xFFFFFFFF);
+        cp.NVIC.icpr[0].write(0xFFFFFFFF);
+    }
+    cortex_m::asm::dsb();
+    cortex_m::asm::isb();
+    unsafe {
+        if app_sel == AppSel::A {
+            cp.SCB.vtor.write(APP_A_START_ADDR);
+        } else {
+            cp.SCB.vtor.write(APP_B_START_ADDR);
+        }
+    }
+    cortex_m::asm::dsb();
+    cortex_m::asm::isb();
+    vector_reset();
+}
+
+pub fn vector_reset() -> ! {
+    unsafe {
+        // Set R0 to VTOR address (0xE000ED08)
+        let vtor_address: u32 = 0xE000ED08;
+
+        // Load VTOR
+        let vtor: u32 = *(vtor_address as *const u32);
+
+        // Load initial MSP value
+        let initial_msp: u32 = *(vtor as *const u32);
+
+        // Set SP value (assume MSP is selected)
+        core::arch::asm!("mov sp, {0}", in(reg) initial_msp);
+
+        // Load reset vector
+        let reset_vector: u32 = *((vtor + 4) as *const u32);
+
+        // Branch to reset handler
+        core::arch::asm!("bx {0}", in(reg) reset_vector);
+    }
+    unreachable!();
+}
+
+fn setup_edac(syscfg: &mut pac::Sysconfig) {
+    // The scrub values are based on the Vorago provided bootloader.
+    edac::enable_rom_scrub(syscfg, 125);
+    edac::enable_ram0_scrub(syscfg, 1000);
+    edac::enable_ram1_scrub(syscfg, 1000);
+    edac::enable_sbe_irq();
+    edac::enable_mbe_irq();
+}
+
+#[interrupt]
+#[allow(non_snake_case)]
+fn WATCHDOG() {
+    let wdt = unsafe { pac::WatchDog::steal() };
+    // Clear interrupt.
+    wdt.wdogintclr().write(|w| unsafe { w.bits(1) });
+}
+
+#[interrupt]
+#[allow(non_snake_case)]
+fn EDAC_SBE() {
+    // TODO: Send some command via UART for notification purposes. Also identify the problematic
+    // memory.
+    edac::clear_sbe_irq();
+}
+
+#[interrupt]
+#[allow(non_snake_case)]
+fn EDAC_MBE() {
+    // TODO: Send some command via UART for notification purposes.
+    edac::clear_mbe_irq();
+    // TODO: Reset like the vorago example?
+}

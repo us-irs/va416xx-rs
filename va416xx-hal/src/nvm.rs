@@ -44,7 +44,7 @@ pub const BP_0_ENABLE_MASK: u8 = 1 << 2;
 pub const BP_1_ENABLE_MASK: u8 = 1 << 3;
 
 pub struct Nvm {
-    spi: pac::Spi3,
+    spi: Option<pac::Spi3>,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -90,7 +90,7 @@ impl Nvm {
         // programmers guide
         spi.ctrl1().modify(|_, w| w.enable().set_bit());
 
-        let mut nvm = Self { spi };
+        let mut nvm = Self { spi: Some(spi) };
         nvm.disable_write_prot();
         nvm
     }
@@ -110,36 +110,40 @@ impl Nvm {
         self.write_single(FRAM_WRSR);
         self.write_with_bmstop(0x00);
     }
+    #[inline(always)]
+    pub fn spi(&self) -> &pac::Spi3 {
+        self.spi.as_ref().unwrap()
+    }
 
     #[inline(always)]
     pub fn write_single(&self, word: u8) {
-        self.spi.data().write(|w| unsafe { w.bits(word as u32) })
+        self.spi().data().write(|w| unsafe { w.bits(word as u32) })
     }
 
     #[inline(always)]
     pub fn write_with_bmstop(&self, word: u8) {
-        self.spi
+        self.spi()
             .data()
             .write(|w| unsafe { w.bits(BMSTART_BMSTOP_MASK | word as u32) })
     }
 
     #[inline(always)]
     pub fn wait_for_tx_idle(&self) {
-        while self.spi.status().read().tfe().bit_is_clear() {
+        while self.spi().status().read().tfe().bit_is_clear() {
             cortex_m::asm::nop();
         }
     }
 
     #[inline(always)]
     pub fn wait_for_rx_available(&self) {
-        while !self.spi.status().read().rne().bit_is_set() {
+        while !self.spi().status().read().rne().bit_is_set() {
             cortex_m::asm::nop();
         }
     }
 
     #[inline(always)]
     pub fn read_single_word(&self) -> u32 {
-        self.spi.data().read().bits()
+        self.spi().data().read().bits()
     }
 
     pub fn write_data(&self, addr: u32, data: &[u8]) {
@@ -151,13 +155,13 @@ impl Nvm {
         self.write_single(mid_addr_byte(addr));
         self.write_single(lsb_addr_byte(addr));
         for byte in data.iter().take(data.len() - 1) {
-            while self.spi.status().read().tnf().bit_is_clear() {
+            while self.spi().status().read().tnf().bit_is_clear() {
                 cortex_m::asm::nop();
             }
             self.write_single(*byte);
             self.read_single_word();
         }
-        while self.spi.status().read().tnf().bit_is_clear() {
+        while self.spi().status().read().tnf().bit_is_clear() {
             cortex_m::asm::nop();
         }
         self.write_with_bmstop(*data.last().unwrap());
@@ -194,13 +198,19 @@ impl Nvm {
         Ok(())
     }
 
-    /// This function releases the ROM SPI and enables chip write protection again.
-    pub fn release(self) -> pac::Spi3 {
+    /// Enable write-protection and disables the peripheral clock.
+    pub fn shutdown(&mut self, sys_cfg: &mut pac::Sysconfig) {
         self.wait_for_tx_idle();
         self.write_with_bmstop(FRAM_WREN);
         self.wait_for_tx_idle();
         self.write_single(WPEN_ENABLE_MASK | BP_0_ENABLE_MASK | BP_1_ENABLE_MASK);
-        self.spi
+        crate::clock::disable_peripheral_clock(sys_cfg, pac::Spi3::PERIPH_SEL);
+    }
+
+    /// This function calls [Self::shutdown] and gives back the peripheral structure.
+    pub fn release(mut self, sys_cfg: &mut pac::Sysconfig) -> pac::Spi3 {
+        self.shutdown(sys_cfg);
+        self.spi.take().unwrap()
     }
 
     fn common_read_start(&self, addr: u32) {
@@ -216,5 +226,12 @@ impl Nvm {
             // The first 4 data bytes received need to be ignored.
             self.read_single_word();
         }
+    }
+}
+
+/// Call [Self::shutdown] on drop.
+impl Drop for Nvm {
+    fn drop(&mut self) {
+        self.shutdown(unsafe { &mut pac::Sysconfig::steal() });
     }
 }

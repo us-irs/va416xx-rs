@@ -114,6 +114,7 @@ fn main() -> ! {
         if DEBUG_PRINTOUTS {
             rprintln!("both images corrupt! booting image A");
         }
+        loop {}
         // TODO: Shift a CCSDS packet out to inform host/OBC about image corruption.
         // Both images seem to be corrupt. Boot default image A.
         boot_app(AppSel::A, &cp)

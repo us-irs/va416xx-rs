@@ -2,9 +2,11 @@ use embedded_hal::spi::MODE_0;
 
 use crate::clock::{Clocks, SyscfgExt};
 use crate::pac;
-use crate::spi::{mode_to_cpo_cph_bit, Instance, BMSTART_BMSTOP_MASK};
+use crate::spi::{
+    mode_to_cpo_cph_bit, spi_clk_config_from_div, Instance, WordProvider, BMSTART_BMSTOP_MASK,
+};
 
-const NVM_SER_CLOCK_RATE_DIV: u8 = 4;
+const NVM_CLOCK_DIV: u16 = 2;
 
 // Commands. The internal FRAM is based on the Cypress FM25V20A device.
 
@@ -61,11 +63,12 @@ impl Nvm {
         // This is done in the C HAL.
         syscfg.assert_periph_reset_for_two_cycles(pac::Spi3::PERIPH_SEL);
 
+        let spi_clk_cfg = spi_clk_config_from_div(NVM_CLOCK_DIV).unwrap();
         let (cpo_bit, cph_bit) = mode_to_cpo_cph_bit(MODE_0);
         spi.ctrl0().write(|w| {
             unsafe {
-                w.size().bits(8);
-                w.scrdv().bits(NVM_SER_CLOCK_RATE_DIV);
+                w.size().bits(u8::word_reg());
+                w.scrdv().bits(spi_clk_cfg.scrdv());
                 // Clear clock phase and polarity. Will be set to correct value for each
                 // transfer
                 w.spo().bit(cpo_bit);
@@ -73,14 +76,13 @@ impl Nvm {
             }
         });
         spi.ctrl1().write(|w| {
-            w.lbm().clear_bit();
-            w.sod().clear_bit();
-            w.ms().set_bit();
-            w.mdlycap().clear_bit();
             w.blockmode().set_bit();
             unsafe { w.ss().bits(0) };
+            w.bmstart().set_bit();
             w.bmstall().set_bit()
         });
+        spi.clkprescale()
+            .write(|w| unsafe { w.bits(spi_clk_cfg.prescale_val() as u32) });
 
         spi.fifo_clr().write(|w| {
             w.rxfifo().set_bit();
@@ -101,6 +103,16 @@ impl Nvm {
         self.wait_for_tx_idle();
         self.write_single(FRAM_WRSR);
         self.write_with_bmstop(0x00);
+        self.wait_for_tx_idle();
+    }
+
+    pub fn read_rdsr(&self) -> u8 {
+        self.write_single(FRAM_RDSR);
+        self.write_with_bmstop(0x00);
+        self.wait_for_rx_available();
+        self.read_single_word();
+        self.wait_for_rx_available();
+        (self.read_single_word() & 0xff) as u8
     }
 
     pub fn enable_write_prot(&mut self) {
@@ -132,6 +144,18 @@ impl Nvm {
         while self.spi().status().read().tfe().bit_is_clear() {
             cortex_m::asm::nop();
         }
+        while self.spi().status().read().busy().bit_is_set() {
+            cortex_m::asm::nop();
+        }
+        self.clear_fifos()
+    }
+
+    #[inline(always)]
+    pub fn clear_fifos(&self) {
+        self.spi().fifo_clr().write(|w| {
+            w.rxfifo().set_bit();
+            w.txfifo().set_bit()
+        })
     }
 
     #[inline(always)]
@@ -188,6 +212,8 @@ impl Nvm {
             self.wait_for_rx_available();
             let next_word = self.read_single_word() as u8;
             if next_word != *byte {
+                self.write_with_bmstop(0);
+                self.wait_for_tx_idle();
                 return Err(VerifyError {
                     addr: addr + idx as u32,
                     found: next_word,
@@ -195,6 +221,8 @@ impl Nvm {
                 });
             }
         }
+        self.write_with_bmstop(0);
+        self.wait_for_tx_idle();
         Ok(())
     }
 

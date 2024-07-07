@@ -32,9 +32,16 @@ use va416xx_hal::{
 };
 
 const EXTCLK_FREQ: u32 = 40_000_000;
-const WITH_WDT: bool = true;
+const WITH_WDT: bool = false;
 const WDT_FREQ_MS: u32 = 50;
 const DEBUG_PRINTOUTS: bool = true;
+
+// Dangerous option! An image with this option set to true will flash itself from RAM directly
+// into the NVM. This can be used as a recovery option from a direct RAM flash to fix the NVM
+// boot process. Please note that this will flash an image which will also always perform the
+// self-flash itself. It is recommended that you use a tool like probe-rs, Keil IDE, or a flash
+// loader to boot a bootloader without this feature.
+const FLASH_SELF: bool = false;
 
 // Important bootloader addresses and offsets, vector table information.
 
@@ -85,6 +92,8 @@ fn main() -> ! {
     rprintln!("-- VA416xx bootloader --");
     let mut dp = pac::Peripherals::take().unwrap();
     let cp = cortex_m::Peripherals::take().unwrap();
+    // Disable ROM protection.
+    dp.sysconfig.rom_prot().write(|w| unsafe { w.bits(1) });
     setup_edac(&mut dp.sysconfig);
     // Use the external clock connected to XTAL_N.
     let clocks = dp
@@ -103,6 +112,48 @@ fn main() -> ! {
         ));
     }
     let nvm = Nvm::new(&mut dp.sysconfig, dp.spi3, &clocks);
+
+    if FLASH_SELF {
+        let bootloader_data = {
+            unsafe {
+                &*core::ptr::slice_from_raw_parts(
+                    (BOOTLOADER_START_ADDR + 4) as *const u8,
+                    (BOOTLOADER_END_ADDR - BOOTLOADER_START_ADDR - 8) as usize,
+                )
+            }
+        };
+        let mut first_four_bytes: [u8; 4] = [0; 4];
+        unsafe {
+            core::arch::asm!(
+                "ldr r0, [{0}]",    // Load 4 bytes from src into r0 register
+                "str r0, [{1}]",    // Store r0 register into first_four_bytes
+                in(reg) BOOTLOADER_START_ADDR as *const u8,         // Input: src pointer (0x0)
+                in(reg) &mut first_four_bytes as *mut [u8; 4],  // Input: destination pointer
+            );
+        }
+        let mut digest = CRC_ALGO.digest();
+        digest.update(&first_four_bytes);
+        digest.update(bootloader_data);
+        let bootloader_crc = digest.finalize();
+
+        nvm.write_data(0x0, &first_four_bytes);
+        nvm.write_data(0x4, bootloader_data);
+        if let Err(e) = nvm.verify_data(0x0, &first_four_bytes) {
+            rprintln!("verification of self-flash to NVM failed: {:?}", e);
+        }
+        if let Err(e) = nvm.verify_data(0x4, bootloader_data) {
+            rprintln!("verification of self-flash to NVM failed: {:?}", e);
+        }
+
+        nvm.write_data(BOOTLOADER_CRC_ADDR, &bootloader_crc.to_be_bytes());
+        if let Err(e) = nvm.verify_data(BOOTLOADER_CRC_ADDR, &bootloader_crc.to_be_bytes()) {
+            rprintln!(
+                "error: CRC verification for bootloader self-flash failed: {:?}",
+                e
+            );
+        }
+    }
+
     // Check bootloader's CRC (and write it if blank)
     check_own_crc(&opt_wdt, &nvm, &cp);
 
@@ -114,7 +165,6 @@ fn main() -> ! {
         if DEBUG_PRINTOUTS {
             rprintln!("both images corrupt! booting image A");
         }
-        loop {}
         // TODO: Shift a CCSDS packet out to inform host/OBC about image corruption.
         // Both images seem to be corrupt. Boot default image A.
         boot_app(AppSel::A, &cp)
@@ -124,8 +174,11 @@ fn main() -> ! {
 fn check_own_crc(wdt: &OptWdt, nvm: &Nvm, cp: &cortex_m::Peripherals) {
     let crc_exp = unsafe { *(BOOTLOADER_CRC_ADDR as *const u16) };
     wdt.feed();
+    // I'd prefer to use [core::slice::from_raw_parts], but that is problematic
+    // because the address of the bootloader is 0x0, so the NULL check fails and the functions
+    // panics.
     let crc_calc = CRC_ALGO.checksum(unsafe {
-        core::slice::from_raw_parts(
+        &*core::ptr::slice_from_raw_parts(
             BOOTLOADER_START_ADDR as *const u8,
             (BOOTLOADER_END_ADDR - BOOTLOADER_START_ADDR - 4) as usize,
         )
@@ -150,6 +203,9 @@ fn check_own_crc(wdt: &OptWdt, nvm: &Nvm, cp: &cortex_m::Peripherals) {
 }
 
 fn check_app_crc(app_sel: AppSel, wdt: &OptWdt) -> bool {
+    if DEBUG_PRINTOUTS {
+        rprintln!("Checking image {:?}", app_sel);
+    }
     if app_sel == AppSel::A {
         check_app_given_addr(APP_A_CRC_ADDR, APP_A_START_ADDR, APP_A_SIZE_ADDR, wdt)
     } else {

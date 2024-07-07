@@ -1,0 +1,3 @@
+spacepackets == 0.24
+tmtccmd == 8.0.1
+toml == 0.10

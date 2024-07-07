@@ -23,5 +23,5 @@ version = "2"
 features = ["thumbv6-backend"]
 
 [dependencies.rtic-monotonics]
-version = "1"
+version = "2"
 features = ["cortex-m-systick"]

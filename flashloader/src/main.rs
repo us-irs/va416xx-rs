@@ -28,6 +28,8 @@ const COBS_FRAME_SEPARATOR: u8 = 0x0;
 const MAX_PACKET_SIZE: usize = 1024;
 const MAX_FRAME_SIZE: usize = cobs::max_encoding_length(MAX_PACKET_SIZE);
 const UART_BAUDRATE: u32 = 115200;
+const SERIAL_RX_WIRETAPPING: bool = false;
+const COBS_RX_DEBUGGING: bool = false;
 
 const BOOT_NVM_MEMORY_ID: u8 = 1;
 
@@ -52,8 +54,8 @@ mod app {
     use super::*;
     use embedded_hal_nb::nb;
     use panic_rtt_target as _;
-    use rtic_monotonics::systick::ExtU32;
-    use rtic_monotonics::systick::Systick;
+    use rtic::Mutex;
+    use rtic_monotonics::systick::prelude::*;
     use rtic_sync::{
         channel::{Receiver, Sender},
         make_channel,
@@ -99,13 +101,14 @@ mod app {
     pub type TcTx = Sender<'static, usize, 2>;
     pub type TcRx = Receiver<'static, usize, 2>;
 
+    rtic_monotonics::systick_monotonic!(Mono, 10_000);
+
     #[init]
     fn init(mut cx: init::Context) -> (Shared, Local) {
         //rtt_init_default!();
         rtt_log::init();
         rprintln!("-- Vorago flashloader --");
         // Initialize the systick interrupt & obtain the token to prove that we did
-        let systick_mono_token = rtic_monotonics::create_systick_token!();
         // Use the external clock connected to XTAL_N.
         let clocks = cx
             .device
@@ -130,8 +133,11 @@ mod app {
         let (tx, rx) = uart0.split();
         let (tc_tx, tc_rx) = make_channel!(usize, 2);
 
-        Systick::start(cx.core.SYST, clocks.sysclk().raw(), systick_mono_token);
+        Mono::start(cx.core.SYST, clocks.sysclk().raw());
         CLOCKS.set(clocks).unwrap();
+        pus_tc_handler::spawn().unwrap();
+        uart_reader_task::spawn().unwrap();
+        pus_tm_tx_handler::spawn().unwrap();
         (
             Shared {
                 decode_buffer_busy: false,
@@ -168,68 +174,108 @@ mod app {
     async fn uart_reader_task(mut cx: uart_reader_task::Context) {
         let mut current_idx = 0;
         loop {
-            match nb::block!(cx.local.uart_rx.read()) {
-                Ok(byte) => match cx.local.cobs_reader_state {
-                    CobsReaderStates::WaitingForStart => {
-                        if byte == COBS_FRAME_SEPARATOR {
-                            *cx.local.cobs_reader_state = CobsReaderStates::WatingForEnd;
+            match cx.local.uart_rx.read() {
+                Ok(byte) => {
+                    if SERIAL_RX_WIRETAPPING {
+                        log::debug!("RX Byte: 0x{:x?}", byte);
+                    }
+                    handle_single_rx_byte(&mut cx, byte, &mut current_idx)
+                }
+                Err(e) => {
+                    match e {
+                        nb::Error::Other(e) => {
+                            log::warn!("UART error: {:?}", e);
+                            match e {
+                                uart::Error::Overrun => {
+                                    cx.local.uart_rx.clear_fifo();
+                                }
+                                uart::Error::FramingError => todo!(),
+                                uart::Error::ParityError => todo!(),
+                                uart::Error::BreakCondition => todo!(),
+                                uart::Error::TransferPending => todo!(),
+                                uart::Error::BufferTooShort => todo!(),
+                            }
+                        }
+                        nb::Error::WouldBlock => {
+                            // Delay for a short period before polling again.
+                            Mono::delay(400.micros()).await;
                         }
                     }
-                    CobsReaderStates::WatingForEnd => {
-                        if byte == COBS_FRAME_SEPARATOR {
-                            let mut sending_failed = false;
-                            let mut decoding_error = false;
-                            let mut decode_buffer_busy = false;
-                            cx.shared.decode_buffer_busy.lock(|busy| {
-                                if *busy {
-                                    decode_buffer_busy = true;
-                                } else {
-                                    cx.shared.decode_buf.lock(|buf| {
-                                        match cobs::decode(&cx.local.read_buf[..current_idx], buf) {
-                                            Ok(packet_len) => {
-                                                if cx.local.tc_tx.try_send(packet_len).is_err() {
-                                                    sending_failed = true;
-                                                }
-                                            }
-                                            Err(_) => {
-                                                decoding_error = true;
-                                            }
+                }
+            }
+        }
+    }
+
+    fn handle_single_rx_byte(
+        cx: &mut uart_reader_task::Context,
+        byte: u8,
+        current_idx: &mut usize,
+    ) {
+        match cx.local.cobs_reader_state {
+            CobsReaderStates::WaitingForStart => {
+                if byte == COBS_FRAME_SEPARATOR {
+                    if COBS_RX_DEBUGGING {
+                        log::debug!("COBS start marker detected");
+                    }
+                    *cx.local.cobs_reader_state = CobsReaderStates::WatingForEnd;
+                    *current_idx = 0;
+                }
+            }
+            CobsReaderStates::WatingForEnd => {
+                if byte == COBS_FRAME_SEPARATOR {
+                    if COBS_RX_DEBUGGING {
+                        log::debug!("COBS end marker detected");
+                    }
+                    let mut sending_failed = false;
+                    let mut decoding_error = false;
+                    let mut decode_buffer_busy = false;
+                    cx.shared.decode_buffer_busy.lock(|busy| {
+                        if *busy {
+                            decode_buffer_busy = true;
+                        } else {
+                            cx.shared.decode_buf.lock(|buf| {
+                                match cobs::decode(&cx.local.read_buf[..*current_idx], buf) {
+                                    Ok(packet_len) => {
+                                        if COBS_RX_DEBUGGING {
+                                            log::debug!(
+                                                "COBS decoded packet with length {}",
+                                                packet_len
+                                            );
                                         }
-                                    });
-                                    *busy = true;
+                                        if cx.local.tc_tx.try_send(packet_len).is_err() {
+                                            sending_failed = true;
+                                        }
+                                        *busy = true;
+                                    }
+                                    Err(_) => {
+                                        decoding_error = true;
+                                    }
                                 }
                             });
-                            if sending_failed {
-                                log::warn!("sending TC packet failed, queue full");
-                            }
-                            if decoding_error {
-                                log::warn!("decoding error");
-                            }
-                            if decode_buffer_busy {
-                                log::warn!("decode buffer busy. data arriving too fast");
-                            }
-                        } else if current_idx >= cx.local.read_buf.len() {
-                            *cx.local.cobs_reader_state = CobsReaderStates::FrameOverflow;
-                        } else {
-                            cx.local.read_buf[current_idx] = byte;
-                            current_idx += 1;
                         }
+                    });
+                    if sending_failed {
+                        log::warn!("sending TC packet failed, queue full");
                     }
-                    CobsReaderStates::FrameOverflow => {
-                        if byte == COBS_FRAME_SEPARATOR {
-                            *cx.local.cobs_reader_state = CobsReaderStates::WaitingForStart;
-                            current_idx = 0;
-                        }
+                    if decoding_error {
+                        log::warn!("decoding error");
                     }
-                },
-                Err(e) => match e {
-                    uart::Error::Overrun => todo!(),
-                    uart::Error::FramingError => todo!(),
-                    uart::Error::ParityError => todo!(),
-                    uart::Error::BreakCondition => todo!(),
-                    uart::Error::TransferPending => todo!(),
-                    uart::Error::BufferTooShort => todo!(),
-                },
+                    if decode_buffer_busy {
+                        log::warn!("decode buffer busy. data arriving too fast");
+                    }
+                    *cx.local.cobs_reader_state = CobsReaderStates::WaitingForStart;
+                } else if *current_idx >= cx.local.read_buf.len() {
+                    *cx.local.cobs_reader_state = CobsReaderStates::FrameOverflow;
+                } else {
+                    cx.local.read_buf[*current_idx] = byte;
+                    *current_idx += 1;
+                }
+            }
+            CobsReaderStates::FrameOverflow => {
+                if byte == COBS_FRAME_SEPARATOR {
+                    *cx.local.cobs_reader_state = CobsReaderStates::WaitingForStart;
+                    *current_idx = 0;
+                }
             }
         }
     }
@@ -245,7 +291,8 @@ mod app {
     )]
     async fn pus_tc_handler(mut cx: pus_tc_handler::Context) {
         loop {
-            let _ = cx.local.tc_rx.recv().await;
+            let packet_len = cx.local.tc_rx.recv().await.expect("all senders down");
+            log::info!(target: "TC Handler", "received packet with length {}", packet_len);
             // We still copy the data to a local buffer, so the exchange buffer can already be used
             // for the next packet / decode process.
             cx.shared
@@ -255,20 +302,21 @@ mod app {
             match PusTcReader::new(cx.local.read_buf) {
                 Ok((pus_tc, _)) => {
                     if pus_tc.service() == PusServiceId::Test as u8 && pus_tc.subservice() == 1 {
-                        log::info!("Received ping TC");
+                        log::info!(target: "TC Handler", "received ping TC");
                     } else if pus_tc.service() == PusServiceId::MemoryManagement as u8 {
                         // Raw memory write TC
                         if pus_tc.subservice() == 2 {
                             let app_data = pus_tc.app_data();
                             if app_data.len() < 10 {
                                 log::warn!(
+                                    target: "TC Handler",
                                     "app data for raw memory write is too short: {}",
                                     app_data.len()
                                 );
                             }
                             let memory_id = app_data[0];
                             if memory_id != BOOT_NVM_MEMORY_ID {
-                                log::warn!("memory ID {} not supported", memory_id);
+                                log::warn!(target: "TC Handler", "memory ID {} not supported", memory_id);
                                 // TODO: Error reporting
                                 return;
                             }
@@ -276,6 +324,7 @@ mod app {
                             let data_len = u32::from_be_bytes(app_data[6..10].try_into().unwrap());
                             if 10 + data_len as usize > app_data.len() {
                                 log::warn!(
+                                    target: "TC Handler",
                                     "invalid data length {} for raw mem write detected",
                                     data_len
                                 );
@@ -300,7 +349,7 @@ mod app {
                 }
                 Err(e) => {
                     log::warn!("PUS TC error: {}", e);
-                },
+                }
             }
         }
     }
@@ -314,7 +363,7 @@ mod app {
     )]
     async fn pus_tm_tx_handler(_cx: pus_tm_tx_handler::Context) {
         loop {
-            Systick::delay(500.millis()).await;
+            Mono::delay(500.millis()).await;
         }
     }
 

@@ -11,6 +11,14 @@ raw PAC. This crate also implements traits specified by the
 [embedded-hal](https://github.com/rust-embedded/embedded-hal) project, making it compatible with
 various drivers in the embedded rust ecosystem.
 
+You have to enable one of the following device features to use this crate depending on
+which chip you are using:
+
+- `va41630`
+- `va41629`
+- `va41628`
+- `va41620`
+
 ## Building
 
 Building an application requires the `thumbv7em-none-eabihf` cross-compiler toolchain.
@@ -56,7 +64,7 @@ is contained within the
 
 	[dependencies.va416xx-hal]
 	version = "<Most Recent Version>"
-	features = ["rt"]
+	features = ["va41630"]
    ```
 
 6. Build the application with `cargo build`

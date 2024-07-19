@@ -295,12 +295,17 @@ pub trait PinId: Sealed {
 }
 
 macro_rules! pin_id {
-    ($Group:ident, $Id:ident, $NUM:literal) => {
+    ($Group:ident, $Id:ident, $NUM:literal $(, $meta: meta)?) => {
         // Need paste macro to use ident in doc attribute
         paste::paste! {
+            $(#[$meta])?
             #[doc = "Pin ID representing pin " $Id]
             pub enum $Id {}
+
+            $(#[$meta])?
             impl Sealed for $Id {}
+
+            $(#[$meta])?
             impl PinId for $Id {
                 const DYN: DynPinId = DynPinId {
                     group: DynGroup::$Group,
@@ -689,13 +694,14 @@ impl<I: PinId> Registers<I> {
 
 macro_rules! pins {
     (
-        $Port:ident, $PinsName:ident, $($Id:ident,)+,
+        $Port:ident, $PinsName:ident, $($Id:ident $(, $meta:meta)?)+,
     ) => {
         paste::paste!(
             /// Collection of all the individual [`Pin`]s for a given port (PORTA or PORTB)
             pub struct $PinsName {
                 port: $Port,
                 $(
+                    $(#[$meta])?
                     #[doc = "Pin " $Id]
                     pub [<$Id:lower>]: Pin<$Id, Reset>,
                 )+
@@ -718,6 +724,7 @@ macro_rules! pins {
                         port,
                         // Safe because we only create one `Pin` per `PinId`
                         $(
+                            $(#[$meta])?
                             [<$Id:lower>]: unsafe { Pin::new() },
                         )+
                     }
@@ -739,13 +746,15 @@ macro_rules! pins {
     }
 }
 
+//$Group:ident, $PinsName:ident, $Port:ident, [$(($Id:ident, $NUM:literal $(, $meta:meta)?)),+]
+//$Group:ident, $PinsName:ident, $Port:ident, [$(($Id:ident, $NUM:literal, $meta: meta),)+]
 macro_rules! declare_pins {
     (
-        $Group:ident, $PinsName:ident, $Port:ident, [$(($Id:ident, $NUM:literal),)+]
+        $Group:ident, $PinsName:ident, $Port:ident, [$(($Id:ident, $NUM:literal $(, $meta:meta)?)),+]
     ) => {
-        pins!($Port, $PinsName, $($Id,)+,);
+        pins!($Port, $PinsName, $($Id $(, $meta)?)+,);
         $(
-            pin_id!($Group, $Id, $NUM);
+            pin_id!($Group, $Id, $NUM $(, $meta)?);
         )+
     }
 }
@@ -770,7 +779,7 @@ declare_pins!(
         (PA12, 12),
         (PA13, 13),
         (PA14, 14),
-        (PA15, 15),
+        (PA15, 15)
     ]
 );
 
@@ -784,17 +793,17 @@ declare_pins!(
         (PB2, 2),
         (PB3, 3),
         (PB4, 4),
-        (PB5, 5),
-        (PB6, 6),
-        (PB7, 7),
-        (PB8, 8),
-        (PB9, 9),
-        (PB10, 10),
-        (PB11, 11),
+        (PB5, 5, cfg(not(feature = "va41628"))),
+        (PB6, 6, cfg(not(feature = "va41628"))),
+        (PB7, 7, cfg(not(feature = "va41628"))),
+        (PB8, 8, cfg(not(feature = "va41628"))),
+        (PB9, 9, cfg(not(feature = "va41628"))),
+        (PB10, 10, cfg(not(feature = "va41628"))),
+        (PB11, 11, cfg(not(feature = "va41628"))),
         (PB12, 12),
         (PB13, 13),
         (PB14, 14),
-        (PB15, 15),
+        (PB15, 15)
     ]
 );
 
@@ -816,9 +825,9 @@ declare_pins!(
         (PC10, 10),
         (PC11, 11),
         (PC12, 12),
-        (PC13, 13),
+        (PC13, 13, cfg(not(feature = "va41628"))),
         (PC14, 14),
-        (PC15, 15),
+        (PC15, 15, cfg(not(feature = "va41628")))
     ]
 );
 
@@ -827,22 +836,22 @@ declare_pins!(
     PinsD,
     Portd,
     [
-        (PD0, 0),
-        (PD1, 1),
-        (PD2, 2),
-        (PD3, 3),
-        (PD4, 4),
-        (PD5, 5),
-        (PD6, 6),
-        (PD7, 7),
-        (PD8, 8),
-        (PD9, 9),
+        (PD0, 0, cfg(not(feature = "va41628"))),
+        (PD1, 1, cfg(not(feature = "va41628"))),
+        (PD2, 2, cfg(not(feature = "va41628"))),
+        (PD3, 3, cfg(not(feature = "va41628"))),
+        (PD4, 4, cfg(not(feature = "va41628"))),
+        (PD5, 5, cfg(not(feature = "va41628"))),
+        (PD6, 6, cfg(not(feature = "va41628"))),
+        (PD7, 7, cfg(not(feature = "va41628"))),
+        (PD8, 8, cfg(not(feature = "va41628"))),
+        (PD9, 9, cfg(not(feature = "va41628"))),
         (PD10, 10),
         (PD11, 11),
         (PD12, 12),
         (PD13, 13),
         (PD14, 14),
-        (PD15, 15),
+        (PD15, 15)
     ]
 );
 
@@ -861,12 +870,12 @@ declare_pins!(
         (PE7, 7),
         (PE8, 8),
         (PE9, 9),
-        (PE10, 10),
-        (PE11, 11),
+        (PE10, 10, cfg(not(feature = "va41628"))),
+        (PE11, 11, cfg(not(feature = "va41628"))),
         (PE12, 12),
         (PE13, 13),
         (PE14, 14),
-        (PE15, 15),
+        (PE15, 15)
     ]
 );
 
@@ -877,20 +886,20 @@ declare_pins!(
     [
         (PF0, 0),
         (PF1, 1),
-        (PF2, 2),
-        (PF3, 3),
-        (PF4, 4),
-        (PF5, 5),
-        (PF6, 6),
-        (PF7, 7),
-        (PF8, 8),
+        (PF2, 2, cfg(not(feature = "va41628"))),
+        (PF3, 3, cfg(not(feature = "va41628"))),
+        (PF4, 4, cfg(not(feature = "va41628"))),
+        (PF5, 5, cfg(not(feature = "va41628"))),
+        (PF6, 6, cfg(not(feature = "va41628"))),
+        (PF7, 7, cfg(not(feature = "va41628"))),
+        (PF8, 8, cfg(not(feature = "va41628"))),
         (PF9, 9),
-        (PF10, 10),
+        (PF10, 10, cfg(not(feature = "va41628"))),
         (PF11, 11),
         (PF12, 12),
         (PF13, 13),
         (PF14, 14),
-        (PF15, 15),
+        (PF15, 15)
     ]
 );
 
@@ -906,6 +915,6 @@ declare_pins!(
         (PG4, 4),
         (PG5, 5),
         (PG6, 6),
-        (PG7, 7),
+        (PG7, 7)
     ]
 );

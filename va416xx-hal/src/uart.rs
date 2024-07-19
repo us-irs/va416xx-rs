@@ -10,31 +10,55 @@ use embedded_hal_nb::serial::Read;
 use fugit::RateExtU32;
 
 use crate::clock::{Clocks, PeripheralSelect, SyscfgExt};
-use crate::gpio::{AltFunc1, Pin, PD11, PD12, PE2, PE3, PF11, PF12, PF8, PF9, PG0, PG1};
+use crate::gpio::PF13;
 use crate::time::Hertz;
 use crate::{disable_interrupt, enable_interrupt};
 use crate::{
-    gpio::{AltFunc2, AltFunc3, PA2, PA3, PB14, PB15, PC14, PC15, PC4, PC5},
+    gpio::{
+        AltFunc1, AltFunc2, AltFunc3, Pin, PA2, PA3, PB14, PB15, PC14, PC4, PC5, PD11, PD12, PE2,
+        PE3, PF12, PF9, PG0, PG1,
+    },
     pac::{self, uart0 as uart_base, Uart0, Uart1, Uart2},
 };
+
+#[cfg(not(feature = "va41628"))]
+use crate::gpio::{PC15, PF8};
 
 //==================================================================================================
 // Type-Level support
 //==================================================================================================
 
-pub trait TxRxPins<Uart> {}
+pub trait RxPin<Uart> {}
+pub trait TxPin<Uart> {}
 
-impl TxRxPins<Uart0> for (Pin<PA2, AltFunc3>, Pin<PA3, AltFunc3>) {}
-impl TxRxPins<Uart0> for (Pin<PC4, AltFunc2>, Pin<PC5, AltFunc2>) {}
-impl TxRxPins<Uart0> for (Pin<PE2, AltFunc3>, Pin<PE3, AltFunc3>) {}
-impl TxRxPins<Uart0> for (Pin<PG0, AltFunc1>, Pin<PG1, AltFunc1>) {}
+impl TxPin<Uart0> for Pin<PA2, AltFunc3> {}
+impl RxPin<Uart0> for Pin<PA3, AltFunc3> {}
 
-impl TxRxPins<Uart1> for (Pin<PB14, AltFunc3>, Pin<PB15, AltFunc3>) {}
-impl TxRxPins<Uart1> for (Pin<PD11, AltFunc3>, Pin<PD12, AltFunc3>) {}
-impl TxRxPins<Uart1> for (Pin<PF11, AltFunc1>, Pin<PF12, AltFunc1>) {}
+impl TxPin<Uart0> for Pin<PC4, AltFunc2> {}
+impl RxPin<Uart0> for Pin<PC5, AltFunc2> {}
 
-impl TxRxPins<Uart2> for (Pin<PC14, AltFunc2>, Pin<PC15, AltFunc2>) {}
-impl TxRxPins<Uart2> for (Pin<PF8, AltFunc1>, Pin<PF9, AltFunc1>) {}
+impl TxPin<Uart0> for Pin<PE2, AltFunc3> {}
+impl RxPin<Uart0> for Pin<PE3, AltFunc3> {}
+
+impl TxPin<Uart0> for Pin<PG0, AltFunc1> {}
+impl RxPin<Uart0> for Pin<PG1, AltFunc1> {}
+
+impl TxPin<Uart1> for Pin<PB14, AltFunc3> {}
+impl RxPin<Uart1> for Pin<PB15, AltFunc3> {}
+
+impl TxPin<Uart1> for Pin<PD11, AltFunc3> {}
+impl RxPin<Uart1> for Pin<PD12, AltFunc3> {}
+
+impl TxPin<Uart1> for Pin<PF12, AltFunc1> {}
+impl RxPin<Uart1> for Pin<PF13, AltFunc1> {}
+
+impl TxPin<Uart2> for Pin<PC14, AltFunc2> {}
+#[cfg(not(feature = "va41628"))]
+impl RxPin<Uart2> for Pin<PC15, AltFunc2> {}
+
+#[cfg(not(feature = "va41628"))]
+impl TxPin<Uart2> for Pin<PF8, AltFunc1> {}
+impl RxPin<Uart2> for Pin<PF9, AltFunc1> {}
 
 //==================================================================================================
 // Regular Definitions
@@ -511,10 +535,12 @@ impl<Uart: Instance> UartBase<Uart> {
     }
 }
 
-impl<UartInstance: Instance, Pins> Uart<UartInstance, Pins> {
+impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstance: Instance>
+    Uart<UartInstance, (TxPinInst, RxPinInst)>
+{
     pub fn new(
         uart: UartInstance,
-        pins: Pins,
+        pins: (TxPinInst, RxPinInst),
         config: impl Into<Config>,
         syscfg: &mut va416xx::Sysconfig,
         clocks: &Clocks,
@@ -535,7 +561,7 @@ impl<UartInstance: Instance, Pins> Uart<UartInstance, Pins> {
 
     pub fn new_with_clock_freq(
         uart: UartInstance,
-        pins: Pins,
+        pins: (TxPinInst, RxPinInst),
         config: impl Into<Config>,
         syscfg: &mut va416xx::Sysconfig,
         clock: impl Into<Hertz>,
@@ -567,7 +593,7 @@ impl<UartInstance: Instance, Pins> Uart<UartInstance, Pins> {
 
     /// If the IRQ capabilities of the peripheral are used, the UART needs to be converted
     /// with this function
-    pub fn into_uart_with_irq(self) -> UartWithIrq<UartInstance, Pins> {
+    pub fn into_uart_with_irq(self) -> UartWithIrq<UartInstance, (TxPinInst, RxPinInst)> {
         let (inner, pins) = self.downgrade_internal();
         UartWithIrq {
             pins,
@@ -608,7 +634,7 @@ impl<UartInstance: Instance, Pins> Uart<UartInstance, Pins> {
         }
     }
 
-    fn downgrade_internal(self) -> (UartBase<UartInstance>, Pins) {
+    fn downgrade_internal(self) -> (UartBase<UartInstance>, (TxPinInst, RxPinInst)) {
         let base = UartBase {
             uart: self.inner.uart,
             tx: self.inner.tx,
@@ -625,7 +651,7 @@ impl<UartInstance: Instance, Pins> Uart<UartInstance, Pins> {
         }
     }
 
-    pub fn release(self) -> (UartInstance, Pins) {
+    pub fn release(self) -> (UartInstance, (TxPinInst, RxPinInst)) {
         (self.inner.release(), self.pins)
     }
 }

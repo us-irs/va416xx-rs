@@ -11,14 +11,16 @@ use crate::{
     clock::{PeripheralSelect, SyscfgExt},
     gpio::{
         AltFunc1, AltFunc2, AltFunc3, Pin, PA0, PA1, PA2, PA3, PA4, PA5, PA6, PA7, PA8, PA9, PB0,
-        PB1, PB10, PB11, PB12, PB13, PB14, PB15, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9, PC0, PC1,
-        PC10, PC11, PC7, PC8, PC9, PE10, PE11, PE12, PE13, PE14, PE15, PE5, PE6, PE7, PE8, PE9,
-        PF0, PF1, PF2, PF3, PF4, PF5, PF6, PF7, PG2, PG3, PG4,
+        PB1, PB12, PB13, PB14, PB15, PB2, PB3, PB4, PC0, PC1, PC10, PC11, PC7, PC8, PC9, PE12,
+        PE13, PE14, PE15, PE5, PE6, PE7, PE8, PE9, PF0, PF1, PG2, PG3, PG4,
     },
     pac,
     time::Hertz,
     typelevel::{NoneT, Sealed},
 };
+
+#[cfg(not(feature = "va41628"))]
+use crate::gpio::{PB10, PB11, PB5, PB6, PB7, PB8, PB9, PE10, PE11, PF2, PF3, PF4, PF5, PF6, PF7};
 
 //==================================================================================================
 // Defintions
@@ -75,15 +77,20 @@ pub trait OptionalHwCs<Spi>: HwCsProvider + Sealed {}
 macro_rules! hw_cs_pins {
     ($SPIx:path, $portId: path:
         $(
-            ($PXx:ident, $AFx:ident, $HwCsIdent:path, $typedef:ident),
+            ($PXx:ident, $AFx:ident, $HwCsIdent:path, $typedef:ident $(, $meta: meta)?),
         )+
     ) => {
         $(
+            $(#[$meta])?
             impl HwCsProvider for Pin<$PXx, $AFx> {
                 const CS_ID: HwChipSelectId = $HwCsIdent;
                 const SPI_ID: SpiId = $portId;
             }
+
+            $(#[$meta])?
             impl OptionalHwCs<$SPIx> for Pin<$PXx, $AFx> {}
+
+            $(#[$meta])?
             pub type $typedef = Pin<$PXx, $AFx>;
         )+
     };
@@ -106,9 +113,11 @@ impl PinMosi<pac::Spi0> for Pin<PC1, AltFunc1> {}
 impl PinMiso<pac::Spi0> for Pin<PC0, AltFunc1> {}
 
 // SPI 1
-
+#[cfg(not(feature = "va41628"))]
 impl PinSck<pac::Spi1> for Pin<PB8, AltFunc3> {}
+#[cfg(not(feature = "va41628"))]
 impl PinMosi<pac::Spi1> for Pin<PB10, AltFunc3> {}
+#[cfg(not(feature = "va41628"))]
 impl PinMiso<pac::Spi1> for Pin<PB9, AltFunc3> {}
 
 impl PinSck<pac::Spi1> for Pin<PC9, AltFunc2> {}
@@ -122,8 +131,11 @@ impl PinSck<pac::Spi1> for Pin<PE13, AltFunc2> {}
 impl PinMosi<pac::Spi1> for Pin<PE15, AltFunc2> {}
 impl PinMiso<pac::Spi1> for Pin<PE14, AltFunc2> {}
 
+#[cfg(not(feature = "va41628"))]
 impl PinSck<pac::Spi1> for Pin<PF3, AltFunc1> {}
+#[cfg(not(feature = "va41628"))]
 impl PinMosi<pac::Spi1> for Pin<PF5, AltFunc1> {}
+#[cfg(not(feature = "va41628"))]
 impl PinMiso<pac::Spi1> for Pin<PF4, AltFunc1> {}
 
 // SPI 2
@@ -132,8 +144,11 @@ impl PinSck<pac::Spi2> for Pin<PA5, AltFunc2> {}
 impl PinMosi<pac::Spi2> for Pin<PA7, AltFunc2> {}
 impl PinMiso<pac::Spi2> for Pin<PA6, AltFunc2> {}
 
+#[cfg(not(feature = "va41628"))]
 impl PinSck<pac::Spi2> for Pin<PF5, AltFunc2> {}
+#[cfg(not(feature = "va41628"))]
 impl PinMosi<pac::Spi2> for Pin<PF7, AltFunc2> {}
+#[cfg(not(feature = "va41628"))]
 impl PinMiso<pac::Spi2> for Pin<PF6, AltFunc2> {}
 
 // SPI3 is shared with the ROM SPI pins and has its own dedicated pins.
@@ -145,14 +160,14 @@ hw_cs_pins!(
     (PB14, AltFunc1, HwChipSelectId::Id0, HwCs0Spi0),
     (PB13, AltFunc1, HwChipSelectId::Id1, HwCs1Spi0),
     (PB12, AltFunc1, HwChipSelectId::Id2, HwCs2Spi0),
-    (PB11, AltFunc1, HwChipSelectId::Id3, HwCs3Spi0),
+    (PB11, AltFunc1, HwChipSelectId::Id3, HwCs3Spi0, cfg(not(feature="va41628"))),
 );
 
 hw_cs_pins!(
     pac::Spi1, SpiId::Spi1:
-    (PB7, AltFunc3, HwChipSelectId::Id0, HwCs0Spi1Pb),
-    (PB6, AltFunc3, HwChipSelectId::Id1, HwCs1Spi1Pb),
-    (PB5, AltFunc3, HwChipSelectId::Id2, HwCs2Spi1Pb),
+    (PB7, AltFunc3, HwChipSelectId::Id0, HwCs0Spi1Pb, cfg(not(feature="va41628"))),
+    (PB6, AltFunc3, HwChipSelectId::Id1, HwCs1Spi1Pb, cfg(not(feature="va41628"))),
+    (PB5, AltFunc3, HwChipSelectId::Id2, HwCs2Spi1Pb, cfg(not(feature="va41628"))),
     (PB4, AltFunc3, HwChipSelectId::Id3, HwCs3Spi1Pb),
     (PB3, AltFunc3, HwChipSelectId::Id4, HwCs4Spi1Pb),
     (PB2, AltFunc3, HwChipSelectId::Id5, HwCs5Spi1Pb),
@@ -161,14 +176,14 @@ hw_cs_pins!(
     (PC8, AltFunc2, HwChipSelectId::Id0, HwCs0Spi1Pc),
     (PC7, AltFunc2, HwChipSelectId::Id1, HwCs1Spi1Pc),
     (PE12, AltFunc2, HwChipSelectId::Id0, HwCs0Spi1Pe),
-    (PE11, AltFunc2, HwChipSelectId::Id1, HwCs1Spi1Pe),
-    (PE10, AltFunc2, HwChipSelectId::Id2, HwCs2Spi1Pe),
+    (PE11, AltFunc2, HwChipSelectId::Id1, HwCs1Spi1Pe, cfg(not(feature="va41628"))),
+    (PE10, AltFunc2, HwChipSelectId::Id2, HwCs2Spi1Pe, cfg(not(feature="va41628"))),
     (PE9, AltFunc2, HwChipSelectId::Id3, HwCs3Spi1Pe),
     (PE8, AltFunc2, HwChipSelectId::Id4, HwCs4Spi1Pe),
     (PE7, AltFunc3, HwChipSelectId::Id5, HwCs5Spi1Pe),
     (PE6, AltFunc3, HwChipSelectId::Id6, HwCs6Spi1Pe),
     (PE5, AltFunc3, HwChipSelectId::Id7, HwCs7Spi1Pe),
-    (PF2, AltFunc1, HwChipSelectId::Id0, HwCs0Spi1Pf),
+    (PF2, AltFunc1, HwChipSelectId::Id0, HwCs0Spi1Pf, cfg(not(feature="va41628"))),
     (PG2, AltFunc2, HwChipSelectId::Id0, HwCs0Spi1Pg),
 );
 
@@ -183,9 +198,9 @@ hw_cs_pins!(
     (PA9, AltFunc2, HwChipSelectId::Id5, HwCs5Spi2Pa),
     (PF0, AltFunc2, HwChipSelectId::Id4, HwCs4Spi2Pf),
     (PF1, AltFunc2, HwChipSelectId::Id3, HwCs3Spi2Pf),
-    (PF2, AltFunc2, HwChipSelectId::Id2, HwCs2Spi2Pf),
-    (PF3, AltFunc2, HwChipSelectId::Id1, HwCs1Spi2Pf),
-    (PF4, AltFunc2, HwChipSelectId::Id0, HwCs0Spi2Pf),
+    (PF2, AltFunc2, HwChipSelectId::Id2, HwCs2Spi2Pf, cfg(not(feature="va41628"))),
+    (PF3, AltFunc2, HwChipSelectId::Id1, HwCs1Spi2Pf, cfg(not(feature="va41628"))),
+    (PF4, AltFunc2, HwChipSelectId::Id0, HwCs0Spi2Pf, cfg(not(feature="va41628"))),
 );
 
 //==================================================================================================

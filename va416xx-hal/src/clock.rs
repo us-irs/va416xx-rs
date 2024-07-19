@@ -10,6 +10,7 @@
 //! # Examples
 //!
 //! - [UART example on the PEB1 board](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/uart.rs)
+#[cfg(not(feature = "va41628"))]
 use crate::adc::ADC_MAX_CLK;
 use crate::pac;
 
@@ -447,11 +448,22 @@ impl ClkgenCfgr {
             .ctrl0()
             .modify(|_, w| unsafe { w.clksel_sys().bits(self.clksel_sys as u8) });
 
+        Ok(Clocks {
+            sysclk: final_sysclk,
+            apb1: final_sysclk / 2,
+            apb2: final_sysclk / 4,
+            #[cfg(not(feature = "va41628"))]
+            adc_clk: self.cfg_adc_clk_div(final_sysclk),
+        })
+    }
+
+    #[cfg(not(feature = "va41628"))]
+    fn cfg_adc_clk_div(&self, final_sysclk: Hertz) -> Hertz {
         // I will just do the ADC stuff like Vorago does it.
         // ADC clock (must be 2-12.5 MHz)
         // NOTE: Not using divide by 1 or /2 ratio in REVA silicon because of triggering issue
         // For this reason, keep SYSCLK above 8MHz to have the ADC /4 ratio in range)
-        let adc_clk = if final_sysclk.raw() <= ADC_MAX_CLK.raw() * 4 {
+        if final_sysclk.raw() <= ADC_MAX_CLK.raw() * 4 {
             self.clkgen
                 .ctrl1()
                 .modify(|_, w| unsafe { w.adc_clk_div_sel().bits(AdcClkDivSel::Div4 as u8) });
@@ -461,14 +473,7 @@ impl ClkgenCfgr {
                 .ctrl1()
                 .modify(|_, w| unsafe { w.adc_clk_div_sel().bits(AdcClkDivSel::Div8 as u8) });
             final_sysclk / 8
-        };
-
-        Ok(Clocks {
-            sysclk: final_sysclk,
-            apb1: final_sysclk / 2,
-            apb2: final_sysclk / 4,
-            adc_clk,
-        })
+        }
     }
 }
 
@@ -483,6 +488,7 @@ pub struct Clocks {
     sysclk: Hertz,
     apb1: Hertz,
     apb2: Hertz,
+    #[cfg(not(feature = "va41628"))]
     adc_clk: Hertz,
 }
 
@@ -513,6 +519,7 @@ impl Clocks {
     }
 
     /// Returns the ADC clock frequency which has a separate divider.
+    #[cfg(not(feature = "va41628"))]
     pub fn adc_clk(&self) -> Hertz {
         self.adc_clk
     }

@@ -3,14 +3,21 @@
 #[cfg(test)]
 extern crate std;
 
+#[cfg(not(feature = "device-selected"))]
+compile_error!(
+    "This crate requires one of the following device features enabled:
+        va41630
+        va41629
+        va41628
+"
+);
+
 pub use va416xx as device;
 pub use va416xx as pac;
 
 pub mod prelude;
 
-pub mod adc;
 pub mod clock;
-pub mod dac;
 pub mod dma;
 pub mod gpio;
 pub mod i2c;
@@ -21,6 +28,11 @@ pub mod timer;
 pub mod typelevel;
 pub mod uart;
 pub mod wdt;
+
+#[cfg(not(feature = "va41628"))]
+pub mod adc;
+#[cfg(not(feature = "va41628"))]
+pub mod dac;
 
 #[derive(Debug, Eq, Copy, Clone, PartialEq)]
 pub enum FunSel {

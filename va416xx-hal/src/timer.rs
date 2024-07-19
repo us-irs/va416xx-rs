@@ -10,12 +10,17 @@ use cortex_m::interrupt::Mutex;
 use crate::clock::Clocks;
 use crate::gpio::{
     AltFunc1, AltFunc2, AltFunc3, DynPinId, Pin, PinId, PA0, PA1, PA10, PA11, PA12, PA13, PA14,
-    PA15, PA2, PA3, PA4, PA5, PA6, PA7, PB0, PB1, PB10, PB11, PB12, PB13, PB14, PB15, PB2, PB3,
-    PB4, PB5, PB6, PB7, PB8, PB9, PC0, PC1, PD0, PD1, PD10, PD11, PD12, PD13, PD14, PD15, PD2, PD3,
-    PD4, PD5, PD6, PD7, PD8, PD9, PE0, PE1, PE10, PE11, PE12, PE13, PE14, PE15, PE2, PE3, PE4, PE5,
-    PE6, PE7, PE8, PE9, PF0, PF1, PF10, PF11, PF12, PF13, PF14, PF15, PF2, PF3, PF4, PF5, PF6, PF7,
-    PF8, PF9, PG0, PG1, PG2, PG3, PG6,
+    PA15, PA2, PA3, PA4, PA5, PA6, PA7, PB0, PB1, PB12, PB13, PB14, PB15, PB2, PB3, PB4, PC0, PC1,
+    PD10, PD11, PD12, PD13, PD14, PD15, PE0, PE1, PE12, PE13, PE14, PE15, PE2, PE3, PE4, PE5, PE6,
+    PE7, PE8, PE9, PF0, PF1, PF11, PF12, PF13, PF14, PF15, PF9, PG0, PG1, PG2, PG3, PG6,
 };
+
+#[cfg(not(feature = "va41628"))]
+use crate::gpio::{
+    PB10, PB11, PB5, PB6, PB7, PB8, PB9, PD0, PD1, PD2, PD3, PD4, PD5, PD6, PD7, PD8, PD9, PE10,
+    PE11, PF10, PF2, PF3, PF4, PF5, PF6, PF7, PF8,
+};
+
 use crate::time::Hertz;
 use crate::typelevel::Sealed;
 use crate::{disable_interrupt, prelude::*};
@@ -196,10 +201,11 @@ pub trait ValidTimAndPin<Pin: TimPin, Tim: ValidTim>: Sealed {}
 macro_rules! valid_pin_and_tims {
     (
         $(
-            ($PinX:ident, $AltFunc:ident, $TimX:path),
+            ($PinX:ident, $AltFunc:ident, $TimX:path $(, $meta: meta)?),
         )+
     ) => {
         $(
+            $(#[$meta])?
             impl TimPin for Pin<$PinX, $AltFunc>
             where
                 $PinX: PinId,
@@ -207,6 +213,7 @@ macro_rules! valid_pin_and_tims {
                 const DYN: DynPinId = $PinX::DYN;
             }
 
+            $(#[$meta])?
             impl<
                 PinInstance: TimPin,
                 Tim: ValidTim
@@ -217,6 +224,7 @@ macro_rules! valid_pin_and_tims {
             {
             }
 
+            $(#[$meta])?
             impl Sealed for (Pin<$PinX, $AltFunc>, $TimX) {}
         )+
     };
@@ -242,29 +250,29 @@ valid_pin_and_tims!(
     (PB2, AltFunc2, pac::Tim15),
     (PB3, AltFunc2, pac::Tim14),
     (PB4, AltFunc2, pac::Tim13),
-    (PB5, AltFunc2, pac::Tim12),
-    (PB6, AltFunc2, pac::Tim11),
-    (PB7, AltFunc2, pac::Tim10),
-    (PB8, AltFunc2, pac::Tim9),
-    (PB9, AltFunc2, pac::Tim8),
-    (PB10, AltFunc2, pac::Tim7),
-    (PB11, AltFunc2, pac::Tim6),
+    (PB5, AltFunc2, pac::Tim12, cfg(not(feature = "va41628"))),
+    (PB6, AltFunc2, pac::Tim11, cfg(not(feature = "va41628"))),
+    (PB7, AltFunc2, pac::Tim10, cfg(not(feature = "va41628"))),
+    (PB8, AltFunc2, pac::Tim9, cfg(not(feature = "va41628"))),
+    (PB9, AltFunc2, pac::Tim8, cfg(not(feature = "va41628"))),
+    (PB10, AltFunc2, pac::Tim7, cfg(not(feature = "va41628"))),
+    (PB11, AltFunc2, pac::Tim6, cfg(not(feature = "va41628"))),
     (PB12, AltFunc2, pac::Tim5),
     (PB13, AltFunc2, pac::Tim4),
     (PB14, AltFunc2, pac::Tim3),
     (PB15, AltFunc2, pac::Tim2),
     (PC0, AltFunc2, pac::Tim1),
     (PC1, AltFunc2, pac::Tim0),
-    (PD0, AltFunc2, pac::Tim0),
-    (PD1, AltFunc2, pac::Tim1),
-    (PD2, AltFunc2, pac::Tim2),
-    (PD3, AltFunc2, pac::Tim3),
-    (PD4, AltFunc2, pac::Tim4),
-    (PD5, AltFunc2, pac::Tim5),
-    (PD6, AltFunc2, pac::Tim6),
-    (PD7, AltFunc2, pac::Tim7),
-    (PD8, AltFunc2, pac::Tim8),
-    (PD9, AltFunc2, pac::Tim9),
+    (PD0, AltFunc2, pac::Tim0, cfg(not(feature = "va41628"))),
+    (PD1, AltFunc2, pac::Tim1, cfg(not(feature = "va41628"))),
+    (PD2, AltFunc2, pac::Tim2, cfg(not(feature = "va41628"))),
+    (PD3, AltFunc2, pac::Tim3, cfg(not(feature = "va41628"))),
+    (PD4, AltFunc2, pac::Tim4, cfg(not(feature = "va41628"))),
+    (PD5, AltFunc2, pac::Tim5, cfg(not(feature = "va41628"))),
+    (PD6, AltFunc2, pac::Tim6, cfg(not(feature = "va41628"))),
+    (PD7, AltFunc2, pac::Tim7, cfg(not(feature = "va41628"))),
+    (PD8, AltFunc2, pac::Tim8, cfg(not(feature = "va41628"))),
+    (PD9, AltFunc2, pac::Tim9, cfg(not(feature = "va41628"))),
     (PD10, AltFunc2, pac::Tim10),
     (PD11, AltFunc2, pac::Tim11),
     (PD12, AltFunc2, pac::Tim12),
@@ -281,23 +289,23 @@ valid_pin_and_tims!(
     (PE7, AltFunc2, pac::Tim23),
     (PE8, AltFunc3, pac::Tim16),
     (PE9, AltFunc3, pac::Tim17),
-    (PE10, AltFunc3, pac::Tim18),
-    (PE11, AltFunc3, pac::Tim19),
+    (PE10, AltFunc3, pac::Tim18, cfg(not(feature = "va41628"))),
+    (PE11, AltFunc3, pac::Tim19, cfg(not(feature = "va41628"))),
     (PE12, AltFunc3, pac::Tim20),
     (PE13, AltFunc3, pac::Tim21),
     (PE14, AltFunc3, pac::Tim22),
     (PE15, AltFunc3, pac::Tim23),
     (PF0, AltFunc3, pac::Tim0),
     (PF1, AltFunc3, pac::Tim1),
-    (PF2, AltFunc3, pac::Tim2),
-    (PF3, AltFunc3, pac::Tim3),
-    (PF4, AltFunc3, pac::Tim4),
-    (PF5, AltFunc3, pac::Tim5),
-    (PF6, AltFunc3, pac::Tim6),
-    (PF7, AltFunc3, pac::Tim7),
-    (PF8, AltFunc3, pac::Tim8),
+    (PF2, AltFunc3, pac::Tim2, cfg(not(feature = "va41628"))),
+    (PF3, AltFunc3, pac::Tim3, cfg(not(feature = "va41628"))),
+    (PF4, AltFunc3, pac::Tim4, cfg(not(feature = "va41628"))),
+    (PF5, AltFunc3, pac::Tim5, cfg(not(feature = "va41628"))),
+    (PF6, AltFunc3, pac::Tim6, cfg(not(feature = "va41628"))),
+    (PF7, AltFunc3, pac::Tim7, cfg(not(feature = "va41628"))),
+    (PF8, AltFunc3, pac::Tim8, cfg(not(feature = "va41628"))),
     (PF9, AltFunc3, pac::Tim9),
-    (PF10, AltFunc3, pac::Tim10),
+    (PF10, AltFunc3, pac::Tim10, cfg(not(feature = "va41628"))),
     (PF11, AltFunc3, pac::Tim11),
     (PF12, AltFunc3, pac::Tim12),
     (PF13, AltFunc2, pac::Tim19),

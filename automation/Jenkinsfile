@@ -36,7 +36,9 @@ pipeline {
         }
         stage('Check Examples') {
           steps {
-            sh 'cargo check --target thumbv7em-none-eabihf --examples'
+            sh """
+              cargo check --target thumbv7em-none-eabihf --examples
+            """
           }
         }
     }

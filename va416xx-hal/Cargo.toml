@@ -1,6 +1,6 @@
 [package]
 name = "va416xx-hal"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Robin Mueller <muellerr@irs.uni-stuttgart.de>"]
 edition = "2021"
 description = "HAL for the Vorago VA416xx family of MCUs"
@@ -38,8 +38,16 @@ features = ["critical-section"]
 default = ["rt", "revb"]
 rt = ["va416xx/rt"]
 defmt = ["dep:defmt", "fugit/defmt"]
+
+va41630 = ["device-selected"]
+va41620 = ["device-selected"]
+
+va41629 = ["device-selected"]
+va41628 = ["device-selected"]
+
+device-selected = []
 revb = []
 
 [package.metadata.docs.rs]
-all-features = true
+features = ["va41630", "defmt"]
 rustdoc-args = ["--generate-link-to-definition"]

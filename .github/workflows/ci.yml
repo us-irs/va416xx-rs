@@ -21,7 +21,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - name: Install nextest
         uses: taiki-e/install-action@nextest
-      - run: cargo nextest run --all-features -p va416xx-hal
+      - run: cargo nextest run --features va41630 -p va416xx-hal
       # I think we can skip those on an embedded crate..
       # - run: cargo test --doc -p va108xx-hal
 
@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@nightly
-      - run: RUSTDOCFLAGS="--cfg docsrs --generate-link-to-definition -Z unstable-options" cargo +nightly doc --all-features
+      - run: RUSTDOCFLAGS="--cfg docsrs --generate-link-to-definition -Z unstable-options" cargo +nightly doc --features va41630
 
   clippy:
     name: Clippy

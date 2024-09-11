@@ -9,12 +9,13 @@ use embedded_hal::spi::{Mode, SpiBus, MODE_0};
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
-use va416xx_hal::spi::{Spi, TransferConfig};
+use va416xx_hal::spi::{clk_div_for_target_clock, Spi, TransferConfig};
 use va416xx_hal::{
     gpio::{PinsB, PinsC},
     pac,
     prelude::*,
     spi::SpiConfig,
+    time::Hertz,
 };
 
 #[derive(PartialEq, Debug)]
@@ -56,21 +57,24 @@ fn main() -> ! {
         pins_c.pc1.into_funsel_1(),
     );
 
-    let mut spi_cfg = SpiConfig::default();
+    let mut spi_cfg = SpiConfig::default().clk_div(
+        clk_div_for_target_clock(Hertz::from_raw(SPI_SPEED_KHZ), &clocks)
+            .expect("invalid target clock"),
+    );
     if EXAMPLE_SEL == ExampleSelect::Loopback {
         spi_cfg = spi_cfg.loopback(true)
     }
-    let transfer_cfg =
-        TransferConfig::new_no_hw_cs(SPI_SPEED_KHZ.kHz(), SPI_MODE, BLOCKMODE, false);
+    let transfer_cfg = TransferConfig::new_no_hw_cs(None, Some(SPI_MODE), BLOCKMODE, false);
     // Create SPI peripheral.
     let mut spi0 = Spi::new(
+        &mut dp.sysconfig,
+        &clocks,
         dp.spi0,
         (sck, miso, mosi),
-        &clocks,
         spi_cfg,
-        &mut dp.sysconfig,
         Some(&transfer_cfg.downgrade()),
-    );
+    )
+    .expect("creating SPI peripheral failed");
     spi0.set_fill_word(FILL_WORD);
     loop {
         let mut tx_buf: [u8; 3] = [1, 2, 3];

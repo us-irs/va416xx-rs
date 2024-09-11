@@ -8,7 +8,7 @@ use core::{convert::Infallible, marker::PhantomData, ops::Deref};
 use embedded_hal::spi::Mode;
 
 use crate::{
-    clock::{PeripheralSelect, SyscfgExt},
+    clock::{Clocks, PeripheralSelect, SyscfgExt},
     gpio::{
         AltFunc1, AltFunc2, AltFunc3, Pin, PA0, PA1, PA2, PA3, PA4, PA5, PA6, PA7, PA8, PA9, PB0,
         PB1, PB12, PB13, PB14, PB15, PB2, PB3, PB4, PC0, PC1, PC10, PC11, PC7, PC8, PC9, PE12,
@@ -28,6 +28,11 @@ use crate::gpio::{PB10, PB11, PB5, PB6, PB7, PB8, PB9, PE10, PE11, PF2, PF3, PF4
 
 // FIFO has a depth of 16.
 const FILL_DEPTH: usize = 12;
+
+pub const DEFAULT_CLK_DIV: u16 = 2;
+
+pub const BMSTART_BMSTOP_MASK: u32 = 1 << 31;
+pub const BMSKIPDATA_MASK: u32 = 1 << 30;
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub enum HwChipSelectId {
@@ -106,6 +111,14 @@ impl OptionalHwCs<pac::Spi1> for NoneT {}
 impl OptionalHwCs<pac::Spi2> for NoneT {}
 impl OptionalHwCs<pac::Spi3> for NoneT {}
 
+pub struct RomSpiSck;
+pub struct RomSpiMiso;
+pub struct RomSpiMosi;
+
+impl Sealed for RomSpiSck {}
+impl Sealed for RomSpiMosi {}
+impl Sealed for RomSpiMiso {}
+
 // SPI 0
 
 impl PinSck<pac::Spi0> for Pin<PB15, AltFunc1> {}
@@ -152,6 +165,10 @@ impl PinMosi<pac::Spi2> for Pin<PF7, AltFunc2> {}
 impl PinMiso<pac::Spi2> for Pin<PF6, AltFunc2> {}
 
 // SPI3 is shared with the ROM SPI pins and has its own dedicated pins.
+//
+impl PinSck<pac::Spi3> for RomSpiSck {}
+impl PinMosi<pac::Spi3> for RomSpiMosi {}
+impl PinMiso<pac::Spi3> for RomSpiMiso {}
 
 // SPI 0 HW CS pins
 
@@ -211,7 +228,7 @@ pub trait TransferConfigProvider {
     fn sod(&mut self, sod: bool);
     fn blockmode(&mut self, blockmode: bool);
     fn mode(&mut self, mode: Mode);
-    fn frequency(&mut self, spi_clk: Hertz);
+    fn clk_div(&mut self, clk_div: u16);
     fn hw_cs_id(&self) -> u8;
 }
 
@@ -219,8 +236,8 @@ pub trait TransferConfigProvider {
 /// and might change for transfers to different SPI slaves
 #[derive(Copy, Clone)]
 pub struct TransferConfig<HwCs> {
-    pub spi_clk: Hertz,
-    pub mode: Mode,
+    pub clk_div: Option<u16>,
+    pub mode: Option<Mode>,
     /// This only works if the Slave Output Disable (SOD) bit of the [`SpiConfig`] is set to
     /// false
     pub hw_cs: Option<HwCs>,
@@ -234,8 +251,8 @@ pub struct TransferConfig<HwCs> {
 /// Type erased variant of the transfer configuration. This is required to avoid generics in
 /// the SPI constructor.
 pub struct ErasedTransferConfig {
-    pub spi_clk: Hertz,
-    pub mode: Mode,
+    pub clk_div: Option<u16>,
+    pub mode: Option<Mode>,
     pub sod: bool,
     /// If this is enabled, all data in the FIFO is transmitted in a single frame unless
     /// the BMSTOP bit is set on a dataword. A frame is defined as CSn being active for the
@@ -245,9 +262,14 @@ pub struct ErasedTransferConfig {
 }
 
 impl TransferConfig<NoneT> {
-    pub fn new_no_hw_cs(spi_clk: impl Into<Hertz>, mode: Mode, blockmode: bool, sod: bool) -> Self {
+    pub fn new_no_hw_cs(
+        clk_div: Option<u16>,
+        mode: Option<Mode>,
+        blockmode: bool,
+        sod: bool,
+    ) -> Self {
         TransferConfig {
-            spi_clk: spi_clk.into(),
+            clk_div,
             mode,
             hw_cs: None,
             sod,
@@ -258,14 +280,14 @@ impl TransferConfig<NoneT> {
 
 impl<HwCs: HwCsProvider> TransferConfig<HwCs> {
     pub fn new(
-        spi_clk: impl Into<Hertz>,
-        mode: Mode,
+        clk_div: Option<u16>,
+        mode: Option<Mode>,
         hw_cs: Option<HwCs>,
         blockmode: bool,
         sod: bool,
     ) -> Self {
         TransferConfig {
-            spi_clk: spi_clk.into(),
+            clk_div,
             mode,
             hw_cs,
             sod,
@@ -275,7 +297,7 @@ impl<HwCs: HwCsProvider> TransferConfig<HwCs> {
 
     pub fn downgrade(self) -> ErasedTransferConfig {
         ErasedTransferConfig {
-            spi_clk: self.spi_clk,
+            clk_div: self.clk_div,
             mode: self.mode,
             sod: self.sod,
             blockmode: self.blockmode,
@@ -295,11 +317,11 @@ impl<HwCs: HwCsProvider> TransferConfigProvider for TransferConfig<HwCs> {
     }
 
     fn mode(&mut self, mode: Mode) {
-        self.mode = mode;
+        self.mode = Some(mode);
     }
 
-    fn frequency(&mut self, spi_clk: Hertz) {
-        self.spi_clk = spi_clk;
+    fn clk_div(&mut self, clk_div: u16) {
+        self.clk_div = Some(clk_div);
     }
 
     fn hw_cs_id(&self) -> u8 {
@@ -307,13 +329,9 @@ impl<HwCs: HwCsProvider> TransferConfigProvider for TransferConfig<HwCs> {
     }
 }
 
-#[derive(Default)]
 /// Configuration options for the whole SPI bus. See Programmer Guide p.92 for more details
 pub struct SpiConfig {
-    /// Serial clock rate divider. Together with the CLKPRESCALE register, it determines
-    /// the SPI clock rate in master mode. 0 by default. Specifying a higher value
-    /// limits the maximum attainable SPI speed
-    pub ser_clock_rate_div: u8,
+    clk_div: u16,
     /// By default, configure SPI for master mode (ms == false)
     ms: bool,
     /// Slave output disable. Useful if separate GPIO pins or decoders are used for CS control
@@ -324,9 +342,26 @@ pub struct SpiConfig {
     pub master_delayer_capture: bool,
 }
 
+impl Default for SpiConfig {
+    fn default() -> Self {
+        Self {
+            clk_div: DEFAULT_CLK_DIV,
+            ms: Default::default(),
+            slave_output_disable: Default::default(),
+            loopback_mode: Default::default(),
+            master_delayer_capture: Default::default(),
+        }
+    }
+}
+
 impl SpiConfig {
     pub fn loopback(mut self, enable: bool) -> Self {
         self.loopback_mode = enable;
+        self
+    }
+
+    pub fn clk_div(mut self, clk_div: u16) -> Self {
+        self.clk_div = clk_div;
         self
     }
 
@@ -406,6 +441,16 @@ impl Instance for pac::Spi2 {
     }
 }
 
+impl Instance for pac::Spi3 {
+    const IDX: u8 = 3;
+    const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi3;
+
+    #[inline(always)]
+    fn ptr() -> *const SpiRegBlock {
+        Self::ptr()
+    }
+}
+
 //==================================================================================================
 // Spi
 //==================================================================================================
@@ -425,7 +470,7 @@ pub struct Spi<SpiInstance, Pins, Word = u8> {
     pins: Pins,
 }
 
-fn mode_to_cpo_cph_bit(mode: embedded_hal::spi::Mode) -> (bool, bool) {
+pub fn mode_to_cpo_cph_bit(mode: embedded_hal::spi::Mode) -> (bool, bool) {
     match mode {
         embedded_hal::spi::MODE_0 => (false, false),
         embedded_hal::spi::MODE_1 => (false, true),
@@ -434,10 +479,105 @@ fn mode_to_cpo_cph_bit(mode: embedded_hal::spi::Mode) -> (bool, bool) {
     }
 }
 
+#[derive(Debug)]
+pub struct SpiClkConfig {
+    prescale_val: u16,
+    scrdv: u8,
+}
+
+impl SpiClkConfig {
+    pub fn prescale_val(&self) -> u16 {
+        self.prescale_val
+    }
+    pub fn scrdv(&self) -> u8 {
+        self.scrdv
+    }
+}
+
+#[derive(Debug)]
+pub enum SpiClkConfigError {
+    DivIsZero,
+    DivideValueNotEven,
+    ScrdvValueTooLarge,
+}
+
+#[inline]
+pub fn spi_clk_config_from_div(mut div: u16) -> Result<SpiClkConfig, SpiClkConfigError> {
+    if div == 0 {
+        return Err(SpiClkConfigError::DivIsZero);
+    }
+    if div % 2 != 0 {
+        return Err(SpiClkConfigError::DivideValueNotEven);
+    }
+    let mut prescale_val = 0;
+
+    // find largest (even) prescale value that divides into div
+    for i in (2..=0xfe).rev().step_by(2) {
+        if div % i == 0 {
+            prescale_val = i;
+            break;
+        }
+    }
+
+    if prescale_val == 0 {
+        return Err(SpiClkConfigError::DivideValueNotEven);
+    }
+
+    div /= prescale_val;
+    if div > u8::MAX as u16 + 1 {
+        return Err(SpiClkConfigError::ScrdvValueTooLarge);
+    }
+    Ok(SpiClkConfig {
+        prescale_val,
+        scrdv: (div - 1) as u8,
+    })
+}
+
+#[inline]
+pub fn clk_div_for_target_clock(spi_clk: impl Into<Hertz>, clocks: &Clocks) -> Option<u16> {
+    let spi_clk = spi_clk.into();
+    if spi_clk > clocks.apb1() {
+        return None;
+    }
+
+    // Step 1: Calculate raw divider.
+    let raw_div = clocks.apb1().raw() / spi_clk.raw();
+    let remainder = clocks.apb1().raw() % spi_clk.raw();
+
+    // Step 2: Round up if necessary.
+    let mut rounded_div = if remainder * 2 >= spi_clk.raw() {
+        raw_div + 1
+    } else {
+        raw_div
+    };
+
+    if rounded_div % 2 != 0 {
+        // Take slower clock conservatively.
+        rounded_div += 1;
+    }
+    if rounded_div > u16::MAX as u32 {
+        return None;
+    }
+    Some(rounded_div as u16)
+}
+
 impl<SpiInstance: Instance, Word: WordProvider> SpiBase<SpiInstance, Word>
 where
     <Word as TryFrom<u32>>::Error: core::fmt::Debug,
 {
+    #[inline]
+    pub fn cfg_clock_from_div(&mut self, div: u16) -> Result<(), SpiClkConfigError> {
+        let val = spi_clk_config_from_div(div)?;
+        self.spi_instance()
+            .ctrl0()
+            .modify(|_, w| unsafe { w.scrdv().bits(val.scrdv as u8) });
+        self.spi_instance()
+            .clkprescale()
+            .write(|w| unsafe { w.bits(val.prescale_val as u32) });
+        Ok(())
+    }
+
+    /*
     #[inline]
     pub fn cfg_clock(&mut self, spi_clk: impl Into<Hertz>) {
         let clk_prescale =
@@ -446,6 +586,7 @@ where
             .clkprescale()
             .write(|w| unsafe { w.bits(clk_prescale) });
     }
+        */
 
     #[inline]
     pub fn cfg_mode(&mut self, mode: Mode) {
@@ -454,6 +595,11 @@ where
             w.spo().bit(cpo_bit);
             w.sph().bit(cph_bit)
         });
+    }
+
+    #[inline]
+    pub fn spi_instance(&self) -> &SpiInstance {
+        &self.spi
     }
 
     #[inline]
@@ -501,9 +647,13 @@ where
     pub fn cfg_transfer<HwCs: OptionalHwCs<SpiInstance>>(
         &mut self,
         transfer_cfg: &TransferConfig<HwCs>,
-    ) {
-        self.cfg_clock(transfer_cfg.spi_clk);
-        self.cfg_mode(transfer_cfg.mode);
+    ) -> Result<(), SpiClkConfigError> {
+        if let Some(trans_clk_div) = transfer_cfg.clk_div {
+            self.cfg_clock_from_div(trans_clk_div)?;
+        }
+        if let Some(mode) = transfer_cfg.mode {
+            self.cfg_mode(mode);
+        }
         self.blockmode = transfer_cfg.blockmode;
         self.spi.ctrl1().modify(|_, w| {
             if transfer_cfg.sod {
@@ -523,6 +673,7 @@ where
             }
             w
         });
+        Ok(())
     }
 
     /// Sends a word to the slave
@@ -616,43 +767,44 @@ where
     ///     to be done once.
     /// * `syscfg` - Can be passed optionally to enable the peripheral clock
     pub fn new(
+        syscfg: &mut pac::Sysconfig,
+        clocks: &crate::clock::Clocks,
         spi: SpiI,
         pins: (Sck, Miso, Mosi),
-        clocks: &crate::clock::Clocks,
         spi_cfg: SpiConfig,
-        syscfg: &mut pac::Sysconfig,
         transfer_cfg: Option<&ErasedTransferConfig>,
-    ) -> Self {
+    ) -> Result<Self, SpiClkConfigError> {
         crate::clock::enable_peripheral_clock(syscfg, SpiI::PERIPH_SEL);
         // This is done in the C HAL.
         syscfg.assert_periph_reset_for_two_cycles(SpiI::PERIPH_SEL);
         let SpiConfig {
-            ser_clock_rate_div,
+            clk_div,
             ms,
             slave_output_disable,
             loopback_mode,
             master_delayer_capture,
         } = spi_cfg;
-        let mut mode = embedded_hal::spi::MODE_0;
-        let mut clk_prescale = 0x02;
+        let mut init_mode = embedded_hal::spi::MODE_0;
         let mut ss = 0;
         let mut init_blockmode = false;
         let apb1_clk = clocks.apb1();
         if let Some(transfer_cfg) = transfer_cfg {
-            mode = transfer_cfg.mode;
-            clk_prescale =
-                apb1_clk.raw() / (transfer_cfg.spi_clk.raw() * (ser_clock_rate_div as u32 + 1));
+            if let Some(mode) = transfer_cfg.mode {
+                init_mode = mode;
+            }
+            //self.cfg_clock_from_div(transfer_cfg.clk_div);
             if transfer_cfg.hw_cs != HwChipSelectId::Invalid {
                 ss = transfer_cfg.hw_cs as u8;
             }
             init_blockmode = transfer_cfg.blockmode;
         }
 
-        let (cpo_bit, cph_bit) = mode_to_cpo_cph_bit(mode);
+        let spi_clk_cfg = spi_clk_config_from_div(clk_div)?;
+        let (cpo_bit, cph_bit) = mode_to_cpo_cph_bit(init_mode);
         spi.ctrl0().write(|w| {
             unsafe {
                 w.size().bits(Word::word_reg());
-                w.scrdv().bits(ser_clock_rate_div);
+                w.scrdv().bits(spi_clk_cfg.scrdv);
                 // Clear clock phase and polarity. Will be set to correct value for each
                 // transfer
                 w.spo().bit(cpo_bit);
@@ -667,16 +819,17 @@ where
             w.blockmode().bit(init_blockmode);
             unsafe { w.ss().bits(ss) }
         });
+        spi.clkprescale()
+            .write(|w| unsafe { w.bits(spi_clk_cfg.prescale_val as u32) });
 
         spi.fifo_clr().write(|w| {
             w.rxfifo().set_bit();
             w.txfifo().set_bit()
         });
-        spi.clkprescale().write(|w| unsafe { w.bits(clk_prescale) });
         // Enable the peripheral as the last step as recommended in the
         // programmers guide
         spi.ctrl1().modify(|_, w| w.enable().set_bit());
-        Spi {
+        Ok(Spi {
             inner: SpiBase {
                 spi,
                 cfg: spi_cfg,
@@ -686,34 +839,37 @@ where
                 word: PhantomData,
             },
             pins,
+        })
+    }
+
+    delegate::delegate! {
+        to self.inner {
+            #[inline]
+            pub fn cfg_clock_from_div(&mut self, div: u16) -> Result<(), SpiClkConfigError>;
+
+            #[inline]
+            pub fn spi_instance(&self) -> &SpiI;
+
+            #[inline]
+            pub fn cfg_mode(&mut self, mode: Mode);
+
+            #[inline]
+            pub fn perid(&self) -> u32;
+
+            pub fn cfg_transfer<HwCs: OptionalHwCs<SpiI>>(
+                &mut self, transfer_cfg: &TransferConfig<HwCs>
+            ) -> Result<(), SpiClkConfigError>;
         }
     }
 
     #[inline]
-    pub fn cfg_clock(&mut self, spi_clk: impl Into<Hertz>) {
-        self.inner.cfg_clock(spi_clk);
-    }
-
-    #[inline]
-    pub fn cfg_mode(&mut self, mode: Mode) {
-        self.inner.cfg_mode(mode);
-    }
-
     pub fn set_fill_word(&mut self, fill_word: Word) {
         self.inner.fill_word = fill_word;
     }
 
+    #[inline]
     pub fn fill_word(&self) -> Word {
         self.inner.fill_word
-    }
-
-    #[inline]
-    pub fn perid(&self) -> u32 {
-        self.inner.perid()
-    }
-
-    pub fn cfg_transfer<HwCs: OptionalHwCs<SpiI>>(&mut self, transfer_cfg: &TransferConfig<HwCs>) {
-        self.inner.cfg_transfer(transfer_cfg);
     }
 
     /// Releases the SPI peripheral and associated pins

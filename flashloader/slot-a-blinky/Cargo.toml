@@ -1,17 +1,17 @@
+[package]
+name = "slot-a-blinky"
+version = "0.1.0"
+edition = "2021"
+
 [workspace]
-resolver = "2"
-members = [
-  "bootloader",
-  "flashloader",
-  "examples/simple",
-	"va416xx",
-	"va416xx-hal",
-	"vorago-peb1"
-]
-exclude = [
-  "flashloader/slot-a-blinky",
-  "flashloader/slot-b-blinky",
-]
+
+[dependencies]
+cortex-m-rt = "0.7"
+va416xx-hal = { path = "../../va416xx-hal" }
+panic-rtt-target = { version = "0.1.3" }
+rtt-target = { version = "0.5" }
+cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
+embedded-hal = "1"
 
 [profile.dev]
 codegen-units = 1

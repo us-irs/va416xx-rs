@@ -3,7 +3,6 @@
 //! ## Examples
 //!
 //! - [UART simple example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/uart.rs)
-use core::marker::PhantomData;
 use core::ops::Deref;
 
 use embedded_hal_nb::serial::Read;
@@ -336,27 +335,23 @@ pub struct UartWithIrqBase<UART> {
 
 /// Serial receiver
 pub struct Rx<Uart> {
-    _usart: PhantomData<Uart>,
+    uart: Uart,
 }
 
 /// Serial transmitter
 pub struct Tx<Uart> {
-    _usart: PhantomData<Uart>,
+    uart: Uart,
 }
 
-impl<Uart> Rx<Uart> {
-    fn new() -> Self {
-        Self {
-            _usart: PhantomData,
-        }
+impl<Uart: Instance> Rx<Uart> {
+    fn new(uart: Uart) -> Self {
+        Self { uart }
     }
 }
 
 impl<Uart> Tx<Uart> {
-    fn new() -> Self {
-        Self {
-            _usart: PhantomData,
-        }
+    fn new(uart: Uart) -> Self {
+        Self { uart }
     }
 }
 
@@ -366,6 +361,12 @@ pub trait Instance: Deref<Target = uart_base::RegisterBlock> {
     const IRQ_RX: pac::Interrupt;
     const IRQ_TX: pac::Interrupt;
 
+    /// Retrieve the peripheral structure.
+    ///
+    /// # Safety
+    ///
+    /// This circumvents the safety guarantees of the HAL.
+    unsafe fn steal() -> Self;
     fn ptr() -> *const uart_base::RegisterBlock;
 }
 
@@ -375,6 +376,9 @@ impl Instance for Uart0 {
     const IRQ_RX: pac::Interrupt = pac::Interrupt::UART0_RX;
     const IRQ_TX: pac::Interrupt = pac::Interrupt::UART0_TX;
 
+    unsafe fn steal() -> Self {
+        pac::Peripherals::steal().uart0
+    }
     fn ptr() -> *const uart_base::RegisterBlock {
         Uart0::ptr() as *const _
     }
@@ -386,6 +390,9 @@ impl Instance for Uart1 {
     const IRQ_RX: pac::Interrupt = pac::Interrupt::UART1_RX;
     const IRQ_TX: pac::Interrupt = pac::Interrupt::UART1_TX;
 
+    unsafe fn steal() -> Self {
+        pac::Peripherals::steal().uart1
+    }
     fn ptr() -> *const uart_base::RegisterBlock {
         Uart1::ptr() as *const _
     }
@@ -397,6 +404,9 @@ impl Instance for Uart2 {
     const IRQ_RX: pac::Interrupt = pac::Interrupt::UART2_RX;
     const IRQ_TX: pac::Interrupt = pac::Interrupt::UART2_TX;
 
+    unsafe fn steal() -> Self {
+        pac::Peripherals::steal().uart2
+    }
     fn ptr() -> *const uart_base::RegisterBlock {
         Uart2::ptr() as *const _
     }
@@ -551,8 +561,8 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
         Uart {
             inner: UartBase {
                 uart,
-                tx: Tx::new(),
-                rx: Rx::new(),
+                tx: Tx::new(unsafe { UartInstance::steal() }),
+                rx: Rx::new(unsafe { UartInstance::steal() }),
             },
             pins,
         }
@@ -570,8 +580,8 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
         Uart {
             inner: UartBase {
                 uart,
-                tx: Tx::new(),
-                rx: Rx::new(),
+                tx: Tx::new(unsafe { UartInstance::steal() }),
+                rx: Rx::new(unsafe { UartInstance::steal() }),
             },
             pins,
         }
@@ -653,6 +663,36 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
 
     pub fn release(self) -> (UartInstance, (TxPinInst, RxPinInst)) {
         (self.inner.release(), self.pins)
+    }
+}
+
+impl<Uart: Instance> Rx<Uart> {
+    /// Direct access to the peripheral structure.
+    ///
+    /// # Safety
+    ///
+    /// You must ensure that only registers related to the operation of the RX side are used.
+    pub unsafe fn uart(&self) -> &Uart {
+        &self.uart
+    }
+
+    pub fn clear_fifo(&self) {
+        self.uart.fifo_clr().write(|w| w.rxfifo().set_bit());
+    }
+}
+
+impl<Uart: Instance> Tx<Uart> {
+    /// Direct access to the peripheral structure.
+    ///
+    /// # Safety
+    ///
+    /// You must ensure that only registers related to the operation of the TX side are used.
+    pub unsafe fn uart(&self) -> &Uart {
+        &self.uart
+    }
+
+    pub fn clear_fifo(&self) {
+        self.uart.fifo_clr().write(|w| w.txfifo().set_bit());
     }
 }
 

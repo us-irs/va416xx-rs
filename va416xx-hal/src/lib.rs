@@ -19,8 +19,10 @@ pub mod prelude;
 
 pub mod clock;
 pub mod dma;
+pub mod edac;
 pub mod gpio;
 pub mod i2c;
+pub mod nvm;
 pub mod pwm;
 pub mod spi;
 pub mod time;

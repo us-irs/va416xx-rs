@@ -19,7 +19,12 @@ This workspace contains the following crates:
 
 It also contains the following helper crates:
 
-- The `examples` crates contains various example applications for the HAL and the PAC.
+- The [`bootloader`](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/bootloader)
+  crate contains a sample bootloader strongly based on the one provided by Vorago.
+- The [`flashloader`](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/flashloader)
+  crate contains a sample flashloader which is able to update the redundant images in the NVM which
+  is compatible to the provided bootloader as well.
+- The `examples` folder contains various example applications crates for the HAL and the PAC.
 
 ## Using the `.cargo/config.toml` file
 

@@ -21,10 +21,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Fixed
 
 - Small fixes and improvements for ADC drivers
+- Fixes for the SPI implementation where the clock divider values were not calculated
+  correctly
 
 ## Added
 
 - Added basic DMA driver
+- Added basic EDAC module
+- Added bootloader and flashloader example application
+- Added NVM module which exposes a simple API to write to the NVM memory used for the boot process
 
 # [v0.1.0] 2024-07-01
 

@@ -40,7 +40,6 @@ pub fn disable_wdt_interrupts() {
 
 impl Wdt {
     pub fn new(
-        &self,
         syscfg: &mut pac::Sysconfig,
         wdt: pac::WatchDog,
         clocks: &Clocks,

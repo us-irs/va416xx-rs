@@ -197,66 +197,36 @@ impl From<Hertz> for Config {
 // IRQ Definitions
 //==================================================================================================
 
-struct IrqInfo {
+#[derive(Debug)]
+pub struct IrqInfo {
     rx_len: usize,
     rx_idx: usize,
     mode: IrqReceptionMode,
 }
 
-pub enum IrqResultMask {
-    Complete = 0,
-    Overflow = 1,
-    FramingError = 2,
-    ParityError = 3,
-    Break = 4,
-    Timeout = 5,
-    Addr9 = 6,
-    /// Should not happen
-    Unknown = 7,
-}
-
 /// This struct is used to return the default IRQ handler result to the user
 #[derive(Debug, Default)]
 pub struct IrqResult {
-    raw_res: u32,
+    complete: bool,
+    timeout: bool,
+    pub errors: IrqUartError,
     pub bytes_read: usize,
 }
 
 impl IrqResult {
-    pub const fn new() -> Self {
+    pub fn new() -> Self {
         IrqResult {
-            raw_res: 0,
+            complete: false,
+            timeout: false,
+            errors: IrqUartError::default(),
             bytes_read: 0,
         }
     }
 }
-
 impl IrqResult {
     #[inline]
-    pub fn raw_result(&self) -> u32 {
-        self.raw_res
-    }
-
-    #[inline]
-    pub(crate) fn clear_result(&mut self) {
-        self.raw_res = 0;
-    }
-    #[inline]
-    pub(crate) fn set_result(&mut self, flag: IrqResultMask) {
-        self.raw_res |= 1 << flag as u32;
-    }
-
-    #[inline]
-    pub fn complete(&self) -> bool {
-        if ((self.raw_res >> IrqResultMask::Complete as u32) & 0x01) == 0x01 {
-            return true;
-        }
-        false
-    }
-
-    #[inline]
     pub fn error(&self) -> bool {
-        if self.overflow_error() || self.framing_error() || self.parity_error() {
+        if self.errors.overflow || self.errors.parity || self.errors.framing {
             return true;
         }
         false
@@ -264,34 +234,27 @@ impl IrqResult {
 
     #[inline]
     pub fn overflow_error(&self) -> bool {
-        if ((self.raw_res >> IrqResultMask::Overflow as u32) & 0x01) == 0x01 {
-            return true;
-        }
-        false
+        self.errors.overflow
     }
 
     #[inline]
     pub fn framing_error(&self) -> bool {
-        if ((self.raw_res >> IrqResultMask::FramingError as u32) & 0x01) == 0x01 {
-            return true;
-        }
-        false
+        self.errors.framing
     }
 
     #[inline]
     pub fn parity_error(&self) -> bool {
-        if ((self.raw_res >> IrqResultMask::ParityError as u32) & 0x01) == 0x01 {
-            return true;
-        }
-        false
+        self.errors.parity
     }
 
     #[inline]
     pub fn timeout(&self) -> bool {
-        if ((self.raw_res >> IrqResultMask::Timeout as u32) & 0x01) == 0x01 {
-            return true;
-        }
-        false
+        self.timeout
+    }
+
+    #[inline]
+    pub fn complete(&self) -> bool {
+        self.complete
     }
 }
 
@@ -317,41 +280,27 @@ pub struct Uart<UartInstance, Pins> {
     pins: Pins,
 }
 
-/// UART using the IRQ capabilities of the peripheral. Can be created with the
-/// [`Uart::into_uart_with_irq`] function. Currently, only the RX side for IRQ based reception
-/// is implemented.
-pub struct UartWithIrq<Uart, Pins> {
-    base: UartWithIrqBase<Uart>,
-    pins: Pins,
-}
+/// Serial receiver
+pub struct Rx<Uart>(Uart);
 
-/// Type-erased UART using the IRQ capabilities of the peripheral. Can be created with the
-/// [`UartWithIrq::downgrade`] function. Currently, only the RX side for IRQ based reception
-/// is implemented.
-pub struct UartWithIrqBase<UART> {
-    pub inner: UartBase<UART>,
+// Serial receiver, using interrupts to offload reading to the hardware.
+pub struct RxWithIrq<Uart> {
+    inner: Rx<Uart>,
     irq_info: IrqInfo,
 }
 
-/// Serial receiver
-pub struct Rx<Uart> {
-    uart: Uart,
-}
-
 /// Serial transmitter
-pub struct Tx<Uart> {
-    uart: Uart,
-}
+pub struct Tx<Uart>(Uart);
 
 impl<Uart: Instance> Rx<Uart> {
     fn new(uart: Uart) -> Self {
-        Self { uart }
+        Self(uart)
     }
 }
 
 impl<Uart> Tx<Uart> {
     fn new(uart: Uart) -> Self {
-        Self { uart }
+        Self(uart)
     }
 }
 
@@ -602,20 +551,30 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
     }
 
     /// If the IRQ capabilities of the peripheral are used, the UART needs to be converted
-    /// with this function
-    pub fn into_uart_with_irq(self) -> UartWithIrq<UartInstance, (TxPinInst, RxPinInst)> {
+    /// with this function. Currently, IRQ abstractions are only implemented for the RX part
+    /// of the UART, so this function will release a TX and RX handle as well as the pin
+    /// instances.
+    pub fn split_with_irq(
+        self,
+    ) -> (
+        Tx<UartInstance>,
+        RxWithIrq<UartInstance>,
+        (TxPinInst, RxPinInst),
+    ) {
         let (inner, pins) = self.downgrade_internal();
-        UartWithIrq {
-            pins,
-            base: UartWithIrqBase {
-                inner,
+        let (tx, rx) = inner.split();
+        (
+            tx,
+            RxWithIrq {
+                inner: rx,
                 irq_info: IrqInfo {
                     rx_len: 0,
                     rx_idx: 0,
                     mode: IrqReceptionMode::Idle,
                 },
             },
-        }
+            pins,
+        )
     }
 
     delegate::delegate! {
@@ -673,11 +632,26 @@ impl<Uart: Instance> Rx<Uart> {
     ///
     /// You must ensure that only registers related to the operation of the RX side are used.
     pub unsafe fn uart(&self) -> &Uart {
-        &self.uart
+        &self.0
     }
 
+    #[inline]
     pub fn clear_fifo(&self) {
-        self.uart.fifo_clr().write(|w| w.rxfifo().set_bit());
+        self.0.fifo_clr().write(|w| w.rxfifo().set_bit());
+    }
+
+    #[inline]
+    pub fn enable(&mut self) {
+        self.0.enable().modify(|_, w| w.rxenable().set_bit());
+    }
+
+    #[inline]
+    pub fn disable(&mut self) {
+        self.0.enable().modify(|_, w| w.rxenable().clear_bit());
+    }
+
+    pub fn release(self) -> Uart {
+        self.0
     }
 }
 
@@ -688,11 +662,22 @@ impl<Uart: Instance> Tx<Uart> {
     ///
     /// You must ensure that only registers related to the operation of the TX side are used.
     pub unsafe fn uart(&self) -> &Uart {
-        &self.uart
+        &self.0
     }
 
+    #[inline]
     pub fn clear_fifo(&self) {
-        self.uart.fifo_clr().write(|w| w.txfifo().set_bit());
+        self.0.fifo_clr().write(|w| w.txfifo().set_bit());
+    }
+
+    #[inline]
+    pub fn enable(&mut self) {
+        self.0.enable().modify(|_, w| w.txenable().set_bit());
+    }
+
+    #[inline]
+    pub fn disable(&mut self) {
+        self.0.enable().modify(|_, w| w.txenable().clear_bit());
     }
 }
 
@@ -701,6 +686,7 @@ pub struct IrqUartError {
     overflow: bool,
     framing: bool,
     parity: bool,
+    other: bool,
 }
 
 impl IrqUartError {
@@ -715,7 +701,7 @@ pub enum IrqError {
     Uart(IrqUartError),
 }
 
-impl<Uart: Instance> UartWithIrqBase<Uart> {
+impl<Uart: Instance> RxWithIrq<Uart> {
     /// This initializes a non-blocking read transfer using the IRQ capabilities of the UART
     /// peripheral.
     ///
@@ -735,8 +721,7 @@ impl<Uart: Instance> UartWithIrqBase<Uart> {
         self.irq_info.mode = IrqReceptionMode::Pending;
         self.irq_info.rx_idx = 0;
         self.irq_info.rx_len = max_len;
-        self.inner.enable_rx();
-        self.inner.enable_tx();
+        self.inner.enable();
         self.enable_rx_irq_sources(enb_timeout_irq);
         unsafe { enable_interrupt(Uart::IRQ_RX) };
         Ok(())
@@ -744,7 +729,7 @@ impl<Uart: Instance> UartWithIrqBase<Uart> {
 
     #[inline]
     fn enable_rx_irq_sources(&mut self, timeout: bool) {
-        self.inner.uart.irq_enb().modify(|_, w| {
+        self.inner.0.irq_enb().modify(|_, w| {
             if timeout {
                 w.irq_rx_to().set_bit();
             }
@@ -755,28 +740,22 @@ impl<Uart: Instance> UartWithIrqBase<Uart> {
 
     #[inline]
     fn disable_rx_irq_sources(&mut self) {
-        self.inner.uart.irq_enb().modify(|_, w| {
+        self.inner.0.irq_enb().modify(|_, w| {
             w.irq_rx_to().clear_bit();
             w.irq_rx_status().clear_bit();
             w.irq_rx().clear_bit()
         });
     }
 
-    #[inline]
-    pub fn enable_tx(&mut self) {
-        self.inner.enable_tx()
-    }
-
-    #[inline]
-    pub fn disable_tx(&mut self) {
-        self.inner.disable_tx()
-    }
-
     pub fn cancel_transfer(&mut self) {
         self.disable_rx_irq_sources();
-        self.inner.clear_tx_fifo();
+        self.inner.clear_fifo();
         self.irq_info.rx_idx = 0;
         self.irq_info.rx_len = 0;
+    }
+
+    pub fn uart(&self) -> &Uart {
+        &self.inner.0
     }
 
     /// Default IRQ handler which can be used to read the packets arriving on the UART peripheral.
@@ -791,104 +770,102 @@ impl<Uart: Instance> UartWithIrqBase<Uart> {
             });
         }
         let mut res = IrqResult::default();
-        let mut possible_error = IrqUartError::default();
 
-        let rx_status = self.inner.uart.rxstatus().read();
-        res.raw_res = rx_status.bits();
-        let irq_end = self.inner.uart.irq_end().read();
-        let enb_status = self.inner.uart.enable().read();
+        let irq_end = self.inner.0.irq_end().read();
+        let enb_status = self.inner.0.enable().read();
         let rx_enabled = enb_status.rxenable().bit_is_set();
-        let _tx_enabled = enb_status.txenable().bit_is_set();
-        let read_handler = |res: &mut IrqResult,
-                            possible_error: &mut IrqUartError,
-                            read_res: nb::Result<u8, Error>|
-         -> Option<u8> {
-            match read_res {
-                Ok(byte) => Some(byte),
-                Err(nb::Error::WouldBlock) => None,
-                Err(nb::Error::Other(e)) => {
-                    match e {
-                        Error::Overrun => {
-                            possible_error.overflow = true;
-                        }
-                        Error::FramingError => {
-                            possible_error.framing = true;
-                        }
-                        Error::ParityError => {
-                            possible_error.parity = true;
-                        }
-                        _ => {
-                            res.set_result(IrqResultMask::Unknown);
-                        }
-                    }
-                    None
-                }
-            }
-        };
+
+        // Half-Full interrupt. We have a guaranteed amount of data we can read.
         if irq_end.irq_rx().bit_is_set() {
+            // Determine the number of bytes to read, ensuring we leave 1 byte in the FIFO.
+            // We use this trick/hack because the timeout feature of the peripheral relies on data
+            // being in the RX FIFO. If data continues arriving, another half-full IRQ will fire.
+            // If not, the last byte(s) is/are emptied by the timeout interrupt.
+            let available_bytes = self.inner.0.rxfifoirqtrg().read().bits() as usize;
+
+            let bytes_to_read = core::cmp::min(
+                available_bytes.saturating_sub(1),
+                self.irq_info.rx_len - self.irq_info.rx_idx,
+            );
+
             // If this interrupt bit is set, the trigger level is available at the very least.
             // Read everything as fast as possible
-            for _ in 0..core::cmp::min(
-                self.inner.uart.rxfifoirqtrg().read().bits() as usize,
-                self.irq_info.rx_len,
-            ) {
-                buf[self.irq_info.rx_idx] = (self.inner.uart.data().read().bits() & 0xff) as u8;
+            for _ in 0..bytes_to_read {
+                buf[self.irq_info.rx_idx] = (self.inner.0.data().read().bits() & 0xff) as u8;
                 self.irq_info.rx_idx += 1;
             }
 
+            // On high-baudrates, data might be available immediately, and we possible have to
+            // read continuosly? Then again, the CPU should always be faster than that. I'd rather
+            // rely on the hardware firing another IRQ. I have not tried baudrates higher than
+            // 115200 so far.
+        }
+        let read_handler =
+            |possible_error: &mut IrqUartError, read_res: nb::Result<u8, Error>| -> Option<u8> {
+                match read_res {
+                    Ok(byte) => Some(byte),
+                    Err(nb::Error::WouldBlock) => None,
+                    Err(nb::Error::Other(e)) => {
+                        match e {
+                            Error::Overrun => {
+                                possible_error.overflow = true;
+                            }
+                            Error::FramingError => {
+                                possible_error.framing = true;
+                            }
+                            Error::ParityError => {
+                                possible_error.parity = true;
+                            }
+                            _ => {
+                                possible_error.other = true;
+                            }
+                        }
+                        None
+                    }
+                }
+            };
+        // Timeout, empty the FIFO completely.
+        if irq_end.irq_rx_to().bit_is_set() {
             // While there is data in the FIFO, write it into the reception buffer
             loop {
                 if self.irq_info.rx_idx == self.irq_info.rx_len {
-                    self.irq_completion_handler(&mut res);
-                    return Ok(res);
+                    break;
                 }
-                if let Some(byte) = read_handler(&mut res, &mut possible_error, self.inner.read()) {
+                if let Some(byte) = read_handler(&mut res.errors, self.inner.read()) {
                     buf[self.irq_info.rx_idx] = byte;
                     self.irq_info.rx_idx += 1;
                 } else {
                     break;
                 }
             }
+            self.irq_completion_handler(&mut res);
+            return Ok(res);
         }
 
         // RX transfer not complete, check for RX errors
         if (self.irq_info.rx_idx < self.irq_info.rx_len) && rx_enabled {
             // Read status register again, might have changed since reading received data
-            let rx_status = self.inner.uart.rxstatus().read();
-            res.raw_res = rx_status.bits();
+            let rx_status = self.inner.0.rxstatus().read();
             if rx_status.rxovr().bit_is_set() {
-                possible_error.overflow = true;
+                res.errors.overflow = true;
             }
             if rx_status.rxfrm().bit_is_set() {
-                possible_error.framing = true;
+                res.errors.framing = true;
             }
             if rx_status.rxpar().bit_is_set() {
-                possible_error.parity = true;
-            }
-            if rx_status.rxto().bit_is_set() {
-                // A timeout has occured but there might be some leftover data in the FIFO,
-                // so read that data as well
-                while let Some(byte) =
-                    read_handler(&mut res, &mut possible_error, self.inner.read())
-                {
-                    buf[self.irq_info.rx_idx] = byte;
-                    self.irq_info.rx_idx += 1;
-                }
-                self.irq_completion_handler(&mut res);
-                res.set_result(IrqResultMask::Timeout);
-                return Ok(res);
+                res.errors.parity = true;
             }
 
             // If it is not a timeout, it's an error
-            if possible_error.error() {
+            if res.error() {
                 self.disable_rx_irq_sources();
-                return Err(IrqError::Uart(possible_error));
+                return Err(IrqError::Uart(res.errors));
             }
         }
 
         // Clear the interrupt status bits
         self.inner
-            .uart
+            .0
             .irq_clr()
             .write(|w| unsafe { w.bits(irq_end.bits()) });
         Ok(res)
@@ -896,45 +873,20 @@ impl<Uart: Instance> UartWithIrqBase<Uart> {
 
     fn irq_completion_handler(&mut self, res: &mut IrqResult) {
         self.disable_rx_irq_sources();
-        self.inner.disable_rx();
+        self.inner.disable();
         res.bytes_read = self.irq_info.rx_idx;
-        res.clear_result();
-        res.set_result(IrqResultMask::Complete);
+        res.complete = true;
         self.irq_info.mode = IrqReceptionMode::Idle;
         self.irq_info.rx_idx = 0;
         self.irq_info.rx_len = 0;
     }
 
+    pub fn irq_info(&self) -> &IrqInfo {
+        &self.irq_info
+    }
+
     pub fn release(self) -> Uart {
         self.inner.release()
-    }
-}
-
-impl<Uart: Instance, Pins> UartWithIrq<Uart, Pins> {
-    /// See [`UartWithIrqBase::read_fixed_len_using_irq`] doc
-    pub fn read_fixed_len_using_irq(
-        &mut self,
-        max_len: usize,
-        enb_timeout_irq: bool,
-    ) -> Result<(), Error> {
-        self.base.read_fixed_len_using_irq(max_len, enb_timeout_irq)
-    }
-
-    pub fn cancel_transfer(&mut self) {
-        self.base.cancel_transfer()
-    }
-
-    /// See [`UartWithIrqBase::irq_handler`] doc
-    pub fn irq_handler(&mut self, buf: &mut [u8]) -> Result<IrqResult, IrqError> {
-        self.base.irq_handler(buf)
-    }
-
-    pub fn release(self) -> (Uart, Pins) {
-        (self.base.release(), self.pins)
-    }
-
-    pub fn downgrade(self) -> (UartWithIrqBase<Uart>, Pins) {
-        (self.base, self.pins)
     }
 }
 

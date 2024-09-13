@@ -17,12 +17,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Added `va41620`, `va41630`, `va41628` and `va41629` device features. A device now has to be
   selected for HAL compilation to work properly
+- Adaptions for the UART IRQ feature which are now only implemented for the RX part of the UART.
 
 ## Fixed
 
 - Small fixes and improvements for ADC drivers
 - Fixes for the SPI implementation where the clock divider values were not calculated
   correctly
+- Fixes for UART IRQ handler implementation
 
 ## Added
 

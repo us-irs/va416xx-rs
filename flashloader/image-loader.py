@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-from spacepackets.ecss import RequestId
 from spacepackets.ecss.defs import PusService
 from spacepackets.ecss.tm import PusTm
 import toml
 import struct
 import logging
 import argparse
-import threading
 import time
 import enum
 from tmtccmd.com.serial_base import SerialCfg
@@ -45,6 +43,7 @@ ACTION_SERVICE = 8
 
 RAW_MEMORY_WRITE_SUBSERVICE = 2
 BOOT_NVM_MEMORY_ID = 1
+PING_PAYLOAD_SIZE = 0
 
 
 class ActionId(enum.IntEnum):
@@ -104,6 +103,29 @@ def main() -> int:
     com_if = SerialCobsComIF(serial_cfg)
     com_if.open()
     file_path = None
+    if args.ping:
+        _LOGGER.info("Sending ping command")
+        ping_tc = PusTc(
+            apid=0x00,
+            service=PusService.S17_TEST,
+            subservice=1,
+            seq_count=SEQ_PROVIDER.get_and_increment(),
+            app_data=bytes(PING_PAYLOAD_SIZE),
+        )
+        verificator.add_tc(ping_tc)
+        com_if.send(ping_tc.pack())
+
+        data_available = com_if.data_available(0.4)
+        if not data_available:
+            _LOGGER.warning("no ping reply received")
+        for reply in com_if.receive():
+            result = verificator.add_tm(
+                Service1Tm.from_tm(PusTm.unpack(reply, 0), UnpackParams(0))
+            )
+            if result is not None and result.completed:
+                _LOGGER.info("received ping completion reply")
+        if not args.target:
+            return 0
     if args.target:
         if not args.corrupt:
             if not args.path:
@@ -113,15 +135,6 @@ def main() -> int:
             if not file_path.exists():
                 _LOGGER.error("File does not exist")
                 return -1
-    if args.ping:
-        _LOGGER.info("Sending ping command")
-        ping_tc = PusTc(
-            apid=0x00,
-            service=PusService.S17_TEST,
-            subservice=1,
-            seq_count=SEQ_PROVIDER.get_and_increment(),
-        )
-        com_if.send(ping_tc.pack())
     if args.corrupt:
         if not args.target:
             _LOGGER.error("target for corruption command required")
@@ -254,7 +267,7 @@ def main() -> int:
                             ):
                                 done = True
                                 # Still keep a small delay
-                                time.sleep(0.01)
+                                # time.sleep(0.05)
                         verificator.remove_completed_entries()
                         if done:
                             break

@@ -20,7 +20,7 @@ embedded-io = "0.6"
 num_enum = { version = "0.7", default-features = false }
 typenum = "1"
 bitflags = "2"
-bitfield = "0.15"
+bitfield = "0.17"
 defmt = { version = "0.3", optional = true }
 fugit = "0.3"
 delegate = "0.12"

@@ -45,17 +45,26 @@ const BOOTLOADER_START_ADDR: u32 = 0x0;
 const BOOTLOADER_CRC_ADDR: u32 = BOOTLOADER_END_ADDR - 4;
 const BOOTLOADER_END_ADDR: u32 = 0x4000;
 
-const APP_A_START_ADDR: u32 = BOOTLOADER_END_ADDR; // 0x4000
-// The actual size of the image which is relevant for CRC calculation.
-const APP_A_SIZE_ADDR: u32 = APP_B_END_ADDR - 8; // 0x21FF8
-const APP_A_CRC_ADDR: u32 = APP_B_END_ADDR - 4; // 0x21FFC
+// 0x4000
+const APP_A_START_ADDR: u32 = BOOTLOADER_END_ADDR;
+// The actual size of the image which is relevant for CRC calculation will be store at this
+// address.
+// 0x21FF8
+const APP_A_SIZE_ADDR: u32 = APP_B_END_ADDR - 8;
+// 0x21FFC
+const APP_A_CRC_ADDR: u32 = APP_B_END_ADDR - 4;
 pub const APP_A_END_ADDR: u32 = APP_B_END_ADDR - BOOTLOADER_END_ADDR / 2;
 
-const APP_B_START_ADDR: u32 = APP_A_END_ADDR; //  0x22000
-// The actual size of the image which is relevant for CRC calculation.
-const APP_B_SIZE_ADDR: u32 = APP_B_END_ADDR - 8; // 0x3FFF8
-const APP_B_CRC_ADDR: u32 = APP_B_END_ADDR - 4; // 0x3FFFC
-pub const APP_B_END_ADDR: u32 = NVM_SIZE; // 0x40000
+//  0x22000
+const APP_B_START_ADDR: u32 = APP_A_END_ADDR;
+// The actual size of the image which is relevant for CRC calculation will be stored at this
+// address.
+// 0x3FFF8
+const APP_B_SIZE_ADDR: u32 = APP_B_END_ADDR - 8;
+// 0x3FFFC
+const APP_B_CRC_ADDR: u32 = APP_B_END_ADDR - 4;
+// 0x40000
+pub const APP_B_END_ADDR: u32 = NVM_SIZE;
 
 pub const APP_IMG_SZ: u32 = APP_B_END_ADDR - APP_A_START_ADDR / 2;
 

@@ -6,11 +6,17 @@ a simple PUS (CCSDS) interface to update the software. It also provides a Python
 called the `image-loader.py` which can be used to upload compiled images to the flashloader
 application to write them to the NVM.
 
+Please note that the both the application and the image loader are tailored towards usage
+with the [bootloader provided by this repository](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/bootloader).
+
 The software can quickly be adapted to interface with a real primary on-board software instead of
 the Python script provided here to upload images because it uses a low-level CCSDS based packet
 interface.
 
 ## Using the Python image loader
+
+The Python image loader communicates with the Rust flashload application using a dedicated serial
+port with a baudrate of 115200.
 
 It is recommended to run the script in a dedicated virtual environment. For example, on UNIX
 systems you can use `python3 -m venv venv` and then `source venv/bin/activate` to create

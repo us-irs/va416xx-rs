@@ -4,13 +4,14 @@
 
 use core::cell::Cell;
 
-use cortex_m::interrupt::Mutex;
 use cortex_m_rt::entry;
+use critical_section::Mutex;
 use embedded_hal::delay::DelayNs;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::dma::{Dma, DmaCfg, DmaChannel, DmaCtrlBlock};
+use va416xx_hal::irq_router::enable_and_init_irq_router;
 use va416xx_hal::pwm::CountdownTimer;
 use va416xx_hal::{
     pac::{self, interrupt},
@@ -45,6 +46,7 @@ fn main() -> ! {
         .xtal_n_clk_with_src_freq(peb1::EXTCLK_FREQ)
         .freeze(&mut dp.sysconfig)
         .unwrap();
+    enable_and_init_irq_router(&mut dp.sysconfig, &dp.irq_router);
     // Safety: The DMA control block has an alignment rule of 128 and we constructed it directly
     // statically.
     let dma = Dma::new(&mut dp.sysconfig, dp.dma, DmaCfg::default(), unsafe {
@@ -88,10 +90,10 @@ fn transfer_example_8_bit(
     (0..64).for_each(|i| {
         src_buf[i] = i as u8;
     });
-    cortex_m::interrupt::free(|cs| {
+    critical_section::with(|cs| {
         DMA_DONE_FLAG.borrow(cs).set(false);
     });
-    cortex_m::interrupt::free(|cs| {
+    critical_section::with(|cs| {
         DMA_ACTIVE_FLAG.borrow(cs).set(false);
     });
     // Safety: The source and destination buffer are valid for the duration of the DMA transfer.
@@ -112,7 +114,7 @@ fn transfer_example_8_bit(
     // Use polling for completion status.
     loop {
         let mut dma_done = false;
-        cortex_m::interrupt::free(|cs| {
+        critical_section::with(|cs| {
             if DMA_ACTIVE_FLAG.borrow(cs).get() {
                 rprintln!("DMA0 is active with 8 bit transfer");
                 DMA_ACTIVE_FLAG.borrow(cs).set(false);
@@ -143,10 +145,10 @@ fn transfer_example_16_bit(dma0: &mut DmaChannel, delay_ms: &mut CountdownTimer<
             DMA_SRC_BUF[i] = (i as u32 * u16::MAX as u32 / (dest_buf_ref.len() as u32 - 1)) as u16;
         });
     }
-    cortex_m::interrupt::free(|cs| {
+    critical_section::with(|cs| {
         DMA_DONE_FLAG.borrow(cs).set(false);
     });
-    cortex_m::interrupt::free(|cs| {
+    critical_section::with(|cs| {
         DMA_ACTIVE_FLAG.borrow(cs).set(false);
     });
     // Safety: The source and destination buffer are valid for the duration of the DMA transfer.
@@ -170,7 +172,7 @@ fn transfer_example_16_bit(dma0: &mut DmaChannel, delay_ms: &mut CountdownTimer<
     // Use polling for completion status.
     loop {
         let mut dma_done = false;
-        cortex_m::interrupt::free(|cs| {
+        critical_section::with(|cs| {
             if DMA_ACTIVE_FLAG.borrow(cs).get() {
                 rprintln!("DMA0 is active with 16-bit transfer");
                 DMA_ACTIVE_FLAG.borrow(cs).set(false);
@@ -206,10 +208,10 @@ fn transfer_example_32_bit(
     (0..16).for_each(|i| {
         src_buf[i] = (i as u64 * u32::MAX as u64 / (src_buf.len() - 1) as u64) as u32;
     });
-    cortex_m::interrupt::free(|cs| {
+    critical_section::with(|cs| {
         DMA_DONE_FLAG.borrow(cs).set(false);
     });
-    cortex_m::interrupt::free(|cs| {
+    critical_section::with(|cs| {
         DMA_ACTIVE_FLAG.borrow(cs).set(false);
     });
     // Safety: The source and destination buffer are valid for the duration of the DMA transfer.
@@ -230,7 +232,7 @@ fn transfer_example_32_bit(
     // Use polling for completion status.
     loop {
         let mut dma_done = false;
-        cortex_m::interrupt::free(|cs| {
+        critical_section::with(|cs| {
             if DMA_ACTIVE_FLAG.borrow(cs).get() {
                 rprintln!("DMA0 is active with 32-bit transfer");
                 DMA_ACTIVE_FLAG.borrow(cs).set(false);
@@ -260,7 +262,7 @@ fn transfer_example_32_bit(
 #[allow(non_snake_case)]
 fn DMA_DONE0() {
     // Notify the main loop that the DMA transfer is finished.
-    cortex_m::interrupt::free(|cs| {
+    critical_section::with(|cs| {
         DMA_DONE_FLAG.borrow(cs).set(true);
     });
 }
@@ -269,7 +271,7 @@ fn DMA_DONE0() {
 #[allow(non_snake_case)]
 fn DMA_ACTIVE0() {
     // Notify the main loop that the DMA 0 is active now.
-    cortex_m::interrupt::free(|cs| {
+    critical_section::with(|cs| {
         DMA_ACTIVE_FLAG.borrow(cs).set(true);
     });
 }

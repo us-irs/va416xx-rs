@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixes for the SPI implementation where the clock divider values were not calculated
   correctly
 - Fixes for UART IRQ handler implementation
+- Add new IRQ router initialization method `irq_router::enable_and_init_irq_router`. This method
+  also sets the initial values of some registers to 0 where the datasheet and the actual reset
+  value are inconsistent, which can lead to weird bugs like IRQs not being triggered properly.
 
 ## Added
 

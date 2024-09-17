@@ -5,7 +5,8 @@
 //! - [Timer MS and Second Tick Example](https://github.com/us-irs/va416xx-rs/blob/main/examples/simple/examples/timer-ticks.rs)
 use core::cell::Cell;
 
-use cortex_m::interrupt::Mutex;
+use cortex_m::asm;
+use critical_section::Mutex;
 
 use crate::clock::Clocks;
 use crate::gpio::{
@@ -169,6 +170,14 @@ macro_rules! tim_markers {
     };
 }
 
+pub const fn const_clock<Tim: ValidTim + ?Sized>(_: &Tim, clocks: &Clocks) -> Hertz {
+    if Tim::TIM_ID <= 15 {
+        clocks.apb1()
+    } else {
+        clocks.apb2()
+    }
+}
+
 tim_markers!(
     (pac::Tim0, 0, pac::Interrupt::TIM0),
     (pac::Tim1, 1, pac::Interrupt::TIM1),
@@ -328,17 +337,25 @@ valid_pin_and_tims!(
 ///
 /// Only the bit related to the corresponding TIM peripheral is modified
 #[inline]
-fn assert_tim_reset(syscfg: &mut pac::Sysconfig, tim_id: u8) {
+pub fn assert_tim_reset(syscfg: &mut pac::Sysconfig, tim_id: u8) {
     syscfg
         .tim_reset()
         .modify(|r, w| unsafe { w.bits(r.bits() & !(1 << tim_id as u32)) })
 }
 
 #[inline]
-fn deassert_tim_reset(syscfg: &mut pac::Sysconfig, tim_id: u8) {
+pub fn deassert_tim_reset(syscfg: &mut pac::Sysconfig, tim_id: u8) {
     syscfg
         .tim_reset()
         .modify(|r, w| unsafe { w.bits(r.bits() | (1 << tim_id as u32)) })
+}
+
+#[inline]
+pub fn assert_tim_reset_for_two_cycles(syscfg: &mut pac::Sysconfig, tim_id: u8) {
+    assert_tim_reset(syscfg, tim_id);
+    asm::nop();
+    asm::nop();
+    deassert_tim_reset(syscfg, tim_id);
 }
 
 pub type TimRegBlock = pac::tim0::RegisterBlock;
@@ -481,7 +498,7 @@ pub struct CountdownTimer<TIM: ValidTim> {
 }
 
 #[inline]
-fn enable_tim_clk(syscfg: &mut pac::Sysconfig, idx: u8) {
+pub fn enable_tim_clk(syscfg: &mut pac::Sysconfig, idx: u8) {
     syscfg
         .tim_clk_enable()
         .modify(|r, w| unsafe { w.bits(r.bits() | (1 << idx)) });
@@ -579,9 +596,10 @@ impl<Tim: ValidTim> CountdownTimer<Tim> {
     pub fn load(&mut self, timeout: impl Into<Hertz>) {
         self.tim.reg().ctrl().modify(|_, w| w.enable().clear_bit());
         self.curr_freq = timeout.into();
-        self.rst_val = self.clock.raw() / self.curr_freq.raw();
+        self.rst_val = (self.clock.raw() / self.curr_freq.raw()) - 1;
         self.set_reload(self.rst_val);
-        self.set_count(0);
+        // Decrementing counter, to set the reset value.
+        self.set_count(self.rst_val);
     }
 
     #[inline(always)]
@@ -601,7 +619,7 @@ impl<Tim: ValidTim> CountdownTimer<Tim> {
 
     #[inline(always)]
     pub fn enable(&mut self) {
-        self.tim.reg().ctrl().modify(|_, w| w.enable().set_bit());
+        self.tim.reg().enable().write(|w| unsafe { w.bits(1) });
     }
 
     #[inline(always)]
@@ -778,7 +796,7 @@ pub fn set_up_ms_tick<Tim: ValidTim>(
 /// This function can be called in a specified interrupt handler to increment
 /// the MS counter
 pub fn default_ms_irq_handler() {
-    cortex_m::interrupt::free(|cs| {
+    critical_section::with(|cs| {
         let mut ms = MS_COUNTER.borrow(cs).get();
         ms += 1;
         MS_COUNTER.borrow(cs).set(ms);
@@ -787,7 +805,7 @@ pub fn default_ms_irq_handler() {
 
 /// Get the current MS tick count
 pub fn get_ms_ticks() -> u32 {
-    cortex_m::interrupt::free(|cs| MS_COUNTER.borrow(cs).get())
+    critical_section::with(|cs| MS_COUNTER.borrow(cs).get())
 }
 
 pub struct DelayMs<Tim: ValidTim = pac::Tim0>(CountdownTimer<Tim>);

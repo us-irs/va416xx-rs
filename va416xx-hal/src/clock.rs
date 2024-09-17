@@ -494,7 +494,7 @@ pub struct Clocks {
 
 impl Clocks {
     /// Returns the frequency of the HBO clock
-    pub fn hbo(&self) -> Hertz {
+    pub const fn hbo(&self) -> Hertz {
         HBO_FREQ
     }
 
@@ -504,23 +504,23 @@ impl Clocks {
     }
 
     /// Returns system clock divied by 2.
-    pub fn apb1(&self) -> Hertz {
+    pub const fn apb1(&self) -> Hertz {
         self.apb1
     }
 
     /// Returns system clock divied by 4.
-    pub fn apb2(&self) -> Hertz {
+    pub const fn apb2(&self) -> Hertz {
         self.apb2
     }
 
     /// Returns the system (core) frequency
-    pub fn sysclk(&self) -> Hertz {
+    pub const fn sysclk(&self) -> Hertz {
         self.sysclk
     }
 
     /// Returns the ADC clock frequency which has a separate divider.
     #[cfg(not(feature = "va41628"))]
-    pub fn adc_clk(&self) -> Hertz {
+    pub const fn adc_clk(&self) -> Hertz {
         self.adc_clk
     }
 }

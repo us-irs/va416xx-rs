@@ -108,6 +108,7 @@ mod app {
     use spacepackets::ecss::{
         tc::PusTcReader, tm::PusTmCreator, EcssEnumU8, PusPacket, WritablePusPacket,
     };
+    use va416xx_hal::irq_router::enable_and_init_irq_router;
     use va416xx_hal::{
         clock::ClkgenExt,
         edac,
@@ -163,6 +164,7 @@ mod app {
             .xtal_n_clk_with_src_freq(Hertz::from_raw(EXTCLK_FREQ))
             .freeze(&mut cx.device.sysconfig)
             .unwrap();
+        enable_and_init_irq_router(&mut cx.device.sysconfig, &cx.device.irq_router);
         setup_edac(&mut cx.device.sysconfig);
 
         let gpiob = PinsG::new(&mut cx.device.sysconfig, cx.device.portg);
@@ -488,7 +490,7 @@ mod app {
                     .unwrap();
                 Mono::delay(2.millis()).await;
             }
-            Mono::delay(30.millis()).await;
+            Mono::delay(50.millis()).await;
         }
     }
 

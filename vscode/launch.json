@@ -410,5 +410,65 @@
                 ]
             }
         },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Embassy Example",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "embassy-example",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/embassy-example",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "RTIC Example",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "embassy-example",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/rtic-example",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
     ]
 }

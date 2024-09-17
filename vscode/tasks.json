@@ -4,6 +4,32 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "bootloader",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--bin",
+                "bootloader"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "flashloader",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--bin",
+                "flashloader"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
             "label": "blinky-pac-example",
             "type": "shell",
             "command": "~/.cargo/bin/cargo", // note: full path to the cargo
@@ -24,6 +50,19 @@
                 "build",
                 "--example",
                 "rtt-log"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "timer-ticks-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--example",
+                "timer-ticks"
             ],
             "group": {
                 "kind": "build",
@@ -51,6 +90,19 @@
                 "build",
                 "--example",
                 "uart"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "pwm-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--example",
+                "pwm"
             ],
             "group": {
                 "kind": "build",
@@ -103,6 +155,32 @@
                 "build",
                 "--example",
                 "adc"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "dma-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--example",
+                "dma"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "embassy-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--bin",
+                "embassy-example"
             ],
             "group": {
                 "kind": "build",

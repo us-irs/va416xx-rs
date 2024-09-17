@@ -96,7 +96,9 @@ example.
 ### Using VS Code
 
 Assuming a working debug connection to your VA108xx board, you can debug using VS Code with
-the [`Cortex-Debug` plugin](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug).
+the [`Cortex-Debug` plugin](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug). Please make sure that
+[`objdump-multiarch` and `nm-multiarch`](https://forums.raspberrypi.com/viewtopic.php?t=333146)
+are installed as well.
 
 Some sample configuration files for VS code were provided and can be used by running
 `cp -rT vscode .vscode` like specified above. After that, you can use `Run and Debug`
@@ -111,4 +113,5 @@ configuration variables in your `settings.json`:
 - `"cortex-debug.gdbPath.osx"`
 
 The provided VS Code configurations also provide an integrated RTT logger, which you can access
-via the terminal at `RTT Ch:0 console`.
+via the terminal at `RTT Ch:0 console`. In order for the RTT block address detection to
+work properly, `objdump-multiarch` and `nm-multiarch` need to be installed.

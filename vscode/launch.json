@@ -74,8 +74,7 @@
             "runToEntryPoint": "main",
             "rttConfig": {
                 "enabled": true,
-                // Have to use exact address unfortunately. "auto" does not work for some reason..
-                "address": "0x1fff8000",
+                "address": "auto",
                 "decoders": [
                     {
                         "port": 0,
@@ -104,8 +103,7 @@
             "runToEntryPoint": "main",
             "rttConfig": {
                 "enabled": true,
-                // Have to use exact address unfortunately. "auto" does not work for some reason..
-                "address": "0x1fff8000",
+                "address": "auto",
                 "decoders": [
                     {
                         "port": 0,
@@ -134,8 +132,7 @@
             "runToEntryPoint": "main",
             "rttConfig": {
                 "enabled": true,
-                // Have to use exact address unfortunately. "auto" does not work for some reason..
-                "address": "0x1fff8000",
+                "address": "auto",
                 "decoders": [
                     {
                         "port": 0,
@@ -164,11 +161,11 @@
             "runToEntryPoint": "main",
             "rttConfig": {
                 "enabled": true,
-                // Have to use exact address unfortunately. "auto" does not work for some reason..
-                "address": "0x1fff8000",
+                "address": "auto",
                 "decoders": [
                     {
                         "port": 0,
+                        "timestamp": true,
                         "type": "console"
                     }
                 ]
@@ -194,8 +191,7 @@
             "runToEntryPoint": "main",
             "rttConfig": {
                 "enabled": true,
-                // Have to use exact address unfortunately. "auto" does not work for some reason..
-                "address": "0x1fff8000",
+                "address": "auto",
                 "decoders": [
                     {
                         "port": 0,
@@ -224,8 +220,7 @@
             "runToEntryPoint": "main",
             "rttConfig": {
                 "enabled": true,
-                // Have to use exact address unfortunately. "auto" does not work for some reason..
-                "address": "0x1fff8000",
+                "address": "auto",
                 "decoders": [
                     {
                         "port": 0,
@@ -255,8 +250,7 @@
             "runToEntryPoint": "main",
             "rttConfig": {
                 "enabled": true,
-                // Have to use exact address unfortunately. "auto" does not work for some reason..
-                "address": "0x1fff8000",
+                "address": "auto",
                 "decoders": [
                     {
                         "port": 0,
@@ -286,8 +280,127 @@
             "runToEntryPoint": "main",
             "rttConfig": {
                 "enabled": true,
-                // Have to use exact address unfortunately. "auto" does not work for some reason..
-                "address": "0x1fff8000",
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Debug PWM Example",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "pwm-example",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/examples/pwm",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Debug DMA Example",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "dma-example",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/examples/dma",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Bootloader",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "bootloader",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/bootloader",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Flashloader",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "flashloader",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/flashloader",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
                 "decoders": [
                     {
                         "port": 0,

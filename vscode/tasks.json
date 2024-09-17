@@ -186,5 +186,18 @@
                 "kind": "build",
             }
         },
+        {
+            "label": "rtic-example",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--bin",
+                "rtic-example"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
     ]
 }

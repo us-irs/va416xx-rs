@@ -1,12 +1,14 @@
 [workspace]
 resolver = "2"
 members = [
+  "va416xx",
+  "va416xx-hal",
+  "vorago-peb1",
   "bootloader",
   "flashloader",
   "examples/simple",
-	"va416xx",
-	"va416xx-hal",
-	"vorago-peb1"
+  "examples/embassy",
+  "examples/rtic",
 ]
 exclude = [
   "flashloader/slot-a-blinky",

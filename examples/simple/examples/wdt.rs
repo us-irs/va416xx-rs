@@ -3,11 +3,12 @@
 #![no_std]
 
 use core::cell::Cell;
-use cortex_m::interrupt::Mutex;
 use cortex_m_rt::entry;
+use critical_section::Mutex;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
+use va416xx_hal::irq_router::enable_and_init_irq_router;
 use va416xx_hal::pac::{self, interrupt};
 use va416xx_hal::prelude::*;
 use va416xx_hal::wdt::Wdt;
@@ -40,6 +41,7 @@ fn main() -> ! {
         .xtal_n_clk_with_src_freq(peb1::EXTCLK_FREQ)
         .freeze(&mut dp.sysconfig)
         .unwrap();
+    enable_and_init_irq_router(&mut dp.sysconfig, &dp.irq_router);
     let mut delay_sysclk = cortex_m::delay::Delay::new(cp.SYST, clocks.apb0().raw());
 
     let mut last_interrupt_counter = 0;
@@ -49,7 +51,7 @@ fn main() -> ! {
         if TEST_MODE != TestMode::AllowReset {
             wdt_ctrl.feed();
         }
-        let interrupt_counter = cortex_m::interrupt::free(|cs| WDT_INTRPT_COUNT.borrow(cs).get());
+        let interrupt_counter = critical_section::with(|cs| WDT_INTRPT_COUNT.borrow(cs).get());
         if interrupt_counter > last_interrupt_counter {
             rprintln!("interrupt counter has increased to {}", interrupt_counter);
             last_interrupt_counter = interrupt_counter;
@@ -65,7 +67,7 @@ fn main() -> ! {
 #[interrupt]
 #[allow(non_snake_case)]
 fn WATCHDOG() {
-    cortex_m::interrupt::free(|cs| {
+    critical_section::with(|cs| {
         WDT_INTRPT_COUNT
             .borrow(cs)
             .set(WDT_INTRPT_COUNT.borrow(cs).get() + 1);

@@ -3,12 +3,14 @@
 #![no_std]
 
 use core::cell::Cell;
-use cortex_m::interrupt::Mutex;
+use cortex_m::asm;
 use cortex_m_rt::entry;
+use critical_section::Mutex;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::{
+    irq_router::enable_and_init_irq_router,
     pac::{self, interrupt},
     prelude::*,
     timer::{default_ms_irq_handler, set_up_ms_tick, CountdownTimer, MS_COUNTER},
@@ -35,19 +37,21 @@ fn main() -> ! {
         .xtal_n_clk_with_src_freq(peb1::EXTCLK_FREQ)
         .freeze(&mut dp.sysconfig)
         .unwrap();
+    enable_and_init_irq_router(&mut dp.sysconfig, &dp.irq_router);
     let _ = set_up_ms_tick(&mut dp.sysconfig, dp.tim0, &clocks);
     let mut second_timer = CountdownTimer::new(&mut dp.sysconfig, dp.tim1, &clocks);
-    second_timer.start(1.Hz());
     second_timer.listen();
+    second_timer.start(1.Hz());
     loop {
-        let current_ms = cortex_m::interrupt::free(|cs| MS_COUNTER.borrow(cs).get());
-        if current_ms - last_ms >= 1000 {
-            last_ms = current_ms;
+        let current_ms = critical_section::with(|cs| MS_COUNTER.borrow(cs).get());
+        if current_ms >= last_ms + 1000 {
+            // To prevent drift.
+            last_ms += 1000;
             rprintln!("MS counter: {}", current_ms);
-            let second = cortex_m::interrupt::free(|cs| SEC_COUNTER.borrow(cs).get());
+            let second = critical_section::with(|cs| SEC_COUNTER.borrow(cs).get());
             rprintln!("Second counter: {}", second);
         }
-        cortex_m::asm::delay(10000);
+        asm::delay(1000);
     }
 }
 
@@ -60,7 +64,7 @@ fn TIM0() {
 #[interrupt]
 #[allow(non_snake_case)]
 fn TIM1() {
-    cortex_m::interrupt::free(|cs| {
+    critical_section::with(|cs| {
         let mut sec = SEC_COUNTER.borrow(cs).get();
         sec += 1;
         SEC_COUNTER.borrow(cs).set(sec);

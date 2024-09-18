@@ -24,7 +24,8 @@ It also contains the following helper crates:
 - The [`flashloader`](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/flashloader)
   crate contains a sample flashloader which is able to update the redundant images in the NVM which
   is compatible to the provided bootloader as well.
-- The `examples` folder contains various example applications crates for the HAL and the PAC.
+- The [`examples`](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples)
+  folder contains various example applications crates using the HAL and the PAC.
   This folder also contains dedicated example applications using the
   [`RTIC`](https://rtic.rs/2/book/en/) and [`embassy`](https://github.com/embassy-rs/embassy)
   native Rust RTOSes.

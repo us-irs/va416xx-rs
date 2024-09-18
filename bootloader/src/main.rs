@@ -1,17 +1,5 @@
 //! Vorago bootloader which can boot from two images.
 //!
-//! Bootloader memory map
-//!
-//! * <0x0>     Bootloader start                         <code up to 0x3FFE bytes>
-//! * <0x3FFE>  Bootloader CRC                           <halfword>
-//! * <0x4000>  App image A start                        <code up to 0x1DFFC (~120K) bytes>
-//! * <0x21FFC> App image A CRC check length             <halfword>
-//! * <0x21FFE> App image A CRC check value              <halfword>
-//! * <0x22000> App image B start                        <code up to 0x1DFFC (~120K) bytes>
-//! * <0x3FFFC> App image B CRC check length             <halfword>
-//! * <0x3FFFE> App image B CRC check value              <halfword>
-//! * <0x40000>                                          <end>
-//!
 //! As opposed to the Vorago example code, this bootloader assumes a 40 MHz external clock
 //! but does not scale that clock up.
 #![no_main]
@@ -19,6 +7,9 @@
 
 use cortex_m_rt::entry;
 use crc::{Crc, CRC_32_ISO_HDLC};
+#[cfg(not(feature = "rtt-panic"))]
+use panic_halt as _;
+#[cfg(feature = "rtt-panic")]
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 use va416xx_hal::{
@@ -42,6 +33,9 @@ const DEBUG_PRINTOUTS: bool = true;
 // self-flash itself. It is recommended that you use a tool like probe-rs, Keil IDE, or a flash
 // loader to boot a bootloader without this feature.
 const FLASH_SELF: bool = false;
+// Useful for debugging and see what the bootloader is doing. Enabled currently, because
+// the binary stays small enough.
+const RTT_PRINTOUT: bool = true;
 
 // Important bootloader addresses and offsets, vector table information.
 
@@ -88,8 +82,10 @@ impl WdtInterface for OptWdt {
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!();
-    rprintln!("-- VA416xx bootloader --");
+    if RTT_PRINTOUT {
+        rtt_init_print!();
+        rprintln!("-- VA416xx bootloader --");
+    }
     let mut dp = pac::Peripherals::take().unwrap();
     let cp = cortex_m::Peripherals::take().unwrap();
     // Disable ROM protection.
@@ -133,18 +129,24 @@ fn main() -> ! {
         nvm.write_data(0x0, &first_four_bytes);
         nvm.write_data(0x4, bootloader_data);
         if let Err(e) = nvm.verify_data(0x0, &first_four_bytes) {
-            rprintln!("verification of self-flash to NVM failed: {:?}", e);
+            if RTT_PRINTOUT {
+                rprintln!("verification of self-flash to NVM failed: {:?}", e);
+            }
         }
         if let Err(e) = nvm.verify_data(0x4, bootloader_data) {
-            rprintln!("verification of self-flash to NVM failed: {:?}", e);
+            if RTT_PRINTOUT {
+                rprintln!("verification of self-flash to NVM failed: {:?}", e);
+            }
         }
 
         nvm.write_data(BOOTLOADER_CRC_ADDR, &bootloader_crc.to_be_bytes());
         if let Err(e) = nvm.verify_data(BOOTLOADER_CRC_ADDR, &bootloader_crc.to_be_bytes()) {
-            rprintln!(
-                "error: CRC verification for bootloader self-flash failed: {:?}",
-                e
-            );
+            if RTT_PRINTOUT {
+                rprintln!(
+                    "error: CRC verification for bootloader self-flash failed: {:?}",
+                    e
+                );
+            }
         }
     }
 
@@ -156,7 +158,7 @@ fn main() -> ! {
     } else if check_app_crc(AppSel::B, &opt_wdt) {
         boot_app(AppSel::B, &cp)
     } else {
-        if DEBUG_PRINTOUTS {
+        if DEBUG_PRINTOUTS && RTT_PRINTOUT {
             rprintln!("both images corrupt! booting image A");
         }
         // TODO: Shift a CCSDS packet out to inform host/OBC about image corruption.
@@ -184,7 +186,7 @@ fn check_own_crc(wdt: &OptWdt, nvm: &Nvm, cp: &cortex_m::Peripherals) {
     let crc_calc = digest.finalize();
     wdt.feed();
     if crc_exp == 0x0000 || crc_exp == 0xffff {
-        if DEBUG_PRINTOUTS {
+        if DEBUG_PRINTOUTS && RTT_PRINTOUT {
             rprintln!("BL CRC blank - prog new CRC");
         }
         // Blank CRC, write it to NVM.
@@ -194,7 +196,7 @@ fn check_own_crc(wdt: &OptWdt, nvm: &Nvm, cp: &cortex_m::Peripherals) {
         // cortex_m::peripheral::SCB::sys_reset();
     } else if crc_exp != crc_calc {
         // Bootloader is corrupted. Try to run App A.
-        if DEBUG_PRINTOUTS {
+        if DEBUG_PRINTOUTS && RTT_PRINTOUT {
             rprintln!(
                 "bootloader CRC corrupt, read {} and expected {}. booting image A immediately",
                 crc_calc,
@@ -217,7 +219,7 @@ fn read_four_bytes_at_addr_zero(buf: &mut [u8; 4]) {
     }
 }
 fn check_app_crc(app_sel: AppSel, wdt: &OptWdt) -> bool {
-    if DEBUG_PRINTOUTS {
+    if DEBUG_PRINTOUTS && RTT_PRINTOUT {
         rprintln!("Checking image {:?}", app_sel);
     }
     if app_sel == AppSel::A {
@@ -237,7 +239,9 @@ fn check_app_given_addr(
     let image_size = unsafe { (image_size_addr as *const u32).read_unaligned().to_be() };
     // Sanity check.
     if image_size > APP_A_END_ADDR - APP_A_START_ADDR - 8 {
-        rprintln!("detected invalid app size {}", image_size);
+        if RTT_PRINTOUT {
+            rprintln!("detected invalid app size {}", image_size);
+        }
         return false;
     }
     wdt.feed();
@@ -252,7 +256,7 @@ fn check_app_given_addr(
 }
 
 fn boot_app(app_sel: AppSel, cp: &cortex_m::Peripherals) -> ! {
-    if DEBUG_PRINTOUTS {
+    if DEBUG_PRINTOUTS && RTT_PRINTOUT {
         rprintln!("booting app {:?}", app_sel);
     }
     let clkgen = unsafe { pac::Clkgen::steal() };

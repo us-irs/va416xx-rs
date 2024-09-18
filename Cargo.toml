@@ -41,4 +41,4 @@ debug-assertions = false # <-
 lto = true
 opt-level = 'z'            # <-
 overflow-checks = false  # <-
-# strip = true  # Automatically strip symbols from the binary.
+strip = true  # Automatically strip symbols from the binary.

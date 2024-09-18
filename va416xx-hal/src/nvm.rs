@@ -1,3 +1,10 @@
+//! Non-volatile memory (NVM) driver.
+//!
+//! Provides a basic API to work with the internal NVM of the VA41630 MCU.
+//!
+//! # Examples
+//!
+//! - [Flashloader application](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/flashloader)
 use embedded_hal::spi::MODE_0;
 
 use crate::clock::{Clocks, SyscfgExt};

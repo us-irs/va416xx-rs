@@ -312,13 +312,19 @@ impl ClkgenCfgr {
     }
 
     #[inline]
+    pub fn pll_cfg(mut self, pll_cfg: PllCfg) -> Self {
+        self.pll_cfg = Some(pll_cfg);
+        self
+    }
+
+    #[inline]
     pub fn ref_clk_sel(mut self, ref_clk_sel: RefClkSel) -> Self {
         self.ref_clk_sel = ref_clk_sel;
         self
     }
 
     /// Configures all clocks and return a clock configuration structure containing the final
-    /// frozen clock.
+    /// frozen clocks.
     ///
     /// Internal implementation details: This implementation is based on the HAL implementation
     /// which performs a lot of delays. I do not know if all of those are necessary, but
@@ -499,7 +505,7 @@ impl Clocks {
     }
 
     /// Returns the frequency of the APB0 which is equal to the system clock.
-    pub fn apb0(&self) -> Hertz {
+    pub const fn apb0(&self) -> Hertz {
         self.sysclk()
     }
 

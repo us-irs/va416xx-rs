@@ -3,6 +3,7 @@
 //! ## Examples
 //!
 //! - [UART simple example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/uart.rs)
+//! - [Flashloader app using UART with IRQs](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/flashloader)
 use core::ops::Deref;
 
 use embedded_hal_nb::serial::Read;

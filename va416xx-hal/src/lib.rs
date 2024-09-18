@@ -20,7 +20,7 @@
 //! is not very accurate. You can use the [crate::clock] module for this. If you are working
 //! with interrupts, it is strongly recommended to set up the IRQ router with the
 //! [crate::irq_router] module at the very least because that peripheral has confusing and/or
-//! faulty register reset values which might leads to weird bugs and glitches.
+//! faulty register reset values which might lead to weird bugs and glitches.
 #![no_std]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 #[cfg(test)]
@@ -46,7 +46,6 @@ pub mod edac;
 pub mod gpio;
 pub mod i2c;
 pub mod irq_router;
-pub mod nvm;
 pub mod pwm;
 pub mod spi;
 pub mod time;
@@ -54,6 +53,9 @@ pub mod timer;
 pub mod typelevel;
 pub mod uart;
 pub mod wdt;
+
+#[cfg(feature = "va41630")]
+pub mod nvm;
 
 #[cfg(not(feature = "va41628"))]
 pub mod adc;

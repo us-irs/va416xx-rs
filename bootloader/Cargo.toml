@@ -11,9 +11,11 @@ panic-rtt-target = { version = "0.1.3" }
 panic-halt = { version = "0.2" }
 rtt-target = { version = "0.5" }
 crc = "3"
+static_assertions = "1"
 
 [dependencies.va416xx-hal]
 path = "../va416xx-hal"
+features = ["va41630"]
 
 [features]
 default = []

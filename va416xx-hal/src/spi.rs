@@ -1,11 +1,15 @@
 //! API for the SPI peripheral
 //!
+//! The main abstraction provided by this module are the [Spi] and the [SpiBase] structure.
+//! These provide the [embedded_hal::spi] traits, but also offer a low level interface
+//! via the [SpiLowLevel] trait.
+//!
 //! ## Examples
 //!
 //! - [Blocking SPI example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/spi.rs)
 use core::{convert::Infallible, marker::PhantomData, ops::Deref};
 
-use embedded_hal::spi::Mode;
+use embedded_hal::spi::{Mode, MODE_0};
 
 use crate::{
     clock::{Clocks, PeripheralSelect, SyscfgExt},
@@ -228,100 +232,100 @@ pub trait TransferConfigProvider {
     fn sod(&mut self, sod: bool);
     fn blockmode(&mut self, blockmode: bool);
     fn mode(&mut self, mode: Mode);
-    fn clk_div(&mut self, clk_div: u16);
+    fn clk_cfg(&mut self, clk_cfg: SpiClkConfig);
     fn hw_cs_id(&self) -> u8;
 }
 
 /// This struct contains all configuration parameter which are transfer specific
 /// and might change for transfers to different SPI slaves
-#[derive(Copy, Clone)]
-pub struct TransferConfig<HwCs> {
-    pub clk_div: Option<u16>,
-    pub mode: Option<Mode>,
-    /// This only works if the Slave Output Disable (SOD) bit of the [`SpiConfig`] is set to
-    /// false
+#[derive(Copy, Clone, Debug)]
+pub struct TransferConfigWithHwcs<HwCs> {
     pub hw_cs: Option<HwCs>,
-    pub sod: bool,
-    /// If this is enabled, all data in the FIFO is transmitted in a single frame unless
-    /// the BMSTOP bit is set on a dataword. A frame is defined as CSn being active for the
-    /// duration of multiple data words
-    pub blockmode: bool,
+    pub cfg: TransferConfig,
 }
 
 /// Type erased variant of the transfer configuration. This is required to avoid generics in
 /// the SPI constructor.
-pub struct ErasedTransferConfig {
-    pub clk_div: Option<u16>,
+#[derive(Copy, Clone, Debug)]
+pub struct TransferConfig {
+    pub clk_cfg: Option<SpiClkConfig>,
     pub mode: Option<Mode>,
     pub sod: bool,
     /// If this is enabled, all data in the FIFO is transmitted in a single frame unless
     /// the BMSTOP bit is set on a dataword. A frame is defined as CSn being active for the
     /// duration of multiple data words
     pub blockmode: bool,
+    /// Only used when blockmode is used. The SCK will be stalled until an explicit stop bit
+    /// is set on a written word.
+    pub bmstall: bool,
     pub hw_cs: HwChipSelectId,
 }
 
-impl TransferConfig<NoneT> {
+impl TransferConfigWithHwcs<NoneT> {
     pub fn new_no_hw_cs(
-        clk_div: Option<u16>,
+        clk_cfg: Option<SpiClkConfig>,
         mode: Option<Mode>,
         blockmode: bool,
+        bmstall: bool,
         sod: bool,
     ) -> Self {
-        TransferConfig {
-            clk_div,
-            mode,
+        TransferConfigWithHwcs {
             hw_cs: None,
-            sod,
-            blockmode,
+            cfg: TransferConfig {
+                clk_cfg,
+                mode,
+                sod,
+                blockmode,
+                bmstall,
+                hw_cs: HwChipSelectId::Invalid,
+            },
         }
     }
 }
 
-impl<HwCs: HwCsProvider> TransferConfig<HwCs> {
+impl<HwCs: HwCsProvider> TransferConfigWithHwcs<HwCs> {
     pub fn new(
-        clk_div: Option<u16>,
+        clk_cfg: Option<SpiClkConfig>,
         mode: Option<Mode>,
         hw_cs: Option<HwCs>,
         blockmode: bool,
+        bmstall: bool,
         sod: bool,
     ) -> Self {
-        TransferConfig {
-            clk_div,
-            mode,
+        TransferConfigWithHwcs {
             hw_cs,
-            sod,
-            blockmode,
+            cfg: TransferConfig {
+                clk_cfg,
+                mode,
+                sod,
+                blockmode,
+                bmstall,
+                hw_cs: HwCs::CS_ID,
+            },
         }
     }
 
-    pub fn downgrade(self) -> ErasedTransferConfig {
-        ErasedTransferConfig {
-            clk_div: self.clk_div,
-            mode: self.mode,
-            sod: self.sod,
-            blockmode: self.blockmode,
-            hw_cs: HwCs::CS_ID,
-        }
+    pub fn downgrade(self) -> TransferConfig {
+        self.cfg
     }
 }
 
-impl<HwCs: HwCsProvider> TransferConfigProvider for TransferConfig<HwCs> {
+impl<HwCs: HwCsProvider> TransferConfigProvider for TransferConfigWithHwcs<HwCs> {
     /// Slave Output Disable
     fn sod(&mut self, sod: bool) {
-        self.sod = sod;
+        self.cfg.sod = sod;
     }
 
     fn blockmode(&mut self, blockmode: bool) {
-        self.blockmode = blockmode;
+        self.cfg.blockmode = blockmode;
     }
 
     fn mode(&mut self, mode: Mode) {
-        self.mode = Some(mode);
+        self.cfg.mode = Some(mode);
     }
 
-    fn clk_div(&mut self, clk_div: u16) {
-        self.clk_div = Some(clk_div);
+    fn clk_cfg(&mut self, clk_cfg: SpiClkConfig) {
+        self.cfg.clk_cfg = Some(clk_cfg);
     }
 
     fn hw_cs_id(&self) -> u8 {
@@ -331,7 +335,16 @@ impl<HwCs: HwCsProvider> TransferConfigProvider for TransferConfig<HwCs> {
 
 /// Configuration options for the whole SPI bus. See Programmer Guide p.92 for more details
 pub struct SpiConfig {
-    clk_div: u16,
+    clk: SpiClkConfig,
+    // SPI mode configuration
+    pub init_mode: Mode,
+    /// If this is enabled, all data in the FIFO is transmitted in a single frame unless
+    /// the BMSTOP bit is set on a dataword. A frame is defined as CSn being active for the
+    /// duration of multiple data words. Defaults to true.
+    pub blockmode: bool,
+    /// This enables the stalling of the SPI SCK if in blockmode and the FIFO is empty.
+    /// Currently enabled by default.
+    pub bmstall: bool,
     /// By default, configure SPI for master mode (ms == false)
     ms: bool,
     /// Slave output disable. Useful if separate GPIO pins or decoders are used for CS control
@@ -345,7 +358,11 @@ pub struct SpiConfig {
 impl Default for SpiConfig {
     fn default() -> Self {
         Self {
-            clk_div: DEFAULT_CLK_DIV,
+            init_mode: MODE_0,
+            blockmode: true,
+            bmstall: true,
+            // Default value is definitely valid.
+            clk: SpiClkConfig::from_div(DEFAULT_CLK_DIV).unwrap(),
             ms: Default::default(),
             slave_output_disable: Default::default(),
             loopback_mode: Default::default(),
@@ -360,8 +377,23 @@ impl SpiConfig {
         self
     }
 
-    pub fn clk_div(mut self, clk_div: u16) -> Self {
-        self.clk_div = clk_div;
+    pub fn blockmode(mut self, enable: bool) -> Self {
+        self.blockmode = enable;
+        self
+    }
+
+    pub fn bmstall(mut self, enable: bool) -> Self {
+        self.bmstall = enable;
+        self
+    }
+
+    pub fn mode(mut self, mode: Mode) -> Self {
+        self.init_mode = mode;
+        self
+    }
+
+    pub fn clk_cfg(mut self, clk_cfg: SpiClkConfig) -> Self {
+        self.clk = clk_cfg;
         self
     }
 
@@ -455,6 +487,36 @@ impl Instance for pac::Spi3 {
 // Spi
 //==================================================================================================
 
+/// Low level access trait for the SPI peripheral.
+pub trait SpiLowLevel {
+    /// Low level function to write a word to the SPI FIFO but also checks whether
+    /// there is actually data in the FIFO.
+    ///
+    /// Uses the [nb] API to allow usage in blocking and non-blocking contexts.
+    fn write_fifo(&self, data: u32) -> nb::Result<(), Infallible>;
+
+    /// Low level function to write a word to the SPI FIFO without checking whether
+    /// there FIFO is full.
+    ///
+    /// This does not necesarily mean there is a space in the FIFO available.
+    /// Use [Self::write_fifo] function to write a word into the FIFO reliably.
+    fn write_fifo_unchecked(&self, data: u32);
+
+    /// Low level function to read a word from the SPI FIFO. Must be preceeded by a
+    /// [Self::write_fifo] call.
+    ///
+    /// Uses the [nb] API to allow usage in blocking and non-blocking contexts.
+    fn read_fifo(&self) -> nb::Result<u32, Infallible>;
+
+    /// Low level function to read a word from from the SPI FIFO.
+    ///
+    /// This does not necesarily mean there is a word in the FIFO available.
+    /// Use the [Self::read_fifo] function to read a word from the FIFO reliably using the [nb]
+    /// API.
+    /// You might also need to mask the value to ignore the BMSTART/BMSTOP bit.
+    fn read_fifo_unchecked(&self) -> u32;
+}
+
 pub struct SpiBase<SpiInstance, Word = u8> {
     spi: SpiInstance,
     cfg: SpiConfig,
@@ -462,6 +524,7 @@ pub struct SpiBase<SpiInstance, Word = u8> {
     /// Fill word for read-only SPI transactions.
     pub fill_word: Word,
     blockmode: bool,
+    bmstall: bool,
     word: PhantomData<Word>,
 }
 
@@ -479,7 +542,8 @@ pub fn mode_to_cpo_cph_bit(mode: embedded_hal::spi::Mode) -> (bool, bool) {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct SpiClkConfig {
     prescale_val: u16,
     scrdv: u8,
@@ -491,6 +555,23 @@ impl SpiClkConfig {
     }
     pub fn scrdv(&self) -> u8 {
         self.scrdv
+    }
+}
+
+impl SpiClkConfig {
+    pub fn new(prescale_val: u16, scrdv: u8) -> Self {
+        Self {
+            prescale_val,
+            scrdv,
+        }
+    }
+
+    pub fn from_div(div: u16) -> Result<Self, SpiClkConfigError> {
+        spi_clk_config_from_div(div)
+    }
+
+    pub fn from_clk(spi_clk: Hertz, clocks: &Clocks) -> Option<Self> {
+        clk_div_for_target_clock(spi_clk, clocks).map(|div| spi_clk_config_from_div(div).unwrap())
     }
 }
 
@@ -566,27 +647,21 @@ where
     <Word as TryFrom<u32>>::Error: core::fmt::Debug,
 {
     #[inline]
-    pub fn cfg_clock_from_div(&mut self, div: u16) -> Result<(), SpiClkConfigError> {
-        let val = spi_clk_config_from_div(div)?;
-        self.spi_instance()
+    pub fn cfg_clock(&mut self, cfg: SpiClkConfig) {
+        self.spi
             .ctrl0()
-            .modify(|_, w| unsafe { w.scrdv().bits(val.scrdv as u8) });
-        self.spi_instance()
-            .clkprescale()
-            .write(|w| unsafe { w.bits(val.prescale_val as u32) });
-        Ok(())
-    }
-
-    /*
-    #[inline]
-    pub fn cfg_clock(&mut self, spi_clk: impl Into<Hertz>) {
-        let clk_prescale =
-            self.apb1_clk.raw() / (spi_clk.into().raw() * (self.cfg.ser_clock_rate_div as u32 + 1));
+            .modify(|_, w| unsafe { w.scrdv().bits(cfg.scrdv) });
         self.spi
             .clkprescale()
-            .write(|w| unsafe { w.bits(clk_prescale) });
+            .write(|w| unsafe { w.bits(cfg.prescale_val as u32) });
     }
-        */
+
+    #[inline]
+    pub fn cfg_clock_from_div(&mut self, div: u16) -> Result<(), SpiClkConfigError> {
+        let val = spi_clk_config_from_div(div)?;
+        self.cfg_clock(val);
+        Ok(())
+    }
 
     #[inline]
     pub fn cfg_mode(&mut self, mode: Mode) {
@@ -598,7 +673,7 @@ where
     }
 
     #[inline]
-    pub fn spi_instance(&self) -> &SpiInstance {
+    pub fn spi(&self) -> &SpiInstance {
         &self.spi
     }
 
@@ -646,17 +721,17 @@ where
 
     pub fn cfg_transfer<HwCs: OptionalHwCs<SpiInstance>>(
         &mut self,
-        transfer_cfg: &TransferConfig<HwCs>,
-    ) -> Result<(), SpiClkConfigError> {
-        if let Some(trans_clk_div) = transfer_cfg.clk_div {
-            self.cfg_clock_from_div(trans_clk_div)?;
+        transfer_cfg: &TransferConfigWithHwcs<HwCs>,
+    ) {
+        if let Some(trans_clk_div) = transfer_cfg.cfg.clk_cfg {
+            self.cfg_clock(trans_clk_div);
         }
-        if let Some(mode) = transfer_cfg.mode {
+        if let Some(mode) = transfer_cfg.cfg.mode {
             self.cfg_mode(mode);
         }
-        self.blockmode = transfer_cfg.blockmode;
+        self.blockmode = transfer_cfg.cfg.blockmode;
         self.spi.ctrl1().modify(|_, w| {
-            if transfer_cfg.sod {
+            if transfer_cfg.cfg.sod {
                 w.sod().set_bit();
             } else if transfer_cfg.hw_cs.is_some() {
                 w.sod().clear_bit();
@@ -666,78 +741,264 @@ where
             } else {
                 w.sod().clear_bit();
             }
-            if transfer_cfg.blockmode {
-                w.blockmode().set_bit();
-            } else {
-                w.blockmode().clear_bit();
-            }
-            w
+            w.blockmode().bit(transfer_cfg.cfg.blockmode);
+            w.bmstall().bit(transfer_cfg.cfg.bmstall)
         });
+    }
+
+    /// Low level function to write a word to the SPI FIFO but also checks whether
+    /// there is actually data in the FIFO.
+    ///
+    /// Uses the [nb] API to allow usage in blocking and non-blocking contexts.
+    #[inline(always)]
+    pub fn write_fifo(&self, data: u32) -> nb::Result<(), Infallible> {
+        if self.spi.status().read().tnf().bit_is_clear() {
+            return Err(nb::Error::WouldBlock);
+        }
+        self.write_fifo_unchecked(data);
         Ok(())
     }
 
-    /// Sends a word to the slave
+    /// Low level function to write a word to the SPI FIFO without checking whether
+    /// there FIFO is full.
+    ///
+    /// This does not necesarily mean there is a space in the FIFO available.
+    /// Use [Self::write_fifo] function to write a word into the FIFO reliably.
     #[inline(always)]
-    fn send_blocking(&self, word: Word) {
-        // TODO: Upper limit for wait cycles to avoid complete hangups?
-        while self.spi.status().read().tnf().bit_is_clear() {}
-        self.send(word)
+    pub fn write_fifo_unchecked(&self, data: u32) {
+        self.spi.data().write(|w| unsafe { w.bits(data) });
     }
 
+    /// Low level function to read a word from the SPI FIFO. Must be preceeded by a
+    /// [Self::write_fifo] call.
+    ///
+    /// Uses the [nb] API to allow usage in blocking and non-blocking contexts.
     #[inline(always)]
-    fn send(&self, word: Word) {
-        self.spi.data().write(|w| unsafe { w.bits(word.into()) });
+    pub fn read_fifo(&self) -> nb::Result<u32, Infallible> {
+        if self.spi.status().read().rne().bit_is_clear() {
+            return Err(nb::Error::WouldBlock);
+        }
+        Ok(self.read_fifo_unchecked())
     }
 
-    /// Read a word from the slave. Must be preceeded by a [`send`](Self::send) call
+    /// Low level function to read a word from from the SPI FIFO.
+    ///
+    /// This does not necesarily mean there is a word in the FIFO available.
+    /// Use the [Self::read_fifo] function to read a word from the FIFO reliably using the [nb]
+    /// API.
+    /// You might also need to mask the value to ignore the BMSTART/BMSTOP bit.
     #[inline(always)]
-    fn read_blocking(&self) -> Word {
-        // TODO: Upper limit for wait cycles to avoid complete hangups?
-        while self.spi.status().read().rne().bit_is_clear() {}
-        self.read_single_word()
+    pub fn read_fifo_unchecked(&self) -> u32 {
+        self.spi.data().read().bits()
     }
 
-    #[inline(always)]
-    fn read_single_word(&self) -> Word {
-        (self.spi.data().read().bits() & Word::MASK)
-            .try_into()
-            .unwrap()
+    fn flush_internal(&self) {
+        let mut status_reg = self.spi.status().read();
+        while status_reg.tfe().bit_is_clear()
+            || status_reg.rne().bit_is_set()
+            || status_reg.busy().bit_is_set()
+        {
+            if status_reg.rne().bit_is_set() {
+                self.read_fifo_unchecked();
+            }
+            status_reg = self.spi.status().read();
+        }
     }
 
     fn transfer_preparation(&self, words: &[Word]) -> Result<(), Infallible> {
         if words.is_empty() {
             return Ok(());
         }
-        let mut status_reg = self.spi.status().read();
-        // Wait until all bytes have been transferred.
-        while status_reg.tfe().bit_is_clear() {
-            // Ignore all received read words.
-            if status_reg.rne().bit_is_set() {
-                self.clear_rx_fifo();
-            }
-            status_reg = self.spi.status().read();
-        }
-        // Ignore all received read words.
-        if status_reg.rne().bit_is_set() {
-            self.clear_rx_fifo();
-        }
+        self.flush_internal();
         Ok(())
     }
 
-    fn initial_send_fifo_pumping(&self, words: Option<&[Word]>) -> usize {
+    // The FIFO can hold a guaranteed amount of data, so we can pump it on transfer
+    // initialization. Returns the amount of written bytes.
+    fn initial_send_fifo_pumping_with_words(&self, words: &[Word]) -> usize {
         if self.blockmode {
             self.spi.ctrl1().modify(|_, w| w.mtxpause().set_bit())
         }
         // Fill the first half of the write FIFO
         let mut current_write_idx = 0;
-        for _ in 0..core::cmp::min(FILL_DEPTH, words.map_or(0, |words| words.len())) {
-            self.send_blocking(words.map_or(self.fill_word, |words| words[current_write_idx]));
+        let smaller_idx = core::cmp::min(FILL_DEPTH, words.len());
+        for _ in 0..smaller_idx {
+            if current_write_idx == smaller_idx.saturating_sub(1) && self.bmstall {
+                self.write_fifo_unchecked(words[current_write_idx].into() | BMSTART_BMSTOP_MASK);
+            } else {
+                self.write_fifo_unchecked(words[current_write_idx].into());
+            }
             current_write_idx += 1;
         }
         if self.blockmode {
             self.spi.ctrl1().modify(|_, w| w.mtxpause().clear_bit())
         }
         current_write_idx
+    }
+
+    // The FIFO can hold a guaranteed amount of data, so we can pump it on transfer
+    // initialization.
+    fn initial_send_fifo_pumping_with_fill_words(&self, send_len: usize) -> usize {
+        if self.blockmode {
+            self.spi.ctrl1().modify(|_, w| w.mtxpause().set_bit())
+        }
+        // Fill the first half of the write FIFO
+        let mut current_write_idx = 0;
+        let smaller_idx = core::cmp::min(FILL_DEPTH, send_len);
+        for _ in 0..smaller_idx {
+            if current_write_idx == smaller_idx.saturating_sub(1) && self.bmstall {
+                self.write_fifo_unchecked(self.fill_word.into() | BMSTART_BMSTOP_MASK);
+            } else {
+                self.write_fifo_unchecked(self.fill_word.into());
+            }
+            current_write_idx += 1;
+        }
+        if self.blockmode {
+            self.spi.ctrl1().modify(|_, w| w.mtxpause().clear_bit())
+        }
+        current_write_idx
+    }
+}
+
+impl<SpiInstance: Instance, Word: WordProvider> SpiLowLevel for SpiBase<SpiInstance, Word>
+where
+    <Word as TryFrom<u32>>::Error: core::fmt::Debug,
+{
+    #[inline(always)]
+    fn write_fifo(&self, data: u32) -> nb::Result<(), Infallible> {
+        if self.spi.status().read().tnf().bit_is_clear() {
+            return Err(nb::Error::WouldBlock);
+        }
+        self.write_fifo_unchecked(data);
+        Ok(())
+    }
+
+    #[inline(always)]
+    fn write_fifo_unchecked(&self, data: u32) {
+        self.spi.data().write(|w| unsafe { w.bits(data) });
+    }
+
+    #[inline(always)]
+    fn read_fifo(&self) -> nb::Result<u32, Infallible> {
+        if self.spi.status().read().rne().bit_is_clear() {
+            return Err(nb::Error::WouldBlock);
+        }
+        Ok(self.read_fifo_unchecked())
+    }
+
+    #[inline(always)]
+    fn read_fifo_unchecked(&self) -> u32 {
+        self.spi.data().read().bits()
+    }
+}
+
+impl<SpiI: Instance, Word: WordProvider> embedded_hal::spi::ErrorType for SpiBase<SpiI, Word> {
+    type Error = Infallible;
+}
+
+impl<SpiI: Instance, Word: WordProvider> embedded_hal::spi::SpiBus<Word> for SpiBase<SpiI, Word>
+where
+    <Word as TryFrom<u32>>::Error: core::fmt::Debug,
+{
+    fn read(&mut self, words: &mut [Word]) -> Result<(), Self::Error> {
+        self.transfer_preparation(words)?;
+        let mut current_read_idx = 0;
+        let mut current_write_idx = self.initial_send_fifo_pumping_with_fill_words(words.len());
+        loop {
+            if current_read_idx < words.len() {
+                words[current_read_idx] = (nb::block!(self.read_fifo())? & Word::MASK)
+                    .try_into()
+                    .unwrap();
+                current_read_idx += 1;
+            }
+            if current_write_idx < words.len() {
+                if current_write_idx == words.len() - 1 && self.bmstall {
+                    nb::block!(self.write_fifo(self.fill_word.into() | BMSTART_BMSTOP_MASK))?;
+                } else {
+                    nb::block!(self.write_fifo(self.fill_word.into()))?;
+                }
+                current_write_idx += 1;
+            }
+            if current_read_idx >= words.len() && current_write_idx >= words.len() {
+                break;
+            }
+        }
+        Ok(())
+    }
+
+    fn write(&mut self, words: &[Word]) -> Result<(), Self::Error> {
+        self.transfer_preparation(words)?;
+        let mut current_write_idx = self.initial_send_fifo_pumping_with_words(words);
+        while current_write_idx < words.len() {
+            if current_write_idx == words.len() - 1 && self.bmstall {
+                nb::block!(self.write_fifo(words[current_write_idx].into() | BMSTART_BMSTOP_MASK))?;
+            } else {
+                nb::block!(self.write_fifo(words[current_write_idx].into()))?;
+            }
+            current_write_idx += 1;
+            // Ignore received words.
+            if self.spi.status().read().rne().bit_is_set() {
+                self.clear_rx_fifo();
+            }
+        }
+        Ok(())
+    }
+
+    fn transfer(&mut self, read: &mut [Word], write: &[Word]) -> Result<(), Self::Error> {
+        self.transfer_preparation(write)?;
+        let mut current_read_idx = 0;
+        let mut current_write_idx = self.initial_send_fifo_pumping_with_words(write);
+        while current_read_idx < read.len() || current_write_idx < write.len() {
+            if current_write_idx < write.len() {
+                if current_write_idx == write.len() - 1 && self.bmstall {
+                    nb::block!(
+                        self.write_fifo(write[current_write_idx].into() | BMSTART_BMSTOP_MASK)
+                    )?;
+                } else {
+                    nb::block!(self.write_fifo(write[current_write_idx].into()))?;
+                }
+                current_write_idx += 1;
+            }
+            if current_read_idx < read.len() {
+                read[current_read_idx] = (nb::block!(self.read_fifo())? & Word::MASK)
+                    .try_into()
+                    .unwrap();
+                current_read_idx += 1;
+            }
+        }
+
+        Ok(())
+    }
+
+    fn transfer_in_place(&mut self, words: &mut [Word]) -> Result<(), Self::Error> {
+        self.transfer_preparation(words)?;
+        let mut current_read_idx = 0;
+        let mut current_write_idx = self.initial_send_fifo_pumping_with_words(words);
+
+        while current_read_idx < words.len() || current_write_idx < words.len() {
+            if current_write_idx < words.len() {
+                if current_write_idx == words.len() - 1 && self.bmstall {
+                    nb::block!(
+                        self.write_fifo(words[current_write_idx].into() | BMSTART_BMSTOP_MASK)
+                    )?;
+                } else {
+                    nb::block!(self.write_fifo(words[current_write_idx].into()))?;
+                }
+                current_write_idx += 1;
+            }
+            if current_read_idx < words.len() && current_read_idx < current_write_idx {
+                words[current_read_idx] = (nb::block!(self.read_fifo())? & Word::MASK)
+                    .try_into()
+                    .unwrap();
+                current_read_idx += 1;
+            }
+        }
+        Ok(())
+    }
+
+    fn flush(&mut self) -> Result<(), Self::Error> {
+        self.flush_internal();
+        Ok(())
     }
 }
 
@@ -772,55 +1033,44 @@ where
         spi: SpiI,
         pins: (Sck, Miso, Mosi),
         spi_cfg: SpiConfig,
-        transfer_cfg: Option<&ErasedTransferConfig>,
-    ) -> Result<Self, SpiClkConfigError> {
+    ) -> Self {
         crate::clock::enable_peripheral_clock(syscfg, SpiI::PERIPH_SEL);
         // This is done in the C HAL.
         syscfg.assert_periph_reset_for_two_cycles(SpiI::PERIPH_SEL);
         let SpiConfig {
-            clk_div,
+            clk,
+            init_mode,
+            blockmode,
+            bmstall,
             ms,
             slave_output_disable,
             loopback_mode,
             master_delayer_capture,
         } = spi_cfg;
-        let mut init_mode = embedded_hal::spi::MODE_0;
-        let mut ss = 0;
-        let mut init_blockmode = false;
-        let apb1_clk = clocks.apb1();
-        if let Some(transfer_cfg) = transfer_cfg {
-            if let Some(mode) = transfer_cfg.mode {
-                init_mode = mode;
-            }
-            //self.cfg_clock_from_div(transfer_cfg.clk_div);
-            if transfer_cfg.hw_cs != HwChipSelectId::Invalid {
-                ss = transfer_cfg.hw_cs as u8;
-            }
-            init_blockmode = transfer_cfg.blockmode;
-        }
 
-        let spi_clk_cfg = spi_clk_config_from_div(clk_div)?;
         let (cpo_bit, cph_bit) = mode_to_cpo_cph_bit(init_mode);
         spi.ctrl0().write(|w| {
             unsafe {
                 w.size().bits(Word::word_reg());
-                w.scrdv().bits(spi_clk_cfg.scrdv);
+                w.scrdv().bits(clk.scrdv);
                 // Clear clock phase and polarity. Will be set to correct value for each
                 // transfer
                 w.spo().bit(cpo_bit);
                 w.sph().bit(cph_bit)
             }
         });
+
         spi.ctrl1().write(|w| {
             w.lbm().bit(loopback_mode);
             w.sod().bit(slave_output_disable);
             w.ms().bit(ms);
             w.mdlycap().bit(master_delayer_capture);
-            w.blockmode().bit(init_blockmode);
-            unsafe { w.ss().bits(ss) }
+            w.blockmode().bit(blockmode);
+            w.bmstall().bit(bmstall);
+            unsafe { w.ss().bits(0) }
         });
         spi.clkprescale()
-            .write(|w| unsafe { w.bits(spi_clk_cfg.prescale_val as u32) });
+            .write(|w| unsafe { w.bits(clk.prescale_val as u32) });
 
         spi.fifo_clr().write(|w| {
             w.rxfifo().set_bit();
@@ -829,26 +1079,30 @@ where
         // Enable the peripheral as the last step as recommended in the
         // programmers guide
         spi.ctrl1().modify(|_, w| w.enable().set_bit());
-        Ok(Spi {
+        Spi {
             inner: SpiBase {
                 spi,
                 cfg: spi_cfg,
-                apb1_clk,
+                apb1_clk: clocks.apb1(),
                 fill_word: Default::default(),
-                blockmode: init_blockmode,
+                bmstall,
+                blockmode,
                 word: PhantomData,
             },
             pins,
-        })
+        }
     }
 
     delegate::delegate! {
         to self.inner {
             #[inline]
+            pub fn cfg_clock(&mut self, cfg: SpiClkConfig);
+
+            #[inline]
             pub fn cfg_clock_from_div(&mut self, div: u16) -> Result<(), SpiClkConfigError>;
 
             #[inline]
-            pub fn spi_instance(&self) -> &SpiI;
+            pub fn spi(&self) -> &SpiI;
 
             #[inline]
             pub fn cfg_mode(&mut self, mode: Mode);
@@ -857,8 +1111,8 @@ where
             pub fn perid(&self) -> u32;
 
             pub fn cfg_transfer<HwCs: OptionalHwCs<SpiI>>(
-                &mut self, transfer_cfg: &TransferConfig<HwCs>
-            ) -> Result<(), SpiClkConfigError>;
+                &mut self, transfer_cfg: &TransferConfigWithHwcs<HwCs>
+            );
         }
     }
 
@@ -882,140 +1136,23 @@ where
     }
 }
 
-/// Changing the word size also requires a type conversion
-impl<SpiI: Instance, Sck: PinSck<SpiI>, Miso: PinMiso<SpiI>, Mosi: PinMosi<SpiI>>
-    From<Spi<SpiI, (Sck, Miso, Mosi), u8>> for Spi<SpiI, (Sck, Miso, Mosi), u16>
-{
-    fn from(old_spi: Spi<SpiI, (Sck, Miso, Mosi), u8>) -> Self {
-        old_spi
-            .inner
-            .spi
-            .ctrl0()
-            .modify(|_, w| unsafe { w.size().bits(WordSize::SixteenBits as u8) });
-        Spi {
-            inner: SpiBase {
-                spi: old_spi.inner.spi,
-                cfg: old_spi.inner.cfg,
-                blockmode: old_spi.inner.blockmode,
-                fill_word: Default::default(),
-                apb1_clk: old_spi.inner.apb1_clk,
-                word: PhantomData,
-            },
-            pins: old_spi.pins,
-        }
-    }
-}
-
-/// Changing the word size also requires a type conversion
-impl<SpiI: Instance, Sck: PinSck<SpiI>, Miso: PinMiso<SpiI>, Mosi: PinMosi<SpiI>>
-    From<Spi<SpiI, (Sck, Miso, Mosi), u16>> for Spi<SpiI, (Sck, Miso, Mosi), u8>
-{
-    fn from(old_spi: Spi<SpiI, (Sck, Miso, Mosi), u16>) -> Self {
-        old_spi
-            .inner
-            .spi
-            .ctrl0()
-            .modify(|_, w| unsafe { w.size().bits(WordSize::EightBits as u8) });
-        Spi {
-            inner: SpiBase {
-                spi: old_spi.inner.spi,
-                cfg: old_spi.inner.cfg,
-                blockmode: old_spi.inner.blockmode,
-                apb1_clk: old_spi.inner.apb1_clk,
-                fill_word: Default::default(),
-                word: PhantomData,
-            },
-            pins: old_spi.pins,
-        }
-    }
-}
-
-impl<SpiI: Instance, Word: WordProvider> embedded_hal::spi::ErrorType for SpiBase<SpiI, Word> {
-    type Error = Infallible;
-}
-
-impl<SpiI: Instance, Word: WordProvider> embedded_hal::spi::SpiBus<Word> for SpiBase<SpiI, Word>
+impl<
+        SpiI: Instance,
+        Sck: PinSck<SpiI>,
+        Miso: PinMiso<SpiI>,
+        Mosi: PinMosi<SpiI>,
+        Word: WordProvider,
+    > SpiLowLevel for Spi<SpiI, (Sck, Miso, Mosi), Word>
 where
     <Word as TryFrom<u32>>::Error: core::fmt::Debug,
 {
-    fn read(&mut self, words: &mut [Word]) -> Result<(), Self::Error> {
-        self.transfer_preparation(words)?;
-        let mut current_read_idx = 0;
-        let mut current_write_idx = self.initial_send_fifo_pumping(None);
-        loop {
-            if current_write_idx < words.len() {
-                self.send_blocking(self.fill_word);
-                current_write_idx += 1;
-            }
-            if current_read_idx < words.len() {
-                words[current_read_idx] = self.read_blocking();
-                current_read_idx += 1;
-            }
-            if current_read_idx >= words.len() && current_write_idx >= words.len() {
-                break;
-            }
+    delegate::delegate! {
+        to self.inner {
+            fn write_fifo(&self, data: u32) -> nb::Result<(), Infallible>;
+            fn write_fifo_unchecked(&self, data: u32);
+            fn read_fifo(&self) -> nb::Result<u32, Infallible>;
+            fn read_fifo_unchecked(&self) -> u32;
         }
-        Ok(())
-    }
-
-    fn write(&mut self, words: &[Word]) -> Result<(), Self::Error> {
-        self.transfer_preparation(words)?;
-        let mut current_write_idx = self.initial_send_fifo_pumping(Some(words));
-        while current_write_idx < words.len() {
-            self.send_blocking(words[current_write_idx]);
-            current_write_idx += 1;
-            // Ignore received words.
-            if self.spi.status().read().rne().bit_is_set() {
-                self.clear_rx_fifo();
-            }
-        }
-        Ok(())
-    }
-
-    fn transfer(&mut self, read: &mut [Word], write: &[Word]) -> Result<(), Self::Error> {
-        self.transfer_preparation(write)?;
-        let mut current_read_idx = 0;
-        let mut current_write_idx = self.initial_send_fifo_pumping(Some(write));
-        while current_read_idx < read.len() || current_write_idx < write.len() {
-            if current_write_idx < write.len() {
-                self.send_blocking(write[current_write_idx]);
-                current_write_idx += 1;
-            }
-            if current_read_idx < read.len() {
-                read[current_read_idx] = self.read_blocking();
-                current_read_idx += 1;
-            }
-        }
-
-        Ok(())
-    }
-
-    fn transfer_in_place(&mut self, words: &mut [Word]) -> Result<(), Self::Error> {
-        self.transfer_preparation(words)?;
-        let mut current_read_idx = 0;
-        let mut current_write_idx = self.initial_send_fifo_pumping(Some(words));
-
-        while current_read_idx < words.len() || current_write_idx < words.len() {
-            if current_write_idx < words.len() {
-                self.send_blocking(words[current_write_idx]);
-                current_write_idx += 1;
-            }
-            if current_read_idx < words.len() && current_read_idx < current_write_idx {
-                words[current_read_idx] = self.read_blocking();
-                current_read_idx += 1;
-            }
-        }
-        Ok(())
-    }
-
-    fn flush(&mut self) -> Result<(), Self::Error> {
-        let status_reg = self.spi.status().read();
-        while status_reg.tfe().bit_is_clear() || status_reg.rne().bit_is_set() {
-            if status_reg.rne().bit_is_set() {
-                self.read_single_word();
-            }
-        }
-        Ok(())
     }
 }
 
@@ -1040,23 +1177,63 @@ impl<
 where
     <Word as TryFrom<u32>>::Error: core::fmt::Debug,
 {
-    fn read(&mut self, words: &mut [Word]) -> Result<(), Self::Error> {
-        self.inner.read(words)
+    delegate::delegate! {
+        to self.inner {
+            fn read(&mut self, words: &mut [Word]) -> Result<(), Self::Error>;
+            fn write(&mut self, words: &[Word]) -> Result<(), Self::Error>;
+            fn transfer(&mut self, read: &mut [Word], write: &[Word]) -> Result<(), Self::Error>;
+            fn transfer_in_place(&mut self, words: &mut [Word]) -> Result<(), Self::Error>;
+            fn flush(&mut self) -> Result<(), Self::Error>;
+        }
     }
+}
 
-    fn write(&mut self, words: &[Word]) -> Result<(), Self::Error> {
-        self.inner.write(words)
+/// Changing the word size also requires a type conversion
+impl<SpiI: Instance, Sck: PinSck<SpiI>, Miso: PinMiso<SpiI>, Mosi: PinMosi<SpiI>>
+    From<Spi<SpiI, (Sck, Miso, Mosi), u8>> for Spi<SpiI, (Sck, Miso, Mosi), u16>
+{
+    fn from(old_spi: Spi<SpiI, (Sck, Miso, Mosi), u8>) -> Self {
+        old_spi
+            .inner
+            .spi
+            .ctrl0()
+            .modify(|_, w| unsafe { w.size().bits(WordSize::SixteenBits as u8) });
+        Spi {
+            inner: SpiBase {
+                spi: old_spi.inner.spi,
+                cfg: old_spi.inner.cfg,
+                blockmode: old_spi.inner.blockmode,
+                bmstall: old_spi.inner.bmstall,
+                fill_word: Default::default(),
+                apb1_clk: old_spi.inner.apb1_clk,
+                word: PhantomData,
+            },
+            pins: old_spi.pins,
+        }
     }
+}
 
-    fn transfer(&mut self, read: &mut [Word], write: &[Word]) -> Result<(), Self::Error> {
-        self.inner.transfer(read, write)
-    }
-
-    fn transfer_in_place(&mut self, words: &mut [Word]) -> Result<(), Self::Error> {
-        self.inner.transfer_in_place(words)
-    }
-
-    fn flush(&mut self) -> Result<(), Self::Error> {
-        self.inner.flush()
+/// Changing the word size also requires a type conversion
+impl<SpiI: Instance, Sck: PinSck<SpiI>, Miso: PinMiso<SpiI>, Mosi: PinMosi<SpiI>>
+    From<Spi<SpiI, (Sck, Miso, Mosi), u16>> for Spi<SpiI, (Sck, Miso, Mosi), u8>
+{
+    fn from(old_spi: Spi<SpiI, (Sck, Miso, Mosi), u16>) -> Self {
+        old_spi
+            .inner
+            .spi
+            .ctrl0()
+            .modify(|_, w| unsafe { w.size().bits(WordSize::EightBits as u8) });
+        Spi {
+            inner: SpiBase {
+                spi: old_spi.inner.spi,
+                cfg: old_spi.inner.cfg,
+                blockmode: old_spi.inner.blockmode,
+                bmstall: old_spi.inner.bmstall,
+                apb1_clk: old_spi.inner.apb1_clk,
+                fill_word: Default::default(),
+                word: PhantomData,
+            },
+            pins: old_spi.pins,
+        }
     }
 }

@@ -2,8 +2,13 @@
 #![no_main]
 #![no_std]
 
+use va416xx_hal::time::Hertz;
+
+const EXTCLK_FREQ: Hertz = Hertz::from_raw(40_000_000);
+
 #[rtic::app(device = pac, dispatchers = [U1, U2, U3])]
 mod app {
+    use super::*;
     use cortex_m::asm;
     use embedded_hal::digital::StatefulOutputPin;
     use panic_rtt_target as _;
@@ -13,6 +18,7 @@ mod app {
     use va416xx_hal::{
         gpio::{OutputReadablePushPull, Pin, PinsG, PG5},
         pac,
+        prelude::*,
     };
 
     #[local]
@@ -23,14 +29,22 @@ mod app {
     #[shared]
     struct Shared {}
 
-    rtic_monotonics::systick_monotonic!(Mono, 10_000);
+    rtic_monotonics::systick_monotonic!(Mono, 1_000);
 
     #[init]
-    fn init(_ctx: init::Context) -> (Shared, Local) {
+    fn init(mut cx: init::Context) -> (Shared, Local) {
         rtt_init_default!();
-        rprintln!("-- Vorago RTIC template --");
-        let mut dp = pac::Peripherals::take().unwrap();
-        let portg = PinsG::new(&mut dp.sysconfig, dp.portg);
+        rprintln!("-- Vorago RTIC example application --");
+        // Use the external clock connected to XTAL_N.
+        let clocks = cx
+            .device
+            .clkgen
+            .constrain()
+            .xtal_n_clk_with_src_freq(EXTCLK_FREQ)
+            .freeze(&mut cx.device.sysconfig)
+            .unwrap();
+        Mono::start(cx.core.SYST, clocks.sysclk().raw());
+        let portg = PinsG::new(&mut cx.device.sysconfig, cx.device.portg);
         let led = portg.pg5.into_readable_push_pull_output();
         blinky::spawn().ok();
         (Shared {}, Local { led })

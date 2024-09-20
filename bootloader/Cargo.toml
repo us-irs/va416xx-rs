@@ -8,8 +8,13 @@ cortex-m = "0.7"
 cortex-m-rt = "0.7"
 embedded-hal = "1"
 panic-rtt-target = { version = "0.1.3" }
+panic-halt = { version = "0.2" }
 rtt-target = { version = "0.5" }
 crc = "3"
 
 [dependencies.va416xx-hal]
 path = "../va416xx-hal"
+
+[features]
+default = []
+rtt-panic = []

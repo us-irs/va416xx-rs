@@ -99,9 +99,9 @@ example.
 
 ### Using VS Code
 
-Assuming a working debug connection to your VA108xx board, you can debug using VS Code with
-the [`Cortex-Debug` plugin](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug). Please make sure that
-[`objdump-multiarch` and `nm-multiarch`](https://forums.raspberrypi.com/viewtopic.php?t=333146)
+Assuming a working debug connection to your VA416xx board, you can debug using VS Code with
+the [`Cortex-Debug` plugin](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug).
+Please make sure that [`objdump-multiarch` and `nm-multiarch`](https://forums.raspberrypi.com/viewtopic.php?t=333146)
 are installed as well.
 
 Some sample configuration files for VS code were provided and can be used by running

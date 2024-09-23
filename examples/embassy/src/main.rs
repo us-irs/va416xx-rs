@@ -1,13 +1,12 @@
 #![no_std]
 #![no_main]
+use embassy_example::EXTCLK_FREQ;
 use embassy_executor::Spawner;
 use embassy_time::{Duration, Instant, Ticker};
 use embedded_hal::digital::StatefulOutputPin;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 use va416xx_hal::{gpio::PinsG, pac, prelude::*, time::Hertz};
-
-const EXTCLK_FREQ: u32 = 40_000_000;
 
 // main is itself an async function.
 #[embassy_executor::main]

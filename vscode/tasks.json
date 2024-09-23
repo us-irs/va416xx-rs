@@ -96,6 +96,19 @@
             }
         },
         {
+            "label": "uart-echo-with-irq",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--bin",
+                "uart-echo-with-irq"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
             "label": "pwm-example",
             "type": "shell",
             "command": "~/.cargo/bin/cargo", // note: full path to the cargo

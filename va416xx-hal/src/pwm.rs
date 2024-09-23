@@ -9,8 +9,10 @@ use core::convert::Infallible;
 use core::marker::PhantomData;
 
 use crate::pac;
+use crate::time::Hertz;
+pub use crate::timer::ValidTim;
+use crate::timer::{TimAndPinRegister, TimDynRegister, TimPin, TimRegInterface, ValidTimAndPin};
 use crate::{clock::Clocks, gpio::DynPinId};
-pub use crate::{gpio::PinId, time::Hertz, timer::*};
 
 const DUTY_MAX: u16 = u16::MAX;
 

@@ -7,6 +7,7 @@
 //! ## Examples
 //!
 //! - [UART simple example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/uart.rs)
+//! - [UART echo with IRQ and Embassy](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/embassy/src/bin/uart-echo-with-irq.rs)
 //! - [Flashloader app using UART with IRQs](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/flashloader)
 use core::ops::Deref;
 
@@ -806,7 +807,6 @@ impl<Uart: Instance> RxWithIrq<Uart> {
     /// API after calling this function to continue emptying the FIFO.
     pub fn irq_handler(&mut self, buf: &mut [u8; 16]) -> Result<IrqResult, IrqUartError> {
         let mut result = IrqResult::default();
-        let mut current_idx = 0;
 
         let irq_end = self.uart().irq_end().read();
         let enb_status = self.uart().enable().read();
@@ -814,27 +814,27 @@ impl<Uart: Instance> RxWithIrq<Uart> {
 
         // Half-Full interrupt. We have a guaranteed amount of data we can read.
         if irq_end.irq_rx().bit_is_set() {
-            // Determine the number of bytes to read, ensuring we leave 1 byte in the FIFO.
-            // We use this trick/hack because the timeout feature of the peripheral relies on data
-            // being in the RX FIFO. If data continues arriving, another half-full IRQ will fire.
-            // If not, the last byte(s) is/are emptied by the timeout interrupt.
             let available_bytes = self.uart().rxfifoirqtrg().read().bits() as usize;
 
             // If this interrupt bit is set, the trigger level is available at the very least.
             // Read everything as fast as possible
             for _ in 0..available_bytes {
-                buf[current_idx] = (self.uart().data().read().bits() & 0xff) as u8;
-                current_idx += 1;
+                buf[result.bytes_read] = (self.uart().data().read().bits() & 0xff) as u8;
+                result.bytes_read += 1;
             }
         }
 
         // Timeout, empty the FIFO completely.
         if irq_end.irq_rx_to().bit_is_set() {
-            let read_result = self.0.read();
-            // While there is data in the FIFO, write it into the reception buffer
-            while let Some(byte) = self.read_handler(&mut result.errors, &read_result) {
-                buf[current_idx] = byte;
-                current_idx += 1;
+            loop {
+                // While there is data in the FIFO, write it into the reception buffer
+                let read_result = self.0.read();
+                if let Some(byte) = self.read_handler(&mut result.errors, &read_result) {
+                    buf[result.bytes_read] = byte;
+                    result.bytes_read += 1;
+                } else {
+                    break;
+                }
             }
         }
 

@@ -11,7 +11,8 @@ use va416xx_hal::{
     gpio::PinsA,
     pac,
     prelude::*,
-    pwm::{self, get_duty_from_percent, CountdownTimer, PwmA, PwmB, ReducedPwmPin},
+    pwm::{self, get_duty_from_percent, PwmA, PwmB, ReducedPwmPin},
+    timer::CountdownTimer,
 };
 
 #[entry]

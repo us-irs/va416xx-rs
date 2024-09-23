@@ -109,6 +109,7 @@ mod app {
         tc::PusTcReader, tm::PusTmCreator, EcssEnumU8, PusPacket, WritablePusPacket,
     };
     use va416xx_hal::irq_router::enable_and_init_irq_router;
+    use va416xx_hal::uart::IrqContextTimeoutOrMaxSize;
     use va416xx_hal::{
         clock::ClkgenExt,
         edac,
@@ -132,6 +133,7 @@ mod app {
     struct Local {
         uart_rx: uart::RxWithIrq<pac::Uart0>,
         uart_tx: uart::Tx<pac::Uart0>,
+        rx_context: IrqContextTimeoutOrMaxSize,
         rom_spi: Option<pac::Spi3>,
         // We handle all TM in one task.
         tm_cons: DataConsumer<BUF_RB_SIZE_TM, SIZES_RB_SIZE_TM>,
@@ -178,7 +180,7 @@ mod app {
             &mut cx.device.sysconfig,
             &clocks,
         );
-        let (tx, mut rx, _) = uart0.split_with_irq();
+        let (tx, rx) = uart0.split();
 
         let verif_reporter = VerificationReportCreator::new(0).unwrap();
 
@@ -191,7 +193,9 @@ mod app {
         Mono::start(cx.core.SYST, clocks.sysclk().raw());
         CLOCKS.set(clocks).unwrap();
 
-        rx.read_fixed_len_using_irq(MAX_TC_FRAME_SIZE, true)
+        let mut rx = rx.to_rx_with_irq();
+        let mut rx_context = IrqContextTimeoutOrMaxSize::new(MAX_TC_FRAME_SIZE);
+        rx.read_fixed_len_or_timeout_based_using_irq(&mut rx_context)
             .expect("initiating UART RX failed");
         pus_tc_handler::spawn().unwrap();
         pus_tm_tx_handler::spawn().unwrap();
@@ -205,6 +209,7 @@ mod app {
             Local {
                 uart_rx: rx,
                 uart_tx: tx,
+                rx_context,
                 rom_spi: Some(cx.device.spi3),
                 tm_cons: DataConsumer {
                     buf_cons: buf_cons_tm,
@@ -231,20 +236,26 @@ mod app {
         }
     }
 
+    // This is the interrupt handler to read all bytes received on the UART0.
     #[task(
         binds = UART0_RX,
         local = [
             cnt: u32 = 0,
             rx_buf: [u8; MAX_TC_FRAME_SIZE] = [0; MAX_TC_FRAME_SIZE],
+            rx_context,
             uart_rx,
             tc_prod
         ],
     )]
     fn uart_rx_irq(cx: uart_rx_irq::Context) {
-        match cx.local.uart_rx.irq_handler(cx.local.rx_buf) {
+        match cx
+            .local
+            .uart_rx
+            .irq_handler_max_size_or_timeout_based(cx.local.rx_context, cx.local.rx_buf)
+        {
             Ok(result) => {
                 if RX_DEBUGGING {
-                    log::debug!("RX Info: {:?}", cx.local.uart_rx.irq_info());
+                    log::debug!("RX Info: {:?}", cx.local.rx_context);
                     log::debug!("RX Result: {:?}", result);
                 }
                 if result.complete() {
@@ -279,7 +290,7 @@ mod app {
                     // Initiate next transfer.
                     cx.local
                         .uart_rx
-                        .read_fixed_len_using_irq(MAX_TC_FRAME_SIZE, true)
+                        .read_fixed_len_or_timeout_based_using_irq(cx.local.rx_context)
                         .expect("read operation failed");
                 }
                 if result.error() {
@@ -438,7 +449,12 @@ mod app {
                     return;
                 }
                 let data = &app_data[10..10 + data_len as usize];
-                log::info!("writing {} bytes at offset {} to NVM", data_len, offset);
+                log::info!(
+                    target: "TC Handler",
+                    "writing {} bytes at offset {} to NVM",
+                    data_len,
+                    offset
+                );
                 // Safety: We only use this for NVM handling and we only do NVM
                 // handling here.
                 let mut sys_cfg = unsafe { pac::Sysconfig::steal() };
@@ -455,7 +471,9 @@ mod app {
                     .completion_success(cx.local.src_data_buf, started_token, 0, 0, &[])
                     .expect("completion success failed");
                 write_and_send(&tm);
-                log::info!("NVM operation done");
+                log::info!(
+                    target: "TC Handler",
+                    "NVM operation done");
             }
         }
     }

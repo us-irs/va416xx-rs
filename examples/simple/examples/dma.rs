@@ -12,7 +12,7 @@ use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::dma::{Dma, DmaCfg, DmaChannel, DmaCtrlBlock};
 use va416xx_hal::irq_router::enable_and_init_irq_router;
-use va416xx_hal::pwm::CountdownTimer;
+use va416xx_hal::timer::CountdownTimer;
 use va416xx_hal::{
     pac::{self, interrupt},
     prelude::*,

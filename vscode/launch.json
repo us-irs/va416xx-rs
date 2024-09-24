@@ -353,6 +353,36 @@
         {
             "type": "cortex-debug",
             "request": "launch",
+            "name": "UART Echo with IRQ",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "uart-echo-with-irq",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/uart-echo-with-irq",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
             "name": "Bootloader",
             "servertype": "jlink",
             "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",

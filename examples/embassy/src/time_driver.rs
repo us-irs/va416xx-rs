@@ -17,7 +17,7 @@ use va416xx_hal::{
     enable_interrupt,
     irq_router::enable_and_init_irq_router,
     pac::{self, interrupt},
-    pwm::{assert_tim_reset_for_two_cycles, enable_tim_clk, ValidTim},
+    timer::{assert_tim_reset_for_two_cycles, enable_tim_clk, ValidTim},
 };
 
 pub type TimekeeperClk = pac::Tim15;

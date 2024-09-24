@@ -169,9 +169,9 @@ mod app {
         enable_and_init_irq_router(&mut cx.device.sysconfig, &cx.device.irq_router);
         setup_edac(&mut cx.device.sysconfig);
 
-        let gpiob = PinsG::new(&mut cx.device.sysconfig, cx.device.portg);
-        let tx = gpiob.pg0.into_funsel_1();
-        let rx = gpiob.pg1.into_funsel_1();
+        let gpiog = PinsG::new(&mut cx.device.sysconfig, cx.device.portg);
+        let tx = gpiog.pg0.into_funsel_1();
+        let rx = gpiog.pg1.into_funsel_1();
 
         let uart0 = Uart::new(
             cx.device.uart0,

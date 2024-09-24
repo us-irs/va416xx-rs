@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added an additional way to read the UART RX with IRQs. The module documentation provides
   more information.
 - Made the UART with IRQ API more flexible for future additions.
+- Improved UART API result and error handling, added low level API to read from and write
+  to the FIFO directly
 
 ## Fixed
 

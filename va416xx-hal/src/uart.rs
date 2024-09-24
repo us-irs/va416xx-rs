@@ -9,6 +9,7 @@
 //! - [UART simple example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/uart.rs)
 //! - [UART echo with IRQ and Embassy](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/embassy/src/bin/uart-echo-with-irq.rs)
 //! - [Flashloader app using UART with IRQs](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/flashloader)
+use core::convert::Infallible;
 use core::ops::Deref;
 
 use embedded_hal_nb::serial::Read;
@@ -69,15 +70,28 @@ impl RxPin<Uart2> for Pin<PF9, AltFunc1> {}
 // Regular Definitions
 //==================================================================================================
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct TransferPendingError;
+
+#[derive(Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum RxError {
+    Overrun,
+    Framing,
+    Parity,
+}
+#[derive(Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum Error {
-    Overrun,
-    FramingError,
-    ParityError,
+    Rx(RxError),
     BreakCondition,
-    TransferPending,
-    BufferTooShort,
+}
+
+impl From<RxError> for Error {
+    fn from(value: RxError) -> Self {
+        Self::Rx(value)
+    }
 }
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
@@ -231,50 +245,47 @@ impl IrqContextTimeoutOrMaxSize {
 #[derive(Debug, Default)]
 pub struct IrqResult {
     pub bytes_read: usize,
-    pub errors: IrqUartError,
+    pub errors: Option<IrqUartError>,
 }
 
 /// This struct is used to return the default IRQ handler result to the user
 #[derive(Debug, Default)]
-pub struct IrqResultMaxSizeTimeout {
+pub struct IrqResultMaxSizeOrTimeout {
     complete: bool,
     timeout: bool,
-    pub errors: IrqUartError,
+    pub errors: Option<IrqUartError>,
     pub bytes_read: usize,
 }
 
-impl IrqResultMaxSizeTimeout {
+impl IrqResultMaxSizeOrTimeout {
     pub fn new() -> Self {
-        IrqResultMaxSizeTimeout {
+        IrqResultMaxSizeOrTimeout {
             complete: false,
             timeout: false,
-            errors: IrqUartError::default(),
+            errors: None,
             bytes_read: 0,
         }
     }
 }
-impl IrqResultMaxSizeTimeout {
+impl IrqResultMaxSizeOrTimeout {
     #[inline]
-    pub fn error(&self) -> bool {
-        if self.errors.overflow || self.errors.parity || self.errors.framing {
-            return true;
-        }
-        false
+    pub fn has_errors(&self) -> bool {
+        self.errors.is_some()
     }
 
     #[inline]
     pub fn overflow_error(&self) -> bool {
-        self.errors.overflow
+        self.errors.map_or(false, |e| e.overflow)
     }
 
     #[inline]
     pub fn framing_error(&self) -> bool {
-        self.errors.framing
+        self.errors.map_or(false, |e| e.framing)
     }
 
     #[inline]
     pub fn parity_error(&self) -> bool {
-        self.errors.parity
+        self.errors.map_or(false, |e| e.parity)
     }
 
     #[inline]
@@ -295,42 +306,8 @@ enum IrqReceptionMode {
 }
 
 //==================================================================================================
-// UART implementation
+// UART peripheral wrapper
 //==================================================================================================
-
-/// Type erased variant of a UART. Can be created with the [Uart::downgrade] function.
-pub struct UartBase<Uart> {
-    uart: Uart,
-    tx: Tx<Uart>,
-    rx: Rx<Uart>,
-}
-/// Serial abstraction. Entry point to create a new UART
-pub struct Uart<UartInstance, Pins> {
-    inner: UartBase<UartInstance>,
-    pins: Pins,
-}
-
-/// Serial receiver.
-///
-/// Can be created by using the [Uart::split] or [UartBase::split] API.
-pub struct Rx<Uart>(Uart);
-
-/// Serial transmitter
-///
-/// Can be created by using the [Uart::split] or [UartBase::split] API.
-pub struct Tx<Uart>(Uart);
-
-impl<Uart: Instance> Rx<Uart> {
-    fn new(uart: Uart) -> Self {
-        Self(uart)
-    }
-}
-
-impl<Uart> Tx<Uart> {
-    fn new(uart: Uart) -> Self {
-        Self(uart)
-    }
-}
 
 pub trait Instance: Deref<Target = uart_base::RegisterBlock> {
     const IDX: u8;
@@ -387,6 +364,17 @@ impl Instance for Uart2 {
     fn ptr() -> *const uart_base::RegisterBlock {
         Uart2::ptr() as *const _
     }
+}
+
+//==================================================================================================
+// UART implementation
+//==================================================================================================
+
+/// Type erased variant of a UART. Can be created with the [Uart::downgrade] function.
+pub struct UartBase<Uart> {
+    uart: Uart,
+    tx: Tx<Uart>,
+    rx: Rx<Uart>,
 }
 
 impl<Uart: Instance> UartBase<Uart> {
@@ -522,6 +510,12 @@ impl<Uart: Instance> UartBase<Uart> {
     }
 }
 
+/// Serial abstraction. Entry point to create a new UART
+pub struct Uart<UartInstance, Pins> {
+    inner: UartBase<UartInstance>,
+    pins: Pins,
+}
+
 impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstance: Instance>
     Uart<UartInstance, (TxPinInst, RxPinInst)>
 {
@@ -617,6 +611,17 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
     }
 }
 
+/// Serial receiver.
+///
+/// Can be created by using the [Uart::split] or [UartBase::split] API.
+pub struct Rx<Uart>(Uart);
+
+impl<Uart: Instance> Rx<Uart> {
+    fn new(uart: Uart) -> Self {
+        Self(uart)
+    }
+}
+
 impl<Uart: Instance> Rx<Uart> {
     /// Direct access to the peripheral structure.
     ///
@@ -642,12 +647,50 @@ impl<Uart: Instance> Rx<Uart> {
         self.0.enable().modify(|_, w| w.rxenable().clear_bit());
     }
 
+    /// Low level function to read a word from the UART FIFO.
+    ///
+    /// Uses the [nb] API to allow usage in blocking and non-blocking contexts.
+    ///
+    /// Please note that you might have to mask the returned value with 0xff to retrieve the actual
+    /// value if you use the manual parity mode. See chapter 11.4.1 for more information.
+    #[inline(always)]
+    pub fn read_fifo(&self) -> nb::Result<u32, Infallible> {
+        if self.0.rxstatus().read().rdavl().bit_is_clear() {
+            return Err(nb::Error::WouldBlock);
+        }
+        Ok(self.read_fifo_unchecked())
+    }
+
+    /// Low level function to read a word from from the UART FIFO.
+    ///
+    /// This does not necesarily mean there is a word in the FIFO available.
+    /// Use the [Self::read_fifo] function to read a word from the FIFO reliably using the [nb]
+    /// API.
+    ///
+    /// Please note that you might have to mask the returned value with 0xff to retrieve the actual
+    /// value if you use the manual parity mode. See chapter 11.4.1 for more information.
+    #[inline(always)]
+    pub fn read_fifo_unchecked(&self) -> u32 {
+        self.0.data().read().bits()
+    }
+
     pub fn to_rx_with_irq(self) -> RxWithIrq<Uart> {
         RxWithIrq(self)
     }
 
     pub fn release(self) -> Uart {
         self.0
+    }
+}
+
+/// Serial transmitter
+///
+/// Can be created by using the [Uart::split] or [UartBase::split] API.
+pub struct Tx<Uart>(Uart);
+
+impl<Uart> Tx<Uart> {
+    fn new(uart: Uart) -> Self {
+        Self(uart)
     }
 }
 
@@ -675,9 +718,35 @@ impl<Uart: Instance> Tx<Uart> {
     pub fn disable(&mut self) {
         self.0.enable().modify(|_, w| w.txenable().clear_bit());
     }
+
+    /// Low level function to write a word to the UART FIFO.
+    ///
+    /// Uses the [nb] API to allow usage in blocking and non-blocking contexts.
+    ///
+    /// Please note that you might have to mask the returned value with 0xff to retrieve the actual
+    /// value if you use the manual parity mode. See chapter 11.4.1 for more information.
+    #[inline(always)]
+    pub fn write_fifo(&self, data: u32) -> nb::Result<(), Infallible> {
+        if self.0.txstatus().read().wrrdy().bit_is_clear() {
+            return Err(nb::Error::WouldBlock);
+        }
+        self.write_fifo_unchecked(data);
+        Ok(())
+    }
+
+    /// Low level function to write a word to the UART FIFO.
+    ///
+    /// This does not necesarily mean that the FIFO can process another word because it might be
+    /// full.
+    /// Use the [Self::read_fifo] function to write a word to the FIFO reliably using the [nb]
+    /// API.
+    #[inline(always)]
+    pub fn write_fifo_unchecked(&self, data: u32) {
+        self.0.data().write(|w| unsafe { w.bits(data) });
+    }
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Copy, Clone)]
 pub struct IrqUartError {
     overflow: bool,
     framing: bool,
@@ -714,10 +783,11 @@ impl IrqUartError {
     }
 }
 
-#[derive(Debug)]
-pub enum IrqError {
-    BufferTooShort { found: usize, expected: usize },
-    Uart(IrqUartError),
+#[derive(Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct BufferTooShortError {
+    found: usize,
+    expected: usize,
 }
 
 /// Serial receiver, using interrupts to offload reading to the hardware.
@@ -763,9 +833,9 @@ impl<Uart: Instance> RxWithIrq<Uart> {
     pub fn read_fixed_len_or_timeout_based_using_irq(
         &mut self,
         context: &mut IrqContextTimeoutOrMaxSize,
-    ) -> Result<(), Error> {
+    ) -> Result<(), TransferPendingError> {
         if context.mode != IrqReceptionMode::Idle {
-            return Err(Error::TransferPending);
+            return Err(TransferPendingError);
         }
         context.mode = IrqReceptionMode::Pending;
         context.rx_idx = 0;
@@ -804,8 +874,9 @@ impl<Uart: Instance> RxWithIrq<Uart> {
     /// result of the operation.
     ///
     /// This function will not disable the RX interrupts, so you don't need to call any other
-    /// API after calling this function to continue emptying the FIFO.
-    pub fn irq_handler(&mut self, buf: &mut [u8; 16]) -> Result<IrqResult, IrqUartError> {
+    /// API after calling this function to continue emptying the FIFO. RX errors are handled
+    /// as partial errors and are returned as part of the [IrqResult].
+    pub fn irq_handler(&mut self, buf: &mut [u8; 16]) -> IrqResult {
         let mut result = IrqResult::default();
 
         let irq_end = self.uart().irq_end().read();
@@ -847,7 +918,7 @@ impl<Uart: Instance> RxWithIrq<Uart> {
         self.uart()
             .irq_clr()
             .write(|w| unsafe { w.bits(irq_end.bits()) });
-        Ok(result)
+        result
     }
 
     /// This function should be called in the user provided UART interrupt handler.
@@ -860,19 +931,20 @@ impl<Uart: Instance> RxWithIrq<Uart> {
     /// [IrqContextTimeoutOrMaxSize] structure.
     ///
     /// If passed buffer is equal to or larger than the specified maximum length, an
-    /// [`Error::BufferTooShort`] will be returned
+    /// [BufferTooShortError] will be returned. Other RX errors are treated as partial errors
+    /// and returned inside the [IrqResultMaxSizeOrTimeout] structure.
     pub fn irq_handler_max_size_or_timeout_based(
         &mut self,
         context: &mut IrqContextTimeoutOrMaxSize,
         buf: &mut [u8],
-    ) -> Result<IrqResultMaxSizeTimeout, IrqError> {
+    ) -> Result<IrqResultMaxSizeOrTimeout, BufferTooShortError> {
         if buf.len() < context.max_len {
-            return Err(IrqError::BufferTooShort {
+            return Err(BufferTooShortError {
                 found: buf.len(),
                 expected: context.max_len,
             });
         }
-        let mut result = IrqResultMaxSizeTimeout::default();
+        let mut result = IrqResultMaxSizeOrTimeout::default();
 
         let irq_end = self.uart().irq_end().read();
         let enb_status = self.uart().enable().read();
@@ -936,49 +1008,51 @@ impl<Uart: Instance> RxWithIrq<Uart> {
 
     fn read_handler(
         &self,
-        errors: &mut IrqUartError,
-        read_res: &nb::Result<u8, Error>,
+        errors: &mut Option<IrqUartError>,
+        read_res: &nb::Result<u8, RxError>,
     ) -> Option<u8> {
         match read_res {
             Ok(byte) => Some(*byte),
             Err(nb::Error::WouldBlock) => None,
             Err(nb::Error::Other(e)) => {
+                // Ensure `errors` is Some(IrqUartError), initializing if it's None
+                let err = errors.get_or_insert(IrqUartError::default());
+
+                // Now we can safely modify fields inside `err`
                 match e {
-                    Error::Overrun => {
-                        errors.overflow = true;
-                    }
-                    Error::FramingError => {
-                        errors.framing = true;
-                    }
-                    Error::ParityError => {
-                        errors.parity = true;
-                    }
-                    _ => {
-                        errors.other = true;
-                    }
+                    RxError::Overrun => err.overflow = true,
+                    RxError::Framing => err.framing = true,
+                    RxError::Parity => err.parity = true,
                 }
                 None
             }
         }
     }
 
-    fn check_for_errors(&self, errors: &mut IrqUartError) {
-        // Read status register again, might have changed since reading received data
+    fn check_for_errors(&self, errors: &mut Option<IrqUartError>) {
         let rx_status = self.uart().rxstatus().read();
-        if rx_status.rxovr().bit_is_set() {
-            errors.overflow = true;
-        }
-        if rx_status.rxfrm().bit_is_set() {
-            errors.framing = true;
-        }
-        if rx_status.rxpar().bit_is_set() {
-            errors.parity = true;
+
+        if rx_status.rxovr().bit_is_set()
+            || rx_status.rxfrm().bit_is_set()
+            || rx_status.rxpar().bit_is_set()
+        {
+            let err = errors.get_or_insert(IrqUartError::default());
+
+            if rx_status.rxovr().bit_is_set() {
+                err.overflow = true;
+            }
+            if rx_status.rxfrm().bit_is_set() {
+                err.framing = true;
+            }
+            if rx_status.rxpar().bit_is_set() {
+                err.parity = true;
+            }
         }
     }
 
     fn irq_completion_handler_max_size_timeout(
         &mut self,
-        res: &mut IrqResultMaxSizeTimeout,
+        res: &mut IrqResultMaxSizeOrTimeout,
         context: &mut IrqContextTimeoutOrMaxSize,
     ) {
         self.disable_rx_irq_sources();
@@ -1000,18 +1074,34 @@ impl embedded_io::Error for Error {
     }
 }
 
+impl embedded_io::Error for RxError {
+    fn kind(&self) -> embedded_io::ErrorKind {
+        embedded_io::ErrorKind::Other
+    }
+}
+
 impl embedded_hal_nb::serial::Error for Error {
     fn kind(&self) -> embedded_hal_nb::serial::ErrorKind {
         embedded_hal_nb::serial::ErrorKind::Other
     }
 }
 
+impl embedded_hal_nb::serial::Error for RxError {
+    fn kind(&self) -> embedded_hal_nb::serial::ErrorKind {
+        match self {
+            RxError::Overrun => embedded_hal_nb::serial::ErrorKind::Overrun,
+            RxError::Framing => embedded_hal_nb::serial::ErrorKind::FrameFormat,
+            RxError::Parity => embedded_hal_nb::serial::ErrorKind::Parity,
+        }
+    }
+}
+
 impl<Uart> embedded_io::ErrorType for Rx<Uart> {
-    type Error = Error;
+    type Error = RxError;
 }
 
 impl<Uart> embedded_hal_nb::serial::ErrorType for Rx<Uart> {
-    type Error = Error;
+    type Error = RxError;
 }
 
 impl<Uart: Instance> embedded_hal_nb::serial::Read<u8> for Rx<Uart> {
@@ -1019,11 +1109,11 @@ impl<Uart: Instance> embedded_hal_nb::serial::Read<u8> for Rx<Uart> {
         let uart = unsafe { &(*Uart::ptr()) };
         let status_reader = uart.rxstatus().read();
         let err = if status_reader.rxovr().bit_is_set() {
-            Some(Error::Overrun)
+            Some(RxError::Overrun)
         } else if status_reader.rxfrm().bit_is_set() {
-            Some(Error::FramingError)
+            Some(RxError::Framing)
         } else if status_reader.rxpar().bit_is_set() {
-            Some(Error::ParityError)
+            Some(RxError::Parity)
         } else {
             None
         };
@@ -1032,14 +1122,15 @@ impl<Uart: Instance> embedded_hal_nb::serial::Read<u8> for Rx<Uart> {
             // and parity status bits. We have to read the DATA register
             // so that the next status reflects the next DATA word
             // For overrun error, we read as well to clear the peripheral
-            uart.data().read().bits();
-            Err(err.into())
-        } else if status_reader.rdavl().bit_is_set() {
-            let data = uart.data().read().bits();
-            Ok((data & 0xff) as u8)
-        } else {
-            Err(nb::Error::WouldBlock)
+            self.read_fifo_unchecked();
+            return Err(err.into());
         }
+        self.read_fifo().map(|val| (val & 0xff) as u8).map_err(|e| {
+            if let nb::Error::Other(_) = e {
+                unreachable!()
+            }
+            nb::Error::WouldBlock
+        })
     }
 }
 
@@ -1059,28 +1150,16 @@ impl<Uart: Instance> embedded_io::Read for Rx<Uart> {
 }
 
 impl<Uart> embedded_io::ErrorType for Tx<Uart> {
-    type Error = Error;
+    type Error = Infallible;
 }
 
 impl<Uart> embedded_hal_nb::serial::ErrorType for Tx<Uart> {
-    type Error = Error;
+    type Error = Infallible;
 }
 
 impl<Uart: Instance> embedded_hal_nb::serial::Write<u8> for Tx<Uart> {
     fn write(&mut self, word: u8) -> nb::Result<(), Self::Error> {
-        let reader = unsafe { &(*Uart::ptr()) }.txstatus().read();
-        if reader.wrrdy().bit_is_clear() {
-            return Err(nb::Error::WouldBlock);
-        } else {
-            // DPARITY bit not supported yet
-            unsafe {
-                // NOTE(unsafe) atomic write to data register
-                // NOTE(write_volatile) 8-bit write that's not
-                // possible through the svd2rust API
-                (*Uart::ptr()).data().write(|w| w.bits(word as u32));
-            }
-        }
-        Ok(())
+        self.write_fifo(word as u32)
     }
 
     fn flush(&mut self) -> nb::Result<(), Self::Error> {
@@ -1123,16 +1202,26 @@ impl<UartInstance> embedded_hal_nb::serial::ErrorType for UartBase<UartInstance>
 
 impl<Uart: Instance> embedded_hal_nb::serial::Read<u8> for UartBase<Uart> {
     fn read(&mut self) -> nb::Result<u8, Self::Error> {
-        self.rx.read()
+        self.rx.read().map_err(|e| e.map(Error::Rx))
     }
 }
 
 impl<Uart: Instance> embedded_hal_nb::serial::Write<u8> for UartBase<Uart> {
     fn write(&mut self, word: u8) -> nb::Result<(), Self::Error> {
-        self.tx.write(word)
+        self.tx.write(word).map_err(|e| {
+            if let nb::Error::Other(_) = e {
+                unreachable!()
+            }
+            nb::Error::WouldBlock
+        })
     }
 
     fn flush(&mut self) -> nb::Result<(), Self::Error> {
-        self.tx.flush()
+        self.tx.flush().map_err(|e| {
+            if let nb::Error::Other(_) = e {
+                unreachable!()
+            }
+            nb::Error::WouldBlock
+        })
     }
 }

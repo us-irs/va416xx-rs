@@ -293,8 +293,8 @@ mod app {
                         .read_fixed_len_or_timeout_based_using_irq(cx.local.rx_context)
                         .expect("read operation failed");
                 }
-                if result.error() {
-                    log::warn!("UART error: {:?}", result.error());
+                if result.has_errors() {
+                    log::warn!("UART error: {:?}", result.errors.unwrap());
                 }
             }
             Err(e) => {

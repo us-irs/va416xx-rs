@@ -128,17 +128,14 @@ async fn blinky(mut led: Pin<PG5, OutputReadablePushPull>) {
 fn UART0_RX() {
     let mut buf: [u8; 16] = [0; 16];
     let mut read_len: usize = 0;
-    let mut irq_error = None;
+    let mut errors = None;
     RX.lock(|static_rx| {
         let mut rx_borrow = static_rx.borrow_mut();
         let rx_mut_ref = rx_borrow.as_mut().unwrap();
-        match rx_mut_ref.irq_handler(&mut buf) {
-            Ok(result) => {
-                read_len = result.bytes_read;
-            }
-            Err(e) => {
-                irq_error = Some(e);
-            }
+        let result = rx_mut_ref.irq_handler(&mut buf);
+        read_len = result.bytes_read;
+        if result.errors.is_some() {
+            errors = result.errors;
         }
     });
     let mut ringbuf_full = false;
@@ -155,8 +152,8 @@ fn UART0_RX() {
         });
     }
 
-    if irq_error.is_some() {
-        rprintln!("error in IRQ handler: {:?}", irq_error);
+    if errors.is_some() {
+        rprintln!("UART error: {:?}", errors);
     }
     if ringbuf_full {
         rprintln!("ringbuffer is full, deleted oldest data");

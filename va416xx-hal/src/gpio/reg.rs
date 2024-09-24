@@ -113,14 +113,6 @@ pub(super) unsafe trait RegisterInterface {
     /// this type.
     fn id(&self) -> DynPinId;
 
-    const PORTA: *const PortRegisterBlock = Porta::ptr();
-    const PORTB: *const PortRegisterBlock = Portb::ptr();
-    const PORTC: *const PortRegisterBlock = Portc::ptr();
-    const PORTD: *const PortRegisterBlock = Portd::ptr();
-    const PORTE: *const PortRegisterBlock = Porte::ptr();
-    const PORTF: *const PortRegisterBlock = Portf::ptr();
-    const PORTG: *const PortRegisterBlock = Portg::ptr();
-
     /// Change the pin mode
     #[inline]
     fn change_mode(&mut self, mode: DynPinMode) {
@@ -155,13 +147,13 @@ pub(super) unsafe trait RegisterInterface {
     #[inline]
     fn port_reg(&self) -> &PortRegisterBlock {
         match self.id().group {
-            DynGroup::A => unsafe { &(*Self::PORTA) },
-            DynGroup::B => unsafe { &(*Self::PORTB) },
-            DynGroup::C => unsafe { &(*Self::PORTC) },
-            DynGroup::D => unsafe { &(*Self::PORTD) },
-            DynGroup::E => unsafe { &(*Self::PORTE) },
-            DynGroup::F => unsafe { &(*Self::PORTF) },
-            DynGroup::G => unsafe { &(*Self::PORTG) },
+            DynGroup::A => unsafe { &(*Porta::ptr()) },
+            DynGroup::B => unsafe { &(*Portb::ptr()) },
+            DynGroup::C => unsafe { &(*Portc::ptr()) },
+            DynGroup::D => unsafe { &(*Portd::ptr()) },
+            DynGroup::E => unsafe { &(*Porte::ptr()) },
+            DynGroup::F => unsafe { &(*Portf::ptr()) },
+            DynGroup::G => unsafe { &(*Portg::ptr()) },
         }
     }
 

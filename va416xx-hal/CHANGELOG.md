@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [unreleased]
 
+# [v0.3.0] 2024-30-09
+
 ## Changed
 
 - Improve and fix SPI abstractions. Add new low level interface. The primary SPI constructor now

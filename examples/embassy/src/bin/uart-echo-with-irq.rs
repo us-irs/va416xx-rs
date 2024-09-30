@@ -86,7 +86,7 @@ async fn main(spawner: Spawner) {
         &clocks,
     );
     let (mut tx, rx) = uart0.split();
-    let mut rx = rx.to_rx_with_irq();
+    let mut rx = rx.into_rx_with_irq();
     rx.start();
     RX.lock(|static_rx| {
         static_rx.borrow_mut().replace(rx);

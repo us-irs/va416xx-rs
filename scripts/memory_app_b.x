@@ -1,7 +1,7 @@
 /* Special linker script for application slot B with an offset at address 0x22000 */
 MEMORY
 {
-	FLASH : ORIGIN = 0x00022000, LENGTH = 256K
+	FLASH : ORIGIN = 0x00022000, LENGTH = 0x1DFF8
 	/* RAM is a mandatory region. This RAM refers to the SRAM_0 */
 	RAM : ORIGIN = 0x1FFF8000, LENGTH = 32K
 	SRAM_1 : ORIGIN = 0x20000000, LENGTH = 32K

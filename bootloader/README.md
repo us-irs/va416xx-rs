@@ -11,10 +11,10 @@ The bootloader uses the following memory map:
 | ------ | ---- |  ---- |
 | 0x0 | Bootloader start | code up to 0x3FFC bytes |
 | 0x3FFC | Bootloader CRC | word |
-| 0x4000 | App image A start | code up to 0x1DFFC (~120K) bytes |
+| 0x4000 | App image A start | code up to 0x1DFF8 (~120K) bytes |
 | 0x21FF8 | App image A CRC check length | word |
 | 0x21FFC | App image A CRC check value | word |
-| 0x22000 | App image B start | code up to 0x1DFFC (~120K) bytes |
+| 0x22000 | App image B start | code up to 0x1DFF8 (~120K) bytes |
 | 0x3FFF8 | App image B CRC check length | word |
 | 0x3FFFC | App image B CRC check value | word |
 | 0x40000 | End of NVM | end  |

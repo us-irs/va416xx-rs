@@ -18,7 +18,7 @@ embedded-hal = "1"
 [dependencies.va416xx-hal]
 path = "../va416xx-hal"
 features = ["va41630"]
-version = "0.2.0"
+version = ">=0.3, <0.4"
 
 [dependencies.lis2dh12]
 git = "https://github.com/us-irs/lis2dh12.git"

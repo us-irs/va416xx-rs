@@ -5,6 +5,10 @@
 pub use lis2dh12;
 
 /// Support for the LIS2DH12 accelerometer on the GPIO board.
+///
+/// # Example
+///
+/// - [PEB1 Accelerometer](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/peb1-accelerometer.rs)
 pub mod accelerometer {
 
     use lis2dh12::{self, detect_i2c_addr, AddrDetectionError, Lis2dh12};

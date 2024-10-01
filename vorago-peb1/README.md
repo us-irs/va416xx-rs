@@ -1,15 +1,12 @@
+[![Crates.io](https://img.shields.io/crates/v/vorago-peb1)](https://crates.io/crates/vorago-peb1)
+[![docs.rs](https://img.shields.io/docsrs/vorago-peb1)](https://docs.rs/vorago-peb1)
+
 # Rust BSP for the Vorago PEB1 development board
 
-## Using the `.cargo/config.toml` file
+This is the Rust **B**oard **S**upport **P**ackage crate for the Vorago PEB1 development board.
+Its aim is to provide drivers for the board features of the PEB1 board.
 
-Use the following command to have a starting `config.toml` file
-
-```sh
-cp .cargo/def-config.toml .cargo/config.toml
-```
-
-You then can adapt the `config.toml` to your needs. For example, you can configure runners
-to conveniently flash with `cargo run`.
+The BSP builds on top of the [HAL crate for VA416xx devices](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/va416xx-hal).
 
 ## Notes on board revisions
 

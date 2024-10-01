@@ -21,9 +21,6 @@ features = ["va41630"]
 version = ">=0.3, <0.4"
 
 [dependencies.lis2dh12]
-git = "https://github.com/us-irs/lis2dh12.git"
-# path = "../../lis2dh12"
-branch = "all-features"
 version = "0.7"
 features = ["out_f32"]
 

@@ -15,3 +15,5 @@ Cargo.lock
 
 /app.map
 /app.bin
+
+/Embed.toml

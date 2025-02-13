@@ -305,17 +305,17 @@ impl IrqResultMaxSizeOrTimeout {
 
     #[inline]
     pub fn overflow_error(&self) -> bool {
-        self.errors.map_or(false, |e| e.overflow)
+        self.errors.is_some_and(|e| e.overflow)
     }
 
     #[inline]
     pub fn framing_error(&self) -> bool {
-        self.errors.map_or(false, |e| e.framing)
+        self.errors.is_some_and(|e| e.framing)
     }
 
     #[inline]
     pub fn parity_error(&self) -> bool {
-        self.errors.map_or(false, |e| e.parity)
+        self.errors.is_some_and(|e| e.parity)
     }
 
     #[inline]

@@ -52,11 +52,11 @@ impl WdtInterface for OptWdt {
     }
 }
 
-use once_cell::sync::Lazy;
 use ringbuf::{
     traits::{Consumer, Observer, Producer, SplitRef},
     CachingCons, StaticProd, StaticRb,
 };
+use static_cell::StaticCell;
 
 // Larger buffer for TC to be able to hold the possibly large memory write packets.
 const BUF_RB_SIZE_TC: usize = 2048;
@@ -66,16 +66,12 @@ const BUF_RB_SIZE_TM: usize = 512;
 const SIZES_RB_SIZE_TM: usize = 16;
 
 // Ring buffers to handling variable sized telemetry
-static mut BUF_RB_TM: Lazy<StaticRb<u8, BUF_RB_SIZE_TM>> =
-    Lazy::new(StaticRb::<u8, BUF_RB_SIZE_TM>::default);
-static mut SIZES_RB_TM: Lazy<StaticRb<usize, SIZES_RB_SIZE_TM>> =
-    Lazy::new(StaticRb::<usize, SIZES_RB_SIZE_TM>::default);
+static BUF_RB_TM: StaticCell<StaticRb<u8, BUF_RB_SIZE_TM>> = StaticCell::new();
+static SIZES_RB_TM: StaticCell<StaticRb<usize, SIZES_RB_SIZE_TM>> = StaticCell::new();
 
 // Ring buffers to handling variable sized telecommands
-static mut BUF_RB_TC: Lazy<StaticRb<u8, BUF_RB_SIZE_TC>> =
-    Lazy::new(StaticRb::<u8, BUF_RB_SIZE_TC>::default);
-static mut SIZES_RB_TC: Lazy<StaticRb<usize, SIZES_RB_SIZE_TC>> =
-    Lazy::new(StaticRb::<usize, SIZES_RB_SIZE_TC>::default);
+static BUF_RB_TC: StaticCell<StaticRb<u8, BUF_RB_SIZE_TC>> = StaticCell::new();
+static SIZES_RB_TC: StaticCell<StaticRb<usize, SIZES_RB_SIZE_TC>> = StaticCell::new();
 
 pub struct DataProducer<const BUF_SIZE: usize, const SIZES_LEN: usize> {
     pub buf_prod: StaticProd<'static, u8, BUF_SIZE>,
@@ -166,6 +162,7 @@ mod app {
             .xtal_n_clk_with_src_freq(Hertz::from_raw(EXTCLK_FREQ))
             .freeze(&mut cx.device.sysconfig)
             .unwrap();
+
         enable_and_init_irq_router(&mut cx.device.sysconfig, &cx.device.irq_router);
         setup_edac(&mut cx.device.sysconfig);
 
@@ -184,11 +181,19 @@ mod app {
 
         let verif_reporter = VerificationReportCreator::new(0).unwrap();
 
-        let (buf_prod_tm, buf_cons_tm) = unsafe { BUF_RB_TM.split_ref() };
-        let (sizes_prod_tm, sizes_cons_tm) = unsafe { SIZES_RB_TM.split_ref() };
+        let (buf_prod_tm, buf_cons_tm) = BUF_RB_TM
+            .init(StaticRb::<u8, BUF_RB_SIZE_TM>::default())
+            .split_ref();
+        let (sizes_prod_tm, sizes_cons_tm) = SIZES_RB_TM
+            .init(StaticRb::<usize, SIZES_RB_SIZE_TM>::default())
+            .split_ref();
 
-        let (buf_prod_tc, buf_cons_tc) = unsafe { BUF_RB_TC.split_ref() };
-        let (sizes_prod_tc, sizes_cons_tc) = unsafe { SIZES_RB_TC.split_ref() };
+        let (buf_prod_tc, buf_cons_tc) = BUF_RB_TC
+            .init(StaticRb::<u8, BUF_RB_SIZE_TC>::default())
+            .split_ref();
+        let (sizes_prod_tc, sizes_cons_tc) = SIZES_RB_TC
+            .init(StaticRb::<usize, SIZES_RB_SIZE_TC>::default())
+            .split_ref();
 
         Mono::start(cx.core.SYST, clocks.sysclk().raw());
         CLOCKS.set(clocks).unwrap();

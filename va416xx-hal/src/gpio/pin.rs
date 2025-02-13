@@ -321,7 +321,6 @@ macro_rules! pin_id {
 //==================================================================================================
 
 /// A type-level GPIO pin, parameterized by [`PinId`] and [`PinMode`] types
-
 pub struct Pin<I: PinId, M: PinMode> {
     pub(in crate::gpio) regs: Registers<I>,
     mode: PhantomData<M>,

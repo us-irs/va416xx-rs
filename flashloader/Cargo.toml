@@ -15,6 +15,7 @@ rtt-log = "0.3"
 log = "0.4"
 crc = "3"
 rtic-sync = "1"
+static_cell = "2"
 
 [dependencies.satrs]
 version = "0.2"

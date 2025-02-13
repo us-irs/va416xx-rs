@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:30 - Timestamp Sub Seconds"]
     #[inline(always)]
-    #[must_use]
     pub fn tsss(&mut self) -> TsssW<SystimeNsecupSpec> {
         TsssW::new(self, 0)
     }
     #[doc = "Bit 31 - Add or Subtract Time"]
     #[inline(always)]
-    #[must_use]
     pub fn addsub(&mut self) -> AddsubW<SystimeNsecupSpec> {
         AddsubW::new(self, 31)
     }
 }
-#[doc = "Holds 32 bits of the nano-second field to be written to, added to, or subtracted from the system time value\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`systime_nsecup::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`systime_nsecup::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Holds 32 bits of the nano-second field to be written to, added to, or subtracted from the system time value\n\nYou can [`read`](crate::Reg::read) this register and get [`systime_nsecup::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`systime_nsecup::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SystimeNsecupSpec;
 impl crate::RegisterSpec for SystimeNsecupSpec {
     type Ux = u32;

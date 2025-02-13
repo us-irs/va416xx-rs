@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of frames received with length field not equal to the valid frame size\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxoutrangetype::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of frames received with length field not equal to the valid frame size\n\nYou can [`read`](crate::Reg::read) this register and get [`rxoutrangetype::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxoutrangetypeSpec;
 impl crate::RegisterSpec for RxoutrangetypeSpec {
     type Ux = u32;

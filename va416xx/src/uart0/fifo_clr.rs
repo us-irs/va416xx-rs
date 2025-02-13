@@ -7,18 +7,16 @@ pub type TxfifoW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Clear Rx FIFO"]
     #[inline(always)]
-    #[must_use]
     pub fn rxfifo(&mut self) -> RxfifoW<FifoClrSpec> {
         RxfifoW::new(self, 0)
     }
     #[doc = "Bit 1 - Clear Tx FIFO"]
     #[inline(always)]
-    #[must_use]
     pub fn txfifo(&mut self) -> TxfifoW<FifoClrSpec> {
         TxfifoW::new(self, 1)
     }
 }
-#[doc = "Clear FIFO Register\n\nYou can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`fifo_clr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Clear FIFO Register\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`fifo_clr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct FifoClrSpec;
 impl crate::RegisterSpec for FifoClrSpec {
     type Ux = u32;

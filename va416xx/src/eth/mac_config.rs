@@ -178,120 +178,101 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - Preamble Length for Transmit frames"]
     #[inline(always)]
-    #[must_use]
     pub fn prelen(&mut self) -> PrelenW<MacConfigSpec> {
         PrelenW::new(self, 0)
     }
     #[doc = "Bit 2 - Receiver Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn re(&mut self) -> ReW<MacConfigSpec> {
         ReW::new(self, 2)
     }
     #[doc = "Bit 3 - Transmitter Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn te(&mut self) -> TeW<MacConfigSpec> {
         TeW::new(self, 3)
     }
     #[doc = "Bit 4 - Deferral Check"]
     #[inline(always)]
-    #[must_use]
     pub fn dc(&mut self) -> DcW<MacConfigSpec> {
         DcW::new(self, 4)
     }
     #[doc = "Bits 5:6 - Back-Off-Limit"]
     #[inline(always)]
-    #[must_use]
     pub fn bl(&mut self) -> BlW<MacConfigSpec> {
         BlW::new(self, 5)
     }
     #[doc = "Bit 7 - Automatic Pad, or CRC Stripping"]
     #[inline(always)]
-    #[must_use]
     pub fn acs(&mut self) -> AcsW<MacConfigSpec> {
         AcsW::new(self, 7)
     }
     #[doc = "Bit 9 - Disable Retry"]
     #[inline(always)]
-    #[must_use]
     pub fn dr(&mut self) -> DrW<MacConfigSpec> {
         DrW::new(self, 9)
     }
     #[doc = "Bit 10 - Checksum Offload"]
     #[inline(always)]
-    #[must_use]
     pub fn ipc(&mut self) -> IpcW<MacConfigSpec> {
         IpcW::new(self, 10)
     }
     #[doc = "Bit 11 - Duplex Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn dm(&mut self) -> DmW<MacConfigSpec> {
         DmW::new(self, 11)
     }
     #[doc = "Bit 12 - Loopback Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn lm(&mut self) -> LmW<MacConfigSpec> {
         LmW::new(self, 12)
     }
     #[doc = "Bit 13 - Disable Receive Own"]
     #[inline(always)]
-    #[must_use]
     pub fn dro(&mut self) -> DroW<MacConfigSpec> {
         DroW::new(self, 13)
     }
     #[doc = "Bit 14 - Speed"]
     #[inline(always)]
-    #[must_use]
     pub fn fes(&mut self) -> FesW<MacConfigSpec> {
         FesW::new(self, 14)
     }
     #[doc = "Bit 15 - Port Select"]
     #[inline(always)]
-    #[must_use]
     pub fn ps(&mut self) -> PsW<MacConfigSpec> {
         PsW::new(self, 15)
     }
     #[doc = "Bit 16 - Disable Carrier Sense During Transmission"]
     #[inline(always)]
-    #[must_use]
     pub fn dcrs(&mut self) -> DcrsW<MacConfigSpec> {
         DcrsW::new(self, 16)
     }
     #[doc = "Bits 17:19 - Inter-Frame Gap"]
     #[inline(always)]
-    #[must_use]
     pub fn ifg(&mut self) -> IfgW<MacConfigSpec> {
         IfgW::new(self, 17)
     }
     #[doc = "Bit 20 - Jumbo Frame Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn je(&mut self) -> JeW<MacConfigSpec> {
         JeW::new(self, 20)
     }
     #[doc = "Bit 21 - Frame Burst Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn be(&mut self) -> BeW<MacConfigSpec> {
         BeW::new(self, 21)
     }
     #[doc = "Bit 22 - Jabber Disable"]
     #[inline(always)]
-    #[must_use]
     pub fn jd(&mut self) -> JdW<MacConfigSpec> {
         JdW::new(self, 22)
     }
     #[doc = "Bit 23 - Watchdog disable"]
     #[inline(always)]
-    #[must_use]
     pub fn wd(&mut self) -> WdW<MacConfigSpec> {
         WdW::new(self, 23)
     }
 }
-#[doc = "Operation mode register for the MAC\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`mac_config::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`mac_config::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Operation mode register for the MAC\n\nYou can [`read`](crate::Reg::read) this register and get [`mac_config::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mac_config::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct MacConfigSpec;
 impl crate::RegisterSpec for MacConfigSpec {
     type Ux = u32;

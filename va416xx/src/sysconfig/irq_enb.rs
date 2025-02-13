@@ -61,42 +61,36 @@ impl R {
 impl W {
     #[doc = "Bit 0 - ROM Multi Bit Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn rommbe(&mut self) -> RommbeW<IrqEnbSpec> {
         RommbeW::new(self, 0)
     }
     #[doc = "Bit 1 - ROM Single Bit Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn romsbe(&mut self) -> RomsbeW<IrqEnbSpec> {
         RomsbeW::new(self, 1)
     }
     #[doc = "Bit 2 - RAM0 Multi Bit Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn ram0mbe(&mut self) -> Ram0mbeW<IrqEnbSpec> {
         Ram0mbeW::new(self, 2)
     }
     #[doc = "Bit 3 - RAM0 Single Bit Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn ram0sbe(&mut self) -> Ram0sbeW<IrqEnbSpec> {
         Ram0sbeW::new(self, 3)
     }
     #[doc = "Bit 4 - RAM1 Multi Bit Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn ram1mbe(&mut self) -> Ram1mbeW<IrqEnbSpec> {
         Ram1mbeW::new(self, 4)
     }
     #[doc = "Bit 5 - RAM1 Single Bit Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn ram1sbe(&mut self) -> Ram1sbeW<IrqEnbSpec> {
         Ram1sbeW::new(self, 5)
     }
 }
-#[doc = "Enable EDAC Error Interrupt Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`irq_enb::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`irq_enb::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Enable EDAC Error Interrupt Register\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_enb::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_enb::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct IrqEnbSpec;
 impl crate::RegisterSpec for IrqEnbSpec {
     type Ux = u32;

@@ -77,73 +77,73 @@ impl RegisterBlock {
         &self.dmaaddr0
     }
 }
-#[doc = "CTRL (rw) register accessor: Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl`]
+#[doc = "CTRL (rw) register accessor: Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl`]
 module"]
 #[doc(alias = "CTRL")]
 pub type Ctrl = crate::Reg<ctrl::CtrlSpec>;
 #[doc = "Control Register"]
 pub mod ctrl;
-#[doc = "STS (rw) register accessor: Status/Interrupt Source Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`sts::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`sts::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sts`]
+#[doc = "STS (rw) register accessor: Status/Interrupt Source Register\n\nYou can [`read`](crate::Reg::read) this register and get [`sts::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sts::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sts`]
 module"]
 #[doc(alias = "STS")]
 pub type Sts = crate::Reg<sts::StsSpec>;
 #[doc = "Status/Interrupt Source Register"]
 pub mod sts;
-#[doc = "DEFADDR (rw) register accessor: Node Address Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`defaddr::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`defaddr::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@defaddr`]
+#[doc = "DEFADDR (rw) register accessor: Node Address Register\n\nYou can [`read`](crate::Reg::read) this register and get [`defaddr::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`defaddr::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@defaddr`]
 module"]
 #[doc(alias = "DEFADDR")]
 pub type Defaddr = crate::Reg<defaddr::DefaddrSpec>;
 #[doc = "Node Address Register"]
 pub mod defaddr;
-#[doc = "CLKDIV (rw) register accessor: Clock Divisor Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkdiv::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkdiv::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv`]
+#[doc = "CLKDIV (rw) register accessor: Clock Divisor Register\n\nYou can [`read`](crate::Reg::read) this register and get [`clkdiv::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkdiv::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv`]
 module"]
 #[doc(alias = "CLKDIV")]
 pub type Clkdiv = crate::Reg<clkdiv::ClkdivSpec>;
 #[doc = "Clock Divisor Register"]
 pub mod clkdiv;
-#[doc = "DKEY (rw) register accessor: Destination Key\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dkey::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dkey::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dkey`]
+#[doc = "DKEY (rw) register accessor: Destination Key\n\nYou can [`read`](crate::Reg::read) this register and get [`dkey::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dkey::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dkey`]
 module"]
 #[doc(alias = "DKEY")]
 pub type Dkey = crate::Reg<dkey::DkeySpec>;
 #[doc = "Destination Key"]
 pub mod dkey;
-#[doc = "TC (rw) register accessor: Time Code Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`tc::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`tc::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@tc`]
+#[doc = "TC (rw) register accessor: Time Code Register\n\nYou can [`read`](crate::Reg::read) this register and get [`tc::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`tc::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@tc`]
 module"]
 #[doc(alias = "TC")]
 pub type Tc = crate::Reg<tc::TcSpec>;
 #[doc = "Time Code Register"]
 pub mod tc;
-#[doc = "TDR (r) register accessor: Timer and Disconnect Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`tdr::R`].  See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@tdr`]
+#[doc = "TDR (r) register accessor: Timer and Disconnect Register\n\nYou can [`read`](crate::Reg::read) this register and get [`tdr::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@tdr`]
 module"]
 #[doc(alias = "TDR")]
 pub type Tdr = crate::Reg<tdr::TdrSpec>;
 #[doc = "Timer and Disconnect Register"]
 pub mod tdr;
-#[doc = "DMACTRL0 (rw) register accessor: DMA Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dmactrl0::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dmactrl0::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmactrl0`]
+#[doc = "DMACTRL0 (rw) register accessor: DMA Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`dmactrl0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dmactrl0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmactrl0`]
 module"]
 #[doc(alias = "DMACTRL0")]
 pub type Dmactrl0 = crate::Reg<dmactrl0::Dmactrl0Spec>;
 #[doc = "DMA Control Register"]
 pub mod dmactrl0;
-#[doc = "DMAMAXLEN0 (rw) register accessor: DMA RX Maximum Length Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dmamaxlen0::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dmamaxlen0::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmamaxlen0`]
+#[doc = "DMAMAXLEN0 (rw) register accessor: DMA RX Maximum Length Register\n\nYou can [`read`](crate::Reg::read) this register and get [`dmamaxlen0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dmamaxlen0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmamaxlen0`]
 module"]
 #[doc(alias = "DMAMAXLEN0")]
 pub type Dmamaxlen0 = crate::Reg<dmamaxlen0::Dmamaxlen0Spec>;
 #[doc = "DMA RX Maximum Length Register"]
 pub mod dmamaxlen0;
-#[doc = "DMATXDESC0 (rw) register accessor: DMA Transmitter Descriptor Table Address Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dmatxdesc0::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dmatxdesc0::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmatxdesc0`]
+#[doc = "DMATXDESC0 (rw) register accessor: DMA Transmitter Descriptor Table Address Register\n\nYou can [`read`](crate::Reg::read) this register and get [`dmatxdesc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dmatxdesc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmatxdesc0`]
 module"]
 #[doc(alias = "DMATXDESC0")]
 pub type Dmatxdesc0 = crate::Reg<dmatxdesc0::Dmatxdesc0Spec>;
 #[doc = "DMA Transmitter Descriptor Table Address Register"]
 pub mod dmatxdesc0;
-#[doc = "DMARXDESC0 (rw) register accessor: DMA Receiver Table Destination Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dmarxdesc0::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dmarxdesc0::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmarxdesc0`]
+#[doc = "DMARXDESC0 (rw) register accessor: DMA Receiver Table Destination Register\n\nYou can [`read`](crate::Reg::read) this register and get [`dmarxdesc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dmarxdesc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmarxdesc0`]
 module"]
 #[doc(alias = "DMARXDESC0")]
 pub type Dmarxdesc0 = crate::Reg<dmarxdesc0::Dmarxdesc0Spec>;
 #[doc = "DMA Receiver Table Destination Register"]
 pub mod dmarxdesc0;
-#[doc = "DMAADDR0 (rw) register accessor: DMA Receiver Table Address Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dmaaddr0::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dmaaddr0::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmaaddr0`]
+#[doc = "DMAADDR0 (rw) register accessor: DMA Receiver Table Address Register\n\nYou can [`read`](crate::Reg::read) this register and get [`dmaaddr0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dmaaddr0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmaaddr0`]
 module"]
 #[doc(alias = "DMAADDR0")]
 pub type Dmaaddr0 = crate::Reg<dmaaddr0::Dmaaddr0Spec>;

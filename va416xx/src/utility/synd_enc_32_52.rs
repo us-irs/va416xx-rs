@@ -9,7 +9,7 @@ impl R {
         SyndEnc32_52R::new(self.bits & 0x000f_ffff)
     }
 }
-#[doc = "EDAC Encode\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`synd_enc_32_52::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "EDAC Encode\n\nYou can [`read`](crate::Reg::read) this register and get [`synd_enc_32_52::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SyndEnc32_52Spec;
 impl crate::RegisterSpec for SyndEnc32_52Spec {
     type Ux = u32;

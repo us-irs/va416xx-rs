@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Count to load"]
     #[inline(always)]
-    #[must_use]
     pub fn cnt(&mut self) -> CntW<WdogloadSpec> {
         CntW::new(self, 0)
     }
 }
-#[doc = "Counter Start Value\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`wdogload::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`wdogload::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Counter Start Value\n\nYou can [`read`](crate::Reg::read) this register and get [`wdogload::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`wdogload::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct WdogloadSpec;
 impl crate::RegisterSpec for WdogloadSpec {
     type Ux = u32;

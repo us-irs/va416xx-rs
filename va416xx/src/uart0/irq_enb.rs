@@ -70,48 +70,41 @@ impl R {
 impl W {
     #[doc = "Bit 0 - RX Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn irq_rx(&mut self) -> IrqRxW<IrqEnbSpec> {
         IrqRxW::new(self, 0)
     }
     #[doc = "Bit 1 - RX Status Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn irq_rx_status(&mut self) -> IrqRxStatusW<IrqEnbSpec> {
         IrqRxStatusW::new(self, 1)
     }
     #[doc = "Bit 2 - RX Timeout Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn irq_rx_to(&mut self) -> IrqRxToW<IrqEnbSpec> {
         IrqRxToW::new(self, 2)
     }
     #[doc = "Bit 4 - TX Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn irq_tx(&mut self) -> IrqTxW<IrqEnbSpec> {
         IrqTxW::new(self, 4)
     }
     #[doc = "Bit 5 - TX Status Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn irq_tx_status(&mut self) -> IrqTxStatusW<IrqEnbSpec> {
         IrqTxStatusW::new(self, 5)
     }
     #[doc = "Bit 6 - TX Empty Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn irq_tx_empty(&mut self) -> IrqTxEmptyW<IrqEnbSpec> {
         IrqTxEmptyW::new(self, 6)
     }
     #[doc = "Bit 7 - TX CTS Change Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn irq_tx_cts(&mut self) -> IrqTxCtsW<IrqEnbSpec> {
         IrqTxCtsW::new(self, 7)
     }
 }
-#[doc = "IRQ Enable Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`irq_enb::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`irq_enb::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "IRQ Enable Register\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_enb::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_enb::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct IrqEnbSpec;
 impl crate::RegisterSpec for IrqEnbSpec {
     type Ux = u32;

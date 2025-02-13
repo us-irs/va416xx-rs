@@ -16,7 +16,7 @@ impl R {
         ChanTagR::new(((self.bits >> 12) & 0x0f) as u8)
     }
 }
-#[doc = "FIFO data\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`fifo_data::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "FIFO data\n\nYou can [`read`](crate::Reg::read) this register and get [`fifo_data::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct FifoDataSpec;
 impl crate::RegisterSpec for FifoDataSpec {
     type Ux = u32;

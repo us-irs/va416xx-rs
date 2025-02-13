@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of frames received with Receive error or Frame Extension error\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxrcverror::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of frames received with Receive error or Frame Extension error\n\nYou can [`read`](crate::Reg::read) this register and get [`rxrcverror::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxrcverrorSpec;
 impl crate::RegisterSpec for RxrcverrorSpec {
     type Ux = u32;

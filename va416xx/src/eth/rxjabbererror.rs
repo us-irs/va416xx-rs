@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of giant frames received with length greater than 1518 bytes and with CRC error\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxjabbererror::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of giant frames received with length greater than 1518 bytes and with CRC error\n\nYou can [`read`](crate::Reg::read) this register and get [`rxjabbererror::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxjabbererrorSpec;
 impl crate::RegisterSpec for RxjabbererrorSpec {
     type Ux = u32;

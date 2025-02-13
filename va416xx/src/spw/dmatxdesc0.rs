@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 4:9 - Offset into the descriptor table"]
     #[inline(always)]
-    #[must_use]
     pub fn descsel(&mut self) -> DescselW<Dmatxdesc0Spec> {
         DescselW::new(self, 4)
     }
     #[doc = "Bits 10:31 - Sets the base address of the descriptor table"]
     #[inline(always)]
-    #[must_use]
     pub fn descbaseaddr(&mut self) -> DescbaseaddrW<Dmatxdesc0Spec> {
         DescbaseaddrW::new(self, 10)
     }
 }
-#[doc = "DMA Transmitter Descriptor Table Address Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dmatxdesc0::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dmatxdesc0::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "DMA Transmitter Descriptor Table Address Register\n\nYou can [`read`](crate::Reg::read) this register and get [`dmatxdesc0::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dmatxdesc0::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Dmatxdesc0Spec;
 impl crate::RegisterSpec for Dmatxdesc0Spec {
     type Ux = u32;

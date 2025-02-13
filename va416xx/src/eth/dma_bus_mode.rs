@@ -133,90 +133,76 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Software Reset (Read, Write Set, and Self Clear)"]
     #[inline(always)]
-    #[must_use]
     pub fn swr(&mut self) -> SwrW<DmaBusModeSpec> {
         SwrW::new(self, 0)
     }
     #[doc = "Bit 1 - DMA Arbitration Scheme"]
     #[inline(always)]
-    #[must_use]
     pub fn da(&mut self) -> DaW<DmaBusModeSpec> {
         DaW::new(self, 1)
     }
     #[doc = "Bits 2:6 - Descriptor Skip Length"]
     #[inline(always)]
-    #[must_use]
     pub fn dsl(&mut self) -> DslW<DmaBusModeSpec> {
         DslW::new(self, 2)
     }
     #[doc = "Bits 8:13 - Programmable Burst Lengthe"]
     #[inline(always)]
-    #[must_use]
     pub fn pbl(&mut self) -> PblW<DmaBusModeSpec> {
         PblW::new(self, 8)
     }
     #[doc = "Bits 14:15 - Priority Ratio"]
     #[inline(always)]
-    #[must_use]
     pub fn pr(&mut self) -> PrW<DmaBusModeSpec> {
         PrW::new(self, 14)
     }
     #[doc = "Bit 16 - Fixed Burste"]
     #[inline(always)]
-    #[must_use]
     pub fn fb(&mut self) -> FbW<DmaBusModeSpec> {
         FbW::new(self, 16)
     }
     #[doc = "Bits 17:22 - Rx DMA PBL"]
     #[inline(always)]
-    #[must_use]
     pub fn rpbl(&mut self) -> RpblW<DmaBusModeSpec> {
         RpblW::new(self, 17)
     }
     #[doc = "Bit 23 - Use Separate PBL"]
     #[inline(always)]
-    #[must_use]
     pub fn usp(&mut self) -> UspW<DmaBusModeSpec> {
         UspW::new(self, 23)
     }
     #[doc = "Bit 24 - PBLx8 Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn pblx8(&mut self) -> Pblx8W<DmaBusModeSpec> {
         Pblx8W::new(self, 24)
     }
     #[doc = "Bit 25 - Address-Aligned Beats"]
     #[inline(always)]
-    #[must_use]
     pub fn aal(&mut self) -> AalW<DmaBusModeSpec> {
         AalW::new(self, 25)
     }
     #[doc = "Bit 26 - Mixed Burst"]
     #[inline(always)]
-    #[must_use]
     pub fn mb(&mut self) -> MbW<DmaBusModeSpec> {
         MbW::new(self, 26)
     }
     #[doc = "Bit 27 - Transmit Priority"]
     #[inline(always)]
-    #[must_use]
     pub fn txpr(&mut self) -> TxprW<DmaBusModeSpec> {
         TxprW::new(self, 27)
     }
     #[doc = "Bits 28:29 - Channel Priority Weights"]
     #[inline(always)]
-    #[must_use]
     pub fn prwg(&mut self) -> PrwgW<DmaBusModeSpec> {
         PrwgW::new(self, 28)
     }
     #[doc = "Bit 31 - Rebuild INCRx Burst"]
     #[inline(always)]
-    #[must_use]
     pub fn rib(&mut self) -> RibW<DmaBusModeSpec> {
         RibW::new(self, 31)
     }
 }
-#[doc = "Controls the DMA Host Interface Mode\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dma_bus_mode::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dma_bus_mode::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Controls the DMA Host Interface Mode\n\nYou can [`read`](crate::Reg::read) this register and get [`dma_bus_mode::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dma_bus_mode::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DmaBusModeSpec;
 impl crate::RegisterSpec for DmaBusModeSpec {
     type Ux = u32;

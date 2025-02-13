@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Good and bad Frames transmitted with length 1024 to max bytes\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`tx1024maxoct_gb::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Good and bad Frames transmitted with length 1024 to max bytes\n\nYou can [`read`](crate::Reg::read) this register and get [`tx1024maxoct_gb::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Tx1024maxoctGbSpec;
 impl crate::RegisterSpec for Tx1024maxoctGbSpec {
     type Ux = u32;

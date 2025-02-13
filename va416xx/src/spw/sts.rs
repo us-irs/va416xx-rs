@@ -115,78 +115,66 @@ impl R {
 impl W {
     #[doc = "Bit 0 - A new time count value was received"]
     #[inline(always)]
-    #[must_use]
     pub fn to(&mut self) -> ToW<StsSpec> {
         ToW::new(self, 0)
     }
     #[doc = "Bit 1 - Credit has occurred"]
     #[inline(always)]
-    #[must_use]
     pub fn ce(&mut self) -> CeW<StsSpec> {
         CeW::new(self, 1)
     }
     #[doc = "Bit 2 - Escape error has occurred"]
     #[inline(always)]
-    #[must_use]
     pub fn er(&mut self) -> ErW<StsSpec> {
         ErW::new(self, 2)
     }
     #[doc = "Bit 3 - Disconnection error has occurred"]
     #[inline(always)]
-    #[must_use]
     pub fn de(&mut self) -> DeW<StsSpec> {
         DeW::new(self, 3)
     }
     #[doc = "Bit 4 - Parity error has occurred"]
     #[inline(always)]
-    #[must_use]
     pub fn pe(&mut self) -> PeW<StsSpec> {
         PeW::new(self, 4)
     }
     #[doc = "Bit 6 - A synchronization problem has occurred when receiving NChars"]
     #[inline(always)]
-    #[must_use]
     pub fn we(&mut self) -> WeW<StsSpec> {
         WeW::new(self, 6)
     }
     #[doc = "Bit 7 - Packet is received with an invalid destination address field"]
     #[inline(always)]
-    #[must_use]
     pub fn ia(&mut self) -> IaW<StsSpec> {
         IaW::new(self, 7)
     }
     #[doc = "Bit 8 - Set to one when a packet is received with an EOP after the first byte for a non-RMAP packet and after the second byte for a RMAP packet"]
     #[inline(always)]
-    #[must_use]
     pub fn ee(&mut self) -> EeW<StsSpec> {
         EeW::new(self, 8)
     }
     #[doc = "Bit 9 - Active port"]
     #[inline(always)]
-    #[must_use]
     pub fn ap(&mut self) -> ApW<StsSpec> {
         ApW::new(self, 9)
     }
     #[doc = "Bits 21:23 - Link State"]
     #[inline(always)]
-    #[must_use]
     pub fn ls(&mut self) -> LsW<StsSpec> {
         LsW::new(self, 21)
     }
     #[doc = "Bits 24:25 - Number of Transmit Descriptors"]
     #[inline(always)]
-    #[must_use]
     pub fn ntxd(&mut self) -> NtxdW<StsSpec> {
         NtxdW::new(self, 24)
     }
     #[doc = "Bits 26:27 - Number of Receive Descriptors"]
     #[inline(always)]
-    #[must_use]
     pub fn nrxd(&mut self) -> NrxdW<StsSpec> {
         NrxdW::new(self, 26)
     }
 }
-#[doc = "Status/Interrupt Source Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`sts::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`sts::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Status/Interrupt Source Register\n\nYou can [`read`](crate::Reg::read) this register and get [`sts::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sts::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct StsSpec;
 impl crate::RegisterSpec for StsSpec {
     type Ux = u32;

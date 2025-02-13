@@ -9,7 +9,7 @@ impl R {
         TsssR::new(self.bits & 0x7fff_ffff)
     }
 }
-#[doc = "Holds 32 bits of the nano-second field of the system time\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`systime_nanosec::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Holds 32 bits of the nano-second field of the system time\n\nYou can [`read`](crate::Reg::read) this register and get [`systime_nanosec::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SystimeNanosecSpec;
 impl crate::RegisterSpec for SystimeNanosecSpec {
     type Ux = u32;

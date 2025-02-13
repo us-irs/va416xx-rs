@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - 8-bit node address used for node identification on the SpaceWire network"]
     #[inline(always)]
-    #[must_use]
     pub fn defaddr(&mut self) -> DefaddrW<DefaddrSpec> {
         DefaddrW::new(self, 0)
     }
     #[doc = "Bits 8:15 - 8-bit default mask used for node identification on the SpaceWire network"]
     #[inline(always)]
-    #[must_use]
     pub fn defmask(&mut self) -> DefmaskW<DefaddrSpec> {
         DefmaskW::new(self, 8)
     }
 }
-#[doc = "Node Address Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`defaddr::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`defaddr::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Node Address Register\n\nYou can [`read`](crate::Reg::read) this register and get [`defaddr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`defaddr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DefaddrSpec;
 impl crate::RegisterSpec for DefaddrSpec {
     type Ux = u32;

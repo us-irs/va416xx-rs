@@ -86,7 +86,7 @@ impl R {
         TxstsfstsR::new(((self.bits >> 25) & 1) != 0)
     }
 }
-#[doc = "Gives the status of the various internal blocks for debugging\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`mac_debug::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Gives the status of the various internal blocks for debugging\n\nYou can [`read`](crate::Reg::read) this register and get [`mac_debug::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct MacDebugSpec;
 impl crate::RegisterSpec for MacDebugSpec {
     type Ux = u32;

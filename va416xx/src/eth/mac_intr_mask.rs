@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bit 9 - Timestamp Interrupt Mask"]
     #[inline(always)]
-    #[must_use]
     pub fn tsim(&mut self) -> TsimW<MacIntrMaskSpec> {
         TsimW::new(self, 9)
     }
 }
-#[doc = "Contains the masks for generating interrupt\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`mac_intr_mask::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`mac_intr_mask::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Contains the masks for generating interrupt\n\nYou can [`read`](crate::Reg::read) this register and get [`mac_intr_mask::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mac_intr_mask::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct MacIntrMaskSpec;
 impl crate::RegisterSpec for MacIntrMaskSpec {
     type Ux = u32;

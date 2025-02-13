@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Writing any value to this bit resets the bits counter and TRNG valid registers"]
     #[inline(always)]
-    #[must_use]
     pub fn rst_bits_counter(&mut self) -> RstBitsCounterW<RstBitsCounterSpec> {
         RstBitsCounterW::new(self, 0)
     }
 }
-#[doc = "Reset Bits Counter Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rst_bits_counter::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`rst_bits_counter::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Reset Bits Counter Register\n\nYou can [`read`](crate::Reg::read) this register and get [`rst_bits_counter::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rst_bits_counter::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RstBitsCounterSpec;
 impl crate::RegisterSpec for RstBitsCounterSpec {
     type Ux = u32;

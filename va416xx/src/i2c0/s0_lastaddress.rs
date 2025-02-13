@@ -16,7 +16,7 @@ impl R {
         AddressR::new(((self.bits >> 1) & 0x03ff) as u16)
     }
 }
-#[doc = "Slave I2C Last Address value\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`s0_lastaddress::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Slave I2C Last Address value\n\nYou can [`read`](crate::Reg::read) this register and get [`s0_lastaddress::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct S0LastaddressSpec;
 impl crate::RegisterSpec for S0LastaddressSpec {
     type Ux = u32;

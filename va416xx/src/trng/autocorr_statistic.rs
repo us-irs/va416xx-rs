@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:13 - Count each time an autocorrelation test starts"]
     #[inline(always)]
-    #[must_use]
     pub fn autocorr_trys(&mut self) -> AutocorrTrysW<AutocorrStatisticSpec> {
         AutocorrTrysW::new(self, 0)
     }
     #[doc = "Bits 14:21 - Count each time an autocorrelation test fails"]
     #[inline(always)]
-    #[must_use]
     pub fn autocorr_fails(&mut self) -> AutocorrFailsW<AutocorrStatisticSpec> {
         AutocorrFailsW::new(self, 14)
     }
 }
-#[doc = "Auto-correlator Statistic Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`autocorr_statistic::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`autocorr_statistic::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Auto-correlator Statistic Register\n\nYou can [`read`](crate::Reg::read) this register and get [`autocorr_statistic::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`autocorr_statistic::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct AutocorrStatisticSpec;
 impl crate::RegisterSpec for AutocorrStatisticSpec {
     type Ux = u32;

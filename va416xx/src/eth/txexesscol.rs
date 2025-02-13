@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of aborted frames because of excessive collision errors\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txexesscol::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of aborted frames because of excessive collision errors\n\nYou can [`read`](crate::Reg::read) this register and get [`txexesscol::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxexesscolSpec;
 impl crate::RegisterSpec for TxexesscolSpec {
     type Ux = u32;

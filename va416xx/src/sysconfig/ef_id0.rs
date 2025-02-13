@@ -5,7 +5,7 @@ impl core::fmt::Debug for R {
         write!(f, "{}", self.bits())
     }
 }
-#[doc = "EFuse ID0 Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ef_id0::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "EFuse ID0 Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ef_id0::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct EfId0Spec;
 impl crate::RegisterSpec for EfId0Spec {
     type Ux = u32;

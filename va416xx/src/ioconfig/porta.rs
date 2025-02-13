@@ -214,72 +214,61 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Input Filter Selectoin"]
     #[inline(always)]
-    #[must_use]
     pub fn flttype(&mut self) -> FlttypeW<PortaSpec> {
         FlttypeW::new(self, 0)
     }
     #[doc = "Bits 3:5 - Input Filter Clock Selection"]
     #[inline(always)]
-    #[must_use]
     pub fn fltclk(&mut self) -> FltclkW<PortaSpec> {
         FltclkW::new(self, 3)
     }
     #[doc = "Bit 6 - Input Invert Selection"]
     #[inline(always)]
-    #[must_use]
     pub fn invinp(&mut self) -> InvinpW<PortaSpec> {
         InvinpW::new(self, 6)
     }
     #[doc = "Bit 7 - Input Enable While Output enabled"]
     #[inline(always)]
-    #[must_use]
     pub fn iewo(&mut self) -> IewoW<PortaSpec> {
         IewoW::new(self, 7)
     }
     #[doc = "Bit 8 - Output Open Drain Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn opendrn(&mut self) -> OpendrnW<PortaSpec> {
         OpendrnW::new(self, 8)
     }
     #[doc = "Bit 9 - Output Invert Selection"]
     #[inline(always)]
-    #[must_use]
     pub fn invout(&mut self) -> InvoutW<PortaSpec> {
         InvoutW::new(self, 9)
     }
     #[doc = "Bit 10 - Internal Pull up/down level"]
     #[inline(always)]
-    #[must_use]
     pub fn plevel(&mut self) -> PlevelW<PortaSpec> {
         PlevelW::new(self, 10)
     }
     #[doc = "Bit 11 - Enable Internal Pull up/down"]
     #[inline(always)]
-    #[must_use]
     pub fn pen(&mut self) -> PenW<PortaSpec> {
         PenW::new(self, 11)
     }
     #[doc = "Bit 12 - Enable Pull when output active"]
     #[inline(always)]
-    #[must_use]
     pub fn pwoa(&mut self) -> PwoaW<PortaSpec> {
         PwoaW::new(self, 12)
     }
     #[doc = "Bits 13:15 - Pin Function Selection"]
     #[inline(always)]
-    #[must_use]
     pub fn funsel(&mut self) -> FunselW<PortaSpec> {
         FunselW::new(self, 13)
     }
     #[doc = "Bit 16 - IO Pin Disable"]
     #[inline(always)]
-    #[must_use]
     pub fn iodis(&mut self) -> IodisW<PortaSpec> {
         IodisW::new(self, 16)
     }
 }
-#[doc = "PORTA Pin Configuration Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`porta::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`porta::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "PORTA Pin Configuration Register\n\nYou can [`read`](crate::Reg::read) this register and get [`porta::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`porta::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct PortaSpec;
 impl crate::RegisterSpec for PortaSpec {
     type Ux = u32;

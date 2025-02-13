@@ -88,60 +88,51 @@ impl R {
 impl W {
     #[doc = "Bit 0 - I2C CLK Enabled"]
     #[inline(always)]
-    #[must_use]
     pub fn clkenabled(&mut self) -> ClkenabledW<CtrlSpec> {
         ClkenabledW::new(self, 0)
     }
     #[doc = "Bit 1 - I2C Activated"]
     #[inline(always)]
-    #[must_use]
     pub fn enabled(&mut self) -> EnabledW<CtrlSpec> {
         EnabledW::new(self, 1)
     }
     #[doc = "Bit 2 - I2C Active"]
     #[inline(always)]
-    #[must_use]
     pub fn enable(&mut self) -> EnableW<CtrlSpec> {
         EnableW::new(self, 2)
     }
     #[doc = "Bit 3 - TX FIFIO Empty Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn txfemd(&mut self) -> TxfemdW<CtrlSpec> {
         TxfemdW::new(self, 3)
     }
     #[doc = "Bit 4 - RX FIFO Full Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn rxffmd(&mut self) -> RxffmdW<CtrlSpec> {
         RxffmdW::new(self, 4)
     }
     #[doc = "Bit 5 - Enable Input Analog Glitch Filter"]
     #[inline(always)]
-    #[must_use]
     pub fn algfilter(&mut self) -> AlgfilterW<CtrlSpec> {
         AlgfilterW::new(self, 5)
     }
     #[doc = "Bit 6 - Enable Input Digital Glitch Filter"]
     #[inline(always)]
-    #[must_use]
     pub fn dlgfilter(&mut self) -> DlgfilterW<CtrlSpec> {
         DlgfilterW::new(self, 6)
     }
     #[doc = "Bit 8 - Enable LoopBack Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn loopback(&mut self) -> LoopbackW<CtrlSpec> {
         LoopbackW::new(self, 8)
     }
     #[doc = "Bit 9 - Enable Timing Config Register"]
     #[inline(always)]
-    #[must_use]
     pub fn tmconfigenb(&mut self) -> TmconfigenbW<CtrlSpec> {
         TmconfigenbW::new(self, 9)
     }
 }
-#[doc = "Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct CtrlSpec;
 impl crate::RegisterSpec for CtrlSpec {
     type Ux = u32;

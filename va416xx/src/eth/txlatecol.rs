@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of aborted frames because of late collision error\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txlatecol::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of aborted frames because of late collision error\n\nYou can [`read`](crate::Reg::read) this register and get [`txlatecol::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxlatecolSpec;
 impl crate::RegisterSpec for TxlatecolSpec {
     type Ux = u32;

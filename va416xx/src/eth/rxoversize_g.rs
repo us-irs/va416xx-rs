@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of frames received without errors with length greater than the max size\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxoversize_g::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of frames received without errors with length greater than the max size\n\nYou can [`read`](crate::Reg::read) this register and get [`rxoversize_g::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxoversizeGSpec;
 impl crate::RegisterSpec for RxoversizeGSpec {
     type Ux = u32;

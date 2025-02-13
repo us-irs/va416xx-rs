@@ -58,12 +58,12 @@ impl RegisterBlock {
     #[doc = "0x20 - The Pulse Width Modulation ValueA"]
     #[inline(always)]
     pub const fn pwma_value(&self) -> &PwmaValue {
-        unsafe { &*(self as *const Self).cast::<u8>().add(32).cast() }
+        unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(32).cast() }
     }
     #[doc = "0x20 - The Pulse Width Modulation Value"]
     #[inline(always)]
     pub const fn pwm_value(&self) -> &PwmValue {
-        unsafe { &*(self as *const Self).cast::<u8>().add(32).cast() }
+        unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(32).cast() }
     }
     #[doc = "0x24 - The Pulse Width Modulation ValueB"]
     #[inline(always)]
@@ -76,37 +76,37 @@ impl RegisterBlock {
         &self.perid
     }
 }
-#[doc = "CTRL (rw) register accessor: Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl`]
+#[doc = "CTRL (rw) register accessor: Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl`]
 module"]
 #[doc(alias = "CTRL")]
 pub type Ctrl = crate::Reg<ctrl::CtrlSpec>;
 #[doc = "Control Register"]
 pub mod ctrl;
-#[doc = "RST_VALUE (rw) register accessor: The value that counter start from after reaching 0.\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rst_value::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`rst_value::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rst_value`]
+#[doc = "RST_VALUE (rw) register accessor: The value that counter start from after reaching 0.\n\nYou can [`read`](crate::Reg::read) this register and get [`rst_value::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rst_value::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rst_value`]
 module"]
 #[doc(alias = "RST_VALUE")]
 pub type RstValue = crate::Reg<rst_value::RstValueSpec>;
 #[doc = "The value that counter start from after reaching 0."]
 pub mod rst_value;
-#[doc = "CNT_VALUE (rw) register accessor: The current value of the counter\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`cnt_value::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`cnt_value::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cnt_value`]
+#[doc = "CNT_VALUE (rw) register accessor: The current value of the counter\n\nYou can [`read`](crate::Reg::read) this register and get [`cnt_value::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cnt_value::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cnt_value`]
 module"]
 #[doc(alias = "CNT_VALUE")]
 pub type CntValue = crate::Reg<cnt_value::CntValueSpec>;
 #[doc = "The current value of the counter"]
 pub mod cnt_value;
-#[doc = "ENABLE (rw) register accessor: Alternate access to the Counter ENABLE bit in the CTRL Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`enable::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`enable::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@enable`]
+#[doc = "ENABLE (rw) register accessor: Alternate access to the Counter ENABLE bit in the CTRL Register\n\nYou can [`read`](crate::Reg::read) this register and get [`enable::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`enable::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@enable`]
 module"]
 #[doc(alias = "ENABLE")]
 pub type Enable = crate::Reg<enable::EnableSpec>;
 #[doc = "Alternate access to the Counter ENABLE bit in the CTRL Register"]
 pub mod enable;
-#[doc = "CSD_CTRL (rw) register accessor: The Cascade Control Register. Controls the counter external enable signals\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`csd_ctrl::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`csd_ctrl::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@csd_ctrl`]
+#[doc = "CSD_CTRL (rw) register accessor: The Cascade Control Register. Controls the counter external enable signals\n\nYou can [`read`](crate::Reg::read) this register and get [`csd_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`csd_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@csd_ctrl`]
 module"]
 #[doc(alias = "CSD_CTRL")]
 pub type CsdCtrl = crate::Reg<csd_ctrl::CsdCtrlSpec>;
 #[doc = "The Cascade Control Register. Controls the counter external enable signals"]
 pub mod csd_ctrl;
-#[doc = "CASCADE0 (rw) register accessor: Cascade Enable Selection\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`cascade0::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`cascade0::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cascade0`]
+#[doc = "CASCADE0 (rw) register accessor: Cascade Enable Selection\n\nYou can [`read`](crate::Reg::read) this register and get [`cascade0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cascade0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cascade0`]
 module"]
 #[doc(alias = "CASCADE0")]
 pub type Cascade0 = crate::Reg<cascade0::Cascade0Spec>;
@@ -116,25 +116,25 @@ pub use cascade0 as cascade1;
 pub use cascade0 as cascade2;
 pub use Cascade0 as Cascade1;
 pub use Cascade0 as Cascade2;
-#[doc = "PWM_VALUE (rw) register accessor: The Pulse Width Modulation Value\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`pwm_value::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`pwm_value::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@pwm_value`]
+#[doc = "PWM_VALUE (rw) register accessor: The Pulse Width Modulation Value\n\nYou can [`read`](crate::Reg::read) this register and get [`pwm_value::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pwm_value::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@pwm_value`]
 module"]
 #[doc(alias = "PWM_VALUE")]
 pub type PwmValue = crate::Reg<pwm_value::PwmValueSpec>;
 #[doc = "The Pulse Width Modulation Value"]
 pub mod pwm_value;
-#[doc = "PWMA_VALUE (rw) register accessor: The Pulse Width Modulation ValueA\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`pwma_value::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`pwma_value::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@pwma_value`]
+#[doc = "PWMA_VALUE (rw) register accessor: The Pulse Width Modulation ValueA\n\nYou can [`read`](crate::Reg::read) this register and get [`pwma_value::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pwma_value::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@pwma_value`]
 module"]
 #[doc(alias = "PWMA_VALUE")]
 pub type PwmaValue = crate::Reg<pwma_value::PwmaValueSpec>;
 #[doc = "The Pulse Width Modulation ValueA"]
 pub mod pwma_value;
-#[doc = "PWMB_VALUE (rw) register accessor: The Pulse Width Modulation ValueB\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`pwmb_value::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`pwmb_value::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@pwmb_value`]
+#[doc = "PWMB_VALUE (rw) register accessor: The Pulse Width Modulation ValueB\n\nYou can [`read`](crate::Reg::read) this register and get [`pwmb_value::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pwmb_value::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@pwmb_value`]
 module"]
 #[doc(alias = "PWMB_VALUE")]
 pub type PwmbValue = crate::Reg<pwmb_value::PwmbValueSpec>;
 #[doc = "The Pulse Width Modulation ValueB"]
 pub mod pwmb_value;
-#[doc = "PERID (r) register accessor: Peripheral ID Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`perid::R`].  See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@perid`]
+#[doc = "PERID (r) register accessor: Peripheral ID Register\n\nYou can [`read`](crate::Reg::read) this register and get [`perid::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@perid`]
 module"]
 #[doc(alias = "PERID")]
 pub type Perid = crate::Reg<perid::PeridSpec>;

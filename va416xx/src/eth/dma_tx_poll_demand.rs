@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Transmit Poll Demand (Read Only and Write Trigger)"]
     #[inline(always)]
-    #[must_use]
     pub fn tpd(&mut self) -> TpdW<DmaTxPollDemandSpec> {
         TpdW::new(self, 0)
     }
 }
-#[doc = "Used by the host to instruct the DMA to poll the transmit Descriptor list\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dma_tx_poll_demand::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dma_tx_poll_demand::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Used by the host to instruct the DMA to poll the transmit Descriptor list\n\nYou can [`read`](crate::Reg::read) this register and get [`dma_tx_poll_demand::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dma_tx_poll_demand::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DmaTxPollDemandSpec;
 impl crate::RegisterSpec for DmaTxPollDemandSpec {
     type Ux = u32;

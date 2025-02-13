@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enable test mode of WDOGINT and WDOGRES"]
     #[inline(always)]
-    #[must_use]
     pub fn test_mode_en(&mut self) -> TestModeEnW<WdogitcrSpec> {
         TestModeEnW::new(self, 0)
     }
 }
-#[doc = "Integration test control\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`wdogitcr::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`wdogitcr::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Integration test control\n\nYou can [`read`](crate::Reg::read) this register and get [`wdogitcr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`wdogitcr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct WdogitcrSpec;
 impl crate::RegisterSpec for WdogitcrSpec {
     type Ux = u32;

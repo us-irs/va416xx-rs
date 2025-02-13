@@ -70,48 +70,41 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enables the interrupt for FIFO empty"]
     #[inline(always)]
-    #[must_use]
     pub fn fifo_empty(&mut self) -> FifoEmptyW<IrqEnbSpec> {
         FifoEmptyW::new(self, 0)
     }
     #[doc = "Bit 1 - Enables the interrupt for FIFO full"]
     #[inline(always)]
-    #[must_use]
     pub fn fifo_full(&mut self) -> FifoFullW<IrqEnbSpec> {
         FifoFullW::new(self, 1)
     }
     #[doc = "Bit 2 - Enables the interrupt for a FIFO overflow"]
     #[inline(always)]
-    #[must_use]
     pub fn fifo_oflow(&mut self) -> FifoOflowW<IrqEnbSpec> {
         FifoOflowW::new(self, 2)
     }
     #[doc = "Bit 3 - Enables the interrupt for a FIFO underflow"]
     #[inline(always)]
-    #[must_use]
     pub fn fifo_uflow(&mut self) -> FifoUflowW<IrqEnbSpec> {
         FifoUflowW::new(self, 3)
     }
     #[doc = "Bit 4 - Enables the interrupt for an ADC data acquisition completion"]
     #[inline(always)]
-    #[must_use]
     pub fn adc_done(&mut self) -> AdcDoneW<IrqEnbSpec> {
         AdcDoneW::new(self, 4)
     }
     #[doc = "Bit 5 - Enables the interrupt for a trigger error"]
     #[inline(always)]
-    #[must_use]
     pub fn trig_error(&mut self) -> TrigErrorW<IrqEnbSpec> {
         TrigErrorW::new(self, 5)
     }
     #[doc = "Bit 6 - Enables the interrupt for the FIFO entry count meets or exceeds the trigger level"]
     #[inline(always)]
-    #[must_use]
     pub fn fifo_depth_trig(&mut self) -> FifoDepthTrigW<IrqEnbSpec> {
         FifoDepthTrigW::new(self, 6)
     }
 }
-#[doc = "Interrupt Enable\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`irq_enb::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`irq_enb::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Interrupt Enable\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_enb::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_enb::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct IrqEnbSpec;
 impl crate::RegisterSpec for IrqEnbSpec {
     type Ux = u32;

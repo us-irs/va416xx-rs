@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:13 - Watchdog Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn wto(&mut self) -> WtoW<MacWdogToSpec> {
         WtoW::new(self, 0)
     }
     #[doc = "Bit 16 - Programmable Watchdog Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn pwe(&mut self) -> PweW<MacWdogToSpec> {
         PweW::new(self, 16)
     }
 }
-#[doc = "Controls the watchdog time-out for received frames\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`mac_wdog_to::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`mac_wdog_to::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Controls the watchdog time-out for received frames\n\nYou can [`read`](crate::Reg::read) this register and get [`mac_wdog_to::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mac_wdog_to::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct MacWdogToSpec;
 impl crate::RegisterSpec for MacWdogToSpec {
     type Ux = u32;

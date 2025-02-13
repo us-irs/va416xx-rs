@@ -142,7 +142,7 @@ impl R {
         TtiR::new(((self.bits >> 29) & 1) != 0)
     }
 }
-#[doc = "Used to determine the status of the DMA\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dma_status::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Used to determine the status of the DMA\n\nYou can [`read`](crate::Reg::read) this register and get [`dma_status::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DmaStatusSpec;
 impl crate::RegisterSpec for DmaStatusSpec {
     type Ux = u32;

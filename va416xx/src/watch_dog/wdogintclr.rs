@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Write any value to clear interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn clear(&mut self) -> ClearW<WdogintclrSpec> {
         ClearW::new(self, 0)
     }
 }
-#[doc = "A write of any value clears the WDT module interrupt, and reloads the counter from the value in the WDOGLOAD Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`wdogintclr::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`wdogintclr::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "A write of any value clears the WDT module interrupt, and reloads the counter from the value in the WDOGLOAD Register\n\nYou can [`read`](crate::Reg::read) this register and get [`wdogintclr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`wdogintclr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct WdogintclrSpec;
 impl crate::RegisterSpec for WdogintclrSpec {
     type Ux = u32;

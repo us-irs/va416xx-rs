@@ -60,19 +60,16 @@ impl W {
 - Unused in standard, ID\\[17:15\\]
 in extended"]
     #[inline(always)]
-    #[must_use]
     pub fn gm0(&mut self) -> Gm0W<GmskbSpec> {
         Gm0W::new(self, 0)
     }
     #[doc = "Bit 3 - Identifier Extension Bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ide(&mut self) -> IdeW<GmskbSpec> {
         IdeW::new(self, 3)
     }
     #[doc = "Bit 4 - Remote Transmission Request in Standard, Substitute Remote Request (SRR) in extended"]
     #[inline(always)]
-    #[must_use]
     pub fn rtr(&mut self) -> RtrW<GmskbSpec> {
         RtrW::new(self, 4)
     }
@@ -81,12 +78,11 @@ in extended"]
 in standard, ID\\[28:18\\]
 in extended"]
     #[inline(always)]
-    #[must_use]
     pub fn gm1(&mut self) -> Gm1W<GmskbSpec> {
         Gm1W::new(self, 5)
     }
 }
-#[doc = "CAN Global Mask Base\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`gmskb::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`gmskb::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "CAN Global Mask Base\n\nYou can [`read`](crate::Reg::read) this register and get [`gmskb::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`gmskb::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct GmskbSpec;
 impl crate::RegisterSpec for GmskbSpec {
     type Ux = u32;

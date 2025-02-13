@@ -70,48 +70,41 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Counters Reset"]
     #[inline(always)]
-    #[must_use]
     pub fn cntrst(&mut self) -> CntrstW<MmcCntrlSpec> {
         CntrstW::new(self, 0)
     }
     #[doc = "Bit 1 - Counter Stop Rollover"]
     #[inline(always)]
-    #[must_use]
     pub fn cntstopro(&mut self) -> CntstoproW<MmcCntrlSpec> {
         CntstoproW::new(self, 1)
     }
     #[doc = "Bit 2 - Reset on Read"]
     #[inline(always)]
-    #[must_use]
     pub fn rstonrd(&mut self) -> RstonrdW<MmcCntrlSpec> {
         RstonrdW::new(self, 2)
     }
     #[doc = "Bit 3 - MMC Counter Freeze"]
     #[inline(always)]
-    #[must_use]
     pub fn cntfreez(&mut self) -> CntfreezW<MmcCntrlSpec> {
         CntfreezW::new(self, 3)
     }
     #[doc = "Bit 4 - Counters Preset"]
     #[inline(always)]
-    #[must_use]
     pub fn cntprst(&mut self) -> CntprstW<MmcCntrlSpec> {
         CntprstW::new(self, 4)
     }
     #[doc = "Bit 5 - Full-Half Preset"]
     #[inline(always)]
-    #[must_use]
     pub fn cntprstlvl(&mut self) -> CntprstlvlW<MmcCntrlSpec> {
         CntprstlvlW::new(self, 5)
     }
     #[doc = "Bit 8 - Update MMC Counters for Dropped Broadcast Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn ucdbc(&mut self) -> UcdbcW<MmcCntrlSpec> {
         UcdbcW::new(self, 8)
     }
 }
-#[doc = "MMC Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`mmc_cntrl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`mmc_cntrl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`mmc_cntrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mmc_cntrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct MmcCntrlSpec;
 impl crate::RegisterSpec for MmcCntrlSpec {
     type Ux = u32;

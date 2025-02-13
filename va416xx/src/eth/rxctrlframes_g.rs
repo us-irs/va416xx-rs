@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of received good control frames\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxctrlframes_g::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of received good control frames\n\nYou can [`read`](crate::Reg::read) this register and get [`rxctrlframes_g::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxctrlframesGSpec;
 impl crate::RegisterSpec for RxctrlframesGSpec {
     type Ux = u32;

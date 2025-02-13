@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 5:7 - Sets the the amount of time in microseconds the control FSM waits for the DAC settling time"]
     #[inline(always)]
-    #[must_use]
     pub fn dac_settling(&mut self) -> DacSettlingW<Ctrl1Spec> {
         DacSettlingW::new(self, 5)
     }
     #[doc = "Bit 8 - Enables the DAC analog block"]
     #[inline(always)]
-    #[must_use]
     pub fn dac_en(&mut self) -> DacEnW<Ctrl1Spec> {
         DacEnW::new(self, 8)
     }
 }
-#[doc = "Control Register 1\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl1::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl1::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Control Register 1\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl1::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl1::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Ctrl1Spec;
 impl crate::RegisterSpec for Ctrl1Spec {
     type Ux = u32;

@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - 8-bit Clock divisor value used for the clock-divider when the link-interface is in the run-state"]
     #[inline(always)]
-    #[must_use]
     pub fn clkdivrun(&mut self) -> ClkdivrunW<ClkdivSpec> {
         ClkdivrunW::new(self, 0)
     }
     #[doc = "Bits 8:15 - 8-bit Clock divisor value used for the clock-divider during startup"]
     #[inline(always)]
-    #[must_use]
     pub fn clkdivstart(&mut self) -> ClkdivstartW<ClkdivSpec> {
         ClkdivstartW::new(self, 8)
     }
 }
-#[doc = "Clock Divisor Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkdiv::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkdiv::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Clock Divisor Register\n\nYou can [`read`](crate::Reg::read) this register and get [`clkdiv::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkdiv::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct ClkdivSpec;
 impl crate::RegisterSpec for ClkdivSpec {
     type Ux = u32;

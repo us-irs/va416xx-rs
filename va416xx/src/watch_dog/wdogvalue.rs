@@ -9,7 +9,7 @@ impl R {
         CntR::new(self.bits)
     }
 }
-#[doc = "Down Counter Value\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`wdogvalue::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Down Counter Value\n\nYou can [`read`](crate::Reg::read) this register and get [`wdogvalue::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct WdogvalueSpec;
 impl crate::RegisterSpec for WdogvalueSpec {
     type Ux = u32;

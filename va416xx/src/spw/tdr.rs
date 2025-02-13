@@ -16,7 +16,7 @@ impl R {
         DisconnectR::new(((self.bits >> 12) & 0x03ff) as u16)
     }
 }
-#[doc = "Timer and Disconnect Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`tdr::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Timer and Disconnect Register\n\nYou can [`read`](crate::Reg::read) this register and get [`tdr::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TdrSpec;
 impl crate::RegisterSpec for TdrSpec {
     type Ux = u32;

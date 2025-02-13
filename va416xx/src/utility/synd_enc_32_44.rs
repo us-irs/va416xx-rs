@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:5 - Computed syndrome value for bits 15-0"]
     #[inline(always)]
-    #[must_use]
     pub fn synd_enc_7_0(&mut self) -> SyndEnc7_0W<SyndEnc32_44Spec> {
         SyndEnc7_0W::new(self, 0)
     }
     #[doc = "Bits 6:11 - Computed syndrome value for bits 31-16"]
     #[inline(always)]
-    #[must_use]
     pub fn synd_enc_31_16(&mut self) -> SyndEnc31_16W<SyndEnc32_44Spec> {
         SyndEnc31_16W::new(self, 6)
     }
 }
-#[doc = "EDAC Encode\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`synd_enc_32_44::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`synd_enc_32_44::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "EDAC Encode\n\nYou can [`read`](crate::Reg::read) this register and get [`synd_enc_32_44::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`synd_enc_32_44::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SyndEnc32_44Spec;
 impl crate::RegisterSpec for SyndEnc32_44Spec {
     type Ux = u32;

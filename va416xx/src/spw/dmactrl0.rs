@@ -228,144 +228,121 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Write a one to this bit each time new descriptors are activated in the table"]
     #[inline(always)]
-    #[must_use]
     pub fn te(&mut self) -> TeW<Dmactrl0Spec> {
         TeW::new(self, 0)
     }
     #[doc = "Bit 1 - Packets are allowed to be received to this channel"]
     #[inline(always)]
-    #[must_use]
     pub fn re(&mut self) -> ReW<Dmactrl0Spec> {
         ReW::new(self, 1)
     }
     #[doc = "Bit 2 - An interrupt will be generated each time a packet is transmitted"]
     #[inline(always)]
-    #[must_use]
     pub fn ti(&mut self) -> TiW<Dmactrl0Spec> {
         TiW::new(self, 2)
     }
     #[doc = "Bit 3 - An interrupt will be generated each time a packet has been received"]
     #[inline(always)]
-    #[must_use]
     pub fn ri(&mut self) -> RiW<Dmactrl0Spec> {
         RiW::new(self, 3)
     }
     #[doc = "Bit 4 - An interrupt will be generated each time an AHB error occurs when this DMA channel is accessing the bus"]
     #[inline(always)]
-    #[must_use]
     pub fn ai(&mut self) -> AiW<Dmactrl0Spec> {
         AiW::new(self, 4)
     }
     #[doc = "Bit 5 - Set each time a packet has been sent"]
     #[inline(always)]
-    #[must_use]
     pub fn ps(&mut self) -> PsW<Dmactrl0Spec> {
         PsW::new(self, 5)
     }
     #[doc = "Bit 6 - Set each time a packet has been received"]
     #[inline(always)]
-    #[must_use]
     pub fn pr(&mut self) -> PrW<Dmactrl0Spec> {
         PrW::new(self, 6)
     }
     #[doc = "Bit 7 - An error response was detected on the AHB bus - DMA transmit"]
     #[inline(always)]
-    #[must_use]
     pub fn ta(&mut self) -> TaW<Dmactrl0Spec> {
         TaW::new(self, 7)
     }
     #[doc = "Bit 8 - An error response was detected on the AHB bus - DMA receive"]
     #[inline(always)]
-    #[must_use]
     pub fn ra(&mut self) -> RaW<Dmactrl0Spec> {
         RaW::new(self, 8)
     }
     #[doc = "Bit 11 - Indicates to the GRSPW that there are enabled descriptors in the descriptor table"]
     #[inline(always)]
-    #[must_use]
     pub fn rd(&mut self) -> RdW<Dmactrl0Spec> {
         RdW::new(self, 11)
     }
     #[doc = "Bit 12 - If cleared, packets will be discarded when a packet is arriving and there are no active descriptors. If set, the GRSPW will wait for a descriptor to be activated"]
     #[inline(always)]
-    #[must_use]
     pub fn ns(&mut self) -> NsW<Dmactrl0Spec> {
         NsW::new(self, 12)
     }
     #[doc = "Bit 13 - Enable Address"]
     #[inline(always)]
-    #[must_use]
     pub fn en(&mut self) -> EnW<Dmactrl0Spec> {
         EnW::new(self, 13)
     }
     #[doc = "Bit 14 - Strip Address"]
     #[inline(always)]
-    #[must_use]
     pub fn sa(&mut self) -> SaW<Dmactrl0Spec> {
         SaW::new(self, 14)
     }
     #[doc = "Bit 15 - Strip PID"]
     #[inline(always)]
-    #[must_use]
     pub fn sp(&mut self) -> SpW<Dmactrl0Spec> {
         SpW::new(self, 15)
     }
     #[doc = "Bit 16 - Disable transmitter when a link error occurs"]
     #[inline(always)]
-    #[must_use]
     pub fn le(&mut self) -> LeW<Dmactrl0Spec> {
         LeW::new(self, 16)
     }
     #[doc = "Bit 17 - Transmit Enable Lock"]
     #[inline(always)]
-    #[must_use]
     pub fn tl(&mut self) -> TlW<Dmactrl0Spec> {
         TlW::new(self, 17)
     }
     #[doc = "Bit 18 - Transmit Packet IRQ"]
     #[inline(always)]
-    #[must_use]
     pub fn tp(&mut self) -> TpW<Dmactrl0Spec> {
         TpW::new(self, 18)
     }
     #[doc = "Bit 19 - Receive Packet IRQ"]
     #[inline(always)]
-    #[must_use]
     pub fn rp(&mut self) -> RpW<Dmactrl0Spec> {
         RpW::new(self, 19)
     }
     #[doc = "Bit 20 - Interrupt code transmit enable on truncation"]
     #[inline(always)]
-    #[must_use]
     pub fn it(&mut self) -> ItW<Dmactrl0Spec> {
         ItW::new(self, 20)
     }
     #[doc = "Bit 21 - Interrupt code transmit enable on EEP"]
     #[inline(always)]
-    #[must_use]
     pub fn ie(&mut self) -> IeW<Dmactrl0Spec> {
         IeW::new(self, 21)
     }
     #[doc = "Bit 22 - Truncated"]
     #[inline(always)]
-    #[must_use]
     pub fn tr(&mut self) -> TrW<Dmactrl0Spec> {
         TrW::new(self, 22)
     }
     #[doc = "Bit 23 - EEP Termination"]
     #[inline(always)]
-    #[must_use]
     pub fn ep(&mut self) -> EpW<Dmactrl0Spec> {
         EpW::new(self, 23)
     }
     #[doc = "Bits 26:31 - Interrupt number used for this channel"]
     #[inline(always)]
-    #[must_use]
     pub fn intnum(&mut self) -> IntnumW<Dmactrl0Spec> {
         IntnumW::new(self, 26)
     }
 }
-#[doc = "DMA Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dmactrl0::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dmactrl0::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "DMA Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`dmactrl0::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dmactrl0::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Dmactrl0Spec;
 impl crate::RegisterSpec for Dmactrl0Spec {
     type Ux = u32;

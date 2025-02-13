@@ -47,30 +47,26 @@ impl W {
     #[doc = "Bit 0 - Set to 1 after the EHR_DATA\\[0,1,2,3,4,5\\]
 registers have been read"]
     #[inline(always)]
-    #[must_use]
     pub fn ehr_valid(&mut self) -> EhrValidW<IcrSpec> {
         EhrValidW::new(self, 0)
     }
     #[doc = "Bit 1 - Software cannot clear this bit. Only a TRNG reset can clear this bit"]
     #[inline(always)]
-    #[must_use]
     pub fn autocorr_err(&mut self) -> AutocorrErrW<IcrSpec> {
         AutocorrErrW::new(self, 1)
     }
     #[doc = "Bit 2 - Clear a Continuous Random Number Generation Testing (CRNGT) error"]
     #[inline(always)]
-    #[must_use]
     pub fn crngt_err(&mut self) -> CrngtErrW<IcrSpec> {
         CrngtErrW::new(self, 2)
     }
     #[doc = "Bit 3 - Clears a Von Neumann error"]
     #[inline(always)]
-    #[must_use]
     pub fn vn_err(&mut self) -> VnErrW<IcrSpec> {
         VnErrW::new(self, 3)
     }
 }
-#[doc = "Interrupt Clear Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`icr::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`icr::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Interrupt Clear Register\n\nYou can [`read`](crate::Reg::read) this register and get [`icr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`icr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct IcrSpec;
 impl crate::RegisterSpec for IcrSpec {
     type Ux = u32;

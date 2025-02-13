@@ -9,7 +9,7 @@ impl R {
         PeriphidR::new((self.bits & 0xff) as u8)
     }
 }
-#[doc = "Peripheral ID\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`wdogperiphid2::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Peripheral ID\n\nYou can [`read`](crate::Reg::read) this register and get [`wdogperiphid2::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Wdogperiphid2Spec;
 impl crate::RegisterSpec for Wdogperiphid2Spec {
     type Ux = u32;

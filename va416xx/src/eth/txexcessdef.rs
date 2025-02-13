@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of frames aborted because of excessive deferral error\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txexcessdef::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of frames aborted because of excessive deferral error\n\nYou can [`read`](crate::Reg::read) this register and get [`txexcessdef::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxexcessdefSpec;
 impl crate::RegisterSpec for TxexcessdefSpec {
     type Ux = u32;

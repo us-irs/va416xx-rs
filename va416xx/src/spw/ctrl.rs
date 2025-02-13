@@ -234,120 +234,101 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Disable the SpaceWire CODEC"]
     #[inline(always)]
-    #[must_use]
     pub fn ld(&mut self) -> LdW<CtrlSpec> {
         LdW::new(self, 0)
     }
     #[doc = "Bit 1 - Start the link"]
     #[inline(always)]
-    #[must_use]
     pub fn ls(&mut self) -> LsW<CtrlSpec> {
         LsW::new(self, 1)
     }
     #[doc = "Bit 2 - Automatically start the link when a NULL has been received"]
     #[inline(always)]
-    #[must_use]
     pub fn as_(&mut self) -> AsW<CtrlSpec> {
         AsW::new(self, 2)
     }
     #[doc = "Bit 3 - If set, an interrupt is generated when one or both of bit 8 to 9 is set and its corresponding event occurs"]
     #[inline(always)]
-    #[must_use]
     pub fn ie(&mut self) -> IeW<CtrlSpec> {
         IeW::new(self, 3)
     }
     #[doc = "Bit 4 - The host can generate a tick by writing a one to this field"]
     #[inline(always)]
-    #[must_use]
     pub fn ti(&mut self) -> TiW<CtrlSpec> {
         TiW::new(self, 4)
     }
     #[doc = "Bit 5 - Enable Promiscuous mode"]
     #[inline(always)]
-    #[must_use]
     pub fn pm(&mut self) -> PmW<CtrlSpec> {
         PmW::new(self, 5)
     }
     #[doc = "Bit 6 - Make complete reset of the SpaceWire node. Self-clearing"]
     #[inline(always)]
-    #[must_use]
     pub fn rs(&mut self) -> RsW<CtrlSpec> {
         RsW::new(self, 6)
     }
     #[doc = "Bit 8 - Generate interrupt when a valid time-code is received"]
     #[inline(always)]
-    #[must_use]
     pub fn tq(&mut self) -> TqW<CtrlSpec> {
         TqW::new(self, 8)
     }
     #[doc = "Bit 9 - Generate interrupt when link error occurs"]
     #[inline(always)]
-    #[must_use]
     pub fn li(&mut self) -> LiW<CtrlSpec> {
         LiW::new(self, 9)
     }
     #[doc = "Bit 10 - Enable time-code transmissions"]
     #[inline(always)]
-    #[must_use]
     pub fn tt(&mut self) -> TtW<CtrlSpec> {
         TtW::new(self, 10)
     }
     #[doc = "Bit 11 - Enable time-code receptions"]
     #[inline(always)]
-    #[must_use]
     pub fn tr(&mut self) -> TrW<CtrlSpec> {
         TrW::new(self, 11)
     }
     #[doc = "Bit 12 - Time-code Flag Filter"]
     #[inline(always)]
-    #[must_use]
     pub fn tf(&mut self) -> TfW<CtrlSpec> {
         TfW::new(self, 12)
     }
     #[doc = "Bit 13 - Transmitter Enable Lock Control"]
     #[inline(always)]
-    #[must_use]
     pub fn tl(&mut self) -> TlW<CtrlSpec> {
         TlW::new(self, 13)
     }
     #[doc = "Bit 15 - SpW Plug-and-Play Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn pe(&mut self) -> PeW<CtrlSpec> {
         PeW::new(self, 15)
     }
     #[doc = "Bit 16 - Enable RMAP command handler"]
     #[inline(always)]
-    #[must_use]
     pub fn re(&mut self) -> ReW<CtrlSpec> {
         ReW::new(self, 16)
     }
     #[doc = "Bit 17 - If set only one RMAP buffer is used"]
     #[inline(always)]
-    #[must_use]
     pub fn rd(&mut self) -> RdW<CtrlSpec> {
         RdW::new(self, 17)
     }
     #[doc = "Bit 20 - Disable port force"]
     #[inline(always)]
-    #[must_use]
     pub fn np(&mut self) -> NpW<CtrlSpec> {
         NpW::new(self, 20)
     }
     #[doc = "Bit 21 - Selects the active port when the no port force bit is zero"]
     #[inline(always)]
-    #[must_use]
     pub fn ps(&mut self) -> PsW<CtrlSpec> {
         PsW::new(self, 21)
     }
     #[doc = "Bit 22 - Loop-back Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn le(&mut self) -> LeW<CtrlSpec> {
         LeW::new(self, 22)
     }
 }
-#[doc = "Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct CtrlSpec;
 impl crate::RegisterSpec for CtrlSpec {
     type Ux = u32;

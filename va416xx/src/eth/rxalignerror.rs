@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of frames received with alignment error\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxalignerror::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of frames received with alignment error\n\nYou can [`read`](crate::Reg::read) this register and get [`rxalignerror::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxalignerrorSpec;
 impl crate::RegisterSpec for RxalignerrorSpec {
     type Ux = u32;

@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of good VLAN frames transmitted\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txlanframes_g::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of good VLAN frames transmitted\n\nYou can [`read`](crate::Reg::read) this register and get [`txlanframes_g::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxlanframesGSpec;
 impl crate::RegisterSpec for TxlanframesGSpec {
     type Ux = u32;

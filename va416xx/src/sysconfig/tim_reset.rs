@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:23 - Reset of a given TIMER"]
     #[inline(always)]
-    #[must_use]
     pub fn tim_reset(&mut self) -> TimResetW<TimResetSpec> {
         TimResetW::new(self, 0)
     }
 }
-#[doc = "TIM Reset Control\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`tim_reset::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`tim_reset::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "TIM Reset Control\n\nYou can [`read`](crate::Reg::read) this register and get [`tim_reset::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`tim_reset::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TimResetSpec;
 impl crate::RegisterSpec for TimResetSpec {
     type Ux = u32;

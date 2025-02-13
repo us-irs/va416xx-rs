@@ -9,7 +9,7 @@ impl R {
         InterruptR::new((self.bits & 1) != 0)
     }
 }
-#[doc = "Raw interrupt status\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`wdogris::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Raw interrupt status\n\nYou can [`read`](crate::Reg::read) this register and get [`wdogris::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct WdogrisSpec;
 impl crate::RegisterSpec for WdogrisSpec {
     type Ux = u32;

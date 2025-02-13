@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Transmit Count\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txoctetcount_gb::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Transmit Count\n\nYou can [`read`](crate::Reg::read) this register and get [`txoctetcount_gb::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxoctetcountGbSpec;
 impl crate::RegisterSpec for TxoctetcountGbSpec {
     type Ux = u32;

@@ -5,7 +5,7 @@ impl core::fmt::Debug for R {
         write!(f, "{}", self.bits())
     }
 }
-#[doc = "EDAC Decode Data\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`synd_check_32_44_data::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "EDAC Decode Data\n\nYou can [`read`](crate::Reg::read) this register and get [`synd_check_32_44_data::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SyndCheck32_44DataSpec;
 impl crate::RegisterSpec for SyndCheck32_44DataSpec {
     type Ux = u32;

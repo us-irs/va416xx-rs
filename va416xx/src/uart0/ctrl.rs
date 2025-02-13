@@ -106,72 +106,61 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Parity Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn paren(&mut self) -> ParenW<CtrlSpec> {
         ParenW::new(self, 0)
     }
     #[doc = "Bit 1 - Parity Even/Odd(1/0)"]
     #[inline(always)]
-    #[must_use]
     pub fn pareven(&mut self) -> ParevenW<CtrlSpec> {
         ParevenW::new(self, 1)
     }
     #[doc = "Bit 2 - Parity Sticky"]
     #[inline(always)]
-    #[must_use]
     pub fn parstk(&mut self) -> ParstkW<CtrlSpec> {
         ParstkW::new(self, 2)
     }
     #[doc = "Bit 3 - Stop Bits 1/2(0/1)"]
     #[inline(always)]
-    #[must_use]
     pub fn stopbits(&mut self) -> StopbitsW<CtrlSpec> {
         StopbitsW::new(self, 3)
     }
     #[doc = "Bits 4:5 - Word Size in Bits 5/6/7/8(00/01/10/11)"]
     #[inline(always)]
-    #[must_use]
     pub fn wordsize(&mut self) -> WordsizeW<CtrlSpec> {
         WordsizeW::new(self, 4)
     }
     #[doc = "Bit 6 - Loopback Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn loopback(&mut self) -> LoopbackW<CtrlSpec> {
         LoopbackW::new(self, 6)
     }
     #[doc = "Bit 7 - Loopback Block"]
     #[inline(always)]
-    #[must_use]
     pub fn loopbackblk(&mut self) -> LoopbackblkW<CtrlSpec> {
         LoopbackblkW::new(self, 7)
     }
     #[doc = "Bit 8 - Enable Auto CTS mode"]
     #[inline(always)]
-    #[must_use]
     pub fn autocts(&mut self) -> AutoctsW<CtrlSpec> {
         AutoctsW::new(self, 8)
     }
     #[doc = "Bit 9 - Default RTSn value"]
     #[inline(always)]
-    #[must_use]
     pub fn defrts(&mut self) -> DefrtsW<CtrlSpec> {
         DefrtsW::new(self, 9)
     }
     #[doc = "Bit 10 - Enable Auto RTS mode"]
     #[inline(always)]
-    #[must_use]
     pub fn autorts(&mut self) -> AutortsW<CtrlSpec> {
         AutortsW::new(self, 10)
     }
     #[doc = "Bit 11 - Enable BAUD8 mode"]
     #[inline(always)]
-    #[must_use]
     pub fn baud8(&mut self) -> Baud8W<CtrlSpec> {
         Baud8W::new(self, 11)
     }
 }
-#[doc = "Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct CtrlSpec;
 impl crate::RegisterSpec for CtrlSpec {
     type Ux = u32;

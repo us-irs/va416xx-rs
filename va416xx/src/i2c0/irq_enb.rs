@@ -133,90 +133,76 @@ impl R {
 impl W {
     #[doc = "Bit 0 - I2C Bus is Idle"]
     #[inline(always)]
-    #[must_use]
     pub fn i2cidle(&mut self) -> I2cidleW<IrqEnbSpec> {
         I2cidleW::new(self, 0)
     }
     #[doc = "Bit 1 - Controller is Idle"]
     #[inline(always)]
-    #[must_use]
     pub fn idle(&mut self) -> IdleW<IrqEnbSpec> {
         IdleW::new(self, 1)
     }
     #[doc = "Bit 2 - Controller is Waiting"]
     #[inline(always)]
-    #[must_use]
     pub fn waiting(&mut self) -> WaitingW<IrqEnbSpec> {
         WaitingW::new(self, 2)
     }
     #[doc = "Bit 3 - Controller is Stalled"]
     #[inline(always)]
-    #[must_use]
     pub fn stalled(&mut self) -> StalledW<IrqEnbSpec> {
         StalledW::new(self, 3)
     }
     #[doc = "Bit 4 - I2C Arbitration was lost"]
     #[inline(always)]
-    #[must_use]
     pub fn arblost(&mut self) -> ArblostW<IrqEnbSpec> {
         ArblostW::new(self, 4)
     }
     #[doc = "Bit 5 - I2C Address was not Acknowledged"]
     #[inline(always)]
-    #[must_use]
     pub fn nackaddr(&mut self) -> NackaddrW<IrqEnbSpec> {
         NackaddrW::new(self, 5)
     }
     #[doc = "Bit 6 - I2C Data was not Acknowledged"]
     #[inline(always)]
-    #[must_use]
     pub fn nackdata(&mut self) -> NackdataW<IrqEnbSpec> {
         NackdataW::new(self, 6)
     }
     #[doc = "Bit 7 - I2C Clock Low Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn clkloto(&mut self) -> ClklotoW<IrqEnbSpec> {
         ClklotoW::new(self, 7)
     }
     #[doc = "Bit 10 - TX FIFO Overflowed"]
     #[inline(always)]
-    #[must_use]
     pub fn txoverflow(&mut self) -> TxoverflowW<IrqEnbSpec> {
         TxoverflowW::new(self, 10)
     }
     #[doc = "Bit 11 - TX FIFO Overflowed"]
     #[inline(always)]
-    #[must_use]
     pub fn rxoverflow(&mut self) -> RxoverflowW<IrqEnbSpec> {
         RxoverflowW::new(self, 11)
     }
     #[doc = "Bit 12 - TX FIFO Ready"]
     #[inline(always)]
-    #[must_use]
     pub fn txready(&mut self) -> TxreadyW<IrqEnbSpec> {
         TxreadyW::new(self, 12)
     }
     #[doc = "Bit 13 - RX FIFO Ready"]
     #[inline(always)]
-    #[must_use]
     pub fn rxready(&mut self) -> RxreadyW<IrqEnbSpec> {
         RxreadyW::new(self, 13)
     }
     #[doc = "Bit 14 - TX FIFO Empty"]
     #[inline(always)]
-    #[must_use]
     pub fn txempty(&mut self) -> TxemptyW<IrqEnbSpec> {
         TxemptyW::new(self, 14)
     }
     #[doc = "Bit 15 - RX FIFO Full"]
     #[inline(always)]
-    #[must_use]
     pub fn rxfull(&mut self) -> RxfullW<IrqEnbSpec> {
         RxfullW::new(self, 15)
     }
 }
-#[doc = "Interrupt Enable Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`irq_enb::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`irq_enb::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Interrupt Enable Register\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_enb::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_enb::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct IrqEnbSpec;
 impl crate::RegisterSpec for IrqEnbSpec {
     type Ux = u32;

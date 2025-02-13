@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Defines the initial value for the SpW clock, defaults to divide by ten"]
     #[inline(always)]
-    #[must_use]
     pub fn sw_clkdiv10(&mut self) -> SwClkdiv10W<SwClkdiv10Spec> {
         SwClkdiv10W::new(self, 0)
     }
 }
-#[doc = "Initial SpW Clock Divider Value\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`sw_clkdiv10::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`sw_clkdiv10::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Initial SpW Clock Divider Value\n\nYou can [`read`](crate::Reg::read) this register and get [`sw_clkdiv10::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sw_clkdiv10::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SwClkdiv10Spec;
 impl crate::RegisterSpec for SwClkdiv10Spec {
     type Ux = u32;

@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - PrimeCell Identification"]
     #[inline(always)]
-    #[must_use]
     pub fn primecell_id_0(&mut self) -> PrimecellId0W<PrimecellId0Spec> {
         PrimecellId0W::new(self, 0)
     }
 }
-#[doc = "DMA PrimeCell ID 0\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`primecell_id_0::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`primecell_id_0::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "DMA PrimeCell ID 0\n\nYou can [`read`](crate::Reg::read) this register and get [`primecell_id_0::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`primecell_id_0::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct PrimecellId0Spec;
 impl crate::RegisterSpec for PrimecellId0Spec {
     type Ux = u32;

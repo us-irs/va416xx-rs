@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Data Byte 6"]
     #[inline(always)]
-    #[must_use]
     pub fn byte6(&mut self) -> Byte6W<Data2Cmb1Spec> {
         Byte6W::new(self, 0)
     }
     #[doc = "Bits 8:15 - Data Byte 5"]
     #[inline(always)]
-    #[must_use]
     pub fn byte5(&mut self) -> Byte5W<Data2Cmb1Spec> {
         Byte5W::new(self, 8)
     }
 }
-#[doc = "CAN Frame Data Word 2\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`data2_cmb1::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`data2_cmb1::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "CAN Frame Data Word 2\n\nYou can [`read`](crate::Reg::read) this register and get [`data2_cmb1::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`data2_cmb1::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Data2Cmb1Spec;
 impl crate::RegisterSpec for Data2Cmb1Spec {
     type Ux = u32;

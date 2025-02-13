@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:5 - The current value of the system time counter"]
     #[inline(always)]
-    #[must_use]
     pub fn timecnt(&mut self) -> TimecntW<TcSpec> {
         TimecntW::new(self, 0)
     }
     #[doc = "Bits 6:7 - The current value of the time control flags"]
     #[inline(always)]
-    #[must_use]
     pub fn tirq_end(&mut self) -> TirqEndW<TcSpec> {
         TirqEndW::new(self, 6)
     }
 }
-#[doc = "Time Code Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`tc::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`tc::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Time Code Register\n\nYou can [`read`](crate::Reg::read) this register and get [`tc::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`tc::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TcSpec;
 impl crate::RegisterSpec for TcSpec {
     type Ux = u32;

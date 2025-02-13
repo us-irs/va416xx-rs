@@ -5,7 +5,7 @@ impl core::fmt::Debug for R {
         write!(f, "{}", self.bits())
     }
 }
-#[doc = "RX Count Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxcount::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "RX Count Register\n\nYou can [`read`](crate::Reg::read) this register and get [`rxcount::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxcountSpec;
 impl crate::RegisterSpec for RxcountSpec {
     type Ux = u32;

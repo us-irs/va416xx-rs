@@ -9,7 +9,7 @@ impl R {
         BgCalR::new((self.bits & 7) as u8)
     }
 }
-#[doc = "Bandgap Calibration Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`bg_cal::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Bandgap Calibration Register\n\nYou can [`read`](crate::Reg::read) this register and get [`bg_cal::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct BgCalSpec;
 impl crate::RegisterSpec for BgCalSpec {
     type Ux = u32;

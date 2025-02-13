@@ -133,90 +133,76 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Test Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn tmosc(&mut self) -> TmoscW<AnalogCntlSpec> {
         TmoscW::new(self, 0)
     }
     #[doc = "Bit 1 - Test Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn tmpokdis(&mut self) -> TmpokdisW<AnalogCntlSpec> {
         TmpokdisW::new(self, 1)
     }
     #[doc = "Bit 2 - Test Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn tm_adcmux_n(&mut self) -> TmAdcmuxNW<AnalogCntlSpec> {
         TmAdcmuxNW::new(self, 2)
     }
     #[doc = "Bit 3 - Test Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn tm_adcmux_p(&mut self) -> TmAdcmuxPW<AnalogCntlSpec> {
         TmAdcmuxPW::new(self, 3)
     }
     #[doc = "Bit 4 - Test Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn tmratio(&mut self) -> TmratioW<AnalogCntlSpec> {
         TmratioW::new(self, 4)
     }
     #[doc = "Bits 5:6 - Test Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn tmatomux(&mut self) -> TmatomuxW<AnalogCntlSpec> {
         TmatomuxW::new(self, 5)
     }
     #[doc = "Bits 9:12 - Number of clocks for sample time"]
     #[inline(always)]
-    #[must_use]
     pub fn adc_stest(&mut self) -> AdcStestW<AnalogCntlSpec> {
         AdcStestW::new(self, 9)
     }
     #[doc = "Bit 14 - Enable normal test clock"]
     #[inline(always)]
-    #[must_use]
     pub fn rclk_pos_en(&mut self) -> RclkPosEnW<AnalogCntlSpec> {
         RclkPosEnW::new(self, 14)
     }
     #[doc = "Bit 15 - Enable inverted test clock"]
     #[inline(always)]
-    #[must_use]
     pub fn rclk_neg_en(&mut self) -> RclkNegEnW<AnalogCntlSpec> {
         RclkNegEnW::new(self, 15)
     }
     #[doc = "Bit 16 - Enable normal APB2CLK for test output"]
     #[inline(always)]
-    #[must_use]
     pub fn apb2clk_pos_en(&mut self) -> Apb2clkPosEnW<AnalogCntlSpec> {
         Apb2clkPosEnW::new(self, 16)
     }
     #[doc = "Bit 17 - Enable inverted APB2CLK for test output"]
     #[inline(always)]
-    #[must_use]
     pub fn apb2clk_neg_en(&mut self) -> Apb2clkNegEnW<AnalogCntlSpec> {
         Apb2clkNegEnW::new(self, 17)
     }
     #[doc = "Bit 18 - Enables pull down on analog pads"]
     #[inline(always)]
-    #[must_use]
     pub fn tm_analog_pd_en(&mut self) -> TmAnalogPdEnW<AnalogCntlSpec> {
         TmAnalogPdEnW::new(self, 18)
     }
     #[doc = "Bit 19 - Enables a skip of all delay counters and eFuse read"]
     #[inline(always)]
-    #[must_use]
     pub fn jmp2boot(&mut self) -> Jmp2bootW<AnalogCntlSpec> {
         Jmp2bootW::new(self, 19)
     }
     #[doc = "Bit 20 - Enables a skip of all delay counters, eFuse read, and boot"]
     #[inline(always)]
-    #[must_use]
     pub fn skipboot(&mut self) -> SkipbootW<AnalogCntlSpec> {
         SkipbootW::new(self, 20)
     }
 }
-#[doc = "Analog Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`analog_cntl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`analog_cntl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Analog Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`analog_cntl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`analog_cntl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct AnalogCntlSpec;
 impl crate::RegisterSpec for AnalogCntlSpec {
     type Ux = u32;

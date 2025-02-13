@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Use installed tool by default
 svd2rust_bin="svd2rust"

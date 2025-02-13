@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Timestamp Second"]
     #[inline(always)]
-    #[must_use]
     pub fn tss(&mut self) -> TssW<SystimeSecsupdatSpec> {
         TssW::new(self, 0)
     }
 }
-#[doc = "Holds the lower 32 bits of the second field to be written to, added to, or subtracted from the system time value\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`systime_secsupdat::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`systime_secsupdat::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Holds the lower 32 bits of the second field to be written to, added to, or subtracted from the system time value\n\nYou can [`read`](crate::Reg::read) this register and get [`systime_secsupdat::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`systime_secsupdat::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SystimeSecsupdatSpec;
 impl crate::RegisterSpec for SystimeSecsupdatSpec {
     type Ux = u32;

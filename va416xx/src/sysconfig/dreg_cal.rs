@@ -9,7 +9,7 @@ impl R {
         DregCalR::new((self.bits & 0x01ff) as u16)
     }
 }
-#[doc = "Digital LDO Regulator Calibration Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dreg_cal::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Digital LDO Regulator Calibration Register\n\nYou can [`read`](crate::Reg::read) this register and get [`dreg_cal::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DregCalSpec;
 impl crate::RegisterSpec for DregCalSpec {
     type Ux = u32;

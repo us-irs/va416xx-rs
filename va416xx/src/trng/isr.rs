@@ -30,7 +30,7 @@ impl R {
         VnErrR::new(((self.bits >> 3) & 1) != 0)
     }
 }
-#[doc = "Interrupt Status Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`isr::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Interrupt Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`isr::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct IsrSpec;
 impl crate::RegisterSpec for IsrSpec {
     type Ux = u32;

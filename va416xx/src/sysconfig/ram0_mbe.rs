@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - RAM0 Multi Bit Errors"]
     #[inline(always)]
-    #[must_use]
     pub fn count(&mut self) -> CountW<Ram0MbeSpec> {
         CountW::new(self, 0)
     }
 }
-#[doc = "Count of RAM0 EDAC Multi Bit Errors\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ram0_mbe::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ram0_mbe::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Count of RAM0 EDAC Multi Bit Errors\n\nYou can [`read`](crate::Reg::read) this register and get [`ram0_mbe::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ram0_mbe::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Ram0MbeSpec;
 impl crate::RegisterSpec for Ram0MbeSpec {
     type Ux = u32;

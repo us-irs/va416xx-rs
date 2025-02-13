@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - VLAN Hash Table"]
     #[inline(always)]
-    #[must_use]
     pub fn vlht(&mut self) -> VlhtW<VlanHashtableSpec> {
         VlhtW::new(self, 0)
     }
 }
-#[doc = "Holds the VLAN Hash Table\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`vlan_hashtable::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`vlan_hashtable::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Holds the VLAN Hash Table\n\nYou can [`read`](crate::Reg::read) this register and get [`vlan_hashtable::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`vlan_hashtable::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct VlanHashtableSpec;
 impl crate::RegisterSpec for VlanHashtableSpec {
     type Ux = u32;

@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:10 - Max Word Count"]
     #[inline(always)]
-    #[must_use]
     pub fn maxword(&mut self) -> MaxwordW<S0MaxwordsSpec> {
         MaxwordW::new(self, 0)
     }
     #[doc = "Bit 31 - Enables the max word count"]
     #[inline(always)]
-    #[must_use]
     pub fn enable(&mut self) -> EnableW<S0MaxwordsSpec> {
         EnableW::new(self, 31)
     }
 }
-#[doc = "Slave MaxWords Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`s0_maxwords::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`s0_maxwords::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Slave MaxWords Register\n\nYou can [`read`](crate::Reg::read) this register and get [`s0_maxwords::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`s0_maxwords::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct S0MaxwordsSpec;
 impl crate::RegisterSpec for S0MaxwordsSpec {
     type Ux = u32;

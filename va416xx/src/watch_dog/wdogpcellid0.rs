@@ -9,7 +9,7 @@ impl R {
         PcellidR::new((self.bits & 0xff) as u8)
     }
 }
-#[doc = "PrimeCell ID\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`wdogpcellid0::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "PrimeCell ID\n\nYou can [`read`](crate::Reg::read) this register and get [`wdogpcellid0::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Wdogpcellid0Spec;
 impl crate::RegisterSpec for Wdogpcellid0Spec {
     type Ux = u32;

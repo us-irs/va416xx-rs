@@ -16,7 +16,7 @@ impl R {
         Jep106Id3_0R::new(((self.bits >> 4) & 0x0f) as u8)
     }
 }
-#[doc = "DMA Peripheral ID 1\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`periph_id_1::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "DMA Peripheral ID 1\n\nYou can [`read`](crate::Reg::read) this register and get [`periph_id_1::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct PeriphId1Spec;
 impl crate::RegisterSpec for PeriphId1Spec {
     type Ux = u32;

@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - RMAP destination key"]
     #[inline(always)]
-    #[must_use]
     pub fn destkey(&mut self) -> DestkeyW<DkeySpec> {
         DestkeyW::new(self, 0)
     }
 }
-#[doc = "Destination Key\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dkey::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dkey::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Destination Key\n\nYou can [`read`](crate::Reg::read) this register and get [`dkey::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dkey::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DkeySpec;
 impl crate::RegisterSpec for DkeySpec {
     type Ux = u32;

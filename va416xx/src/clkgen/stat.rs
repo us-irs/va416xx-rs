@@ -30,7 +30,7 @@ impl R {
         SysclklostR::new(((self.bits >> 3) & 1) != 0)
     }
 }
-#[doc = "Clock Generation Module Status Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`stat::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Clock Generation Module Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`stat::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct StatSpec;
 impl crate::RegisterSpec for StatSpec {
     type Ux = u32;

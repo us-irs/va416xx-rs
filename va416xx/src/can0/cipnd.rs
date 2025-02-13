@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:14 - Buffer Interrupt Pending\\[14:0\\]"]
     #[inline(always)]
-    #[must_use]
     pub fn ipnd(&mut self) -> IpndW<CipndSpec> {
         IpndW::new(self, 0)
     }
     #[doc = "Bit 15 - Error Interrupt Pending"]
     #[inline(always)]
-    #[must_use]
     pub fn eipnd(&mut self) -> EipndW<CipndSpec> {
         EipndW::new(self, 15)
     }
 }
-#[doc = "CAN Interrupt Pending Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`cipnd::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`cipnd::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "CAN Interrupt Pending Register\n\nYou can [`read`](crate::Reg::read) this register and get [`cipnd::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cipnd::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct CipndSpec;
 impl crate::RegisterSpec for CipndSpec {
     type Ux = u32;

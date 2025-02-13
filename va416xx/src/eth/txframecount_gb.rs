@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Frame Count Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txframecount_gb::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Frame Count Register\n\nYou can [`read`](crate::Reg::read) this register and get [`txframecount_gb::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxframecountGbSpec;
 impl crate::RegisterSpec for TxframecountGbSpec {
     type Ux = u32;

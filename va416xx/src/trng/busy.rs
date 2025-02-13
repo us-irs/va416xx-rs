@@ -9,7 +9,7 @@ impl R {
         BusyR::new((self.bits & 1) != 0)
     }
 }
-#[doc = "Busy Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`busy::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Busy Register\n\nYou can [`read`](crate::Reg::read) this register and get [`busy::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct BusySpec;
 impl crate::RegisterSpec for BusySpec {
     type Ux = u32;

@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - Half of CAN Frame ID. Format Varies for Standard or Extended Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn id1(&mut self) -> Id1W<Id1HcmbSpec> {
         Id1W::new(self, 0)
     }
 }
-#[doc = "CAN Frame Identifier Word 1\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`id1_hcmb::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`id1_hcmb::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "CAN Frame Identifier Word 1\n\nYou can [`read`](crate::Reg::read) this register and get [`id1_hcmb::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`id1_hcmb::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Id1HcmbSpec;
 impl crate::RegisterSpec for Id1HcmbSpec {
     type Ux = u32;

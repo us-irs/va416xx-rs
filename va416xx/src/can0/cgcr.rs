@@ -115,78 +115,66 @@ impl R {
 impl W {
     #[doc = "Bit 0 - CAN Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn canen(&mut self) -> CanenW<CgcrSpec> {
         CanenW::new(self, 0)
     }
     #[doc = "Bit 1 - RW,Control Receive"]
     #[inline(always)]
-    #[must_use]
     pub fn crx(&mut self) -> CrxW<CgcrSpec> {
         CrxW::new(self, 1)
     }
     #[doc = "Bit 2 - RW,Control Transmit"]
     #[inline(always)]
-    #[must_use]
     pub fn ctx(&mut self) -> CtxW<CgcrSpec> {
         CtxW::new(self, 2)
     }
     #[doc = "Bit 3 - Buffer Lock"]
     #[inline(always)]
-    #[must_use]
     pub fn bufflock(&mut self) -> BufflockW<CgcrSpec> {
         BufflockW::new(self, 3)
     }
     #[doc = "Bit 4 - Time Sync Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tstpen(&mut self) -> TstpenW<CgcrSpec> {
         TstpenW::new(self, 4)
     }
     #[doc = "Bit 5 - Data Direction"]
     #[inline(always)]
-    #[must_use]
     pub fn ddir(&mut self) -> DdirW<CgcrSpec> {
         DdirW::new(self, 5)
     }
     #[doc = "Bit 6 - Listen Only"]
     #[inline(always)]
-    #[must_use]
     pub fn lo(&mut self) -> LoW<CgcrSpec> {
         LoW::new(self, 6)
     }
     #[doc = "Bit 7 - Ignore Acknowledge"]
     #[inline(always)]
-    #[must_use]
     pub fn ignack(&mut self) -> IgnackW<CgcrSpec> {
         IgnackW::new(self, 7)
     }
     #[doc = "Bit 8 - Loopback"]
     #[inline(always)]
-    #[must_use]
     pub fn loopback(&mut self) -> LoopbackW<CgcrSpec> {
         LoopbackW::new(self, 8)
     }
     #[doc = "Bit 9 - Internal"]
     #[inline(always)]
-    #[must_use]
     pub fn internal(&mut self) -> InternalW<CgcrSpec> {
         InternalW::new(self, 9)
     }
     #[doc = "Bit 10 - Diagnostic Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn diagen(&mut self) -> DiagenW<CgcrSpec> {
         DiagenW::new(self, 10)
     }
     #[doc = "Bit 11 - Error Interrupt Type"]
     #[inline(always)]
-    #[must_use]
     pub fn eit(&mut self) -> EitW<CgcrSpec> {
         EitW::new(self, 11)
     }
 }
-#[doc = "CAN Global Configuration Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`cgcr::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`cgcr::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "CAN Global Configuration Register\n\nYou can [`read`](crate::Reg::read) this register and get [`cgcr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cgcr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct CgcrSpec;
 impl crate::RegisterSpec for CgcrSpec {
     type Ux = u32;

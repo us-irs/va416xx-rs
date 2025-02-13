@@ -37,7 +37,7 @@ impl R {
         TxctsnR::new(((self.bits >> 15) & 1) != 0)
     }
 }
-#[doc = "Status Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txstatus::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`txstatus::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxstatusSpec;
 impl crate::RegisterSpec for TxstatusSpec {
     type Ux = u32;

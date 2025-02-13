@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - The entropy source, ring oscillator, is enabled"]
     #[inline(always)]
-    #[must_use]
     pub fn rnd_src_en(&mut self) -> RndSrcEnW<RndSourceEnableSpec> {
         RndSrcEnW::new(self, 0)
     }
 }
-#[doc = "Random Source Enable Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rnd_source_enable::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`rnd_source_enable::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Random Source Enable Register\n\nYou can [`read`](crate::Reg::read) this register and get [`rnd_source_enable::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rnd_source_enable::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RndSourceEnableSpec;
 impl crate::RegisterSpec for RndSourceEnableSpec {
     type Ux = u32;

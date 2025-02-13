@@ -142,96 +142,81 @@ impl R {
 impl W {
     #[doc = "Bit 0 - I2C bus is idle"]
     #[inline(always)]
-    #[must_use]
     pub fn i2cidle(&mut self) -> I2cidleW<StatusSpec> {
         I2cidleW::new(self, 0)
     }
     #[doc = "Bit 1 - I2C controller is Idle"]
     #[inline(always)]
-    #[must_use]
     pub fn idle(&mut self) -> IdleW<StatusSpec> {
         IdleW::new(self, 1)
     }
     #[doc = "Bit 2 - Controller is Waiting"]
     #[inline(always)]
-    #[must_use]
     pub fn waiting(&mut self) -> WaitingW<StatusSpec> {
         WaitingW::new(self, 2)
     }
     #[doc = "Bit 3 - Controller is Stalled"]
     #[inline(always)]
-    #[must_use]
     pub fn stalled(&mut self) -> StalledW<StatusSpec> {
         StalledW::new(self, 3)
     }
     #[doc = "Bit 4 - I2C Arbitration was lost"]
     #[inline(always)]
-    #[must_use]
     pub fn arblost(&mut self) -> ArblostW<StatusSpec> {
         ArblostW::new(self, 4)
     }
     #[doc = "Bit 5 - I2C Address was not Acknowledged"]
     #[inline(always)]
-    #[must_use]
     pub fn nackaddr(&mut self) -> NackaddrW<StatusSpec> {
         NackaddrW::new(self, 5)
     }
     #[doc = "Bit 6 - I2C Data was not Acknowledged"]
     #[inline(always)]
-    #[must_use]
     pub fn nackdata(&mut self) -> NackdataW<StatusSpec> {
         NackdataW::new(self, 6)
     }
     #[doc = "Bit 8 - RX FIFO is Not Empty"]
     #[inline(always)]
-    #[must_use]
     pub fn rxnempty(&mut self) -> RxnemptyW<StatusSpec> {
         RxnemptyW::new(self, 8)
     }
     #[doc = "Bit 9 - RX FIFO is Full"]
     #[inline(always)]
-    #[must_use]
     pub fn rxfull(&mut self) -> RxfullW<StatusSpec> {
         RxfullW::new(self, 9)
     }
     #[doc = "Bit 11 - RX FIFO Above Trigger Level"]
     #[inline(always)]
-    #[must_use]
     pub fn rxtrigger(&mut self) -> RxtriggerW<StatusSpec> {
         RxtriggerW::new(self, 11)
     }
     #[doc = "Bit 12 - TX FIFO is Empty"]
     #[inline(always)]
-    #[must_use]
     pub fn txempty(&mut self) -> TxemptyW<StatusSpec> {
         TxemptyW::new(self, 12)
     }
     #[doc = "Bit 13 - TX FIFO is Full"]
     #[inline(always)]
-    #[must_use]
     pub fn txnfull(&mut self) -> TxnfullW<StatusSpec> {
         TxnfullW::new(self, 13)
     }
     #[doc = "Bit 15 - TX FIFO Below Trigger Level"]
     #[inline(always)]
-    #[must_use]
     pub fn txtrigger(&mut self) -> TxtriggerW<StatusSpec> {
         TxtriggerW::new(self, 15)
     }
     #[doc = "Bit 30 - I2C Raw SDA value"]
     #[inline(always)]
-    #[must_use]
     pub fn raw_sda(&mut self) -> RawSdaW<StatusSpec> {
         RawSdaW::new(self, 30)
     }
     #[doc = "Bit 31 - I2C Raw SCL value"]
     #[inline(always)]
-    #[must_use]
     pub fn raw_scl(&mut self) -> RawSclW<StatusSpec> {
         RawSclW::new(self, 31)
     }
 }
-#[doc = "I2C Controller Status Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`status::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`status::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "I2C Controller Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`status::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`status::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct StatusSpec;
 impl crate::RegisterSpec for StatusSpec {
     type Ux = u32;

@@ -43,30 +43,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - DMA Active Set"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0(&mut self) -> Ch0W<DmaActiveSetSpec> {
         Ch0W::new(self, 0)
     }
     #[doc = "Bit 1 - DMA Active Set"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1(&mut self) -> Ch1W<DmaActiveSetSpec> {
         Ch1W::new(self, 1)
     }
     #[doc = "Bit 2 - DMA Active Set"]
     #[inline(always)]
-    #[must_use]
     pub fn ch2(&mut self) -> Ch2W<DmaActiveSetSpec> {
         Ch2W::new(self, 2)
     }
     #[doc = "Bit 3 - DMA Active Set"]
     #[inline(always)]
-    #[must_use]
     pub fn ch3(&mut self) -> Ch3W<DmaActiveSetSpec> {
         Ch3W::new(self, 3)
     }
 }
-#[doc = "DMA active set\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dma_active_set::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dma_active_set::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "DMA active set\n\nYou can [`read`](crate::Reg::read) this register and get [`dma_active_set::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dma_active_set::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DmaActiveSetSpec;
 impl crate::RegisterSpec for DmaActiveSetSpec {
     type Ux = u32;

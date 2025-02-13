@@ -43,30 +43,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - RX Overrun"]
     #[inline(always)]
-    #[must_use]
     pub fn rorim(&mut self) -> RorimW<IrqEnbSpec> {
         RorimW::new(self, 0)
     }
     #[doc = "Bit 1 - RX Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn rtim(&mut self) -> RtimW<IrqEnbSpec> {
         RtimW::new(self, 1)
     }
     #[doc = "Bit 2 - RX Fifo is at least half full"]
     #[inline(always)]
-    #[must_use]
     pub fn rxim(&mut self) -> RximW<IrqEnbSpec> {
         RximW::new(self, 2)
     }
     #[doc = "Bit 3 - TX Fifo is at least half empty"]
     #[inline(always)]
-    #[must_use]
     pub fn txim(&mut self) -> TximW<IrqEnbSpec> {
         TximW::new(self, 3)
     }
 }
-#[doc = "Interrupt Enable Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`irq_enb::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`irq_enb::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Interrupt Enable Register\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_enb::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_enb::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct IrqEnbSpec;
 impl crate::RegisterSpec for IrqEnbSpec {
     type Ux = u32;

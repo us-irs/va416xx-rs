@@ -52,36 +52,31 @@ impl R {
 impl W {
     #[doc = "Bit 0 - I2C Enabled"]
     #[inline(always)]
-    #[must_use]
     pub fn clkenabled(&mut self) -> ClkenabledW<S0CtrlSpec> {
         ClkenabledW::new(self, 0)
     }
     #[doc = "Bit 1 - I2C Activated"]
     #[inline(always)]
-    #[must_use]
     pub fn enabled(&mut self) -> EnabledW<S0CtrlSpec> {
         EnabledW::new(self, 1)
     }
     #[doc = "Bit 2 - I2C Active"]
     #[inline(always)]
-    #[must_use]
     pub fn enable(&mut self) -> EnableW<S0CtrlSpec> {
         EnableW::new(self, 2)
     }
     #[doc = "Bit 3 - TX FIFIO Empty Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn txfemd(&mut self) -> TxfemdW<S0CtrlSpec> {
         TxfemdW::new(self, 3)
     }
     #[doc = "Bit 4 - RX FIFO Full Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn rxffmd(&mut self) -> RxffmdW<S0CtrlSpec> {
         RxffmdW::new(self, 4)
     }
 }
-#[doc = "Slave Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`s0_ctrl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`s0_ctrl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Slave Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`s0_ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`s0_ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct S0CtrlSpec;
 impl crate::RegisterSpec for S0CtrlSpec {
     type Ux = u32;

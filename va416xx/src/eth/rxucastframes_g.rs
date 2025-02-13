@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of received good unicast frames\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxucastframes_g::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of received good unicast frames\n\nYou can [`read`](crate::Reg::read) this register and get [`rxucastframes_g::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxucastframesGSpec;
 impl crate::RegisterSpec for RxucastframesGSpec {
     type Ux = u32;

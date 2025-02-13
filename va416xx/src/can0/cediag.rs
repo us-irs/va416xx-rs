@@ -70,48 +70,41 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Error Field Identifier"]
     #[inline(always)]
-    #[must_use]
     pub fn efid(&mut self) -> EfidW<CediagSpec> {
         EfidW::new(self, 0)
     }
     #[doc = "Bits 4:9 - Error Bit Identifier"]
     #[inline(always)]
-    #[must_use]
     pub fn ebid(&mut self) -> EbidW<CediagSpec> {
         EbidW::new(self, 4)
     }
     #[doc = "Bit 10 - Transmit Error"]
     #[inline(always)]
-    #[must_use]
     pub fn txe(&mut self) -> TxeW<CediagSpec> {
         TxeW::new(self, 10)
     }
     #[doc = "Bit 11 - Stuff Error"]
     #[inline(always)]
-    #[must_use]
     pub fn stuff(&mut self) -> StuffW<CediagSpec> {
         StuffW::new(self, 11)
     }
     #[doc = "Bit 12 - CRC"]
     #[inline(always)]
-    #[must_use]
     pub fn crc(&mut self) -> CrcW<CediagSpec> {
         CrcW::new(self, 12)
     }
     #[doc = "Bit 13 - Monitor"]
     #[inline(always)]
-    #[must_use]
     pub fn mon(&mut self) -> MonW<CediagSpec> {
         MonW::new(self, 13)
     }
     #[doc = "Bit 14 - Drive"]
     #[inline(always)]
-    #[must_use]
     pub fn drive(&mut self) -> DriveW<CediagSpec> {
         DriveW::new(self, 14)
     }
 }
-#[doc = "CAN Error Diagnostic Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`cediag::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`cediag::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "CAN Error Diagnostic Register\n\nYou can [`read`](crate::Reg::read) this register and get [`cediag::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cediag::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct CediagSpec;
 impl crate::RegisterSpec for CediagSpec {
     type Ux = u32;

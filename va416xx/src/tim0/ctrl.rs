@@ -32,11 +32,11 @@ pub enum StatusSel {
     Toggle = 2,
     #[doc = "3: Selects the Pulse Width Modulated output. It 1 when the counter value is >= the PWMA_VALUE"]
     Pwma = 3,
-    #[doc = "4: Selects the Pulse Width Modulated output. It 1 when the counter value is &lt; the PWMA_VALUE and value is > PWMA_VALUE"]
+    #[doc = "4: Selects the Pulse Width Modulated output. It 1 when the counter value is < the PWMA_VALUE and value is > PWMA_VALUE"]
     Pwmb = 4,
     #[doc = "5: Returns the counter ENABLED bit"]
     Enabled = 5,
-    #[doc = "6: Selects the Pulse Width Modulated output. It 1 when the counter value is &lt;= the PWMA_VALUE and value is >= 0"]
+    #[doc = "6: Selects the Pulse Width Modulated output. It 1 when the counter value is <= the PWMA_VALUE and value is >= 0"]
     PwmaActive = 6,
 }
 impl From<StatusSel> for u8 {
@@ -86,7 +86,7 @@ impl StatusSelR {
     pub fn is_pwma(&self) -> bool {
         *self == StatusSel::Pwma
     }
-    #[doc = "Selects the Pulse Width Modulated output. It 1 when the counter value is &lt; the PWMA_VALUE and value is > PWMA_VALUE"]
+    #[doc = "Selects the Pulse Width Modulated output. It 1 when the counter value is < the PWMA_VALUE and value is > PWMA_VALUE"]
     #[inline(always)]
     pub fn is_pwmb(&self) -> bool {
         *self == StatusSel::Pwmb
@@ -96,7 +96,7 @@ impl StatusSelR {
     pub fn is_enabled(&self) -> bool {
         *self == StatusSel::Enabled
     }
-    #[doc = "Selects the Pulse Width Modulated output. It 1 when the counter value is &lt;= the PWMA_VALUE and value is >= 0"]
+    #[doc = "Selects the Pulse Width Modulated output. It 1 when the counter value is <= the PWMA_VALUE and value is >= 0"]
     #[inline(always)]
     pub fn is_pwma_active(&self) -> bool {
         *self == StatusSel::PwmaActive
@@ -129,7 +129,7 @@ where
     pub fn pwma(self) -> &'a mut crate::W<REG> {
         self.variant(StatusSel::Pwma)
     }
-    #[doc = "Selects the Pulse Width Modulated output. It 1 when the counter value is &lt; the PWMA_VALUE and value is > PWMA_VALUE"]
+    #[doc = "Selects the Pulse Width Modulated output. It 1 when the counter value is < the PWMA_VALUE and value is > PWMA_VALUE"]
     #[inline(always)]
     pub fn pwmb(self) -> &'a mut crate::W<REG> {
         self.variant(StatusSel::Pwmb)
@@ -139,7 +139,7 @@ where
     pub fn enabled(self) -> &'a mut crate::W<REG> {
         self.variant(StatusSel::Enabled)
     }
-    #[doc = "Selects the Pulse Width Modulated output. It 1 when the counter value is &lt;= the PWMA_VALUE and value is >= 0"]
+    #[doc = "Selects the Pulse Width Modulated output. It 1 when the counter value is <= the PWMA_VALUE and value is >= 0"]
     #[inline(always)]
     pub fn pwma_active(self) -> &'a mut crate::W<REG> {
         self.variant(StatusSel::PwmaActive)
@@ -198,48 +198,41 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Counter Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn enable(&mut self) -> EnableW<CtrlSpec> {
         EnableW::new(self, 0)
     }
     #[doc = "Bit 2 - Auto Disables the counter (set ENABLE to 0) when the count reaches 0"]
     #[inline(always)]
-    #[must_use]
     pub fn auto_disable(&mut self) -> AutoDisableW<CtrlSpec> {
         AutoDisableW::new(self, 2)
     }
     #[doc = "Bit 3 - Auto Deactivate the counter (set ACTIVE to 0) when the count reaches 0"]
     #[inline(always)]
-    #[must_use]
     pub fn auto_deactivate(&mut self) -> AutoDeactivateW<CtrlSpec> {
         AutoDeactivateW::new(self, 3)
     }
     #[doc = "Bit 4 - Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn irq_enb(&mut self) -> IrqEnbW<CtrlSpec> {
         IrqEnbW::new(self, 4)
     }
     #[doc = "Bits 5:7 - Counter Status Selection"]
     #[inline(always)]
-    #[must_use]
     pub fn status_sel(&mut self) -> StatusSelW<CtrlSpec> {
         StatusSelW::new(self, 5)
     }
     #[doc = "Bit 8 - Invert the Output Status"]
     #[inline(always)]
-    #[must_use]
     pub fn status_inv(&mut self) -> StatusInvW<CtrlSpec> {
         StatusInvW::new(self, 8)
     }
     #[doc = "Bit 9 - Stop Request"]
     #[inline(always)]
-    #[must_use]
     pub fn req_stop(&mut self) -> ReqStopW<CtrlSpec> {
         ReqStopW::new(self, 9)
     }
 }
-#[doc = "Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct CtrlSpec;
 impl crate::RegisterSpec for CtrlSpec {
     type Ux = u32;

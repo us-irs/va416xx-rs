@@ -27,24 +27,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:5 - Fractional Divide (64ths)"]
     #[inline(always)]
-    #[must_use]
     pub fn frac(&mut self) -> FracW<ClkscaleSpec> {
         FracW::new(self, 0)
     }
     #[doc = "Bits 6:23 - Integer Divide"]
     #[inline(always)]
-    #[must_use]
     pub fn int(&mut self) -> IntW<ClkscaleSpec> {
         IntW::new(self, 6)
     }
     #[doc = "Bit 31 - Reset Baud Counter"]
     #[inline(always)]
-    #[must_use]
     pub fn reset(&mut self) -> ResetW<ClkscaleSpec> {
         ResetW::new(self, 31)
     }
 }
-#[doc = "Clock Scale Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkscale::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkscale::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Clock Scale Register\n\nYou can [`read`](crate::Reg::read) this register and get [`clkscale::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkscale::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct ClkscaleSpec;
 impl crate::RegisterSpec for ClkscaleSpec {
     type Ux = u32;

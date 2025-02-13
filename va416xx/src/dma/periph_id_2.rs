@@ -34,24 +34,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - JEP106"]
     #[inline(always)]
-    #[must_use]
     pub fn jep106_id_6_4(&mut self) -> Jep106Id6_4W<PeriphId2Spec> {
         Jep106Id6_4W::new(self, 0)
     }
     #[doc = "Bit 3 - JEDEC"]
     #[inline(always)]
-    #[must_use]
     pub fn jedec_used(&mut self) -> JedecUsedW<PeriphId2Spec> {
         JedecUsedW::new(self, 3)
     }
     #[doc = "Bits 4:7 - Revision"]
     #[inline(always)]
-    #[must_use]
     pub fn revision(&mut self) -> RevisionW<PeriphId2Spec> {
         RevisionW::new(self, 4)
     }
 }
-#[doc = "DMA Peripheral ID 2\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`periph_id_2::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`periph_id_2::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "DMA Peripheral ID 2\n\nYou can [`read`](crate::Reg::read) this register and get [`periph_id_2::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`periph_id_2::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct PeriphId2Spec;
 impl crate::RegisterSpec for PeriphId2Spec {
     type Ux = u32;

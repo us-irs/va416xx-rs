@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:30 - Target Timestamp Low Register"]
     #[inline(always)]
-    #[must_use]
     pub fn ttslo(&mut self) -> TtsloW<TargetTimeNsecSpec> {
         TtsloW::new(self, 0)
     }
     #[doc = "Bit 31 - 32 Bits of Hash Table"]
     #[inline(always)]
-    #[must_use]
     pub fn trgtbusy(&mut self) -> TrgtbusyW<TargetTimeNsecSpec> {
         TrgtbusyW::new(self, 31)
     }
 }
-#[doc = "Holds the lower 32-bits of time to be compared with the system time\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`target_time_nsec::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`target_time_nsec::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Holds the lower 32-bits of time to be compared with the system time\n\nYou can [`read`](crate::Reg::read) this register and get [`target_time_nsec::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`target_time_nsec::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TargetTimeNsecSpec;
 impl crate::RegisterSpec for TargetTimeNsecSpec {
     type Ux = u32;

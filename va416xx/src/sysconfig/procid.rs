@@ -5,7 +5,7 @@ impl core::fmt::Debug for R {
         write!(f, "{}", self.bits())
     }
 }
-#[doc = "Processor ID Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`procid::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Processor ID Register\n\nYou can [`read`](crate::Reg::read) this register and get [`procid::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct ProcidSpec;
 impl crate::RegisterSpec for ProcidSpec {
     type Ux = u32;

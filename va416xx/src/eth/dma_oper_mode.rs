@@ -142,96 +142,81 @@ impl R {
 impl W {
     #[doc = "Bit 1 - Start or Stop Receive"]
     #[inline(always)]
-    #[must_use]
     pub fn sr(&mut self) -> SrW<DmaOperModeSpec> {
         SrW::new(self, 1)
     }
     #[doc = "Bit 2 - Operate on Second Frame"]
     #[inline(always)]
-    #[must_use]
     pub fn osf(&mut self) -> OsfW<DmaOperModeSpec> {
         OsfW::new(self, 2)
     }
     #[doc = "Bits 3:4 - Receive Threshold Control"]
     #[inline(always)]
-    #[must_use]
     pub fn rtc(&mut self) -> RtcW<DmaOperModeSpec> {
         RtcW::new(self, 3)
     }
     #[doc = "Bit 5 - Drop Giant Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn dgf(&mut self) -> DgfW<DmaOperModeSpec> {
         DgfW::new(self, 5)
     }
     #[doc = "Bit 6 - Forward Undersized Good Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn fuf(&mut self) -> FufW<DmaOperModeSpec> {
         FufW::new(self, 6)
     }
     #[doc = "Bit 7 - Forward Error Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn fef(&mut self) -> FefW<DmaOperModeSpec> {
         FefW::new(self, 7)
     }
     #[doc = "Bits 9:10 - Threshold for Activating Flow Control"]
     #[inline(always)]
-    #[must_use]
     pub fn rfa(&mut self) -> RfaW<DmaOperModeSpec> {
         RfaW::new(self, 9)
     }
     #[doc = "Bits 11:12 - Threshold for Deactivating Flow Control"]
     #[inline(always)]
-    #[must_use]
     pub fn rfd(&mut self) -> RfdW<DmaOperModeSpec> {
         RfdW::new(self, 11)
     }
     #[doc = "Bit 13 - Start or Stop Transmission Command"]
     #[inline(always)]
-    #[must_use]
     pub fn st(&mut self) -> StW<DmaOperModeSpec> {
         StW::new(self, 13)
     }
     #[doc = "Bits 14:16 - Transmit Threshold Control"]
     #[inline(always)]
-    #[must_use]
     pub fn ttc(&mut self) -> TtcW<DmaOperModeSpec> {
         TtcW::new(self, 14)
     }
     #[doc = "Bit 20 - Flush Transmit FIFO"]
     #[inline(always)]
-    #[must_use]
     pub fn ftf(&mut self) -> FtfW<DmaOperModeSpec> {
         FtfW::new(self, 20)
     }
     #[doc = "Bit 21 - Transmit Store and Forward"]
     #[inline(always)]
-    #[must_use]
     pub fn tsf(&mut self) -> TsfW<DmaOperModeSpec> {
         TsfW::new(self, 21)
     }
     #[doc = "Bit 24 - Disable Flushing of Received Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn dff(&mut self) -> DffW<DmaOperModeSpec> {
         DffW::new(self, 24)
     }
     #[doc = "Bit 25 - Receive Store and Forward"]
     #[inline(always)]
-    #[must_use]
     pub fn rsf(&mut self) -> RsfW<DmaOperModeSpec> {
         RsfW::new(self, 25)
     }
     #[doc = "Bit 26 - Disable Dropping of TCP/IP Checksum Error Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn dt(&mut self) -> DtW<DmaOperModeSpec> {
         DtW::new(self, 26)
     }
 }
-#[doc = "Sets the Receive and Transmit operation mode and command\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dma_oper_mode::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dma_oper_mode::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Sets the Receive and Transmit operation mode and command\n\nYou can [`read`](crate::Reg::read) this register and get [`dma_oper_mode::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dma_oper_mode::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DmaOperModeSpec;
 impl crate::RegisterSpec for DmaOperModeSpec {
     type Ux = u32;

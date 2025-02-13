@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Set output value"]
     #[inline(always)]
-    #[must_use]
     pub fn wdogres(&mut self) -> WdogresW<WdogitopSpec> {
         WdogresW::new(self, 0)
     }
     #[doc = "Bit 1 - Set output value"]
     #[inline(always)]
-    #[must_use]
     pub fn wdogint(&mut self) -> WdogintW<WdogitopSpec> {
         WdogintW::new(self, 1)
     }
 }
-#[doc = "Integration test output set\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`wdogitop::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`wdogitop::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Integration test output set\n\nYou can [`read`](crate::Reg::read) this register and get [`wdogitop::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`wdogitop::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct WdogitopSpec;
 impl crate::RegisterSpec for WdogitopSpec {
     type Ux = u32;

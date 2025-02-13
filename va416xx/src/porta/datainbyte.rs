@@ -5,7 +5,7 @@ impl core::fmt::Debug for R {
         write!(f, "{}", self.bits())
     }
 }
-#[doc = "Data In Register by Byte\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`datainbyte::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Data In Register by Byte\n\nYou can [`read`](crate::Reg::read) this register and get [`datainbyte::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DatainbyteSpec;
 impl crate::RegisterSpec for DatainbyteSpec {
     type Ux = u8;

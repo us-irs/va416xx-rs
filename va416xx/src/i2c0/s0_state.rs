@@ -5,7 +5,7 @@ impl core::fmt::Debug for R {
         write!(f, "{}", self.bits())
     }
 }
-#[doc = "Internal STATE of I2C Slave Controller\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`s0_state::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Internal STATE of I2C Slave Controller\n\nYou can [`read`](crate::Reg::read) this register and get [`s0_state::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct S0StateSpec;
 impl crate::RegisterSpec for S0StateSpec {
     type Ux = u32;

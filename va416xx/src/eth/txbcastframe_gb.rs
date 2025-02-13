@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC number of good and bad broadcast frames transmitted\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txbcastframe_gb::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC number of good and bad broadcast frames transmitted\n\nYou can [`read`](crate::Reg::read) this register and get [`txbcastframe_gb::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxbcastframeGbSpec;
 impl crate::RegisterSpec for TxbcastframeGbSpec {
     type Ux = u32;

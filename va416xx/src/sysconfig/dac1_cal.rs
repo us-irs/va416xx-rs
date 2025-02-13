@@ -9,7 +9,7 @@ impl R {
         Dac1CalR::new((self.bits & 0x1f) as u8)
     }
 }
-#[doc = "DAC1 Calibration Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dac1_cal::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "DAC1 Calibration Register\n\nYou can [`read`](crate::Reg::read) this register and get [`dac1_cal::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Dac1CalSpec;
 impl crate::RegisterSpec for Dac1CalSpec {
     type Ux = u32;

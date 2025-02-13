@@ -34,24 +34,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Interrupt Source portion of Interrupt Code"]
     #[inline(always)]
-    #[must_use]
     pub fn ist(&mut self) -> IstW<CstpndSpec> {
         IstW::new(self, 0)
     }
     #[doc = "Bit 4 - Interrupt Request portion of Interrupt Code"]
     #[inline(always)]
-    #[must_use]
     pub fn irq(&mut self) -> IrqW<CstpndSpec> {
         IrqW::new(self, 4)
     }
     #[doc = "Bits 5:7 - CAN Node Status"]
     #[inline(always)]
-    #[must_use]
     pub fn ns(&mut self) -> NsW<CstpndSpec> {
         NsW::new(self, 5)
     }
 }
-#[doc = "CAN Status Pending Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`cstpnd::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`cstpnd::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "CAN Status Pending Register\n\nYou can [`read`](crate::Reg::read) this register and get [`cstpnd::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cstpnd::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct CstpndSpec;
 impl crate::RegisterSpec for CstpndSpec {
     type Ux = u32;

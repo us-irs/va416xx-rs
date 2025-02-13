@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - Selects the number of inverters (out of four possible selections) in the ring oscillator"]
     #[inline(always)]
-    #[must_use]
     pub fn rnd_src_sel(&mut self) -> RndSrcSelW<ConfigSpec> {
         RndSrcSelW::new(self, 0)
     }
 }
-#[doc = "Configuration Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`config::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`config::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Configuration Register\n\nYou can [`read`](crate::Reg::read) this register and get [`config::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`config::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct ConfigSpec;
 impl crate::RegisterSpec for ConfigSpec {
     type Ux = u32;

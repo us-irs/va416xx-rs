@@ -124,84 +124,71 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - PLL Reference Clock Select"]
     #[inline(always)]
-    #[must_use]
     pub fn ref_clk_sel(&mut self) -> RefClkSelW<Ctrl0Spec> {
         RefClkSelW::new(self, 0)
     }
     #[doc = "Bits 2:3 - Input clock select to PLL"]
     #[inline(always)]
-    #[must_use]
     pub fn clksel_sys(&mut self) -> ClkselSysW<Ctrl0Spec> {
         ClkselSysW::new(self, 2)
     }
     #[doc = "Bit 4 - PLL Symbol; select internal feedback path when high rather than FCLK"]
     #[inline(always)]
-    #[must_use]
     pub fn pll_intfb(&mut self) -> PllIntfbW<Ctrl0Spec> {
         PllIntfbW::new(self, 4)
     }
     #[doc = "Bit 5 - PLL Symbol; power down when high"]
     #[inline(always)]
-    #[must_use]
     pub fn pll_pwdn(&mut self) -> PllPwdnW<Ctrl0Spec> {
         PllPwdnW::new(self, 5)
     }
     #[doc = "Bit 6 - PLL Symbol; reference-to-output bypass when high"]
     #[inline(always)]
-    #[must_use]
     pub fn pll_bypass(&mut self) -> PllBypassW<Ctrl0Spec> {
         PllBypassW::new(self, 6)
     }
     #[doc = "Bit 7 - PLL Symbol; Reference-to-counters-to-output bypass when high"]
     #[inline(always)]
-    #[must_use]
     pub fn pll_test(&mut self) -> PllTestW<Ctrl0Spec> {
         PllTestW::new(self, 7)
     }
     #[doc = "Bits 8:13 - PLL Symbol; selects the values 1-64 for the bandwidth divider"]
     #[inline(always)]
-    #[must_use]
     pub fn pll_bwadj(&mut self) -> PllBwadjW<Ctrl0Spec> {
         PllBwadjW::new(self, 8)
     }
     #[doc = "Bits 14:17 - PLL Symbol; selects the values 1-16 for the post VCO divider"]
     #[inline(always)]
-    #[must_use]
     pub fn pll_clkod(&mut self) -> PllClkodW<Ctrl0Spec> {
         PllClkodW::new(self, 14)
     }
     #[doc = "Bits 18:23 - PLL Symbol; selects the values 1-64 for the multiplication factor"]
     #[inline(always)]
-    #[must_use]
     pub fn pll_clkf(&mut self) -> PllClkfW<Ctrl0Spec> {
         PllClkfW::new(self, 18)
     }
     #[doc = "Bits 24:27 - PLL Symbol; selects the values 1-16 for the reference divider"]
     #[inline(always)]
-    #[must_use]
     pub fn pll_clkr(&mut self) -> PllClkrW<Ctrl0Spec> {
         PllClkrW::new(self, 24)
     }
     #[doc = "Bits 28:29 - Selects the PLL out divider to divide by 1/2/4/8"]
     #[inline(always)]
-    #[must_use]
     pub fn clk_div_sel(&mut self) -> ClkDivSelW<Ctrl0Spec> {
         ClkDivSelW::new(self, 28)
     }
     #[doc = "Bit 30 - Writing this bit to 1 puts the PLL into reset"]
     #[inline(always)]
-    #[must_use]
     pub fn pll_reset(&mut self) -> PllResetW<Ctrl0Spec> {
         PllResetW::new(self, 30)
     }
     #[doc = "Bit 31 - Enable the circuit that detects loss of SYS_CLK"]
     #[inline(always)]
-    #[must_use]
     pub fn sys_clk_lost_det_en(&mut self) -> SysClkLostDetEnW<Ctrl0Spec> {
         SysClkLostDetEnW::new(self, 31)
     }
 }
-#[doc = "Clock Generation Module Control Register 0\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl0::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl0::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Clock Generation Module Control Register 0\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl0::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl0::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Ctrl0Spec;
 impl crate::RegisterSpec for Ctrl0Spec {
     type Ux = u32;

@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of good and valid Pause frames received\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxpauseframes::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of good and valid Pause frames received\n\nYou can [`read`](crate::Reg::read) this register and get [`rxpauseframes::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxpauseframesSpec;
 impl crate::RegisterSpec for RxpauseframesSpec {
     type Ux = u32;

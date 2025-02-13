@@ -18,18 +18,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:23 - Counter divide value"]
     #[inline(always)]
-    #[must_use]
     pub fn value(&mut self) -> ValueW<RomScrubSpec> {
         ValueW::new(self, 0)
     }
     #[doc = "Bit 31 - Reset Counter"]
     #[inline(always)]
-    #[must_use]
     pub fn reset(&mut self) -> ResetW<RomScrubSpec> {
         ResetW::new(self, 31)
     }
 }
-#[doc = "ROM Scrub Period Configuration\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rom_scrub::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`rom_scrub::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "ROM Scrub Period Configuration\n\nYou can [`read`](crate::Reg::read) this register and get [`rom_scrub::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rom_scrub::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RomScrubSpec;
 impl crate::RegisterSpec for RomScrubSpec {
     type Ux = u32;

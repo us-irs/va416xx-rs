@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of aborted frames because of carrier sense error\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txcarriererror::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of aborted frames because of carrier sense error\n\nYou can [`read`](crate::Reg::read) this register and get [`txcarriererror::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxcarriererrorSpec;
 impl crate::RegisterSpec for TxcarriererrorSpec {
     type Ux = u32;

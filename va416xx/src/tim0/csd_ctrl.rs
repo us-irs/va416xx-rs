@@ -97,66 +97,56 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Cascade 0 Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn csden0(&mut self) -> Csden0W<CsdCtrlSpec> {
         Csden0W::new(self, 0)
     }
     #[doc = "Bit 1 - Cascade 0 Invert"]
     #[inline(always)]
-    #[must_use]
     pub fn csdinv0(&mut self) -> Csdinv0W<CsdCtrlSpec> {
         Csdinv0W::new(self, 1)
     }
     #[doc = "Bit 2 - Cascade 1 Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn csden1(&mut self) -> Csden1W<CsdCtrlSpec> {
         Csden1W::new(self, 2)
     }
     #[doc = "Bit 3 - Cascade 1 Invert"]
     #[inline(always)]
-    #[must_use]
     pub fn csdinv1(&mut self) -> Csdinv1W<CsdCtrlSpec> {
         Csdinv1W::new(self, 3)
     }
     #[doc = "Bit 4 - Dual Cascade Operation (0:AND, 1:OR)"]
     #[inline(always)]
-    #[must_use]
     pub fn dcasop(&mut self) -> DcasopW<CsdCtrlSpec> {
         DcasopW::new(self, 4)
     }
     #[doc = "Bit 6 - Cascade 0 Enabled as Trigger"]
     #[inline(always)]
-    #[must_use]
     pub fn csdtrg0(&mut self) -> Csdtrg0W<CsdCtrlSpec> {
         Csdtrg0W::new(self, 6)
     }
     #[doc = "Bit 7 - Cascade 1 Enabled as Trigger"]
     #[inline(always)]
-    #[must_use]
     pub fn csdtrg1(&mut self) -> Csdtrg1W<CsdCtrlSpec> {
         Csdtrg1W::new(self, 7)
     }
     #[doc = "Bit 8 - Cascade 2 Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn csden2(&mut self) -> Csden2W<CsdCtrlSpec> {
         Csden2W::new(self, 8)
     }
     #[doc = "Bit 9 - Cascade 2 Invert"]
     #[inline(always)]
-    #[must_use]
     pub fn csdinv2(&mut self) -> Csdinv2W<CsdCtrlSpec> {
         Csdinv2W::new(self, 9)
     }
     #[doc = "Bit 10 - Cascade 2 Trigger mode"]
     #[inline(always)]
-    #[must_use]
     pub fn csdtrg2(&mut self) -> Csdtrg2W<CsdCtrlSpec> {
         Csdtrg2W::new(self, 10)
     }
 }
-#[doc = "The Cascade Control Register. Controls the counter external enable signals\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`csd_ctrl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`csd_ctrl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "The Cascade Control Register. Controls the counter external enable signals\n\nYou can [`read`](crate::Reg::read) this register and get [`csd_ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`csd_ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct CsdCtrlSpec;
 impl crate::RegisterSpec for CsdCtrlSpec {
     type Ux = u32;

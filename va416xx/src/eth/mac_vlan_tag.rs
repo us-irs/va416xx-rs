@@ -43,30 +43,26 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - VLAN Tag identifier for Receive Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn vl(&mut self) -> VlW<MacVlanTagSpec> {
         VlW::new(self, 0)
     }
     #[doc = "Bit 16 - Enable 12-Bit VLAN Tag Comparison"]
     #[inline(always)]
-    #[must_use]
     pub fn etv(&mut self) -> EtvW<MacVlanTagSpec> {
         EtvW::new(self, 16)
     }
     #[doc = "Bit 17 - VLAN Tag Inverse Match Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn vtim(&mut self) -> VtimW<MacVlanTagSpec> {
         VtimW::new(self, 17)
     }
     #[doc = "Bit 18 - Enable S-VLAN"]
     #[inline(always)]
-    #[must_use]
     pub fn esvl(&mut self) -> EsvlW<MacVlanTagSpec> {
         EsvlW::new(self, 18)
     }
 }
-#[doc = "Identifies IEEE 802.1Q VLAN type frames\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`mac_vlan_tag::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`mac_vlan_tag::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Identifies IEEE 802.1Q VLAN type frames\n\nYou can [`read`](crate::Reg::read) this register and get [`mac_vlan_tag::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mac_vlan_tag::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct MacVlanTagSpec;
 impl crate::RegisterSpec for MacVlanTagSpec {
     type Ux = u32;

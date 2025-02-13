@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of missed received frames because of FIFO overflow\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxfifooverflow::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of missed received frames because of FIFO overflow\n\nYou can [`read`](crate::Reg::read) this register and get [`rxfifooverflow::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxfifooverflowSpec;
 impl crate::RegisterSpec for RxfifooverflowSpec {
     type Ux = u32;

@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Writing 1 to this register causes an internal TRNG reset"]
     #[inline(always)]
-    #[must_use]
     pub fn sw_reset(&mut self) -> SwResetW<SwResetSpec> {
         SwResetW::new(self, 0)
     }
 }
-#[doc = "Reset Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`sw_reset::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`sw_reset::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Reset Register\n\nYou can [`read`](crate::Reg::read) this register and get [`sw_reset::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sw_reset::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SwResetSpec;
 impl crate::RegisterSpec for SwResetSpec {
     type Ux = u32;

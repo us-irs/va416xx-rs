@@ -97,66 +97,56 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Loop Back"]
     #[inline(always)]
-    #[must_use]
     pub fn lbm(&mut self) -> LbmW<Ctrl1Spec> {
         LbmW::new(self, 0)
     }
     #[doc = "Bit 1 - Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn enable(&mut self) -> EnableW<Ctrl1Spec> {
         EnableW::new(self, 1)
     }
     #[doc = "Bit 2 - Master/Slave (0:Master, 1:Slave)"]
     #[inline(always)]
-    #[must_use]
     pub fn ms(&mut self) -> MsW<Ctrl1Spec> {
         MsW::new(self, 2)
     }
     #[doc = "Bit 3 - Slave output Disable"]
     #[inline(always)]
-    #[must_use]
     pub fn sod(&mut self) -> SodW<Ctrl1Spec> {
         SodW::new(self, 3)
     }
     #[doc = "Bits 4:6 - Slave Select"]
     #[inline(always)]
-    #[must_use]
     pub fn ss(&mut self) -> SsW<Ctrl1Spec> {
         SsW::new(self, 4)
     }
     #[doc = "Bit 7 - Block Mode Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn blockmode(&mut self) -> BlockmodeW<Ctrl1Spec> {
         BlockmodeW::new(self, 7)
     }
     #[doc = "Bit 8 - Block Mode Start Status Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn bmstart(&mut self) -> BmstartW<Ctrl1Spec> {
         BmstartW::new(self, 8)
     }
     #[doc = "Bit 9 - Block Mode Stall Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn bmstall(&mut self) -> BmstallW<Ctrl1Spec> {
         BmstallW::new(self, 9)
     }
     #[doc = "Bit 10 - Master Delayed Capture Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn mdlycap(&mut self) -> MdlycapW<Ctrl1Spec> {
         MdlycapW::new(self, 10)
     }
     #[doc = "Bit 11 - Master Tx Pause Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn mtxpause(&mut self) -> MtxpauseW<Ctrl1Spec> {
         MtxpauseW::new(self, 11)
     }
 }
-#[doc = "Control Register 1\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl1::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl1::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Control Register 1\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl1::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl1::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Ctrl1Spec;
 impl crate::RegisterSpec for Ctrl1Spec {
     type Ux = u32;

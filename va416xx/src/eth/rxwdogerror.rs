@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of frames received with error because of watchdog timeout error\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxwdogerror::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of frames received with error because of watchdog timeout error\n\nYou can [`read`](crate::Reg::read) this register and get [`rxwdogerror::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxwdogerrorSpec;
 impl crate::RegisterSpec for RxwdogerrorSpec {
     type Ux = u32;

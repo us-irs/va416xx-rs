@@ -34,24 +34,21 @@ impl R {
 impl W {
     #[doc = "Bit 1 - The Von Neumann balancer is bypassed"]
     #[inline(always)]
-    #[must_use]
     pub fn vnc_pypass(&mut self) -> VncPypassW<DebugControlSpec> {
         VncPypassW::new(self, 1)
     }
     #[doc = "Bit 2 - The CRNGT test in the TRNG is bypassed"]
     #[inline(always)]
-    #[must_use]
     pub fn crngt_bypass(&mut self) -> CrngtBypassW<DebugControlSpec> {
         CrngtBypassW::new(self, 2)
     }
     #[doc = "Bit 3 - The autocorrelation test in the TRNG module is bypassed"]
     #[inline(always)]
-    #[must_use]
     pub fn auto_correlate_bypass(&mut self) -> AutoCorrelateBypassW<DebugControlSpec> {
         AutoCorrelateBypassW::new(self, 3)
     }
 }
-#[doc = "Section TBD\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`debug_control::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`debug_control::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Section TBD\n\nYou can [`read`](crate::Reg::read) this register and get [`debug_control::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`debug_control::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DebugControlSpec;
 impl crate::RegisterSpec for DebugControlSpec {
     type Ux = u32;

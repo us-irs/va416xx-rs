@@ -142,96 +142,81 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Transmit Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tie(&mut self) -> TieW<DmaIntrEnSpec> {
         TieW::new(self, 0)
     }
     #[doc = "Bit 1 - Transmit Stopped Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tse(&mut self) -> TseW<DmaIntrEnSpec> {
         TseW::new(self, 1)
     }
     #[doc = "Bit 2 - Transmit Buffer Unavailable Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tue(&mut self) -> TueW<DmaIntrEnSpec> {
         TueW::new(self, 2)
     }
     #[doc = "Bit 3 - Transmit Jabber Timeout Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn the(&mut self) -> TheW<DmaIntrEnSpec> {
         TheW::new(self, 3)
     }
     #[doc = "Bit 4 - Overflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ove(&mut self) -> OveW<DmaIntrEnSpec> {
         OveW::new(self, 4)
     }
     #[doc = "Bit 5 - Underflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn une(&mut self) -> UneW<DmaIntrEnSpec> {
         UneW::new(self, 5)
     }
     #[doc = "Bit 6 - Receive Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rie(&mut self) -> RieW<DmaIntrEnSpec> {
         RieW::new(self, 6)
     }
     #[doc = "Bit 7 - Receive Buffer Unavailable Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rue(&mut self) -> RueW<DmaIntrEnSpec> {
         RueW::new(self, 7)
     }
     #[doc = "Bit 8 - Receive Stopped Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rse(&mut self) -> RseW<DmaIntrEnSpec> {
         RseW::new(self, 8)
     }
     #[doc = "Bit 9 - Receive Watchdog Timeout Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rwe(&mut self) -> RweW<DmaIntrEnSpec> {
         RweW::new(self, 9)
     }
     #[doc = "Bit 10 - Early Transmit Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ete(&mut self) -> EteW<DmaIntrEnSpec> {
         EteW::new(self, 10)
     }
     #[doc = "Bit 13 - Fatal Bus Error Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn fbe(&mut self) -> FbeW<DmaIntrEnSpec> {
         FbeW::new(self, 13)
     }
     #[doc = "Bit 14 - Early Receive Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ere(&mut self) -> EreW<DmaIntrEnSpec> {
         EreW::new(self, 14)
     }
     #[doc = "Bit 15 - Abnormal Interrupt Summary Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn aie(&mut self) -> AieW<DmaIntrEnSpec> {
         AieW::new(self, 15)
     }
     #[doc = "Bit 16 - Normal Interrupt Summary Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn nie(&mut self) -> NieW<DmaIntrEnSpec> {
         NieW::new(self, 16)
     }
 }
-#[doc = "Enables the interrupts reported in the status register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dma_intr_en::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dma_intr_en::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Enables the interrupts reported in the status register\n\nYou can [`read`](crate::Reg::read) this register and get [`dma_intr_en::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dma_intr_en::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DmaIntrEnSpec;
 impl crate::RegisterSpec for DmaIntrEnSpec {
     type Ux = u32;

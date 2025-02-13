@@ -23,7 +23,7 @@ impl R {
         MbeR::new(((self.bits >> 14) & 3) as u8)
     }
 }
-#[doc = "EDAC Decode Syndrome\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`synd_check_32_44_synd::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "EDAC Decode Syndrome\n\nYou can [`read`](crate::Reg::read) this register and get [`synd_check_32_44_synd::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SyndCheck32_44SyndSpec;
 impl crate::RegisterSpec for SyndCheck32_44SyndSpec {
     type Ux = u32;

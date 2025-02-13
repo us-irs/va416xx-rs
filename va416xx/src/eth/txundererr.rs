@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC number of frames aborted because of frame underflow error\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txundererr::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC number of frames aborted because of frame underflow error\n\nYou can [`read`](crate::Reg::read) this register and get [`txundererr::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxundererrSpec;
 impl crate::RegisterSpec for TxundererrSpec {
     type Ux = u32;

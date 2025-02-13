@@ -34,24 +34,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - Fuse-analog register writes enabled when key = 0xfeed"]
     #[inline(always)]
-    #[must_use]
     pub fn reg_wr_key(&mut self) -> RegWrKeyW<SpwM4CtrlSpec> {
         RegWrKeyW::new(self, 0)
     }
     #[doc = "Bit 16 - SPW pad enable"]
     #[inline(always)]
-    #[must_use]
     pub fn spw_pad_en(&mut self) -> SpwPadEnW<SpwM4CtrlSpec> {
         SpwPadEnW::new(self, 16)
     }
     #[doc = "Bit 17 - Lockup reset enable"]
     #[inline(always)]
-    #[must_use]
     pub fn lren(&mut self) -> LrenW<SpwM4CtrlSpec> {
         LrenW::new(self, 17)
     }
 }
-#[doc = "SPW M4 control register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`spw_m4_ctrl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`spw_m4_ctrl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "SPW M4 control register\n\nYou can [`read`](crate::Reg::read) this register and get [`spw_m4_ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`spw_m4_ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SpwM4CtrlSpec;
 impl crate::RegisterSpec for SpwM4CtrlSpec {
     type Ux = u32;

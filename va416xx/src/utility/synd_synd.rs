@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:11 - Provides bits 11:0 for syndrome, 2x6-bit"]
     #[inline(always)]
-    #[must_use]
     pub fn synd_synd(&mut self) -> SyndSyndW<SyndSyndSpec> {
         SyndSyndW::new(self, 0)
     }
 }
-#[doc = "Syndrome Data Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`synd_synd::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`synd_synd::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Syndrome Data Register\n\nYou can [`read`](crate::Reg::read) this register and get [`synd_synd::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`synd_synd::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SyndSyndSpec;
 impl crate::RegisterSpec for SyndSyndSpec {
     type Ux = u32;

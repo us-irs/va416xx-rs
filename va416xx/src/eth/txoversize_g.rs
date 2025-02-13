@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of frames transmitted without errors\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txoversize_g::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of frames transmitted without errors\n\nYou can [`read`](crate::Reg::read) this register and get [`txoversize_g::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxoversizeGSpec;
 impl crate::RegisterSpec for TxoversizeGSpec {
     type Ux = u32;

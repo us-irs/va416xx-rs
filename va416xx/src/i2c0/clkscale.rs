@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:30 - Enable FastMode"]
     #[inline(always)]
-    #[must_use]
     pub fn value(&mut self) -> ValueW<ClkscaleSpec> {
         ValueW::new(self, 0)
     }
     #[doc = "Bit 31 - Enable FastMode"]
     #[inline(always)]
-    #[must_use]
     pub fn fastmode(&mut self) -> FastmodeW<ClkscaleSpec> {
         FastmodeW::new(self, 31)
     }
 }
-#[doc = "Clock Scale divide value\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkscale::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkscale::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Clock Scale divide value\n\nYou can [`read`](crate::Reg::read) this register and get [`clkscale::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkscale::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct ClkscaleSpec;
 impl crate::RegisterSpec for ClkscaleSpec {
     type Ux = u32;

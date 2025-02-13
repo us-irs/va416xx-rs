@@ -9,7 +9,7 @@ impl R {
         AregCalR::new((self.bits & 0x01ff) as u16)
     }
 }
-#[doc = "Analog LDO Regulator Calibration Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`areg_cal::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Analog LDO Regulator Calibration Register\n\nYou can [`read`](crate::Reg::read) this register and get [`areg_cal::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct AregCalSpec;
 impl crate::RegisterSpec for AregCalSpec {
     type Ux = u32;

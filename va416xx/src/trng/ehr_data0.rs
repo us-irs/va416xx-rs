@@ -9,7 +9,7 @@ impl R {
         EhrDataR::new(self.bits)
     }
 }
-#[doc = "Entropy Holding Register Data Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ehr_data0::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Entropy Holding Register Data Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ehr_data0::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct EhrData0Spec;
 impl crate::RegisterSpec for EhrData0Spec {
     type Ux = u32;

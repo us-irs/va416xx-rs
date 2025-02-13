@@ -43,30 +43,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - DMA Request Status for this CH"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0(&mut self) -> Ch0W<DmaReqStatusSpec> {
         Ch0W::new(self, 0)
     }
     #[doc = "Bit 1 - DMA Request Status for this CH"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1(&mut self) -> Ch1W<DmaReqStatusSpec> {
         Ch1W::new(self, 1)
     }
     #[doc = "Bit 2 - DMA Request Status for this CH"]
     #[inline(always)]
-    #[must_use]
     pub fn ch2(&mut self) -> Ch2W<DmaReqStatusSpec> {
         Ch2W::new(self, 2)
     }
     #[doc = "Bit 3 - DMA Request Status for this CH"]
     #[inline(always)]
-    #[must_use]
     pub fn ch3(&mut self) -> Ch3W<DmaReqStatusSpec> {
         Ch3W::new(self, 3)
     }
 }
-#[doc = "DMA Configuration\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dma_req_status::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dma_req_status::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "DMA Configuration\n\nYou can [`read`](crate::Reg::read) this register and get [`dma_req_status::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dma_req_status::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DmaReqStatusSpec;
 impl crate::RegisterSpec for DmaReqStatusSpec {
     type Ux = u32;

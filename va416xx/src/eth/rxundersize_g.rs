@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of frames received with length less than 64 bytes\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxundersize_g::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of frames received with length less than 64 bytes\n\nYou can [`read`](crate::Reg::read) this register and get [`rxundersize_g::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxundersizeGSpec;
 impl crate::RegisterSpec for RxundersizeGSpec {
     type Ux = u32;

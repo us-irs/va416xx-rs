@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 2:30 - Address bits for trap match"]
     #[inline(always)]
-    #[must_use]
     pub fn addr(&mut self) -> AddrW<RamTrapAddr0Spec> {
         AddrW::new(self, 2)
     }
     #[doc = "Bit 31 - Enable Trap mode"]
     #[inline(always)]
-    #[must_use]
     pub fn enable(&mut self) -> EnableW<RamTrapAddr0Spec> {
         EnableW::new(self, 31)
     }
 }
-#[doc = "RAM0 EDAC Trap Address\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ram_trap_addr0::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ram_trap_addr0::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "RAM0 EDAC Trap Address\n\nYou can [`read`](crate::Reg::read) this register and get [`ram_trap_addr0::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ram_trap_addr0::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RamTrapAddr0Spec;
 impl crate::RegisterSpec for RamTrapAddr0Spec {
     type Ux = u32;

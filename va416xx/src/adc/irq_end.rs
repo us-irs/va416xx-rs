@@ -51,7 +51,7 @@ impl R {
         FifoDepthTrigR::new(((self.bits >> 6) & 1) != 0)
     }
 }
-#[doc = "Enabled Interrupt Status\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`irq_end::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Enabled Interrupt Status\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_end::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct IrqEndSpec;
 impl crate::RegisterSpec for IrqEndSpec {
     type Ux = u32;

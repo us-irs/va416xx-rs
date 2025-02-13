@@ -5,7 +5,7 @@ impl core::fmt::Debug for R {
         write!(f, "{}", self.bits())
     }
 }
-#[doc = "Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkdiv0::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::Reg::read) this register and get [`clkdiv0::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Clkdiv0Spec;
 impl crate::RegisterSpec for Clkdiv0Spec {
     type Ux = u32;

@@ -124,84 +124,71 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Promiscuous Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn pr(&mut self) -> PrW<MacFrameFltrSpec> {
         PrW::new(self, 0)
     }
     #[doc = "Bit 1 - Hash Unicast"]
     #[inline(always)]
-    #[must_use]
     pub fn huc(&mut self) -> HucW<MacFrameFltrSpec> {
         HucW::new(self, 1)
     }
     #[doc = "Bit 2 - Hash Multicast"]
     #[inline(always)]
-    #[must_use]
     pub fn hmc(&mut self) -> HmcW<MacFrameFltrSpec> {
         HmcW::new(self, 2)
     }
     #[doc = "Bit 3 - DA Inverse Filtering"]
     #[inline(always)]
-    #[must_use]
     pub fn daif(&mut self) -> DaifW<MacFrameFltrSpec> {
         DaifW::new(self, 3)
     }
     #[doc = "Bit 4 - Pass All Multicast"]
     #[inline(always)]
-    #[must_use]
     pub fn pm(&mut self) -> PmW<MacFrameFltrSpec> {
         PmW::new(self, 4)
     }
     #[doc = "Bit 5 - Disable Broadcast Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn dbf(&mut self) -> DbfW<MacFrameFltrSpec> {
         DbfW::new(self, 5)
     }
     #[doc = "Bits 6:7 - Pass Control Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn pcf(&mut self) -> PcfW<MacFrameFltrSpec> {
         PcfW::new(self, 6)
     }
     #[doc = "Bit 8 - SA Inverse Filtering"]
     #[inline(always)]
-    #[must_use]
     pub fn saif(&mut self) -> SaifW<MacFrameFltrSpec> {
         SaifW::new(self, 8)
     }
     #[doc = "Bit 9 - Source Address Filter Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn saf(&mut self) -> SafW<MacFrameFltrSpec> {
         SafW::new(self, 9)
     }
     #[doc = "Bit 10 - Hash or Perfect Filter"]
     #[inline(always)]
-    #[must_use]
     pub fn hdf(&mut self) -> HdfW<MacFrameFltrSpec> {
         HdfW::new(self, 10)
     }
     #[doc = "Bit 16 - VLAN Tag Filter Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn vfte(&mut self) -> VfteW<MacFrameFltrSpec> {
         VfteW::new(self, 16)
     }
     #[doc = "Bit 21 - Drop non TCP/UDP over IP Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn dntu(&mut self) -> DntuW<MacFrameFltrSpec> {
         DntuW::new(self, 21)
     }
     #[doc = "Bit 31 - Receive All"]
     #[inline(always)]
-    #[must_use]
     pub fn ra(&mut self) -> RaW<MacFrameFltrSpec> {
         RaW::new(self, 31)
     }
 }
-#[doc = "Contains the frame filtering controls\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`mac_frame_fltr::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`mac_frame_fltr::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Contains the frame filtering controls\n\nYou can [`read`](crate::Reg::read) this register and get [`mac_frame_fltr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mac_frame_fltr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct MacFrameFltrSpec;
 impl crate::RegisterSpec for MacFrameFltrSpec {
     type Ux = u32;

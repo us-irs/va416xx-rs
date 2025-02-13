@@ -9,7 +9,7 @@ impl R {
         TssR::new(self.bits)
     }
 }
-#[doc = "Holds the lower 32 bits of the second field of the system time\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`systime_seconds::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Holds the lower 32 bits of the second field of the system time\n\nYou can [`read`](crate::Reg::read) this register and get [`systime_seconds::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SystimeSecondsSpec;
 impl crate::RegisterSpec for SystimeSecondsSpec {
     type Ux = u32;

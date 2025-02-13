@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of good and bad frames received with length between 512 and 1023 bytes\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rx512to1023oct_gb::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of good and bad frames received with length between 512 and 1023 bytes\n\nYou can [`read`](crate::Reg::read) this register and get [`rx512to1023oct_gb::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Rx512to1023octGbSpec;
 impl crate::RegisterSpec for Rx512to1023octGbSpec {
     type Ux = u32;

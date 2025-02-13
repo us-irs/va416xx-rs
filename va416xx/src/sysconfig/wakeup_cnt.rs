@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Used to set a time to wake up the processor after the device has been put in a low power state"]
     #[inline(always)]
-    #[must_use]
     pub fn wkup_cnt(&mut self) -> WkupCntW<WakeupCntSpec> {
         WkupCntW::new(self, 0)
     }
     #[doc = "Bit 3 - Launch SLP mode in analog block"]
     #[inline(always)]
-    #[must_use]
     pub fn cntstrt(&mut self) -> CntstrtW<WakeupCntSpec> {
         CntstrtW::new(self, 3)
     }
 }
-#[doc = "Wakeup Control\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`wakeup_cnt::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`wakeup_cnt::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Wakeup Control\n\nYou can [`read`](crate::Reg::read) this register and get [`wakeup_cnt::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`wakeup_cnt::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct WakeupCntSpec;
 impl crate::RegisterSpec for WakeupCntSpec {
     type Ux = u32;

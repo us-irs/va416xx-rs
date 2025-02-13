@@ -61,42 +61,36 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Lower bound address for CEN0"]
     #[inline(always)]
-    #[must_use]
     pub fn addrlow0(&mut self) -> Addrlow0W<EbiCfg0Spec> {
         Addrlow0W::new(self, 0)
     }
     #[doc = "Bits 8:15 - Upper bound address for CEN0"]
     #[inline(always)]
-    #[must_use]
     pub fn addrhigh0(&mut self) -> Addrhigh0W<EbiCfg0Spec> {
         Addrhigh0W::new(self, 8)
     }
     #[doc = "Bits 16:18 - Number of cycles for a read - N plus 1"]
     #[inline(always)]
-    #[must_use]
     pub fn cfgreadcycle(&mut self) -> CfgreadcycleW<EbiCfg0Spec> {
         CfgreadcycleW::new(self, 16)
     }
     #[doc = "Bits 19:21 - Number of cycles for a write - N plus 1"]
     #[inline(always)]
-    #[must_use]
     pub fn cfgwritecycle(&mut self) -> CfgwritecycleW<EbiCfg0Spec> {
         CfgwritecycleW::new(self, 19)
     }
     #[doc = "Bits 22:24 - Number of cycles for turnaround - N plus 1"]
     #[inline(always)]
-    #[must_use]
     pub fn cfgturnaroundcycle(&mut self) -> CfgturnaroundcycleW<EbiCfg0Spec> {
         CfgturnaroundcycleW::new(self, 22)
     }
     #[doc = "Bit 25 - 8 bit (0) or 16 bit (1) port size"]
     #[inline(always)]
-    #[must_use]
     pub fn cfgsize(&mut self) -> CfgsizeW<EbiCfg0Spec> {
         CfgsizeW::new(self, 25)
     }
 }
-#[doc = "EBI Config Register 0\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ebi_cfg0::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ebi_cfg0::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "EBI Config Register 0\n\nYou can [`read`](crate::Reg::read) this register and get [`ebi_cfg0::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ebi_cfg0::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct EbiCfg0Spec;
 impl crate::RegisterSpec for EbiCfg0Spec {
     type Ux = u32;

@@ -59,36 +59,31 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Power On Reset Status"]
     #[inline(always)]
-    #[must_use]
     pub fn por(&mut self) -> PorW<RstStatSpec> {
         PorW::new(self, 0)
     }
     #[doc = "Bit 1 - External Reset Status"]
     #[inline(always)]
-    #[must_use]
     pub fn extrst(&mut self) -> ExtrstW<RstStatSpec> {
         ExtrstW::new(self, 1)
     }
     #[doc = "Bit 2 - SYSRESETREQ Reset Status"]
     #[inline(always)]
-    #[must_use]
     pub fn sysrstreq(&mut self) -> SysrstreqW<RstStatSpec> {
         SysrstreqW::new(self, 2)
     }
     #[doc = "Bit 3 - LOOKUP Reset Status"]
     #[inline(always)]
-    #[must_use]
     pub fn lookup(&mut self) -> LookupW<RstStatSpec> {
         LookupW::new(self, 3)
     }
     #[doc = "Bit 4 - WATCHDOG Reset Status"]
     #[inline(always)]
-    #[must_use]
     pub fn watchdog(&mut self) -> WatchdogW<RstStatSpec> {
         WatchdogW::new(self, 4)
     }
 }
-#[doc = "System Reset Status\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rst_stat::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`rst_stat::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "System Reset Status\n\nYou can [`read`](crate::Reg::read) this register and get [`rst_stat::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rst_stat::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RstStatSpec;
 impl crate::RegisterSpec for RstStatSpec {
     type Ux = u32;

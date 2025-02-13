@@ -144,7 +144,7 @@ impl RegisterBlock {
         &self.perid
     }
 }
-#[doc = "PORTA (rw) register accessor: PORTA Pin Configuration Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`porta::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`porta::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@porta`]
+#[doc = "PORTA (rw) register accessor: PORTA Pin Configuration Register\n\nYou can [`read`](crate::Reg::read) this register and get [`porta::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`porta::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@porta`]
 module"]
 #[doc(alias = "PORTA")]
 pub type Porta = crate::Reg<porta::PortaSpec>;
@@ -162,55 +162,55 @@ pub use Porta as Portd;
 pub use Porta as Porte;
 pub use Porta as Portf;
 pub use Porta as Portg;
-#[doc = "CLKDIV0 (r) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkdiv0::R`].  See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv0`]
+#[doc = "CLKDIV0 (r) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::Reg::read) this register and get [`clkdiv0::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv0`]
 module"]
 #[doc(alias = "CLKDIV0")]
 pub type Clkdiv0 = crate::Reg<clkdiv0::Clkdiv0Spec>;
 #[doc = "Clock divide value. 0 will disable the clock"]
 pub mod clkdiv0;
-#[doc = "CLKDIV1 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkdiv1::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkdiv1::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv1`]
+#[doc = "CLKDIV1 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::Reg::read) this register and get [`clkdiv1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkdiv1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv1`]
 module"]
 #[doc(alias = "CLKDIV1")]
 pub type Clkdiv1 = crate::Reg<clkdiv1::Clkdiv1Spec>;
 #[doc = "Clock divide value. 0 will disable the clock"]
 pub mod clkdiv1;
-#[doc = "CLKDIV2 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkdiv2::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkdiv2::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv2`]
+#[doc = "CLKDIV2 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::Reg::read) this register and get [`clkdiv2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkdiv2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv2`]
 module"]
 #[doc(alias = "CLKDIV2")]
 pub type Clkdiv2 = crate::Reg<clkdiv2::Clkdiv2Spec>;
 #[doc = "Clock divide value. 0 will disable the clock"]
 pub mod clkdiv2;
-#[doc = "CLKDIV3 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkdiv3::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkdiv3::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv3`]
+#[doc = "CLKDIV3 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::Reg::read) this register and get [`clkdiv3::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkdiv3::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv3`]
 module"]
 #[doc(alias = "CLKDIV3")]
 pub type Clkdiv3 = crate::Reg<clkdiv3::Clkdiv3Spec>;
 #[doc = "Clock divide value. 0 will disable the clock"]
 pub mod clkdiv3;
-#[doc = "CLKDIV4 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkdiv4::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkdiv4::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv4`]
+#[doc = "CLKDIV4 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::Reg::read) this register and get [`clkdiv4::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkdiv4::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv4`]
 module"]
 #[doc(alias = "CLKDIV4")]
 pub type Clkdiv4 = crate::Reg<clkdiv4::Clkdiv4Spec>;
 #[doc = "Clock divide value. 0 will disable the clock"]
 pub mod clkdiv4;
-#[doc = "CLKDIV5 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkdiv5::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkdiv5::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv5`]
+#[doc = "CLKDIV5 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::Reg::read) this register and get [`clkdiv5::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkdiv5::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv5`]
 module"]
 #[doc(alias = "CLKDIV5")]
 pub type Clkdiv5 = crate::Reg<clkdiv5::Clkdiv5Spec>;
 #[doc = "Clock divide value. 0 will disable the clock"]
 pub mod clkdiv5;
-#[doc = "CLKDIV6 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkdiv6::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkdiv6::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv6`]
+#[doc = "CLKDIV6 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::Reg::read) this register and get [`clkdiv6::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkdiv6::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv6`]
 module"]
 #[doc(alias = "CLKDIV6")]
 pub type Clkdiv6 = crate::Reg<clkdiv6::Clkdiv6Spec>;
 #[doc = "Clock divide value. 0 will disable the clock"]
 pub mod clkdiv6;
-#[doc = "CLKDIV7 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkdiv7::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkdiv7::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv7`]
+#[doc = "CLKDIV7 (rw) register accessor: Clock divide value. 0 will disable the clock\n\nYou can [`read`](crate::Reg::read) this register and get [`clkdiv7::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkdiv7::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkdiv7`]
 module"]
 #[doc(alias = "CLKDIV7")]
 pub type Clkdiv7 = crate::Reg<clkdiv7::Clkdiv7Spec>;
 #[doc = "Clock divide value. 0 will disable the clock"]
 pub mod clkdiv7;
-#[doc = "PERID (r) register accessor: Peripheral ID Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`perid::R`].  See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@perid`]
+#[doc = "PERID (r) register accessor: Peripheral ID Register\n\nYou can [`read`](crate::Reg::read) this register and get [`perid::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@perid`]
 module"]
 #[doc(alias = "PERID")]
 pub type Perid = crate::Reg<perid::PeridSpec>;

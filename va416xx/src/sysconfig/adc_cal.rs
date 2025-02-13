@@ -9,7 +9,7 @@ impl R {
         AdcCalR::new((self.bits & 0x1f) as u8)
     }
 }
-#[doc = "ADC Calibration Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`adc_cal::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "ADC Calibration Register\n\nYou can [`read`](crate::Reg::read) this register and get [`adc_cal::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct AdcCalSpec;
 impl crate::RegisterSpec for AdcCalSpec {
     type Ux = u32;

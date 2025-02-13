@@ -43,30 +43,26 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - VLAN Tag for Transmit Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn vlt(&mut self) -> VltW<VlanIncreplaceSpec> {
         VltW::new(self, 0)
     }
     #[doc = "Bits 16:17 - VLAN Tag Control in Transmit Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn vlc(&mut self) -> VlcW<VlanIncreplaceSpec> {
         VlcW::new(self, 16)
     }
     #[doc = "Bit 18 - VLAN Priority Control"]
     #[inline(always)]
-    #[must_use]
     pub fn vlp(&mut self) -> VlpW<VlanIncreplaceSpec> {
         VlpW::new(self, 18)
     }
     #[doc = "Bit 19 - C-VLAN or S-VLAN"]
     #[inline(always)]
-    #[must_use]
     pub fn csvl(&mut self) -> CsvlW<VlanIncreplaceSpec> {
         CsvlW::new(self, 19)
     }
 }
-#[doc = "Holds the VLAN Tag for insertion into or replacement in the transmit frames\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`vlan_increplace::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`vlan_increplace::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Holds the VLAN Tag for insertion into or replacement in the transmit frames\n\nYou can [`read`](crate::Reg::read) this register and get [`vlan_increplace::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`vlan_increplace::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct VlanIncreplaceSpec;
 impl crate::RegisterSpec for VlanIncreplaceSpec {
     type Ux = u32;

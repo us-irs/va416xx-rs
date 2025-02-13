@@ -16,7 +16,7 @@ impl R {
         OscCalR::new(((self.bits >> 3) & 1) != 0)
     }
 }
-#[doc = "Heart Beat OSC Calibration Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`hbo_cal::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Heart Beat OSC Calibration Register\n\nYou can [`read`](crate::Reg::read) this register and get [`hbo_cal::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct HboCalSpec;
 impl crate::RegisterSpec for HboCalSpec {
     type Ux = u32;

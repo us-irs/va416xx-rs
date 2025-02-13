@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of frames received with runt error\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxrunterror::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of frames received with runt error\n\nYou can [`read`](crate::Reg::read) this register and get [`rxrunterror::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxrunterrorSpec;
 impl crate::RegisterSpec for RxrunterrorSpec {
     type Ux = u32;

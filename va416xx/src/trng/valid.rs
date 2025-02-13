@@ -9,7 +9,7 @@ impl R {
         EhrValidR::new((self.bits & 1) != 0)
     }
 }
-#[doc = "Valid Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`valid::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Valid Register\n\nYou can [`read`](crate::Reg::read) this register and get [`valid::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct ValidSpec;
 impl crate::RegisterSpec for ValidSpec {
     type Ux = u32;

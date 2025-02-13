@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of good multicast frames received\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxmcastframes_g::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of good multicast frames received\n\nYou can [`read`](crate::Reg::read) this register and get [`rxmcastframes_g::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxmcastframesGSpec;
 impl crate::RegisterSpec for RxmcastframesGSpec {
     type Ux = u32;

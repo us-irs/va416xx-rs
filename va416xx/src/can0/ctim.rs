@@ -43,30 +43,26 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Time Segment 2"]
     #[inline(always)]
-    #[must_use]
     pub fn tseg2(&mut self) -> Tseg2W<CtimSpec> {
         Tseg2W::new(self, 0)
     }
     #[doc = "Bits 3:6 - Time Segment 1"]
     #[inline(always)]
-    #[must_use]
     pub fn tseg1(&mut self) -> Tseg1W<CtimSpec> {
         Tseg1W::new(self, 3)
     }
     #[doc = "Bits 7:8 - Synchronization Jump Width"]
     #[inline(always)]
-    #[must_use]
     pub fn sjw(&mut self) -> SjwW<CtimSpec> {
         SjwW::new(self, 7)
     }
     #[doc = "Bits 9:15 - Prescaler Configuration"]
     #[inline(always)]
-    #[must_use]
     pub fn psc(&mut self) -> PscW<CtimSpec> {
         PscW::new(self, 9)
     }
 }
-#[doc = "CAN Timing Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctim::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctim::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "CAN Timing Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ctim::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctim::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct CtimSpec;
 impl crate::RegisterSpec for CtimSpec {
     type Ux = u32;

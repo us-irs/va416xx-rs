@@ -9,7 +9,7 @@ impl R {
         IrqOut0R::new(self.bits)
     }
 }
-#[doc = "DEBUG IRQ_OUT\\[31:0\\]\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`irq_out0::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "DEBUG IRQ_OUT\\[31:0\\]\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_out0::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct IrqOut0Spec;
 impl crate::RegisterSpec for IrqOut0Spec {
     type Ux = u32;

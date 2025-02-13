@@ -43,30 +43,26 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Data Size(0x3=>4, 0xf=>16)"]
     #[inline(always)]
-    #[must_use]
     pub fn size(&mut self) -> SizeW<Ctrl0Spec> {
         SizeW::new(self, 0)
     }
     #[doc = "Bit 6 - SPI Clock Polarity"]
     #[inline(always)]
-    #[must_use]
     pub fn spo(&mut self) -> SpoW<Ctrl0Spec> {
         SpoW::new(self, 6)
     }
     #[doc = "Bit 7 - SPI Clock Phase"]
     #[inline(always)]
-    #[must_use]
     pub fn sph(&mut self) -> SphW<Ctrl0Spec> {
         SphW::new(self, 7)
     }
     #[doc = "Bits 8:15 - Serial Clock Rate divide+1 value"]
     #[inline(always)]
-    #[must_use]
     pub fn scrdv(&mut self) -> ScrdvW<Ctrl0Spec> {
         ScrdvW::new(self, 8)
     }
 }
-#[doc = "Control Register 0\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl0::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl0::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Control Register 0\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl0::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl0::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct Ctrl0Spec;
 impl crate::RegisterSpec for Ctrl0Spec {
     type Ux = u32;

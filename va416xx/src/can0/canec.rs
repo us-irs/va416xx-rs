@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Transmit Error Counter"]
     #[inline(always)]
-    #[must_use]
     pub fn tec(&mut self) -> TecW<CanecSpec> {
         TecW::new(self, 0)
     }
     #[doc = "Bits 8:15 - Receive Error Counter"]
     #[inline(always)]
-    #[must_use]
     pub fn rec(&mut self) -> RecW<CanecSpec> {
         RecW::new(self, 8)
     }
 }
-#[doc = "CAN Error Counter Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`canec::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`canec::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "CAN Error Counter Register\n\nYou can [`read`](crate::Reg::read) this register and get [`canec::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`canec::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct CanecSpec;
 impl crate::RegisterSpec for CanecSpec {
     type Ux = u32;

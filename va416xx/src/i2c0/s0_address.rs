@@ -34,24 +34,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Read/Write value"]
     #[inline(always)]
-    #[must_use]
     pub fn rw(&mut self) -> RwW<S0AddressSpec> {
         RwW::new(self, 0)
     }
     #[doc = "Bits 1:10 - Address value"]
     #[inline(always)]
-    #[must_use]
     pub fn address(&mut self) -> AddressW<S0AddressSpec> {
         AddressW::new(self, 1)
     }
     #[doc = "Bit 15 - Enable 10b address mode"]
     #[inline(always)]
-    #[must_use]
     pub fn a10mode(&mut self) -> A10modeW<S0AddressSpec> {
         A10modeW::new(self, 15)
     }
 }
-#[doc = "Slave I2C Address Value\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`s0_address::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`s0_address::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Slave I2C Address Value\n\nYou can [`read`](crate::Reg::read) this register and get [`s0_address::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`s0_address::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct S0AddressSpec;
 impl crate::RegisterSpec for S0AddressSpec {
     type Ux = u32;

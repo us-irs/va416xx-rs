@@ -43,30 +43,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Mask when the TRNG has collected 192 bits"]
     #[inline(always)]
-    #[must_use]
     pub fn ehr_valid_int_mask(&mut self) -> EhrValidIntMaskW<ImrSpec> {
         EhrValidIntMaskW::new(self, 0)
     }
     #[doc = "Bit 1 - Mask the Autocorrelation error"]
     #[inline(always)]
-    #[must_use]
     pub fn autocorr_err_int_mask(&mut self) -> AutocorrErrIntMaskW<ImrSpec> {
         AutocorrErrIntMaskW::new(self, 1)
     }
     #[doc = "Bit 2 - Mask the CRNGT error"]
     #[inline(always)]
-    #[must_use]
     pub fn crngt_err_int_mask(&mut self) -> CrngtErrIntMaskW<ImrSpec> {
         CrngtErrIntMaskW::new(self, 2)
     }
     #[doc = "Bit 3 - Mask the Von Neumann error"]
     #[inline(always)]
-    #[must_use]
     pub fn vn_err_int_mask(&mut self) -> VnErrIntMaskW<ImrSpec> {
         VnErrIntMaskW::new(self, 3)
     }
 }
-#[doc = "Interrupt Mask Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`imr::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`imr::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Interrupt Mask Register\n\nYou can [`read`](crate::Reg::read) this register and get [`imr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`imr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct ImrSpec;
 impl crate::RegisterSpec for ImrSpec {
     type Ux = u32;

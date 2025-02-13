@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Upper 8-bits of the Refresh Rate Counter. Registers are refreshed every DIVCOUNT+1 cycles"]
     #[inline(always)]
-    #[must_use]
     pub fn divcount(&mut self) -> DivcountW<RefreshConfigHSpec> {
         DivcountW::new(self, 0)
     }
     #[doc = "Bits 30:31 - Special Test Mode Configuration. 00/01=normal. 10=Force refresh off. 11=Force refresh on constantly."]
     #[inline(always)]
-    #[must_use]
     pub fn testmode(&mut self) -> TestmodeW<RefreshConfigHSpec> {
         TestmodeW::new(self, 30)
     }
 }
-#[doc = "Register Refresh Rate for TMR registers\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`refresh_config_h::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`refresh_config_h::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Register Refresh Rate for TMR registers\n\nYou can [`read`](crate::Reg::read) this register and get [`refresh_config_h::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`refresh_config_h::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RefreshConfigHSpec;
 impl crate::RegisterSpec for RefreshConfigHSpec {
     type Ux = u32;

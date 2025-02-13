@@ -23,7 +23,7 @@ impl R {
         PeripheralVerR::new(((self.bits >> 24) & 0xff) as u8)
     }
 }
-#[doc = "Peripheral ID Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`perid::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Peripheral ID Register\n\nYou can [`read`](crate::Reg::read) this register and get [`perid::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct PeridSpec;
 impl crate::RegisterSpec for PeridSpec {
     type Ux = u32;

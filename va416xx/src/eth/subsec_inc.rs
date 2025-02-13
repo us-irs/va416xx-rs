@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Sub-Second Increment Valuee"]
     #[inline(always)]
-    #[must_use]
     pub fn ssinc(&mut self) -> SsincW<SubsecIncSpec> {
         SsincW::new(self, 0)
     }
 }
-#[doc = "Holds the 8-bit value by which the Sub-Second register is incremented\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`subsec_inc::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`subsec_inc::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Holds the 8-bit value by which the Sub-Second register is incremented\n\nYou can [`read`](crate::Reg::read) this register and get [`subsec_inc::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`subsec_inc::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct SubsecIncSpec;
 impl crate::RegisterSpec for SubsecIncSpec {
     type Ux = u32;

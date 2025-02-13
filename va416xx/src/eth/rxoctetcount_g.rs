@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of bytes received in good frames only\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxoctetcount_g::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of bytes received in good frames only\n\nYou can [`read`](crate::Reg::read) this register and get [`rxoctetcount_g::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct RxoctetcountGSpec;
 impl crate::RegisterSpec for RxoctetcountGSpec {
     type Ux = u32;

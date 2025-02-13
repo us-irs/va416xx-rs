@@ -9,7 +9,7 @@ impl R {
         CountR::new(self.bits)
     }
 }
-#[doc = "MMC Number of successfully transmitted frames after multiple collisions\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txmulticol_g::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "MMC Number of successfully transmitted frames after multiple collisions\n\nYou can [`read`](crate::Reg::read) this register and get [`txmulticol_g::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct TxmulticolGSpec;
 impl crate::RegisterSpec for TxmulticolGSpec {
     type Ux = u32;

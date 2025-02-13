@@ -25,18 +25,16 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enable watchdog interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn inten(&mut self) -> IntenW<WdogcontrolSpec> {
         IntenW::new(self, 0)
     }
     #[doc = "Bit 1 - Enable watchdog reset output"]
     #[inline(always)]
-    #[must_use]
     pub fn resen(&mut self) -> ResenW<WdogcontrolSpec> {
         ResenW::new(self, 1)
     }
 }
-#[doc = "Enable for block reset and interrupt\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`wdogcontrol::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`wdogcontrol::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Enable for block reset and interrupt\n\nYou can [`read`](crate::Reg::read) this register and get [`wdogcontrol::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`wdogcontrol::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct WdogcontrolSpec;
 impl crate::RegisterSpec for WdogcontrolSpec {
     type Ux = u32;

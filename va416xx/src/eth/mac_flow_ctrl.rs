@@ -70,48 +70,41 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Flow Control Busy or Backpressure Activate"]
     #[inline(always)]
-    #[must_use]
     pub fn fcb_bpa(&mut self) -> FcbBpaW<MacFlowCtrlSpec> {
         FcbBpaW::new(self, 0)
     }
     #[doc = "Bit 1 - Transmit Flow Control Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tfe(&mut self) -> TfeW<MacFlowCtrlSpec> {
         TfeW::new(self, 1)
     }
     #[doc = "Bit 2 - Receive Flow Control Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rfe(&mut self) -> RfeW<MacFlowCtrlSpec> {
         RfeW::new(self, 2)
     }
     #[doc = "Bit 3 - Unicast Pause Frame Detect"]
     #[inline(always)]
-    #[must_use]
     pub fn up(&mut self) -> UpW<MacFlowCtrlSpec> {
         UpW::new(self, 3)
     }
     #[doc = "Bits 4:5 - Pause Low Threshold"]
     #[inline(always)]
-    #[must_use]
     pub fn plt(&mut self) -> PltW<MacFlowCtrlSpec> {
         PltW::new(self, 4)
     }
     #[doc = "Bit 7 - Disable Zero-Quanta Pause"]
     #[inline(always)]
-    #[must_use]
     pub fn dzpq(&mut self) -> DzpqW<MacFlowCtrlSpec> {
         DzpqW::new(self, 7)
     }
     #[doc = "Bits 16:31 - Pause time"]
     #[inline(always)]
-    #[must_use]
     pub fn pt(&mut self) -> PtW<MacFlowCtrlSpec> {
         PtW::new(self, 16)
     }
 }
-#[doc = "Controls the generation of control frames\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`mac_flow_ctrl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`mac_flow_ctrl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Controls the generation of control frames\n\nYou can [`read`](crate::Reg::read) this register and get [`mac_flow_ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mac_flow_ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct MacFlowCtrlSpec;
 impl crate::RegisterSpec for MacFlowCtrlSpec {
     type Ux = u32;

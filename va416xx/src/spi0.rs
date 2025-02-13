@@ -89,37 +89,37 @@ impl RegisterBlock {
         &self.perid
     }
 }
-#[doc = "CTRL0 (rw) register accessor: Control Register 0\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl0::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl0::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl0`]
+#[doc = "CTRL0 (rw) register accessor: Control Register 0\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl0`]
 module"]
 #[doc(alias = "CTRL0")]
 pub type Ctrl0 = crate::Reg<ctrl0::Ctrl0Spec>;
 #[doc = "Control Register 0"]
 pub mod ctrl0;
-#[doc = "CTRL1 (rw) register accessor: Control Register 1\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ctrl1::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ctrl1::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl1`]
+#[doc = "CTRL1 (rw) register accessor: Control Register 1\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl1`]
 module"]
 #[doc(alias = "CTRL1")]
 pub type Ctrl1 = crate::Reg<ctrl1::Ctrl1Spec>;
 #[doc = "Control Register 1"]
 pub mod ctrl1;
-#[doc = "DATA (rw) register accessor: Data Input/Output\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`data::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`data::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@data`]
+#[doc = "DATA (rw) register accessor: Data Input/Output\n\nYou can [`read`](crate::Reg::read) this register and get [`data::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`data::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@data`]
 module"]
 #[doc(alias = "DATA")]
 pub type Data = crate::Reg<data::DataSpec>;
 #[doc = "Data Input/Output"]
 pub mod data;
-#[doc = "STATUS (r) register accessor: Status Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`status::R`].  See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@status`]
+#[doc = "STATUS (r) register accessor: Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`status::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@status`]
 module"]
 #[doc(alias = "STATUS")]
 pub type Status = crate::Reg<status::StatusSpec>;
 #[doc = "Status Register"]
 pub mod status;
-#[doc = "CLKPRESCALE (rw) register accessor: Clock Pre Scale divide value\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`clkprescale::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`clkprescale::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkprescale`]
+#[doc = "CLKPRESCALE (rw) register accessor: Clock Pre Scale divide value\n\nYou can [`read`](crate::Reg::read) this register and get [`clkprescale::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`clkprescale::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@clkprescale`]
 module"]
 #[doc(alias = "CLKPRESCALE")]
 pub type Clkprescale = crate::Reg<clkprescale::ClkprescaleSpec>;
 #[doc = "Clock Pre Scale divide value"]
 pub mod clkprescale;
-#[doc = "IRQ_ENB (rw) register accessor: Interrupt Enable Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`irq_enb::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`irq_enb::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_enb`]
+#[doc = "IRQ_ENB (rw) register accessor: Interrupt Enable Register\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_enb::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_enb::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_enb`]
 module"]
 #[doc(alias = "IRQ_ENB")]
 pub type IrqEnb = crate::Reg<irq_enb::IrqEnbSpec>;
@@ -131,31 +131,31 @@ pub use irq_enb as irq_clr;
 pub use IrqEnb as IrqRaw;
 pub use IrqEnb as IrqEnd;
 pub use IrqEnb as IrqClr;
-#[doc = "RXFIFOIRQTRG (rw) register accessor: Rx FIFO IRQ Trigger Level\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`rxfifoirqtrg::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`rxfifoirqtrg::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rxfifoirqtrg`]
+#[doc = "RXFIFOIRQTRG (rw) register accessor: Rx FIFO IRQ Trigger Level\n\nYou can [`read`](crate::Reg::read) this register and get [`rxfifoirqtrg::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rxfifoirqtrg::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rxfifoirqtrg`]
 module"]
 #[doc(alias = "RXFIFOIRQTRG")]
 pub type Rxfifoirqtrg = crate::Reg<rxfifoirqtrg::RxfifoirqtrgSpec>;
 #[doc = "Rx FIFO IRQ Trigger Level"]
 pub mod rxfifoirqtrg;
-#[doc = "TXFIFOIRQTRG (rw) register accessor: Tx FIFO IRQ Trigger Level\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`txfifoirqtrg::R`].  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`txfifoirqtrg::W`]. You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@txfifoirqtrg`]
+#[doc = "TXFIFOIRQTRG (rw) register accessor: Tx FIFO IRQ Trigger Level\n\nYou can [`read`](crate::Reg::read) this register and get [`txfifoirqtrg::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`txfifoirqtrg::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@txfifoirqtrg`]
 module"]
 #[doc(alias = "TXFIFOIRQTRG")]
 pub type Txfifoirqtrg = crate::Reg<txfifoirqtrg::TxfifoirqtrgSpec>;
 #[doc = "Tx FIFO IRQ Trigger Level"]
 pub mod txfifoirqtrg;
-#[doc = "FIFO_CLR (w) register accessor: Clear FIFO Register\n\nYou can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`fifo_clr::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@fifo_clr`]
+#[doc = "FIFO_CLR (w) register accessor: Clear FIFO Register\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`fifo_clr::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@fifo_clr`]
 module"]
 #[doc(alias = "FIFO_CLR")]
 pub type FifoClr = crate::Reg<fifo_clr::FifoClrSpec>;
 #[doc = "Clear FIFO Register"]
 pub mod fifo_clr;
-#[doc = "STATE (r) register accessor: Internal STATE of SPI Controller\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`state::R`].  See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@state`]
+#[doc = "STATE (r) register accessor: Internal STATE of SPI Controller\n\nYou can [`read`](crate::Reg::read) this register and get [`state::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@state`]
 module"]
 #[doc(alias = "STATE")]
 pub type State = crate::Reg<state::StateSpec>;
 #[doc = "Internal STATE of SPI Controller"]
 pub mod state;
-#[doc = "PERID (r) register accessor: Peripheral ID Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`perid::R`].  See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@perid`]
+#[doc = "PERID (r) register accessor: Peripheral ID Register\n\nYou can [`read`](crate::Reg::read) this register and get [`perid::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@perid`]
 module"]
 #[doc(alias = "PERID")]
 pub type Perid = crate::Reg<perid::PeridSpec>;

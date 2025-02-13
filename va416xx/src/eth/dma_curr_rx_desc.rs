@@ -16,12 +16,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Cleared on Reset. Pointer updated by the DMA during operation."]
     #[inline(always)]
-    #[must_use]
     pub fn currdesaptr(&mut self) -> CurrdesaptrW<DmaCurrRxDescSpec> {
         CurrdesaptrW::new(self, 0)
     }
 }
-#[doc = "Contains the start address of the current Receive Descriptor read by the DMA\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dma_curr_rx_desc::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dma_curr_rx_desc::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+#[doc = "Contains the start address of the current Receive Descriptor read by the DMA\n\nYou can [`read`](crate::Reg::read) this register and get [`dma_curr_rx_desc::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dma_curr_rx_desc::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
 pub struct DmaCurrRxDescSpec;
 impl crate::RegisterSpec for DmaCurrRxDescSpec {
     type Ux = u32;

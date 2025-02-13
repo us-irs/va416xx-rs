@@ -165,7 +165,7 @@ impl TimerDriverEmbassy {
                             .cnt_value()
                             .write(|w| unsafe { w.bits(remaining_ticks as u32) });
                         alarm_tim.ctrl().modify(|_, w| w.irq_enb().set_bit());
-                        alarm_tim.enable().write(|w| unsafe { w.bits(1) })
+                        alarm_tim.enable().write(|w| unsafe { w.bits(1) });
                     }
                 }
             }

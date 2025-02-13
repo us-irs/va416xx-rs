@@ -396,12 +396,12 @@ impl<I2c: Instance> I2cBase<I2c> {
             let (addr, addr_mode_mask) = Self::unwrap_addr(addr_b);
             self.i2c
                 .s0_addressb()
-                .write(|w| unsafe { w.bits((addr << 1) as u32 | addr_mode_mask) })
+                .write(|w| unsafe { w.bits((addr << 1) as u32 | addr_mode_mask) });
         }
         if let Some(addr_b_mask) = sl_cfg.addr_b_mask {
             self.i2c
                 .s0_addressmaskb()
-                .write(|w| unsafe { w.bits((addr_b_mask << 1) as u32) })
+                .write(|w| unsafe { w.bits((addr_b_mask << 1) as u32) });
         }
     }
 

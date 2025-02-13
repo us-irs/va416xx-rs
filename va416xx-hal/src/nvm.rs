@@ -136,14 +136,14 @@ impl Nvm {
 
     #[inline(always)]
     pub fn write_single(&self, word: u8) {
-        self.spi().data().write(|w| unsafe { w.bits(word as u32) })
+        self.spi().data().write(|w| unsafe { w.bits(word as u32) });
     }
 
     #[inline(always)]
     pub fn write_with_bmstop(&self, word: u8) {
         self.spi()
             .data()
-            .write(|w| unsafe { w.bits(BMSTART_BMSTOP_MASK | word as u32) })
+            .write(|w| unsafe { w.bits(BMSTART_BMSTOP_MASK | word as u32) });
     }
 
     #[inline(always)]
@@ -162,7 +162,7 @@ impl Nvm {
         self.spi().fifo_clr().write(|w| {
             w.rxfifo().set_bit();
             w.txfifo().set_bit()
-        })
+        });
     }
 
     #[inline(always)]

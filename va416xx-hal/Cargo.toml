@@ -25,14 +25,11 @@ bitfield = "0.17"
 defmt = { version = "0.3", optional = true }
 fugit = "0.3"
 delegate = "0.12"
-
-[dependencies.void]
-version = "1"
-default-features = false
+void = { version = "1", default-features = false }
 
 [dependencies.va416xx]
 default-features = false
-version = "0.2"
+version = "0.3"
 features = ["critical-section"]
 
 [features]

@@ -308,7 +308,7 @@ pub(super) unsafe trait RegisterInterface {
         unsafe {
             portreg
                 .datamask()
-                .modify(|r, w| w.bits(r.bits() | self.mask_32()))
+                .modify(|r, w| w.bits(r.bits() | self.mask_32()));
         }
     }
 
@@ -320,7 +320,7 @@ pub(super) unsafe trait RegisterInterface {
         unsafe {
             portreg
                 .datamask()
-                .modify(|r, w| w.bits(r.bits() & !self.mask_32()))
+                .modify(|r, w| w.bits(r.bits() & !self.mask_32()));
         }
     }
 

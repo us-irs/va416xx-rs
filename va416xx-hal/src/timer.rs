@@ -340,14 +340,14 @@ valid_pin_and_tims!(
 pub fn assert_tim_reset(syscfg: &mut pac::Sysconfig, tim_id: u8) {
     syscfg
         .tim_reset()
-        .modify(|r, w| unsafe { w.bits(r.bits() & !(1 << tim_id as u32)) })
+        .modify(|r, w| unsafe { w.bits(r.bits() & !(1 << tim_id as u32)) });
 }
 
 #[inline]
 pub fn deassert_tim_reset(syscfg: &mut pac::Sysconfig, tim_id: u8) {
     syscfg
         .tim_reset()
-        .modify(|r, w| unsafe { w.bits(r.bits() | (1 << tim_id as u32)) })
+        .modify(|r, w| unsafe { w.bits(r.bits() | (1 << tim_id as u32)) });
 }
 
 #[inline]

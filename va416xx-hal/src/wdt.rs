@@ -80,12 +80,12 @@ impl Wdt {
 
     #[inline]
     pub fn disable_reset(&mut self) {
-        self.wdt.wdogcontrol().modify(|_, w| w.resen().clear_bit())
+        self.wdt.wdogcontrol().modify(|_, w| w.resen().clear_bit());
     }
 
     #[inline]
     pub fn enable_reset(&mut self) {
-        self.wdt.wdogcontrol().modify(|_, w| w.resen().set_bit())
+        self.wdt.wdogcontrol().modify(|_, w| w.resen().set_bit());
     }
 
     #[inline]

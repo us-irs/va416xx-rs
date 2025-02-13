@@ -58,6 +58,25 @@ You can then adapt the files in `.vscode` to your needs.
 You can use CLI or VS Code for flashing, running and debugging. In any case, take
 care of installing the pre-requisites first.
 
+### Using CLI with probe-rs
+
+Install [probe-rs](https://probe.rs/docs/getting-started/installation/) first.
+
+You can use `probe-rs` to run the software and display RTT log output. However, debugging does not
+work yet.
+
+After installation, you can run the following command
+
+```sh
+probe-rs run --chip VA416xx_RAM --protocol jtag target/thumbv7em-none-eabihf/debug/examples/blinky
+```
+
+to flash and run the blinky program on the RAM. There is also a `VA416xx` chip target
+available for persistent flashing.
+
+Runner configuration avilable in the `.cargo/def-config.toml` file to use `probe-rs` for
+convenience.
+
 ### Pre-Requisites
 
 1. [SEGGER J-Link tools](https://www.segger.com/downloads/jlink/) installed
@@ -65,6 +84,38 @@ care of installing the pre-requisites first.
    cross-architecture debugger installed. All commands here assume `gdb-multiarch`.
 
 ### Using CLI
+
+
+### Using VS Code
+
+Assuming a working debug connection to your VA416xx board, you can debug using VS Code with
+the [`Cortex-Debug` plugin](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug).
+Please make sure that [`objdump-multiarch` and `nm-multiarch`](https://forums.raspberrypi.com/viewtopic.php?t=333146)
+are installed as well.
+
+Some sample configuration files for VS code were provided and can be used by running
+`cp -rT vscode .vscode` like specified above. After that, you can use `Run and Debug`
+to automatically rebuild and flash your application.
+
+If you would like to use a custom GDB application, you can specify the gdb binary in the following
+configuration variables in your `settings.json`:
+
+- `"cortex-debug.gdbPath"`
+- `"cortex-debug.gdbPath.linux"`
+- `"cortex-debug.gdbPath.windows"`
+- `"cortex-debug.gdbPath.osx"`
+
+The provided VS Code configurations also provide an integrated RTT logger, which you can access
+via the terminal at `RTT Ch:0 console`. In order for the RTT block address detection to
+work properly, `objdump-multiarch` and `nm-multiarch` need to be installed.
+
+### Using CLI with GDB and Segger J-Link Tools
+
+Install the following two tools first:
+
+1. [SEGGER J-Link tools](https://www.segger.com/downloads/jlink/) installed
+2. [gdb-multiarch](https://packages.debian.org/sid/gdb-multiarch) or similar
+   cross-architecture debugger installed. All commands here assume `gdb-multiarch`.
 
 You can build the blinky example application with the following command
 
@@ -99,31 +150,8 @@ runner = "gdb-multiarch -q -x jlink/jlink.gdb"
 After that, you can simply use `cargo run --example blinky` to flash the blinky
 example.
 
-### Using VS Code
-
-Assuming a working debug connection to your VA416xx board, you can debug using VS Code with
-the [`Cortex-Debug` plugin](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug).
-Please make sure that [`objdump-multiarch` and `nm-multiarch`](https://forums.raspberrypi.com/viewtopic.php?t=333146)
-are installed as well.
-
-Some sample configuration files for VS code were provided and can be used by running
-`cp -rT vscode .vscode` like specified above. After that, you can use `Run and Debug`
-to automatically rebuild and flash your application.
-
-If you would like to use a custom GDB application, you can specify the gdb binary in the following
-configuration variables in your `settings.json`:
-
-- `"cortex-debug.gdbPath"`
-- `"cortex-debug.gdbPath.linux"`
-- `"cortex-debug.gdbPath.windows"`
-- `"cortex-debug.gdbPath.osx"`
-
-The provided VS Code configurations also provide an integrated RTT logger, which you can access
-via the terminal at `RTT Ch:0 console`. In order for the RTT block address detection to
-work properly, `objdump-multiarch` and `nm-multiarch` need to be installed.
-
 ### Using the RTT Viewer
 
-The RTT viewer can be used to display log messages received from the target. The base address
-for the RTT block placement is 0x1fff8000. It is recommended to use a search range of 0x1000 around
-that base address when using the RTT viewer.
+The Segger RTT viewer can be used to display log messages received from the target. The base
+address for the RTT block placement is 0x1fff8000. It is recommended to use a search range of
+0x1000 around that base address when using the RTT viewer.

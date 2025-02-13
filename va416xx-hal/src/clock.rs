@@ -431,7 +431,9 @@ impl ClkgenCfgr {
                     }
                 }
             }
-            None => self.clkgen.ctrl0().modify(|_, w| w.pll_pwdn().set_bit()),
+            None => {
+                self.clkgen.ctrl0().modify(|_, w| w.pll_pwdn().set_bit());
+            }
         }
 
         if self.clk_lost_detection {

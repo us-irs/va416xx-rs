@@ -4,21 +4,21 @@ use crate::{enable_interrupt, pac};
 pub fn enable_rom_scrub(syscfg: &mut pac::Sysconfig, counter_reset: u16) {
     syscfg
         .rom_scrub()
-        .write(|w| unsafe { w.bits(counter_reset as u32) })
+        .write(|w| unsafe { w.bits(counter_reset as u32) });
 }
 
 #[inline(always)]
 pub fn enable_ram0_scrub(syscfg: &mut pac::Sysconfig, counter_reset: u16) {
     syscfg
         .ram0_scrub()
-        .write(|w| unsafe { w.bits(counter_reset as u32) })
+        .write(|w| unsafe { w.bits(counter_reset as u32) });
 }
 
 #[inline(always)]
 pub fn enable_ram1_scrub(syscfg: &mut pac::Sysconfig, counter_reset: u16) {
     syscfg
         .ram1_scrub()
-        .write(|w| unsafe { w.bits(counter_reset as u32) })
+        .write(|w| unsafe { w.bits(counter_reset as u32) });
 }
 
 /// This function enables the SBE related interrupts. The user should also provide a

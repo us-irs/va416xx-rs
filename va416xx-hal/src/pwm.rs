@@ -43,7 +43,7 @@ macro_rules! pwm_common_func {
         #[inline]
         fn enable_pwm_a(&mut self) {
             self.reg
-                .reg()
+                .reg_block()
                 .ctrl()
                 .modify(|_, w| unsafe { w.status_sel().bits(StatusSelPwm::PwmA as u8) });
         }
@@ -51,7 +51,7 @@ macro_rules! pwm_common_func {
         #[inline]
         fn enable_pwm_b(&mut self) {
             self.reg
-                .reg()
+                .reg_block()
                 .ctrl()
                 .modify(|_, w| unsafe { w.status_sel().bits(StatusSelPwm::PwmB as u8) });
         }
@@ -71,19 +71,25 @@ macro_rules! pwm_common_func {
             self.pwm_base.current_rst_val =
                 self.pwm_base.clock.raw() / self.pwm_base.current_period.raw();
             self.reg
-                .reg()
+                .reg_block()
                 .rst_value()
                 .write(|w| unsafe { w.bits(self.pwm_base.current_rst_val) });
         }
 
         #[inline]
         pub fn disable(&mut self) {
-            self.reg.reg().ctrl().modify(|_, w| w.enable().clear_bit());
+            self.reg
+                .reg_block()
+                .ctrl()
+                .modify(|_, w| w.enable().clear_bit());
         }
 
         #[inline]
         pub fn enable(&mut self) {
-            self.reg.reg().ctrl().modify(|_, w| w.enable().set_bit());
+            self.reg
+                .reg_block()
+                .ctrl()
+                .modify(|_, w| w.enable().set_bit());
         }
 
         #[inline]
@@ -120,7 +126,7 @@ macro_rules! pwmb_func {
                 * self.pwm_base.current_lower_limit as u64)
                 / DUTY_MAX as u64;
             self.reg
-                .reg()
+                .reg_block()
                 .pwmb_value()
                 .write(|w| unsafe { w.bits(pwmb_val as u32) });
         }
@@ -137,7 +143,7 @@ macro_rules! pwmb_func {
                 * self.pwm_base.current_duty as u64)
                 / DUTY_MAX as u64;
             self.reg
-                .reg()
+                .reg_block()
                 .pwma_value()
                 .write(|w| unsafe { w.bits(pwma_val as u32) });
         }
@@ -348,7 +354,7 @@ impl embedded_hal::pwm::SetDutyCycle for ReducedPwmPin {
             * (DUTY_MAX as u64 - self.pwm_base.current_duty as u64))
             / DUTY_MAX as u64;
         self.reg
-            .reg()
+            .reg_block()
             .pwma_value()
             .write(|w| unsafe { w.bits(pwma_val as u32) });
         Ok(())
@@ -368,7 +374,7 @@ impl<Pin: TimPin, Tim: ValidTim> embedded_hal::pwm::SetDutyCycle for PwmPin<Pin,
             * (DUTY_MAX as u64 - self.pwm_base.current_duty as u64))
             / DUTY_MAX as u64;
         self.reg
-            .reg()
+            .reg_block()
             .pwma_value()
             .write(|w| unsafe { w.bits(pwma_val as u32) });
         Ok(())

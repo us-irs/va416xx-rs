@@ -64,7 +64,7 @@ async fn main(spawner: Spawner) {
         .unwrap();
     // Safety: Only called once here.
     unsafe {
-        embassy_example::init(
+        va416xx_embassy::init(
             &mut dp.sysconfig,
             &dp.irq_router,
             dp.tim15,

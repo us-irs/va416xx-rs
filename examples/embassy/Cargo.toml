@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+cfg-if = "1"
 cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
 cortex-m-rt = "0.7"
 embedded-hal = "1"
@@ -13,9 +14,9 @@ rtt-target = { version = "0.5" }
 panic-rtt-target = { version = "0.1" }
 critical-section = "1"
 
-embassy-sync = { version = "0.6.0" }
-embassy-time = { version = "0.3.2" }
-embassy-time-driver = { version = "0.1" }
+embassy-sync = { version = "0.6" }
+embassy-time = { version = "0.4" }
+va416xx-embassy = { path = "../../va416xx-embassy", default-features = false }
 
 [dependencies.ringbuf]
 version = "0.4"
@@ -27,12 +28,11 @@ default-features = false
 features = ["critical-section"]
 
 [dependencies.embassy-executor]
-version = "0.6.0"
+version = "0.7"
 features = [
     "arch-cortex-m",
     "executor-thread",
     "executor-interrupt",
-    "integrated-timers",
 ]
 
 [dependencies.va416xx-hal]
@@ -40,6 +40,7 @@ path = "../../va416xx-hal"
 features = ["va41630"]
 
 [features]
-default = ["ticks-hz-1_000"]
+default = ["ticks-hz-1_000", "va416xx-embassy/irq-tim14-tim15"]
+custom-irqs = []
 ticks-hz-1_000 = ["embassy-time/tick-hz-1_000"]
 ticks-hz-32_768 = ["embassy-time/tick-hz-32_768"]

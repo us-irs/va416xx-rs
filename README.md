@@ -119,3 +119,9 @@ configuration variables in your `settings.json`:
 The provided VS Code configurations also provide an integrated RTT logger, which you can access
 via the terminal at `RTT Ch:0 console`. In order for the RTT block address detection to
 work properly, `objdump-multiarch` and `nm-multiarch` need to be installed.
+
+### Using the RTT Viewer
+
+The RTT viewer can be used to display log messages received from the target. The base address
+for the RTT block placement is 0x1fff8000. It is recommended to use a search range of 0x1000 around
+that base address when using the RTT viewer.

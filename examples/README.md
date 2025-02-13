@@ -20,6 +20,14 @@ cargo run --bin rtic-example
 
 ## Embassy example
 
+Blinky with time driver IRQs in library
+
 ```rs
 cargo run --bin embassy-example
+```
+
+Blinky with custom time driver IRQs
+
+```rs
+cargo run --bin embassy-example --no-default-features --features custom-irqs
 ```

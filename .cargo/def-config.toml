@@ -1,13 +1,11 @@
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = "gdb-multiarch -q -x jlink/jlink.gdb"
+# runner = "gdb-multiarch -q -x jlink/jlink.gdb"
 # runner = "arm-none-eabi-gdb -q -x jlink/jlink-reva.gdb"
 # runner = "gdb-multiarch -q -x jlink/jlink-reva.gdb"
 
 # Probe-rs is currently problematic, possibly because of the
 # ROM protection?
-# runner = "probe-rs run --chip-description-path ./scripts/VA416xx_Series.yaml"
-# runner = ["probe-rs", "run", "--chip", "$CHIP", "--log-format", "{L} {s}"]
-
+runner = "probe-rs run --chip VA416xx_RAM --protocol swd"
 
 rustflags = [
   "-C",

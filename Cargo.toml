@@ -3,6 +3,7 @@ resolver = "2"
 members = [
   "va416xx",
   "va416xx-hal",
+  "va416xx-embassy",
   "vorago-peb1",
   "bootloader",
   "flashloader",

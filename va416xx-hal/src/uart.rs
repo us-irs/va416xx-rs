@@ -248,6 +248,7 @@ impl From<Hertz> for Config {
 //==================================================================================================
 
 #[derive(Debug, Copy, Clone)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct IrqContextTimeoutOrMaxSize {
     rx_idx: usize,
     mode: IrqReceptionMode,
@@ -273,6 +274,7 @@ impl IrqContextTimeoutOrMaxSize {
 
 /// This struct is used to return the default IRQ handler result to the user
 #[derive(Debug, Default)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct IrqResult {
     pub bytes_read: usize,
     pub errors: Option<UartErrors>,
@@ -280,6 +282,7 @@ pub struct IrqResult {
 
 /// This struct is used to return the default IRQ handler result to the user
 #[derive(Debug, Default)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct IrqResultMaxSizeOrTimeout {
     complete: bool,
     timeout: bool,
@@ -330,12 +333,14 @@ impl IrqResultMaxSizeOrTimeout {
 }
 
 #[derive(Debug, PartialEq, Copy, Clone)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 enum IrqReceptionMode {
     Idle,
     Pending,
 }
 
 #[derive(Default, Debug, Copy, Clone)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct UartErrors {
     overflow: bool,
     framing: bool,
@@ -780,8 +785,8 @@ impl<Uart: Instance> Rx<Uart> {
         self.0.data().read().bits()
     }
 
-    pub fn into_rx_with_irq(self) -> RxWithIrq<Uart> {
-        RxWithIrq(self)
+    pub fn into_rx_with_irq(self) -> RxWithInterrupt<Uart> {
+        RxWithInterrupt(self)
     }
 
     pub fn release(self) -> Uart {
@@ -962,9 +967,9 @@ impl<Uart: Instance> embedded_io::Write for Tx<Uart> {
 ///     then call the [Self::irq_handler_max_size_or_timeout_based] in the interrupt service
 ///     routine. You have to call [Self::read_fixed_len_or_timeout_based_using_irq] in the ISR to
 ///     start reading the next packet.
-pub struct RxWithIrq<Uart>(Rx<Uart>);
+pub struct RxWithInterrupt<Uart>(Rx<Uart>);
 
-impl<Uart: Instance> RxWithIrq<Uart> {
+impl<Uart: Instance> RxWithInterrupt<Uart> {
     /// This function should be called once at initialization time if the regular
     /// [Self::irq_handler] is used to read the UART receiver to enable and start the receiver.
     pub fn start(&mut self) {

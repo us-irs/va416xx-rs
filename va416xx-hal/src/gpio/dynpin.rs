@@ -68,7 +68,7 @@ use super::{
 
 /// Value-level `enum` for disabled configurations
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-#[cfg_attr(feature = "defmt", derive(defmt::format))]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum DynDisabled {
     Floating,
     PullDown,
@@ -77,7 +77,7 @@ pub enum DynDisabled {
 
 /// Value-level `enum` for input configurations
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-#[cfg_attr(feature = "defmt", derive(defmt::format))]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum DynInput {
     Floating,
     PullDown,
@@ -86,7 +86,7 @@ pub enum DynInput {
 
 /// Value-level `enum` for output configurations
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-#[cfg_attr(feature = "defmt", derive(defmt::format))]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum DynOutput {
     PushPull,
     OpenDrain,
@@ -121,7 +121,7 @@ impl embedded_hal::digital::Error for InvalidPinTypeError {
 
 /// Value-level `enum` representing pin modes
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-#[cfg_attr(feature = "defmt", derive(defmt::format))]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum DynPinMode {
     Input(DynInput),
     Output(DynOutput),
@@ -157,7 +157,7 @@ pub const DYN_ALT_FUNC_3: DynPinMode = DynPinMode::Alternate(DynAlternate::Sel3)
 
 /// Value-level `enum` for pin groups
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-#[cfg_attr(feature = "defmt", derive(defmt::format))]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum DynGroup {
     A,
     B,
@@ -170,7 +170,7 @@ pub enum DynGroup {
 
 /// Value-level `struct` representing pin IDs
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-#[cfg_attr(feature = "defmt", derive(defmt::format))]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct DynPinId {
     pub group: DynGroup,
     pub num: u8,
@@ -185,7 +185,7 @@ pub struct DynPinId {
 /// This `struct` takes ownership of a [`DynPinId`] and provides an API to
 /// access the corresponding regsiters.
 #[derive(Debug)]
-#[cfg_attr(feature = "defmt", derive(defmt::format))]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub(crate) struct DynRegisters(DynPinId);
 
 // [`DynRegisters`] takes ownership of the [`DynPinId`], and [`DynPin`]
@@ -219,7 +219,7 @@ impl DynRegisters {
 /// This type acts as a type-erased version of [`Pin`]. Every pin is represented
 /// by the same type, and pins are tracked and distinguished at run-time.
 #[derive(Debug)]
-#[cfg_attr(feature = "defmt", derive(defmt::format))]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct DynPin {
     pub(crate) regs: DynRegisters,
     mode: DynPinMode,

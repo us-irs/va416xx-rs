@@ -8,6 +8,33 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [unreleased]
 
+# [v0.4.0] 2025-02-14
+
+## Changed
+
+- GPIO API: Interrupt, pulse and filter and `set_datamask` and `clear_datamask` APIs are now
+  methods which mutable modify the pin instead of consuming and returning it.
+- Simplified PWM module implementation.
+- All error types now implement `core::error::Error` by using the `thiserror::Error` derive.
+- `InvalidPinTypeError` now wraps the pin mode.
+- I2C `TimingCfg` constructor now returns explicit error instead of generic Error.
+  Removed the timing configuration error type from the generic I2C error enumeration.
+- `PinsA` and `PinsB` constructor do not expect an optional `pac::Ioconfig` argument anymore.
+- `IrqCfg` renamed to `InterruptConfig`, kept alias for old name.
+- All library provided interrupt handlers now start with common prefix `on_interrupt_*`
+- `RxWithIrq` renamed to `RxWithInterrupt`
+- `Rx::into_rx_with_irq` does not expect any arguments any more.
+- `filter_type` renamed to `configure_filter_type`.
+- `level_irq` renamed to `configure_level_interrupt`.
+- `edge_irq` renamed to `configure_edge_interrupt`.
+- UART interrupt management is now handled by the main constructor instead of later stages to
+  statically ensure one interrupt vector for the UART peripheral. `Uart::new` expects an
+  optional `InterruptConfig` argument.
+- `enable_interrupt` and `disable_interrupt` renamed to `enable_nvic_interrupt` and
+  `disable_nvic_interrupt` to distinguish them from peripheral interrupts more clearly.
+- `port_mux` renamed to `port_function_select`
+- Renamed `IrqUartErrors` to `UartErrors`.
+
 # [v0.3.0] 2024-30-09
 
 ## Changed

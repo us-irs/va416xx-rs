@@ -19,7 +19,8 @@ use crate::time::Hertz;
 pub const HBO_FREQ: Hertz = Hertz::from_raw(20_000_000);
 pub const XTAL_OSC_TSTART_MS: u32 = 15;
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum PeripheralSelect {
     Spi0 = 0,
     Spi1 = 1,
@@ -57,6 +58,7 @@ pub enum PeripheralSelect {
 pub type PeripheralClock = PeripheralSelect;
 
 #[derive(Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum FilterClkSel {
     SysClk = 0,
     Clk1 = 1,

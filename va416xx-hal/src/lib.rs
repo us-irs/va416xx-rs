@@ -63,6 +63,7 @@ pub mod adc;
 pub mod dac;
 
 #[derive(Debug, Eq, Copy, Clone, PartialEq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum FunSel {
     Sel0 = 0b00,
     Sel1 = 0b01,

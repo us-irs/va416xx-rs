@@ -74,34 +74,28 @@ bitflags::bitflags! {
     }
 }
 
-#[derive(Debug, PartialEq, Eq, Copy, Clone)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, thiserror::Error)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[error("ADC empty error")]
 pub struct AdcEmptyError;
-#[derive(Debug, PartialEq, Eq, Copy, Clone)]
+
+#[derive(Debug, PartialEq, Eq, Copy, Clone, thiserror::Error)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[error("invalid channel range error")]
 pub struct InvalidChannelRangeError;
 
-#[derive(Debug, PartialEq, Eq, Copy, Clone)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, thiserror::Error)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[error("buffer too small")]
 pub struct BufferTooSmallError;
 
-#[derive(Debug, PartialEq, Eq, Copy, Clone)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, thiserror::Error)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum AdcRangeReadError {
-    InvalidChannelRange(InvalidChannelRangeError),
-    BufferTooSmall(BufferTooSmallError),
-}
-
-impl From<InvalidChannelRangeError> for AdcRangeReadError {
-    fn from(value: InvalidChannelRangeError) -> Self {
-        AdcRangeReadError::InvalidChannelRange(value)
-    }
-}
-
-impl From<BufferTooSmallError> for AdcRangeReadError {
-    fn from(value: BufferTooSmallError) -> Self {
-        AdcRangeReadError::BufferTooSmall(value)
-    }
+    #[error("invalid channel range: {0}")]
+    InvalidChannelRange(#[from] InvalidChannelRangeError),
+    #[error("buffer too small: {0}")]
+    BufferTooSmall(#[from] BufferTooSmallError),
 }
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]

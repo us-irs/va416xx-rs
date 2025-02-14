@@ -32,7 +32,8 @@ use va416xx_hal::{
     uart,
 };
 
-pub type SharedUart = Mutex<CriticalSectionRawMutex, RefCell<Option<uart::RxWithIrq<pac::Uart0>>>>;
+pub type SharedUart =
+    Mutex<CriticalSectionRawMutex, RefCell<Option<uart::RxWithInterrupt<pac::Uart0>>>>;
 static RX: SharedUart = Mutex::new(RefCell::new(None));
 
 const BAUDRATE: u32 = 115200;

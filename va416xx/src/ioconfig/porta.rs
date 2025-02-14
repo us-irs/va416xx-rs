@@ -3,6 +3,7 @@ pub type R = crate::R<PortaSpec>;
 #[doc = "Register `PORTA[%s]` writer"]
 pub type W = crate::W<PortaSpec>;
 #[doc = "Input Filter Selectoin\n\nValue on reset: 0"]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
 pub enum Flttype {

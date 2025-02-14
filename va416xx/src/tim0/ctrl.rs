@@ -21,6 +21,7 @@ pub type IrqEnbR = crate::BitReader;
 #[doc = "Field `IRQ_ENB` writer - Interrupt Enable"]
 pub type IrqEnbW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Counter Status Selection\n\nValue on reset: 0"]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
 pub enum StatusSel {

@@ -29,7 +29,7 @@ then
 fi
 
 svdtools patch svd/va416xx-patch.yml
-${svd2rust_bin} --reexport-interrupt -i svd/va416xx.svd.patched
+${svd2rust_bin} --reexport-interrupt --impl-defmt defmt --impl-debug-feature debug -i svd/va416xx.svd.patched
 
 result=$?
 if [ $result -ne 0 ]; then

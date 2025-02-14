@@ -1,5 +1,6 @@
 #[doc = "Register `DATAINBYTE[%s]` reader"]
 pub type R = crate::R<DatainbyteSpec>;
+#[cfg(feature = "debug")]
 impl core::fmt::Debug for R {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(f, "{}", self.bits())

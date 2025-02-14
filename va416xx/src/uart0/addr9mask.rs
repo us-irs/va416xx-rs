@@ -2,6 +2,7 @@
 pub type R = crate::R<Addr9maskSpec>;
 #[doc = "Register `ADDR9MASK` writer"]
 pub type W = crate::W<Addr9maskSpec>;
+#[cfg(feature = "debug")]
 impl core::fmt::Debug for R {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(f, "{}", self.bits())

@@ -2,6 +2,7 @@
 pub type R = crate::R<ClkprescaleSpec>;
 #[doc = "Register `CLKPRESCALE` writer"]
 pub type W = crate::W<ClkprescaleSpec>;
+#[cfg(feature = "debug")]
 impl core::fmt::Debug for R {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(f, "{}", self.bits())

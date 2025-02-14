@@ -2,6 +2,7 @@
 pub type R = crate::R<DatamaskSpec>;
 #[doc = "Register `DATAMASK` writer"]
 pub type W = crate::W<DatamaskSpec>;
+#[cfg(feature = "debug")]
 impl core::fmt::Debug for R {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(f, "{}", self.bits())

@@ -2,6 +2,7 @@
 pub type R = crate::R<Clkdiv2Spec>;
 #[doc = "Register `CLKDIV2` writer"]
 pub type W = crate::W<Clkdiv2Spec>;
+#[cfg(feature = "debug")]
 impl core::fmt::Debug for R {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(f, "{}", self.bits())

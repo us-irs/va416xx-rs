@@ -30,12 +30,6 @@ rustup target add thumbv7em-none-eabihf
 
 After that, you can use `cargo build` to build the development version of the crate.
 
-If you have not done this yet, it is recommended to read some of the excellent resources
-available to learn Rust:
-
-- [Rust Embedded Book](https://docs.rust-embedded.org/book/)
-- [Rust Discovery Book](https://docs.rust-embedded.org/discovery/)
-
 ## Setting up your own binary crate
 
 If you have a custom board, you might be interested in setting up a new binary crate for your
@@ -71,3 +65,11 @@ is contained within the
 
 7. Flashing the board might work differently for different boards and there is usually
    more than one way. You can find example instructions in primary README.
+
+## Embedded Rust
+
+If you have not done this yet, it is recommended to read some of the excellent resources
+available to learn Rust:
+
+- [Rust Embedded Book](https://docs.rust-embedded.org/book/)
+- [Rust Discovery Book](https://docs.rust-embedded.org/discovery/)

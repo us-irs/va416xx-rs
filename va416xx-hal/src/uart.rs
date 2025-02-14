@@ -275,7 +275,7 @@ impl IrqContextTimeoutOrMaxSize {
 #[derive(Debug, Default)]
 pub struct IrqResult {
     pub bytes_read: usize,
-    pub errors: Option<IrqUartError>,
+    pub errors: Option<UartErrors>,
 }
 
 /// This struct is used to return the default IRQ handler result to the user
@@ -283,7 +283,7 @@ pub struct IrqResult {
 pub struct IrqResultMaxSizeOrTimeout {
     complete: bool,
     timeout: bool,
-    pub errors: Option<IrqUartError>,
+    pub errors: Option<UartErrors>,
     pub bytes_read: usize,
 }
 
@@ -336,14 +336,14 @@ enum IrqReceptionMode {
 }
 
 #[derive(Default, Debug, Copy, Clone)]
-pub struct IrqUartError {
+pub struct UartErrors {
     overflow: bool,
     framing: bool,
     parity: bool,
     other: bool,
 }
 
-impl IrqUartError {
+impl UartErrors {
     #[inline(always)]
     pub fn overflow(&self) -> bool {
         self.overflow
@@ -365,7 +365,7 @@ impl IrqUartError {
     }
 }
 
-impl IrqUartError {
+impl UartErrors {
     #[inline(always)]
     pub fn error(&self) -> bool {
         self.overflow || self.framing || self.parity
@@ -405,10 +405,10 @@ impl Instance for Uart0 {
     const IRQ_TX: pac::Interrupt = pac::Interrupt::UART0_TX;
 
     unsafe fn steal() -> Self {
-        pac::Peripherals::steal().uart0
+        Self::steal()
     }
     fn ptr() -> *const uart_base::RegisterBlock {
-        Uart0::ptr() as *const _
+        Self::ptr() as *const _
     }
 }
 
@@ -419,10 +419,10 @@ impl Instance for Uart1 {
     const IRQ_TX: pac::Interrupt = pac::Interrupt::UART1_TX;
 
     unsafe fn steal() -> Self {
-        pac::Peripherals::steal().uart1
+        Self::steal()
     }
     fn ptr() -> *const uart_base::RegisterBlock {
-        Uart1::ptr() as *const _
+        Self::ptr() as *const _
     }
 }
 
@@ -433,10 +433,10 @@ impl Instance for Uart2 {
     const IRQ_TX: pac::Interrupt = pac::Interrupt::UART2_TX;
 
     unsafe fn steal() -> Self {
-        pac::Peripherals::steal().uart2
+        Self::steal()
     }
     fn ptr() -> *const uart_base::RegisterBlock {
-        Uart2::ptr() as *const _
+        Self::ptr() as *const _
     }
 }
 
@@ -1164,7 +1164,7 @@ impl<Uart: Instance> RxWithIrq<Uart> {
 
     fn read_handler(
         &self,
-        errors: &mut Option<IrqUartError>,
+        errors: &mut Option<UartErrors>,
         read_res: &nb::Result<u8, RxError>,
     ) -> Option<u8> {
         match read_res {
@@ -1172,7 +1172,7 @@ impl<Uart: Instance> RxWithIrq<Uart> {
             Err(nb::Error::WouldBlock) => None,
             Err(nb::Error::Other(e)) => {
                 // Ensure `errors` is Some(IrqUartError), initializing if it's None
-                let err = errors.get_or_insert(IrqUartError::default());
+                let err = errors.get_or_insert(UartErrors::default());
 
                 // Now we can safely modify fields inside `err`
                 match e {
@@ -1185,14 +1185,14 @@ impl<Uart: Instance> RxWithIrq<Uart> {
         }
     }
 
-    fn check_for_errors(&self, errors: &mut Option<IrqUartError>) {
+    fn check_for_errors(&self, errors: &mut Option<UartErrors>) {
         let rx_status = self.uart().rxstatus().read();
 
         if rx_status.rxovr().bit_is_set()
             || rx_status.rxfrm().bit_is_set()
             || rx_status.rxpar().bit_is_set()
         {
-            let err = errors.get_or_insert(IrqUartError::default());
+            let err = errors.get_or_insert(UartErrors::default());
 
             if rx_status.rxovr().bit_is_set() {
                 err.overflow = true;

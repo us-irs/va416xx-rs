@@ -144,7 +144,7 @@ pub(super) unsafe trait RegisterInterface {
         }
     }
 
-    #[inline]
+    #[inline(always)]
     fn port_reg(&self) -> &PortRegisterBlock {
         match self.id().group {
             DynGroup::A => unsafe { &(*Porta::ptr()) },
@@ -157,6 +157,7 @@ pub(super) unsafe trait RegisterInterface {
         }
     }
 
+    #[inline(always)]
     fn iocfg_port(&self) -> &PortReg {
         let ioconfig = unsafe { Ioconfig::ptr().as_ref().unwrap() };
         match self.id().group {
@@ -170,12 +171,12 @@ pub(super) unsafe trait RegisterInterface {
         }
     }
 
-    #[inline]
+    #[inline(always)]
     fn mask_32(&self) -> u32 {
         1 << self.id().num
     }
 
-    #[inline]
+    #[inline(always)]
     fn enable_irq(&self) {
         self.port_reg()
             .irq_enb()
@@ -241,10 +242,18 @@ pub(super) unsafe trait RegisterInterface {
         }
     }
 
+    /// Toggle the logic level of an output pin
+    #[inline(always)]
+    fn toggle(&mut self) {
+        // Safety: TOGOUT is a "mask" register, and we only write the bit for
+        // this pin ID
+        unsafe { self.port_reg().togout().write(|w| w.bits(self.mask_32())) };
+    }
+
     /// Only useful for interrupt pins. Configure whether to use edges or level as interrupt soure
     /// When using edge mode, it is possible to generate interrupts on both edges as well
     #[inline]
-    fn interrupt_edge(&mut self, edge_type: InterruptEdge) {
+    fn configure_edge_interrupt(&mut self, edge_type: InterruptEdge) {
         unsafe {
             self.port_reg()
                 .irq_sen()
@@ -271,7 +280,7 @@ pub(super) unsafe trait RegisterInterface {
 
     /// Configure which edge or level type triggers an interrupt
     #[inline]
-    fn interrupt_level(&mut self, level: InterruptLevel) {
+    fn configure_level_interrupt(&mut self, level: InterruptLevel) {
         unsafe {
             self.port_reg()
                 .irq_sen()
@@ -290,7 +299,7 @@ pub(super) unsafe trait RegisterInterface {
 
     /// Only useful for input pins
     #[inline]
-    fn filter_type(&self, filter: FilterType, clksel: FilterClkSel) {
+    fn configure_filter_type(&mut self, filter: FilterType, clksel: FilterClkSel) {
         self.iocfg_port().modify(|_, w| {
             // Safety: Only write to register for this Pin ID
             unsafe {
@@ -328,7 +337,7 @@ pub(super) unsafe trait RegisterInterface {
     /// See p.52 of the programmers guide for more information.
     /// When configured for pulse mode, a given pin will set the non-default state for exactly
     /// one clock cycle before returning to the configured default state
-    fn pulse_mode(&self, enable: bool, default_state: PinState) {
+    fn configure_pulse_mode(&mut self, enable: bool, default_state: PinState) {
         let portreg = self.port_reg();
         unsafe {
             if enable {
@@ -353,7 +362,7 @@ pub(super) unsafe trait RegisterInterface {
     }
 
     /// Only useful for output pins
-    fn delay(&self, delay_1: bool, delay_2: bool) {
+    fn configure_delay(&mut self, delay_1: bool, delay_2: bool) {
         let portreg = self.port_reg();
         unsafe {
             if delay_1 {

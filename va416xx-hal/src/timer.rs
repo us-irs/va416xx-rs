@@ -78,6 +78,7 @@ pub const unsafe fn get_tim_raw(tim_idx: usize) -> &'static pac::tim0::RegisterB
 //==================================================================================================
 
 #[derive(Default, Debug, PartialEq, Eq, Copy, Clone)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct CascadeCtrl {
     /// Enable Cascade 0 signal active as a requirement for counting
     pub enb_start_src_csd0: bool,

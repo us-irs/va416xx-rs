@@ -36,7 +36,7 @@ features = ["critical-section"]
 [features]
 default = ["rt", "revb"]
 rt = ["va416xx/rt"]
-defmt = ["dep:defmt", "fugit/defmt"]
+defmt = ["dep:defmt", "fugit/defmt", "embedded-hal/defmt-03"]
 
 va41630 = ["device-selected"]
 va41620 = ["device-selected"]

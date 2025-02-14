@@ -39,6 +39,7 @@ pub const BMSTART_BMSTOP_MASK: u32 = 1 << 31;
 pub const BMSKIPDATA_MASK: u32 = 1 << 30;
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum HwChipSelectId {
     Id0 = 0,
     Id1 = 1,
@@ -52,6 +53,7 @@ pub enum HwChipSelectId {
 }
 
 #[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum SpiId {
     Spi0,
     Spi1,
@@ -61,11 +63,63 @@ pub enum SpiId {
 }
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum WordSize {
     OneBit = 0x00,
     FourBits = 0x03,
     EightBits = 0x07,
     SixteenBits = 0x0f,
+}
+
+pub type SpiRegBlock = pac::spi0::RegisterBlock;
+
+/// Common trait implemented by all PAC peripheral access structures. The register block
+/// format is the same for all SPI blocks.
+pub trait Instance: Deref<Target = SpiRegBlock> {
+    const IDX: u8;
+    const PERIPH_SEL: PeripheralSelect;
+
+    fn ptr() -> *const SpiRegBlock;
+}
+
+impl Instance for pac::Spi0 {
+    const IDX: u8 = 0;
+    const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi0;
+
+    #[inline(always)]
+    fn ptr() -> *const SpiRegBlock {
+        Self::ptr()
+    }
+}
+
+impl Instance for pac::Spi1 {
+    const IDX: u8 = 1;
+    const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi1;
+
+    #[inline(always)]
+    fn ptr() -> *const SpiRegBlock {
+        Self::ptr()
+    }
+}
+
+impl Instance for pac::Spi2 {
+    const IDX: u8 = 2;
+    const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi2;
+
+    #[inline(always)]
+    fn ptr() -> *const SpiRegBlock {
+        Self::ptr()
+    }
+}
+
+impl Instance for pac::Spi3 {
+    const IDX: u8 = 3;
+    const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi3;
+
+    #[inline(always)]
+    fn ptr() -> *const SpiRegBlock {
+        Self::ptr()
+    }
 }
 
 //==================================================================================================
@@ -239,6 +293,7 @@ pub trait TransferConfigProvider {
 /// This struct contains all configuration parameter which are transfer specific
 /// and might change for transfers to different SPI slaves
 #[derive(Copy, Clone, Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct TransferConfigWithHwcs<HwCs> {
     pub hw_cs: Option<HwCs>,
     pub cfg: TransferConfig,
@@ -247,6 +302,7 @@ pub struct TransferConfigWithHwcs<HwCs> {
 /// Type erased variant of the transfer configuration. This is required to avoid generics in
 /// the SPI constructor.
 #[derive(Copy, Clone, Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct TransferConfig {
     pub clk_cfg: Option<SpiClkConfig>,
     pub mode: Option<Mode>,
@@ -334,6 +390,8 @@ impl<HwCs: HwCsProvider> TransferConfigProvider for TransferConfigWithHwcs<HwCs>
 }
 
 /// Configuration options for the whole SPI bus. See Programmer Guide p.92 for more details
+#[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct SpiConfig {
     clk: SpiClkConfig,
     // SPI mode configuration
@@ -432,57 +490,6 @@ impl WordProvider for u16 {
     }
 }
 
-pub type SpiRegBlock = pac::spi0::RegisterBlock;
-
-/// Common trait implemented by all PAC peripheral access structures. The register block
-/// format is the same for all SPI blocks.
-pub trait Instance: Deref<Target = SpiRegBlock> {
-    const IDX: u8;
-    const PERIPH_SEL: PeripheralSelect;
-
-    fn ptr() -> *const SpiRegBlock;
-}
-
-impl Instance for pac::Spi0 {
-    const IDX: u8 = 0;
-    const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi0;
-
-    #[inline(always)]
-    fn ptr() -> *const SpiRegBlock {
-        Self::ptr()
-    }
-}
-
-impl Instance for pac::Spi1 {
-    const IDX: u8 = 1;
-    const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi1;
-
-    #[inline(always)]
-    fn ptr() -> *const SpiRegBlock {
-        Self::ptr()
-    }
-}
-
-impl Instance for pac::Spi2 {
-    const IDX: u8 = 2;
-    const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi2;
-
-    #[inline(always)]
-    fn ptr() -> *const SpiRegBlock {
-        Self::ptr()
-    }
-}
-
-impl Instance for pac::Spi3 {
-    const IDX: u8 = 3;
-    const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Spi3;
-
-    #[inline(always)]
-    fn ptr() -> *const SpiRegBlock {
-        Self::ptr()
-    }
-}
-
 //==================================================================================================
 // Spi
 //==================================================================================================
@@ -533,6 +540,7 @@ pub struct Spi<SpiInstance, Pins, Word = u8> {
     pins: Pins,
 }
 
+#[inline(always)]
 pub fn mode_to_cpo_cph_bit(mode: embedded_hal::spi::Mode) -> (bool, bool) {
     match mode {
         embedded_hal::spi::MODE_0 => (false, false),
@@ -575,10 +583,14 @@ impl SpiClkConfig {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, thiserror::Error)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum SpiClkConfigError {
+    #[error("division by zero")]
     DivIsZero,
+    #[error("divide value is not even")]
     DivideValueNotEven,
+    #[error("scrdv value is too large")]
     ScrdvValueTooLarge,
 }
 

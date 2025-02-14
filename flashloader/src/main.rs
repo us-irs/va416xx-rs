@@ -127,7 +127,7 @@ mod app {
 
     #[local]
     struct Local {
-        uart_rx: uart::RxWithIrq<pac::Uart0>,
+        uart_rx: uart::RxWithInterrupt<pac::Uart0>,
         uart_tx: uart::Tx<pac::Uart0>,
         rx_context: IrqContextTimeoutOrMaxSize,
         rom_spi: Option<pac::Spi3>,

@@ -77,12 +77,15 @@ pub enum RPower {
     Every1024 = 0b1111,
 }
 
-#[derive(Debug, PartialEq, Eq)]
-pub struct InvalidCtrlBlockAddr;
+#[derive(Debug, PartialEq, Eq, thiserror::Error)]
+#[error("Invalid DMA control block address")]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct InvalidCtrlBlockAddrError;
 
 bitfield::bitfield! {
     #[repr(transparent)]
     #[derive(Clone, Copy)]
+    #[cfg_attr(feature = "defmt", derive(defmt::Format))]
     pub struct ChannelConfig(u32);
     impl Debug;
     u32;
@@ -111,6 +114,7 @@ bitfield::bitfield! {
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct DmaChannelControl {
     pub src_end_ptr: u32,
     pub dest_end_ptr: u32,
@@ -160,9 +164,9 @@ impl DmaCtrlBlock {
     /// The passed address must be 128-byte aligned. The user must also take care of specifying
     /// a valid memory address for the DMA control block which is accessible by the system as well.
     /// For example, the control block can be placed in the SRAM1.
-    pub fn new_at_addr(addr: u32) -> Result<*mut DmaCtrlBlock, InvalidCtrlBlockAddr> {
+    pub fn new_at_addr(addr: u32) -> Result<*mut DmaCtrlBlock, InvalidCtrlBlockAddrError> {
         if addr & BASE_PTR_ADDR_MASK > 0 {
-            return Err(InvalidCtrlBlockAddr);
+            return Err(InvalidCtrlBlockAddrError);
         }
         let ctrl_block_ptr = addr as *mut DmaCtrlBlock;
         unsafe { core::ptr::write(ctrl_block_ptr, DmaCtrlBlock::default()) }
@@ -175,19 +179,21 @@ pub struct Dma {
     ctrl_block: *mut DmaCtrlBlock,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, thiserror::Error)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum DmaTransferInitError {
-    SourceDestLenMissmatch {
-        src_len: usize,
-        dest_len: usize,
-    },
+    #[error("source and destination buffer length mismatch: {src_len} != {dest_len}")]
+    SourceDestLenMissmatch { src_len: usize, dest_len: usize },
     /// Overflow when calculating the source or destination end address.
+    #[error("address overflow")]
     AddrOverflow,
     /// Transfer size larger than 1024 units.
+    #[error("transfer size too large: {0}, 1024 is the allowed maximum")]
     TransferSizeTooLarge(usize),
 }
 
 #[derive(Debug, Clone, Copy, Default)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct DmaCfg {
     pub bufferable: bool,
     pub cacheable: bool,
@@ -493,11 +499,11 @@ impl Dma {
         dma: pac::Dma,
         cfg: DmaCfg,
         ctrl_block: *mut DmaCtrlBlock,
-    ) -> Result<Self, InvalidCtrlBlockAddr> {
+    ) -> Result<Self, InvalidCtrlBlockAddrError> {
         // The conversion to u32 is safe here because we are on a 32-bit system.
         let raw_addr = ctrl_block as u32;
         if raw_addr & BASE_PTR_ADDR_MASK > 0 {
-            return Err(InvalidCtrlBlockAddr);
+            return Err(InvalidCtrlBlockAddrError);
         }
         syscfg.enable_peripheral_clock(PeripheralClock::Dma);
         syscfg.assert_periph_reset_for_two_cycles(PeripheralSelect::Dma);

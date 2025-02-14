@@ -21,56 +21,10 @@
 //! ## Examples
 //!
 //! - [Blinky example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/blinky.rs)
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, thiserror::Error)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[error("pin is masked")]
 pub struct IsMaskedError;
-
-macro_rules! common_reg_if_functions {
-    () => {
-        paste::paste!(
-            #[inline]
-            pub fn datamask(&self) -> bool {
-                self.regs.datamask()
-            }
-
-            #[inline]
-            pub fn clear_datamask(self) -> Self {
-                self.regs.clear_datamask();
-                self
-            }
-
-            #[inline]
-            pub fn set_datamask(self) -> Self {
-                self.regs.set_datamask();
-                self
-            }
-
-            #[inline]
-            pub fn is_high_masked(&self) -> Result<bool, crate::gpio::IsMaskedError> {
-                self.regs.read_pin_masked()
-            }
-
-            #[inline]
-            pub fn is_low_masked(&self) -> Result<bool, crate::gpio::IsMaskedError> {
-                self.regs.read_pin_masked().map(|v| !v)
-            }
-
-            #[inline]
-            pub fn set_high_masked(&mut self) -> Result<(), crate::gpio::IsMaskedError> {
-                self.regs.write_pin_masked(true)
-            }
-
-            #[inline]
-            pub fn set_low_masked(&mut self) -> Result<(), crate::gpio::IsMaskedError> {
-                self.regs.write_pin_masked(false)
-            }
-
-            fn irq_enb(&mut self) {
-                self.regs.enable_irq();
-            }
-        );
-    };
-}
 
 pub mod pin;
 pub use pin::*;

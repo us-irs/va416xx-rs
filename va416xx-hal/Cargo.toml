@@ -26,6 +26,7 @@ defmt = { version = "0.3", optional = true }
 fugit = "0.3"
 delegate = "0.12"
 void = { version = "1", default-features = false }
+thiserror = { version = "2", default-features = false }
 
 [dependencies.va416xx]
 default-features = false

@@ -502,10 +502,10 @@ unsafe impl<Pin: TimPin, Tim: ValidTim> TimRegInterface for TimAndPinRegister<Pi
     }
 }
 
-pub(super) struct TimDynRegister {
-    tim_id: u8,
+pub(crate) struct TimDynRegister {
+    pub(crate) tim_id: u8,
     #[allow(dead_code)]
-    pin_id: DynPinId,
+    pub(crate) pin_id: DynPinId,
 }
 
 impl<Pin: TimPin, Tim: ValidTim> From<TimAndPinRegister<Pin, Tim>> for TimDynRegister {

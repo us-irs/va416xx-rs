@@ -49,9 +49,12 @@ fn main() -> ! {
     enable_and_init_irq_router(&mut dp.sysconfig, &dp.irq_router);
     // Safety: The DMA control block has an alignment rule of 128 and we constructed it directly
     // statically.
-    let dma = Dma::new(&mut dp.sysconfig, dp.dma, DmaCfg::default(), unsafe {
-        core::ptr::addr_of_mut!(DMA_CTRL_BLOCK)
-    })
+    let dma = Dma::new(
+        &mut dp.sysconfig,
+        dp.dma,
+        DmaCfg::default(),
+        core::ptr::addr_of_mut!(DMA_CTRL_BLOCK),
+    )
     .expect("error creating DMA");
     let (mut dma0, _, _, _) = dma.split();
     let mut delay_ms = CountdownTimer::new(&mut dp.sysconfig, dp.tim0, &clocks);

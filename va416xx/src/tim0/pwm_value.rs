@@ -2,6 +2,7 @@
 pub type R = crate::R<PwmValueSpec>;
 #[doc = "Register `PWM_VALUE` writer"]
 pub type W = crate::W<PwmValueSpec>;
+#[cfg(feature = "debug")]
 impl core::fmt::Debug for R {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(f, "{}", self.bits())

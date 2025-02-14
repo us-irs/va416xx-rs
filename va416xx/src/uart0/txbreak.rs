@@ -1,5 +1,6 @@
 #[doc = "Register `TXBREAK` writer"]
 pub type W = crate::W<TxbreakSpec>;
+#[cfg(feature = "debug")]
 impl core::fmt::Debug for crate::generic::Reg<TxbreakSpec> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "(not readable)")

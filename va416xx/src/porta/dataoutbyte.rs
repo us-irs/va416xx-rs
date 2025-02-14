@@ -1,5 +1,6 @@
 #[doc = "Register `DATAOUTBYTE[%s]` writer"]
 pub type W = crate::W<DataoutbyteSpec>;
+#[cfg(feature = "debug")]
 impl core::fmt::Debug for crate::generic::Reg<DataoutbyteSpec> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "(not readable)")

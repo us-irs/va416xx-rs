@@ -30,6 +30,14 @@ use crate::{
 #[cfg(not(feature = "va41628"))]
 use crate::gpio::{PC15, PF8};
 
+#[derive(Debug, Clone, Copy)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum Bank {
+    Uart0 = 0,
+    Uart1 = 1,
+    Uart2 = 2,
+}
+
 //==================================================================================================
 // Type-Level support
 //==================================================================================================
@@ -391,6 +399,7 @@ pub struct BufferTooShortError {
 pub trait Instance: Deref<Target = uart_base::RegisterBlock> {
     const IDX: u8;
     const PERIPH_SEL: PeripheralSelect;
+    const PTR: *const uart_base::RegisterBlock;
     const IRQ_RX: pac::Interrupt;
     const IRQ_TX: pac::Interrupt;
 
@@ -400,7 +409,21 @@ pub trait Instance: Deref<Target = uart_base::RegisterBlock> {
     ///
     /// This circumvents the safety guarantees of the HAL.
     unsafe fn steal() -> Self;
-    fn ptr() -> *const uart_base::RegisterBlock;
+
+    #[inline(always)]
+    fn ptr() -> *const uart_base::RegisterBlock {
+        Self::PTR
+    }
+
+    /// Retrieve the type erased peripheral register block.
+    ///
+    /// # Safety
+    ///
+    /// This circumvents the safety guarantees of the HAL.
+    #[inline(always)]
+    unsafe fn reg_block() -> &'static uart_base::RegisterBlock {
+        unsafe { &(*Self::ptr()) }
+    }
 }
 
 impl Instance for Uart0 {
@@ -408,6 +431,7 @@ impl Instance for Uart0 {
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Uart0;
     const IRQ_RX: pac::Interrupt = pac::Interrupt::UART0_RX;
     const IRQ_TX: pac::Interrupt = pac::Interrupt::UART0_TX;
+    const PTR: *const uart_base::RegisterBlock = Self::PTR;
 
     unsafe fn steal() -> Self {
         Self::steal()
@@ -422,6 +446,7 @@ impl Instance for Uart1 {
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Uart1;
     const IRQ_RX: pac::Interrupt = pac::Interrupt::UART1_RX;
     const IRQ_TX: pac::Interrupt = pac::Interrupt::UART1_TX;
+    const PTR: *const uart_base::RegisterBlock = Self::PTR;
 
     unsafe fn steal() -> Self {
         Self::steal()
@@ -436,12 +461,28 @@ impl Instance for Uart2 {
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Uart2;
     const IRQ_RX: pac::Interrupt = pac::Interrupt::UART2_RX;
     const IRQ_TX: pac::Interrupt = pac::Interrupt::UART2_TX;
+    const PTR: *const uart_base::RegisterBlock = Self::PTR;
 
     unsafe fn steal() -> Self {
         Self::steal()
     }
     fn ptr() -> *const uart_base::RegisterBlock {
         Self::ptr() as *const _
+    }
+}
+
+impl Bank {
+    /// Retrieve the peripheral register block.
+    ///
+    /// # Safety
+    ///
+    /// Circumvents the HAL safety guarantees.
+    pub unsafe fn reg_block(&self) -> &'static uart_base::RegisterBlock {
+        match self {
+            Bank::Uart0 => unsafe { pac::Uart0::reg_block() },
+            Bank::Uart1 => unsafe { pac::Uart1::reg_block() },
+            Bank::Uart2 => unsafe { pac::Uart2::reg_block() },
+        }
     }
 }
 
@@ -581,6 +622,7 @@ impl<Uart: Instance> UartBase<Uart> {
             w.txenable().clear_bit()
         });
         disable_nvic_interrupt(Uart::IRQ_RX);
+        disable_nvic_interrupt(Uart::IRQ_TX);
         self.uart
     }
 
@@ -633,10 +675,10 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
     Uart<UartInstance, (TxPinInst, RxPinInst)>
 {
     pub fn new(
+        syscfg: &mut va416xx::Sysconfig,
         uart: UartInstance,
         pins: (TxPinInst, RxPinInst),
         config: impl Into<Config>,
-        syscfg: &mut va416xx::Sysconfig,
         clocks: &Clocks,
     ) -> Self {
         crate::clock::enable_peripheral_clock(syscfg, UartInstance::PERIPH_SEL);
@@ -654,10 +696,10 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
     }
 
     pub fn new_with_clock_freq(
+        syscfg: &mut va416xx::Sysconfig,
         uart: UartInstance,
         pins: (TxPinInst, RxPinInst),
         config: impl Into<Config>,
-        syscfg: &mut va416xx::Sysconfig,
         clock: impl Into<Hertz>,
     ) -> Self {
         crate::clock::enable_peripheral_clock(syscfg, UartInstance::PERIPH_SEL);
@@ -724,6 +766,34 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
     }
 }
 
+#[inline(always)]
+pub fn enable_rx(uart: &uart_base::RegisterBlock) {
+    uart.enable().modify(|_, w| w.rxenable().set_bit());
+}
+
+#[inline(always)]
+pub fn disable_rx(uart: &uart_base::RegisterBlock) {
+    uart.enable().modify(|_, w| w.rxenable().clear_bit());
+}
+
+#[inline(always)]
+pub fn enable_rx_interrupts(uart: &uart_base::RegisterBlock) {
+    uart.irq_enb().modify(|_, w| {
+        w.irq_rx().set_bit();
+        w.irq_rx_to().set_bit();
+        w.irq_rx_status().set_bit()
+    });
+}
+
+#[inline(always)]
+pub fn disable_rx_interrupts(uart: &uart_base::RegisterBlock) {
+    uart.irq_enb().modify(|_, w| {
+        w.irq_rx().clear_bit();
+        w.irq_rx_to().clear_bit();
+        w.irq_rx_status().clear_bit()
+    });
+}
+
 /// Serial receiver.
 ///
 /// Can be created by using the [Uart::split] or [UartBase::split] API.
@@ -756,6 +826,15 @@ impl<Uart: Instance> Rx<Uart> {
     #[inline]
     pub fn disable(&mut self) {
         self.0.enable().modify(|_, w| w.rxenable().clear_bit());
+    }
+
+    #[inline]
+    pub fn disable_interrupts(&mut self) {
+        disable_rx_interrupts(unsafe { Uart::reg_block() });
+    }
+    #[inline]
+    pub fn enable_interrupts(&mut self) {
+        enable_rx_interrupts(unsafe { Uart::reg_block() });
     }
 
     /// Low level function to read a word from the UART FIFO.
@@ -847,12 +926,51 @@ impl<Uart: Instance> embedded_io::Read for Rx<Uart> {
     }
 }
 
+#[inline(always)]
+pub fn enable_tx(uart: &uart_base::RegisterBlock) {
+    uart.enable().modify(|_, w| w.txenable().set_bit());
+}
+
+#[inline(always)]
+pub fn disable_tx(uart: &uart_base::RegisterBlock) {
+    uart.enable().modify(|_, w| w.txenable().clear_bit());
+}
+
+#[inline(always)]
+pub fn enable_tx_interrupts(uart: &uart_base::RegisterBlock) {
+    uart.irq_enb().modify(|_, w| {
+        w.irq_tx().set_bit();
+        w.irq_tx_status().set_bit();
+        w.irq_tx_empty().set_bit()
+    });
+}
+
+#[inline(always)]
+pub fn disable_tx_interrupts(uart: &uart_base::RegisterBlock) {
+    uart.irq_enb().modify(|_, w| {
+        w.irq_tx().clear_bit();
+        w.irq_tx_status().clear_bit();
+        w.irq_tx_empty().clear_bit()
+    });
+}
+
 /// Serial transmitter
 ///
 /// Can be created by using the [Uart::split] or [UartBase::split] API.
 pub struct Tx<Uart>(Uart);
 
 impl<Uart: Instance> Tx<Uart> {
+    /// Retrieve a TX pin without expecting an explicit UART structure
+    ///
+    /// # Safety
+    ///
+    /// Circumvents the HAL safety guarantees.
+    #[inline(always)]
+    pub unsafe fn steal() -> Self {
+        Self(Uart::steal())
+    }
+
+    #[inline(always)]
     fn new(uart: Uart) -> Self {
         Self(uart)
     }
@@ -862,7 +980,8 @@ impl<Uart: Instance> Tx<Uart> {
     /// # Safety
     ///
     /// You must ensure that only registers related to the operation of the TX side are used.
-    pub unsafe fn uart(&self) -> &Uart {
+    #[inline(always)]
+    pub const unsafe fn uart(&self) -> &Uart {
         &self.0
     }
 
@@ -879,6 +998,27 @@ impl<Uart: Instance> Tx<Uart> {
     #[inline]
     pub fn disable(&mut self) {
         self.0.enable().modify(|_, w| w.txenable().clear_bit());
+    }
+
+    /// Enables the IRQ_TX, IRQ_TX_STATUS and IRQ_TX_EMPTY interrupts.
+    ///
+    /// - The IRQ_TX interrupt is generated when the TX FIFO is at least half empty.
+    /// - The IRQ_TX_STATUS interrupt is generated when write data is lost due to a FIFO overflow
+    /// - The IRQ_TX_EMPTY interrupt is generated when the TX FIFO is empty and the TXBUSY signal
+    ///   is 0
+    #[inline]
+    pub fn enable_interrupts(&self) {
+        // Safety: We own the UART structure
+        enable_tx_interrupts(unsafe { Uart::reg_block() });
+    }
+
+    /// Disables the IRQ_TX, IRQ_TX_STATUS and IRQ_TX_EMPTY interrupts.
+    ///
+    /// [Self::enable_interrupts] documents the interrupts.
+    #[inline]
+    pub fn disable_interrupts(&self) {
+        // Safety: We own the UART structure
+        disable_tx_interrupts(unsafe { Uart::reg_block() });
     }
 
     /// Low level function to write a word to the UART FIFO.
@@ -905,6 +1045,11 @@ impl<Uart: Instance> Tx<Uart> {
     #[inline(always)]
     pub fn write_fifo_unchecked(&self, data: u32) {
         self.0.data().write(|w| unsafe { w.bits(data) });
+    }
+
+    #[inline]
+    pub fn into_async(self) -> TxAsync<Uart> {
+        TxAsync::new(self)
     }
 }
 
@@ -1233,3 +1378,9 @@ impl<Uart: Instance> RxWithInterrupt<Uart> {
         self.0.release()
     }
 }
+
+pub mod tx_asynch;
+pub use tx_asynch::*;
+
+pub mod rx_asynch;
+pub use rx_asynch::*;

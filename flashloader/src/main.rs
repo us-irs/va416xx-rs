@@ -171,10 +171,10 @@ mod app {
         let rx = gpiog.pg1.into_funsel_1();
 
         let uart0 = Uart::new(
+            &mut cx.device.sysconfig,
             cx.device.uart0,
             (tx, rx),
             Hertz::from_raw(UART_BAUDRATE),
-            &mut cx.device.sysconfig,
             &clocks,
         );
         let (tx, rx) = uart0.split();

@@ -79,10 +79,10 @@ async fn main(spawner: Spawner) {
     let rx = portg.pg1.into_funsel_1();
 
     let uart0 = uart::Uart::new(
+        &mut dp.sysconfig,
         dp.uart0,
         (tx, rx),
         Hertz::from_raw(BAUDRATE),
-        &mut dp.sysconfig,
         &clocks,
     );
     let (mut tx, rx) = uart0.split();

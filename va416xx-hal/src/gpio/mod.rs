@@ -21,10 +21,54 @@
 //! ## Examples
 //!
 //! - [Blinky example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/blinky.rs)
+
+//==================================================================================================
+//  Errors, Definitions and Constants
+//==================================================================================================
+
+pub const NUM_PINS_PORT_A_TO_F: usize = 16;
+pub const NUM_PINS_PORT_G: usize = 8;
+pub const NUM_GPIO_PINS: usize = NUM_PINS_PORT_A_TO_F * 6 + NUM_PINS_PORT_G;
+pub const NUM_GPIO_PINS_WITH_IRQ: usize = NUM_GPIO_PINS - NUM_PINS_PORT_G;
+
 #[derive(Debug, PartialEq, Eq, thiserror::Error)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[error("pin is masked")]
 pub struct IsMaskedError;
+
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum Port {
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
+    G,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum InterruptEdge {
+    HighToLow,
+    LowToHigh,
+    BothEdges,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum InterruptLevel {
+    Low = 0,
+    High = 1,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum PinState {
+    Low = 0,
+    High = 1,
+}
 
 pub mod pin;
 pub use pin::*;
@@ -32,4 +76,5 @@ pub use pin::*;
 pub mod dynpin;
 pub use dynpin::*;
 
-mod reg;
+pub mod asynch;
+pub use asynch::*;

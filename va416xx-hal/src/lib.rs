@@ -35,6 +35,7 @@ compile_error!(
 "
 );
 
+use gpio::Port;
 pub use va416xx as device;
 pub use va416xx as pac;
 
@@ -71,20 +72,52 @@ pub enum FunSel {
     Sel3 = 0b11,
 }
 
+#[derive(Debug, PartialEq, Eq, thiserror::Error)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[error("invalid pin with number {0}")]
+pub struct InvalidPinError(u8);
+
+/// Can be used to manually manipulate the function select of port pins.
+///
+/// The function selection table can be found on p.286 of the programmers guide. Please note
+/// that most of the structures and APIs in this library will automatically correctly configure
+/// the pin or statically expect the correct pin type.
+#[inline]
+pub fn port_function_select(
+    ioconfig: &mut pac::Ioconfig,
+    port: Port,
+    pin: u8,
+    funsel: FunSel,
+) -> Result<(), InvalidPinError> {
+    if (port == Port::G && pin >= 8) || pin >= 16 {
+        return Err(InvalidPinError(pin));
+    }
+    let reg_block = match port {
+        Port::A => ioconfig.porta(pin as usize),
+        Port::B => ioconfig.portb0(pin as usize),
+        Port::C => ioconfig.portc0(pin as usize),
+        Port::D => ioconfig.portd0(pin as usize),
+        Port::E => ioconfig.porte0(pin as usize),
+        Port::F => ioconfig.portf0(pin as usize),
+        Port::G => ioconfig.portg0(pin as usize),
+    };
+
+    reg_block.modify(|_, w| unsafe { w.funsel().bits(funsel as u8) });
+    Ok(())
+}
+
 /// Enable a specific interrupt using the NVIC peripheral.
 ///
 /// # Safety
 ///
 /// This function is `unsafe` because it can break mask-based critical sections.
 #[inline]
-pub unsafe fn enable_interrupt(irq: pac::Interrupt) {
-    unsafe {
-        cortex_m::peripheral::NVIC::unmask(irq);
-    }
+pub unsafe fn enable_nvic_interrupt(irq: pac::Interrupt) {
+    cortex_m::peripheral::NVIC::unmask(irq);
 }
 
 /// Disable a specific interrupt using the NVIC peripheral.
 #[inline]
-pub fn disable_interrupt(irq: pac::Interrupt) {
+pub fn disable_nvic_interrupt(irq: pac::Interrupt) {
     cortex_m::peripheral::NVIC::mask(irq);
 }

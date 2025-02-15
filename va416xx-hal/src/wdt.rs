@@ -9,7 +9,7 @@ use crate::{
     pac,
     prelude::SyscfgExt,
 };
-use crate::{disable_interrupt, enable_interrupt};
+use crate::{disable_nvic_interrupt, enable_nvic_interrupt};
 
 pub const WDT_UNLOCK_VALUE: u32 = 0x1ACC_E551;
 
@@ -30,12 +30,12 @@ pub type WdtController = Wdt;
 /// This function is `unsafe` because it can break mask-based critical sections.
 #[inline]
 pub unsafe fn enable_wdt_interrupts() {
-    enable_interrupt(pac::Interrupt::WATCHDOG)
+    enable_nvic_interrupt(pac::Interrupt::WATCHDOG)
 }
 
 #[inline]
 pub fn disable_wdt_interrupts() {
-    disable_interrupt(pac::Interrupt::WATCHDOG)
+    disable_nvic_interrupt(pac::Interrupt::WATCHDOG)
 }
 
 impl Wdt {

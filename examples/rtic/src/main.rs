@@ -10,7 +10,6 @@ const EXTCLK_FREQ: Hertz = Hertz::from_raw(40_000_000);
 mod app {
     use super::*;
     use cortex_m::asm;
-    use embedded_hal::digital::StatefulOutputPin;
     use panic_rtt_target as _;
     use rtic_monotonics::systick::prelude::*;
     use rtic_monotonics::Monotonic;
@@ -64,7 +63,7 @@ mod app {
     )]
     async fn blinky(cx: blinky::Context) {
         loop {
-            cx.local.led.toggle().ok();
+            cx.local.led.toggle();
             Mono::delay(200.millis()).await;
         }
     }

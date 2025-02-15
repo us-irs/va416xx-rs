@@ -16,7 +16,6 @@ use embassy_executor::Spawner;
 use embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex;
 use embassy_sync::blocking_mutex::Mutex;
 use embassy_time::{Duration, Ticker};
-use embedded_hal::digital::StatefulOutputPin;
 use embedded_io::Write;
 use panic_rtt_target as _;
 use ringbuf::{
@@ -119,7 +118,7 @@ async fn main(spawner: Spawner) {
 async fn blinky(mut led: Pin<PG5, OutputReadablePushPull>) {
     let mut ticker = Ticker::every(Duration::from_millis(500));
     loop {
-        led.toggle().ok();
+        led.toggle();
         ticker.next().await;
     }
 }

@@ -353,7 +353,7 @@
         {
             "type": "cortex-debug",
             "request": "launch",
-            "name": "UART Echo with IRQ",
+            "name": "UART Line Terminated Example",
             "servertype": "jlink",
             "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
             "cwd": "${workspaceRoot}",
@@ -486,6 +486,96 @@
                 "load",
             ],
             "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/rtic-example",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Async GPIO Example",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "async-gpio",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/async-gpio",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Async UART TX Example",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "async-uart-tx",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/async-uart-tx",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "port": 0,
+                        "timestamp": true,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Async UART RX Example",
+            "servertype": "jlink",
+            "jlinkscript": "${workspaceFolder}/jlink/JLinkSettings.JLinkScript",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M4",
+            "svdFile": "${workspaceFolder}/va416xx/svd/va416xx.svd.patched",
+            "preLaunchTask": "async-uart-rx",
+            "overrideLaunchCommands": [
+                "monitor halt",
+                "monitor reset",
+                "load",
+            ],
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/async-uart-rx",
             "interface": "swd",
             "runToEntryPoint": "main",
             "rttConfig": {

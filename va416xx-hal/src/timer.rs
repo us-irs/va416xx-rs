@@ -24,8 +24,7 @@ use crate::gpio::{
 
 use crate::time::Hertz;
 use crate::typelevel::Sealed;
-use crate::{disable_interrupt, prelude::*};
-use crate::{enable_interrupt, pac};
+use crate::{disable_nvic_interrupt, enable_nvic_interrupt, pac, prelude::*};
 
 pub static MS_COUNTER: Mutex<Cell<u32>> = Mutex::new(Cell::new(0));
 
@@ -406,7 +405,7 @@ pub type TimRegBlock = pac::tim0::RegisterBlock;
 ///
 /// # Safety
 ///
-/// Users should only implement the [`tim_id`] function. No default function
+/// Users should only implement the [Self::tim_id] function. No default function
 /// implementations should be overridden. The implementing type must also have
 /// "control" over the corresponding pin ID, i.e. it must guarantee that a each
 /// pin ID is a singleton.
@@ -590,7 +589,7 @@ impl<Tim: ValidTim> CountdownTimer<Tim> {
     pub fn listen(&mut self) {
         self.listening = true;
         self.enable_interrupt();
-        unsafe { enable_interrupt(Tim::IRQ) }
+        unsafe { enable_nvic_interrupt(Tim::IRQ) }
     }
 
     /// Return `Ok` if the timer has wrapped. Peripheral will automatically clear the
@@ -618,7 +617,7 @@ impl<Tim: ValidTim> CountdownTimer<Tim> {
     pub fn unlisten(&mut self) {
         self.listening = true;
         self.disable_interrupt();
-        disable_interrupt(Tim::IRQ);
+        disable_nvic_interrupt(Tim::IRQ);
     }
 
     #[inline(always)]

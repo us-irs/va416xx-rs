@@ -1,4 +1,4 @@
-use crate::{enable_interrupt, pac};
+use crate::{enable_nvic_interrupt, pac};
 
 #[inline(always)]
 pub fn enable_rom_scrub(syscfg: &mut pac::Sysconfig, counter_reset: u16) {
@@ -26,7 +26,7 @@ pub fn enable_ram1_scrub(syscfg: &mut pac::Sysconfig, counter_reset: u16) {
 #[inline(always)]
 pub fn enable_sbe_irq() {
     unsafe {
-        enable_interrupt(pac::Interrupt::EDAC_SBE);
+        enable_nvic_interrupt(pac::Interrupt::EDAC_SBE);
     }
 }
 
@@ -35,7 +35,7 @@ pub fn enable_sbe_irq() {
 #[inline(always)]
 pub fn enable_mbe_irq() {
     unsafe {
-        enable_interrupt(pac::Interrupt::EDAC_MBE);
+        enable_nvic_interrupt(pac::Interrupt::EDAC_MBE);
     }
 }
 

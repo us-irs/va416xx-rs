@@ -9,31 +9,24 @@ cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
 cortex-m-rt = "0.7"
 embedded-hal = "1"
 embedded-io = "0.6"
+embedded-hal-async = "1"
+embedded-io-async = "0.6"
 
 rtt-target = { version = "0.5" }
 panic-rtt-target = { version = "0.1" }
 critical-section = "1"
+once_cell = { version = "1", default-features = false, features = ["critical-section"] }
+ringbuf = { version = "0.4", default-features = false }
 
-embassy-sync = { version = "0.6" }
-embassy-time = { version = "0.4" }
+embassy-sync = "0.6"
+embassy-time = "0.4"
+embassy-executor = { version = "0.7", features = [
+  "arch-cortex-m",
+  "executor-thread",
+  "executor-interrupt"
+]}
+
 va416xx-embassy = { path = "../../va416xx-embassy", default-features = false }
-
-[dependencies.ringbuf]
-version = "0.4"
-default-features = false
-
-[dependencies.once_cell]
-version = "1"
-default-features = false
-features = ["critical-section"]
-
-[dependencies.embassy-executor]
-version = "0.7"
-features = [
-    "arch-cortex-m",
-    "executor-thread",
-    "executor-interrupt",
-]
 
 [dependencies.va416xx-hal]
 path = "../../va416xx-hal"

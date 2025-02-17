@@ -14,7 +14,7 @@ pub mod accelerometer {
     use lis2dh12::{self, detect_i2c_addr, AddrDetectionError, Lis2dh12};
     use va416xx_hal::{
         clock::Clocks,
-        i2c::{self, ClockTooSlowForFastI2c, I2cMaster, I2cSpeed, MasterConfig},
+        i2c::{self, ClockTooSlowForFastI2cError, I2cMaster, I2cSpeed, MasterConfig},
         pac,
     };
 
@@ -23,7 +23,7 @@ pub mod accelerometer {
 
     #[derive(Debug)]
     pub enum ConstructorError {
-        ClkError(ClockTooSlowForFastI2c),
+        ClkError(ClockTooSlowForFastI2cError),
         AddrDetectionError(AddrDetectionError<i2c::Error>),
         AccelerometerError(lis2dh12::Error<i2c::Error>),
     }

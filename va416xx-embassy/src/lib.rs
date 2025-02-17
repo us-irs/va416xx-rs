@@ -50,7 +50,7 @@ use embassy_time_queue_utils::Queue;
 use once_cell::sync::OnceCell;
 use va416xx_hal::{
     clock::Clocks,
-    enable_interrupt,
+    enable_nvic_interrupt,
     irq_router::enable_and_init_irq_router,
     pac::{self, interrupt},
     pwm::ValidTim,
@@ -207,7 +207,7 @@ impl TimerDriver {
             .write(|w| unsafe { w.bits(u32::MAX) });
         // Switch on. Timekeeping should always be done.
         unsafe {
-            enable_interrupt(TimekeeperTim::IRQ);
+            enable_nvic_interrupt(TimekeeperTim::IRQ);
         }
         timekeeper_tim_regs
             .ctrl()
@@ -224,7 +224,7 @@ impl TimerDriver {
         });
         // Enable general interrupts. The IRQ enable of the peripheral remains cleared.
         unsafe {
-            enable_interrupt(AlarmTim::IRQ);
+            enable_nvic_interrupt(AlarmTim::IRQ);
         }
     }
 

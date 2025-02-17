@@ -16,6 +16,7 @@ cortex-m-rt = "0.7"
 embedded-hal = "1"
 
 [dependencies.va416xx-hal]
+path = "../va416xx-hal"
 features = ["va41630"]
 version = ">=0.3, <0.4"
 

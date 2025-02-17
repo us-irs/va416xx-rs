@@ -1,7 +1,7 @@
 //! # API for the UART peripheral
 //!
 //! The core of this API are the [Uart], [UartBase], [Rx] and [Tx] structures.
-//! The RX structure also has a dedicated [RxWithIrq] variant which allows reading the receiver
+//! The RX structure also has a dedicated [RxWithInterrupt] variant which allows reading the receiver
 //! using interrupts.
 //!
 //! ## Examples
@@ -18,7 +18,7 @@ use fugit::RateExtU32;
 use crate::clock::{Clocks, PeripheralSelect, SyscfgExt};
 use crate::gpio::PF13;
 use crate::time::Hertz;
-use crate::{disable_interrupt, enable_interrupt};
+use crate::{disable_nvic_interrupt, enable_nvic_interrupt};
 use crate::{
     gpio::{
         AltFunc1, AltFunc2, AltFunc3, Pin, PA2, PA3, PB14, PB15, PC14, PC4, PC5, PD11, PD12, PE2,
@@ -580,7 +580,7 @@ impl<Uart: Instance> UartBase<Uart> {
             w.rxenable().clear_bit();
             w.txenable().clear_bit()
         });
-        disable_interrupt(Uart::IRQ_RX);
+        disable_nvic_interrupt(Uart::IRQ_RX);
         self.uart
     }
 
@@ -975,7 +975,7 @@ impl<Uart: Instance> RxWithInterrupt<Uart> {
     pub fn start(&mut self) {
         self.0.enable();
         self.enable_rx_irq_sources(true);
-        unsafe { enable_interrupt(Uart::IRQ_RX) };
+        unsafe { enable_nvic_interrupt(Uart::IRQ_RX) };
     }
 
     #[inline(always)]

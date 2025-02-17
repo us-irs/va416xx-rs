@@ -3,7 +3,6 @@
 #![no_std]
 
 use cortex_m_rt::entry;
-use embedded_hal::digital::StatefulOutputPin;
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 use va416xx_hal::{gpio::PinsG, pac};
@@ -18,6 +17,6 @@ fn main() -> ! {
     let mut led = portg.pg5.into_readable_push_pull_output();
     loop {
         cortex_m::asm::delay(2_000_000);
-        led.toggle().ok();
+        led.toggle();
     }
 }

@@ -5,7 +5,7 @@
 //! - [Simple DMA example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/dma.rs)
 use crate::{
     clock::{PeripheralClock, PeripheralSelect},
-    enable_interrupt, pac,
+    enable_nvic_interrupt, pac,
     prelude::*,
 };
 
@@ -266,7 +266,7 @@ impl DmaChannel {
     ///
     /// This function is `unsafe` because it can break mask-based critical sections.
     pub unsafe fn enable_done_interrupt(&mut self) {
-        enable_interrupt(self.done_interrupt);
+        enable_nvic_interrupt(self.done_interrupt);
     }
 
     /// Enables the DMA_ACTIVE interrupt for the DMA channel.
@@ -275,7 +275,7 @@ impl DmaChannel {
     ///
     /// This function is `unsafe` because it can break mask-based critical sections.
     pub unsafe fn enable_active_interrupt(&mut self) {
-        enable_interrupt(self.active_interrupt);
+        enable_nvic_interrupt(self.active_interrupt);
     }
 
     /// Prepares a 8-bit DMA transfer from memory to memory.

@@ -68,45 +68,18 @@
 //! # Embedded HAL traits
 //!
 //! This module implements all of the embedded HAL GPIO traits for each [`Pin`]
-//! in the corresponding [`PinMode`]s, namely: [`InputPin`], [`OutputPin`],
-//! and [`StatefulOutputPin`].
+//! in the corresponding [`PinMode`]s, namely: [embedded_hal::digital::InputPin],
+//! [embedded_hal::digital::OutputPin] and [embedded_hal::digital::StatefulOutputPin].
 use core::{convert::Infallible, marker::PhantomData, mem::transmute};
 
 pub use crate::clock::FilterClkSel;
 use crate::typelevel::Sealed;
-use embedded_hal::digital::{ErrorType, InputPin, OutputPin, StatefulOutputPin};
-use va416xx::{Porta, Portb, Portc, Portd, Porte, Portf, Portg};
+use va416xx::{self as pac, Porta, Portb, Portc, Portd, Porte, Portf, Portg};
 
 use super::{
-    reg::RegisterInterface, DynAlternate, DynGroup, DynInput, DynOutput, DynPin, DynPinId,
-    DynPinMode,
+    DynAlternate, DynInput, DynOutput, DynPin, DynPinId, DynPinMode, InputPinAsync, InterruptEdge,
+    InterruptLevel, PinState, Port, PortGDoesNotSupportAsyncError,
 };
-
-//==================================================================================================
-//  Errors and Definitions
-//==================================================================================================
-
-#[derive(Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum InterruptEdge {
-    HighToLow,
-    LowToHigh,
-    BothEdges,
-}
-
-#[derive(Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum InterruptLevel {
-    Low = 0,
-    High = 1,
-}
-
-#[derive(Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum PinState {
-    Low = 0,
-    High = 1,
-}
 
 //==================================================================================================
 // Input configuration
@@ -296,10 +269,11 @@ impl<C: AlternateConfig> PinMode for Alternate<C> {
 pub trait PinId: Sealed {
     /// Corresponding [DynPinId]
     const DYN: DynPinId;
+    const IRQ: Option<pac::Interrupt>;
 }
 
 macro_rules! pin_id {
-    ($Group:ident, $Id:ident, $NUM:literal $(, $meta: meta)?) => {
+    ($Port:ident, $Id:ident, $NUM:literal, $Irq:expr, $(, $meta: meta)?) => {
         // Need paste macro to use ident in doc attribute
         paste::paste! {
             $(#[$meta])?
@@ -311,10 +285,8 @@ macro_rules! pin_id {
 
             $(#[$meta])?
             impl PinId for $Id {
-                const DYN: DynPinId = DynPinId {
-                    group: DynGroup::$Group,
-                    num: $NUM,
-                };
+                const DYN: DynPinId = DynPinId::new(Port::$Port, $NUM);
+                const IRQ: Option<pac::Interrupt> = $Irq;
             }
         }
     };
@@ -340,7 +312,7 @@ impl<I: PinId, M: PinMode> Pin<I, M> {
     /// at most one corresponding [`Pin`] in existence at any given time.
     /// Violating this requirement is `unsafe`.
     #[inline]
-    pub(crate) unsafe fn new() -> Pin<I, M> {
+    pub(crate) const unsafe fn new() -> Pin<I, M> {
         Pin {
             inner: DynPin::new(I::DYN, M::DYN),
             mode: PhantomData,
@@ -348,8 +320,13 @@ impl<I: PinId, M: PinMode> Pin<I, M> {
     }
 
     #[inline]
-    pub fn id(&self) -> DynPinId {
+    pub const fn id(&self) -> DynPinId {
         self.inner.id()
+    }
+
+    #[inline(always)]
+    pub const fn irq_id(&self) -> Option<pac::Interrupt> {
+        I::IRQ
     }
 
     /// Convert the pin to the requested [`PinMode`]
@@ -358,25 +335,25 @@ impl<I: PinId, M: PinMode> Pin<I, M> {
         // Only modify registers if we are actually changing pin mode
         // This check should compile away
         if N::DYN != M::DYN {
-            self.inner.regs.change_mode(N::DYN);
+            self.inner.change_mode(N::DYN);
         }
         // Safe because we drop the existing Pin
         unsafe { Pin::new() }
     }
 
-    /// Configure the pin for function select 1. See Programmer Guide p.40 for the function table
+    /// Configure the pin for function select 1. See Programmer Guide p. 286 for the function table
     #[inline]
     pub fn into_funsel_1(self) -> Pin<I, AltFunc1> {
         self.into_mode()
     }
 
-    /// Configure the pin for function select 2. See Programmer Guide p.40 for the function table
+    /// Configure the pin for function select 2. See Programmer Guide p. 286 for the function table
     #[inline]
     pub fn into_funsel_2(self) -> Pin<I, AltFunc2> {
         self.into_mode()
     }
 
-    /// Configure the pin for function select 3. See Programmer Guide p.40 for the function table
+    /// Configure the pin for function select 3. See Programmer Guide p. 286 for the function table
     #[inline]
     pub fn into_funsel_3(self) -> Pin<I, AltFunc3> {
         self.into_mode()
@@ -419,6 +396,16 @@ impl<I: PinId, M: PinMode> Pin<I, M> {
     }
 
     #[inline]
+    pub fn is_low(&self) -> bool {
+        !self.inner.read_pin()
+    }
+
+    #[inline]
+    pub fn is_high(&self) -> bool {
+        self.inner.read_pin()
+    }
+
+    #[inline]
     pub fn datamask(&self) -> bool {
         self.inner.datamask()
     }
@@ -444,42 +431,40 @@ impl<I: PinId, M: PinMode> Pin<I, M> {
     }
 
     #[inline]
-    pub fn set_high_masked(&mut self) -> Result<(), crate::gpio::IsMaskedError> {
-        self.inner.set_high_masked()
-    }
-
-    #[inline]
-    pub fn set_low_masked(&mut self) -> Result<(), crate::gpio::IsMaskedError> {
-        self.inner.set_low_masked()
-    }
-
-    #[inline]
     pub fn downgrade(self) -> DynPin {
         self.inner
     }
 
-    fn irq_enb(&mut self) {
-        self.inner.irq_enb();
+    // Those only serve for the embedded HAL implementations which have different mutability.
+
+    #[inline]
+    fn is_low_mut(&mut self) -> bool {
+        self.is_low()
     }
 
     #[inline]
-    pub(crate) fn _set_high(&mut self) {
-        self.inner.regs.write_pin(true)
+    fn is_high_mut(&mut self) -> bool {
+        self.is_high()
     }
 
     #[inline]
-    pub(crate) fn _set_low(&mut self) {
-        self.inner.regs.write_pin(false)
+    pub fn enable_interrupt(&mut self) {
+        self.inner.enable_interrupt();
     }
 
     #[inline]
-    pub(crate) fn _is_low(&self) -> bool {
-        !self.inner.regs.read_pin()
+    pub fn disable_interrupt(&mut self) {
+        self.inner.disable_interrupt();
     }
 
-    #[inline]
-    pub(crate) fn _is_high(&self) -> bool {
-        self.inner.regs.read_pin()
+    /// Configure the pin for an edge interrupt but does not enable the interrupt.
+    pub fn configure_edge_interrupt(&mut self, edge_type: InterruptEdge) {
+        self.inner.configure_edge_interrupt(edge_type).unwrap();
+    }
+
+    /// Configure the pin for a level interrupt but does not enable the interrupt.
+    pub fn configure_level_interrupt(&mut self, level_type: InterruptLevel) {
+        self.inner.configure_level_interrupt(level_type).unwrap();
     }
 }
 
@@ -571,56 +556,61 @@ impl<P: AnyPin> AsMut<P> for SpecificPin<P> {
 //==================================================================================================
 
 impl<I: PinId, C: InputConfig> Pin<I, Input<C>> {
-    pub fn configure_edge_interrupt(&mut self, edge_type: InterruptEdge) {
-        self.inner.regs.configure_edge_interrupt(edge_type);
-        self.irq_enb();
-    }
-
-    pub fn configure_interrupt_level(&mut self, level_type: InterruptLevel) {
-        self.inner.regs.configure_level_interrupt(level_type);
-        self.irq_enb();
+    /// Convert the pin into an async pin. The pin can be converted back by calling
+    /// [InputPinAsync::release]
+    pub fn into_async_input(self) -> Result<InputPinAsync<I, C>, PortGDoesNotSupportAsyncError> {
+        InputPinAsync::new(self)
     }
 }
 
 impl<I: PinId, C: OutputConfig> Pin<I, Output<C>> {
-    /// See p.53 of the programmers guide for more information.
+    #[inline]
+    pub fn set_high(&mut self) {
+        self.inner.write_pin(true)
+    }
+
+    #[inline]
+    pub fn set_low(&mut self) {
+        self.inner.write_pin(false)
+    }
+
+    #[inline]
+    pub fn toggle(&mut self) {
+        self.inner.toggle().unwrap()
+    }
+
+    #[inline]
+    pub fn set_high_masked(&mut self) -> Result<(), crate::gpio::IsMaskedError> {
+        self.inner.set_high_masked()
+    }
+
+    #[inline]
+    pub fn set_low_masked(&mut self) -> Result<(), crate::gpio::IsMaskedError> {
+        self.inner.set_low_masked()
+    }
+
     /// Possible delays in clock cycles:
     ///  - Delay 1: 1
     ///  - Delay 2: 2
     ///  - Delay 1 + Delay 2: 3
     #[inline]
     pub fn configure_delay(&mut self, delay_1: bool, delay_2: bool) {
-        self.inner.regs.configure_delay(delay_1, delay_2);
+        self.inner.configure_delay(delay_1, delay_2).unwrap();
     }
 
-    #[inline]
-    pub fn toggle_with_toggle_reg(&mut self) {
-        self.inner.regs.toggle()
-    }
-
-    /// See p.52 of the programmers guide for more information.
     /// When configured for pulse mode, a given pin will set the non-default state for exactly
     /// one clock cycle before returning to the configured default state
     pub fn configure_pulse_mode(&mut self, enable: bool, default_state: PinState) {
-        self.inner.regs.configure_pulse_mode(enable, default_state);
-    }
-
-    pub fn configure_edge_interrupt(&mut self, edge_type: InterruptEdge) {
-        self.inner.regs.configure_edge_interrupt(edge_type);
-        self.irq_enb();
-    }
-
-    pub fn configure_level_interrupt(&mut self, level_type: InterruptLevel) {
-        self.inner.regs.configure_level_interrupt(level_type);
-        self.irq_enb();
+        self.inner
+            .configure_pulse_mode(enable, default_state)
+            .unwrap();
     }
 }
 
 impl<I: PinId, C: InputConfig> Pin<I, Input<C>> {
-    /// See p.37 and p.38 of the programmers guide for more information.
     #[inline]
     pub fn configure_filter_type(&mut self, filter: FilterType, clksel: FilterClkSel) {
-        self.inner.regs.configure_filter_type(filter, clksel);
+        self.inner.configure_filter_type(filter, clksel).unwrap();
     }
 }
 
@@ -628,7 +618,7 @@ impl<I: PinId, C: InputConfig> Pin<I, Input<C>> {
 //  Embedded HAL traits
 //==================================================================================================
 
-impl<I, M> ErrorType for Pin<I, M>
+impl<I, M> embedded_hal::digital::ErrorType for Pin<I, M>
 where
     I: PinId,
     M: PinMode,
@@ -636,63 +626,69 @@ where
     type Error = Infallible;
 }
 
-impl<I: PinId, C: OutputConfig> OutputPin for Pin<I, Output<C>> {
+impl<I: PinId, C: OutputConfig> embedded_hal::digital::OutputPin for Pin<I, Output<C>> {
     #[inline]
     fn set_high(&mut self) -> Result<(), Self::Error> {
-        self._set_high();
+        self.set_high();
         Ok(())
     }
 
     #[inline]
     fn set_low(&mut self) -> Result<(), Self::Error> {
-        self._set_low();
+        self.set_low();
         Ok(())
     }
 }
 
-impl<I, C> InputPin for Pin<I, Input<C>>
+impl<I, C> embedded_hal::digital::InputPin for Pin<I, Input<C>>
 where
     I: PinId,
     C: InputConfig,
 {
     #[inline]
     fn is_high(&mut self) -> Result<bool, Self::Error> {
-        Ok(self._is_high())
+        Ok(self.is_high_mut())
     }
     #[inline]
     fn is_low(&mut self) -> Result<bool, Self::Error> {
-        Ok(self._is_low())
+        Ok(self.is_low_mut())
     }
 }
 
-impl<I, C> StatefulOutputPin for Pin<I, Output<C>>
+impl<I, C> embedded_hal::digital::StatefulOutputPin for Pin<I, Output<C>>
 where
     I: PinId,
     C: OutputConfig + ReadableOutput,
 {
     #[inline]
     fn is_set_high(&mut self) -> Result<bool, Self::Error> {
-        Ok(self._is_high())
+        Ok(self.is_high())
     }
     #[inline]
     fn is_set_low(&mut self) -> Result<bool, Self::Error> {
-        Ok(self._is_low())
+        Ok(self.is_low())
+    }
+
+    #[inline]
+    fn toggle(&mut self) -> Result<(), Self::Error> {
+        self.toggle();
+        Ok(())
     }
 }
 
-impl<I, C> InputPin for Pin<I, Output<C>>
+impl<I, C> embedded_hal::digital::InputPin for Pin<I, Output<C>>
 where
     I: PinId,
     C: OutputConfig + ReadableOutput,
 {
     #[inline]
     fn is_high(&mut self) -> Result<bool, Self::Error> {
-        Ok(self._is_high())
+        Ok(self.is_high_mut())
     }
 
     #[inline]
     fn is_low(&mut self) -> Result<bool, Self::Error> {
-        Ok(self._is_low())
+        Ok(self.is_low_mut())
     }
 }
 
@@ -754,18 +750,31 @@ macro_rules! pins {
     }
 }
 
+macro_rules! declare_pins_with_irq {
+    (
+        $Group:ident, $PinsName:ident, $Port:ident, [$(($Id:ident, $NUM:literal $(, $meta:meta)?)),+]
+    ) => {
+        pins!($Port, $PinsName, $($Id $(, $meta)?)+,);
+        $(
+            paste::paste! {
+                pin_id!($Group, $Id, $NUM, Some(pac::Interrupt::[<$Port:upper $NUM>]), $(, $meta)?);
+            }
+        )+
+    }
+}
+
 macro_rules! declare_pins {
     (
         $Group:ident, $PinsName:ident, $Port:ident, [$(($Id:ident, $NUM:literal $(, $meta:meta)?)),+]
     ) => {
         pins!($Port, $PinsName, $($Id $(, $meta)?)+,);
         $(
-            pin_id!($Group, $Id, $NUM $(, $meta)?);
+            pin_id!($Group, $Id, $NUM, None, $(, $meta)?);
         )+
     }
 }
 
-declare_pins!(
+declare_pins_with_irq!(
     A,
     PinsA,
     Porta,
@@ -789,7 +798,7 @@ declare_pins!(
     ]
 );
 
-declare_pins!(
+declare_pins_with_irq!(
     B,
     PinsB,
     Portb,
@@ -813,7 +822,7 @@ declare_pins!(
     ]
 );
 
-declare_pins!(
+declare_pins_with_irq!(
     C,
     PinsC,
     Portc,
@@ -837,7 +846,7 @@ declare_pins!(
     ]
 );
 
-declare_pins!(
+declare_pins_with_irq!(
     D,
     PinsD,
     Portd,
@@ -861,7 +870,7 @@ declare_pins!(
     ]
 );
 
-declare_pins!(
+declare_pins_with_irq!(
     E,
     PinsE,
     Porte,
@@ -885,7 +894,7 @@ declare_pins!(
     ]
 );
 
-declare_pins!(
+declare_pins_with_irq!(
     F,
     PinsF,
     Portf,

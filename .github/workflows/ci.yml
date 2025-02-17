@@ -10,8 +10,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: "thumbv7em-none-eabihf"
-      - run: cargo check --target thumbv7em-none-eabihf --release
-      - run: cargo check --target thumbv7em-none-eabihf --examples --release
+      - run: cargo check --target thumbv7em-none-eabihf
+      - run: cargo check --target thumbv7em-none-eabihf --examples
+      - run: cargo check -p va416xx --target thumbv7em-none-eabihf --all-features
+      - run: cargo check -p va416xx-hal --target thumbv7em-none-eabihf --examples --features "defmt va41630"
 
   test:
     name: Run Tests

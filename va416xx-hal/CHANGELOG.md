@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [unreleased]
 
-# [v0.4.0] 2025-02-14
+# [v0.4.0]
 
 ## Changed
 
@@ -34,6 +34,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   `disable_nvic_interrupt` to distinguish them from peripheral interrupts more clearly.
 - `port_mux` renamed to `port_function_select`
 - Renamed `IrqUartErrors` to `UartErrors`.
+
+## Added
+
+- Add `downgrade` method for `Pin` and `upgrade` method for `DynPin` as explicit conversion
+  methods.
+- Asynchronous GPIO support.
+- Asynchronous UART TX support.
+- Asynchronous UART RX support.
+- Add new `get_tim_raw` unsafe method to retrieve TIM peripheral blocks.
+- `Uart::with_with_interrupt` and `Uart::new_without_interrupt`
 
 # [v0.3.0] 2024-30-09
 

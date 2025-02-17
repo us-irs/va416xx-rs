@@ -200,6 +200,19 @@
             }
         },
         {
+            "label": "async-gpio",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--bin",
+                "async-gpio"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
             "label": "rtic-example",
             "type": "shell",
             "command": "~/.cargo/bin/cargo", // note: full path to the cargo
@@ -207,6 +220,32 @@
                 "build",
                 "--bin",
                 "rtic-example"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "async-uart-tx",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--bin",
+                "async-uart-tx"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "async-uart-rx",
+            "type": "shell",
+            "command": "~/.cargo/bin/cargo", // note: full path to the cargo
+            "args": [
+                "build",
+                "--bin",
+                "async-uart-rx"
             ],
             "group": {
                 "kind": "build",

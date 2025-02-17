@@ -33,10 +33,10 @@ fn main() -> ! {
     let rx = gpiob.pg1.into_funsel_1();
 
     let uart0 = uart::Uart::new(
+        &mut dp.sysconfig,
         dp.uart0,
         (tx, rx),
         Hertz::from_raw(115200),
-        &mut dp.sysconfig,
         &clocks,
     );
     let (mut tx, mut rx) = uart0.split();

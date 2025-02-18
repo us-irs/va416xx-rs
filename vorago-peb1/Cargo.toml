@@ -1,6 +1,6 @@
 [package]
 name = "vorago-peb1"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Robin Mueller <muellerr@irs.uni-stuttgart.de>"]
 edition = "2021"
 description = "Board Support Crate for the Vorago PEB1 development board"
@@ -14,15 +14,9 @@ categories = ["embedded", "no-std", "hardware-support"]
 cortex-m = "0.7"
 cortex-m-rt = "0.7"
 embedded-hal = "1"
+lis2dh12 = { version = "0.7", features = ["out_f32"] }
 
-[dependencies.va416xx-hal]
-path = "../va416xx-hal"
-features = ["va41630"]
-version = ">=0.3, <=0.4"
-
-[dependencies.lis2dh12]
-version = "0.7"
-features = ["out_f32"]
+va416xx-hal = { version = ">=0.3, <=0.4", features = ["va41630"] }
 
 [features]
 rt = ["va416xx-hal/rt"]

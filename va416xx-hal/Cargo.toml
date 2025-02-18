@@ -23,9 +23,9 @@ embedded-io-async = "0.6"
 num_enum = { version = "0.7", default-features = false }
 typenum = "1"
 bitflags = "2"
-bitfield = "0.17"
+bitfield = { version = ">=0.17, <=0.18"}
 fugit = "0.3"
-delegate = "0.12"
+delegate = ">=0.12, <=0.13"
 heapless = "0.8"
 void = { version = "1", default-features = false }
 thiserror = { version = "2", default-features = false }

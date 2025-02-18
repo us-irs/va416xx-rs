@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [unreleased]
 
-# [v0.4.0]
+# [v0.4.0] 2025-02-18
 
 ## Changed
 
@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Asynchronous UART RX support.
 - Add new `get_tim_raw` unsafe method to retrieve TIM peripheral blocks.
 - `Uart::with_with_interrupt` and `Uart::new_without_interrupt`
+- A lot of missing `defmt::Format` implementations.
 
 # [v0.3.0] 2024-30-09
 

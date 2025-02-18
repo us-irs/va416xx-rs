@@ -136,13 +136,13 @@ pub unsafe fn init<
     alarm: AlarmTim,
     clocks: &Clocks,
 ) {
-    #[cfg(feature = "irqs-in-lib")]
+    #[cfg(feature = "_irqs-in-lib")]
     assert_eq!(
         TimekeeperTim::ID,
         TIMEKEEPER_IRQ as u8 - TIM_IRQ_OFFSET as u8,
         "Timekeeper TIM and IRQ missmatch"
     );
-    #[cfg(feature = "irqs-in-lib")]
+    #[cfg(feature = "_irqs-in-lib")]
     assert_eq!(
         AlarmTim::ID,
         ALARM_IRQ as u8 - TIM_IRQ_OFFSET as u8,

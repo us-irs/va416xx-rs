@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [unreleased]
 
+# [v0.4.1] 2025-02-18
+
+- Chip selection is not enforced anymore, but advised through documentation. This makes using
+  the HAL in libraries a lot easier.
+
 # [v0.4.0] 2025-02-18
 
 ## Changed

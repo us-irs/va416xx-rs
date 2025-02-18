@@ -21,17 +21,20 @@ portable-atomic = "1"
 
 once_cell = { version = "1", default-features = false, features = ["critical-section"] }
 
-va416xx-hal = { version = "0.4" }
+va416xx-hal = { version = "0.4", path = "../va416xx-hal" }
 
 [features]
 default = ["irq-tim14-tim15"]
-irqs-in-lib = []
+
 # This determines the reserved interrupt functions for the embassy time drivers. Only one
 # is allowed to be selected!
-irq-tim14-tim15 = ["irqs-in-lib"]
-irq-tim13-tim14 = ["irqs-in-lib"]
+irq-tim14-tim15 = ["_irqs-in-lib"]
+irq-tim13-tim14 = ["_irqs-in-lib"]
 # These TIMs are clocked slower!
-irq-tim22-tim23 = ["irqs-in-lib"]
+irq-tim22-tim23 = ["_irqs-in-lib"]
+
+# Private feature.
+_irqs-in-lib = []
 
 [package.metadata.docs.rs]
 rustdoc-args = ["--generate-link-to-definition"]

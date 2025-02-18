@@ -11,13 +11,16 @@ raw PAC. This crate also implements traits specified by the
 [embedded-hal](https://github.com/rust-embedded/embedded-hal) project, making it compatible with
 various drivers in the embedded rust ecosystem.
 
-You have to enable one of the following device features to use this crate depending on
-which chip you are using:
+It is generally advised to enable ONE of the following device features to use this crate
+depending on which chip you are using:
 
 - `va41630`
 - `va41629`
 - `va41628`
 - `va41620`
+
+If no chip is specified, only access to APIs which are common for all families or
+which are not disabled for specific families is granted.
 
 ## Building
 

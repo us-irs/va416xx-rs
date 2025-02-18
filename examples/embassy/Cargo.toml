@@ -28,7 +28,7 @@ embassy-executor = { version = "0.7", features = [
   "executor-interrupt"
 ]}
 
-va416xx-hal = { version = "0.4", features = ["va41630"] }
+va416xx-hal = { version = "0.4", path = "../../va416xx-hal" }
 va416xx-embassy = { path = "../../va416xx-embassy", default-features = false }
 
 [features]

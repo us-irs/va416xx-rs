@@ -1,6 +1,6 @@
 [package]
 name = "va416xx-hal"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Robin Mueller <muellerr@irs.uni-stuttgart.de>"]
 edition = "2021"
 description = "HAL for the Vorago VA416xx family of MCUs"
@@ -31,14 +31,9 @@ void = { version = "1", default-features = false }
 thiserror = { version = "2", default-features = false }
 portable-atomic = "1"
 embassy-sync = "0.6"
+va416xx = { version = "0.4", features = ["critical-section"], default-features = false }
 
 defmt = { version = "0.3", optional = true }
-
-[dependencies.va416xx]
-default-features = false
-path = "../va416xx"
-version = "0.4"
-features = ["critical-section"]
 
 [features]
 default = ["rt", "revb"]

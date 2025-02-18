@@ -21,7 +21,7 @@ portable-atomic = "1"
 
 once_cell = { version = "1", default-features = false, features = ["critical-section"] }
 
-va416xx-hal = { version = "0.3", path = "../va416xx-hal" }
+va416xx-hal = { version = "0.4", path = "../va416xx-hal" }
 
 [features]
 default = ["irq-tim14-tim15"]

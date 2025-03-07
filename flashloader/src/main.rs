@@ -256,7 +256,7 @@ mod app {
         match cx
             .local
             .uart_rx
-            .irq_handler_max_size_or_timeout_based(cx.local.rx_context, cx.local.rx_buf)
+            .on_interrupt_max_size_or_timeout_based(cx.local.rx_context, cx.local.rx_buf)
         {
             Ok(result) => {
                 if RX_DEBUGGING {

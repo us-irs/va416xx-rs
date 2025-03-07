@@ -22,7 +22,7 @@ once_cell = { version = "1", default-features = false, features = ["critical-sec
 spacepackets = { version = "0.13", default-features = false }
 cobs = { version = "0.3", default-features = false }
 
-va416xx-hal = { version = "0.4", features = ["va41630"] }
+va416xx-hal = { version = "0.5", features = ["va41630"] }
 
 rtic = { version = "2", features = ["thumbv7-backend"] }
 rtic-monotonics = { version = "2", features = ["cortex-m-systick"] }

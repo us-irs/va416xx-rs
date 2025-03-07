@@ -16,7 +16,7 @@ embedded-io = "0.6"
 panic-halt = "1"
 accelerometer = "0.12"
 
-va416xx-hal = { version = "0.5", features = ["va41630"], path = "../../va416xx-hal" }
+va416xx-hal = { version = "0.5", features = ["va41630"] }
 
 [dependencies.vorago-peb1]
 path = "../../vorago-peb1"

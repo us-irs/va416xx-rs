@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [unreleased]
 
+# [v0.1.2] 2025-03-07
+
+- Bump allowed HAL version to v0.5
+
 # [v0.1.1] 2025-02-18
 
 - Bump allowed HAL version to v0.4
@@ -15,3 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 # [v0.1.0] 2024-10-01
 
 - Initial release
+
+[unreleased]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/vorago-peb1-v0.1.2...HEAD
+[v0.1.2]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/vorago-peb1-v0.1.1...vorago-peb1-v0.1.2
+[v0.1.1]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/vorago-peb1-v0.1.0...vorago-peb1-v0.1.1
+[v0.1.0]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/tag/vorago-peb1-v0.1.0

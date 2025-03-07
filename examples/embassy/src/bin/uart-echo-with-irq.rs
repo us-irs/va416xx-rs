@@ -132,7 +132,7 @@ fn UART0_RX() {
     RX.lock(|static_rx| {
         let mut rx_borrow = static_rx.borrow_mut();
         let rx_mut_ref = rx_borrow.as_mut().unwrap();
-        let result = rx_mut_ref.irq_handler(&mut buf);
+        let result = rx_mut_ref.on_interrupt(&mut buf);
         read_len = result.bytes_read;
         if result.errors.is_some() {
             errors = result.errors;

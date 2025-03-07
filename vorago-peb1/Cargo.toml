@@ -16,7 +16,7 @@ cortex-m-rt = "0.7"
 embedded-hal = "1"
 lis2dh12 = { version = "0.7", features = ["out_f32"] }
 
-va416xx-hal = { version = ">=0.3, <=0.4", features = ["va41630"] }
+va416xx-hal = { version = ">=0.3, <=0.5", features = ["va41630"] }
 
 [features]
 rt = ["va416xx-hal/rt"]

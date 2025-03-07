@@ -1,6 +1,6 @@
 [package]
 name = "va416xx-embassy"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Robin Mueller <muellerr@irs.uni-stuttgart.de>"]
 description = "Embassy-rs support for the Vorago VA416xx family of microcontrollers"
@@ -21,7 +21,7 @@ portable-atomic = "1"
 
 once_cell = { version = "1", default-features = false, features = ["critical-section"] }
 
-va416xx-hal = { version = "0.4.1" }
+va416xx-hal = { version = "0.5", path = "../va416xx-hal" }
 
 [features]
 default = ["irq-tim14-tim15"]

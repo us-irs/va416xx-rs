@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [unreleased]
 
+# [v0.5.0] 2025-03-07
+
+- Bugfix for I2C `TimingCfg::reg`
+- Simplified UART error handling. All APIs are now infallible because writing to a FIFO or
+  reading from a FIFO never fails. Users can either poll errors using `Rx::poll_errors` or
+  `Uart::poll_rx_errors` / `UartBase::poll_rx_errors`, or detect errors using the provided
+  interrupt handlers.
+
 # [v0.4.1] 2025-02-18
 
 - Chip selection is not enforced anymore, but advised through documentation. This makes using
@@ -101,3 +109,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 # [v0.1.0] 2024-07-01
 
 - Initial release with basic HAL drivers
+
+[unreleased]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.5.0...HEAD
+[v0.5.0]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.4.1...va416xx-hal-v0.5.0
+[v0.4.1]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.4.0...va416xx-hal-v0.4.1
+[v0.4.0]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.3.0...va416xx-hal-v0.4.0
+[v0.3.0]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.2.0...va108xx-hal-v0.3.0
+[v0.2.0]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.1.0...va108xx-hal-v0.2.0
+[v0.1.0]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/tag/va416xx-hal-v0.1.0

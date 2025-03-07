@@ -212,13 +212,13 @@ impl TimingCfg {
     }
 
     pub fn reg(&self) -> u32 {
-        (self.tbuf as u32) << 28
-            | (self.thd_sta as u32) << 24
-            | (self.tsu_sta as u32) << 20
-            | (self.tsu_sto as u32) << 16
-            | (self.tlow as u32) << 12
-            | (self.thigh as u32) << 8
-            | (self.tf as u32) << 4
+        ((self.tbuf as u32) << 28)
+            | ((self.thd_sta as u32) << 24)
+            | ((self.tsu_sta as u32) << 20)
+            | ((self.tsu_sto as u32) << 16)
+            | ((self.tlow as u32) << 12)
+            | ((self.thigh as u32) << 8)
+            | ((self.tf as u32) << 4)
             | (self.tr as u32)
     }
 }
@@ -390,7 +390,7 @@ impl<I2c: Instance> I2cBase<I2c> {
         if let Some(max_words) = max_words {
             self.i2c
                 .s0_maxwords()
-                .write(|w| unsafe { w.bits(1 << 31 | max_words as u32) });
+                .write(|w| unsafe { w.bits((1 << 31) | max_words as u32) });
         }
         let (addr, addr_mode_mask) = Self::unwrap_addr(sl_cfg.addr);
         // The first bit is the read/write value. Normally, both read and write are matched
@@ -451,7 +451,7 @@ impl<I2c: Instance> I2cBase<I2c> {
         let clk_div = self.calc_clk_div(speed_mode)?;
         self.i2c
             .clkscale()
-            .write(|w| unsafe { w.bits((speed_mode as u32) << 31 | clk_div as u32) });
+            .write(|w| unsafe { w.bits(((speed_mode as u32) << 31) | clk_div as u32) });
         Ok(())
     }
 

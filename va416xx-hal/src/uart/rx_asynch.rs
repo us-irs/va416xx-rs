@@ -28,7 +28,7 @@ use va416xx::uart0 as uart_base;
 
 use crate::enable_nvic_interrupt;
 
-use super::{Bank, Instance, Rx, RxError, UartErrors};
+use super::{Bank, Instance, Rx, UartErrors};
 
 static UART_RX_WAKERS: [AtomicWaker; 3] = [const { AtomicWaker::new() }; 3];
 static RX_READ_ACTIVE: [AtomicBool; 3] = [const { AtomicBool::new(false) }; 3];
@@ -48,7 +48,7 @@ impl RxFuture {
 }
 
 impl Future for RxFuture {
-    type Output = Result<(), RxError>;
+    type Output = Result<(), Infallible>;
 
     fn poll(
         self: core::pin::Pin<&mut Self>,

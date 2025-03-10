@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [unreleased]
 
+# [v0.5.1] 2025-03-10
+
+## Fixed
+
+- Fix `embedded_io` UART implementation to implement the documented contract properly.
+  The implementation will now block until at least one byte is available or can be written, unless
+  the send or receive buffer is empty.
+
 # [v0.5.0] 2025-03-07
 
 - Bugfix for I2C `TimingCfg::reg`
@@ -111,6 +119,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Initial release with basic HAL drivers
 
 [unreleased]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.5.0...HEAD
+[v0.5.1]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.5.0...va416xx-hal-v0.5.1
 [v0.5.0]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.4.1...va416xx-hal-v0.5.0
 [v0.4.1]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.4.0...va416xx-hal-v0.4.1
 [v0.4.0]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.3.0...va416xx-hal-v0.4.0

@@ -155,3 +155,13 @@ example.
 The Segger RTT viewer can be used to display log messages received from the target. The base
 address for the RTT block placement is 0x1fff8000. It is recommended to use a search range of
 0x1000 around that base address when using the RTT viewer.
+
+## Learning (Embedded) Rust
+
+If you are unfamiliar with Rust on Embedded Systems or Rust in general, the following resources
+are recommended:
+
+- [Rust Book](https://doc.rust-lang.org/book/)
+- [Embedded Rust Book](https://docs.rust-embedded.org/book/)
+- [Embedded Rust Discovery](https://docs.rust-embedded.org/discovery/microbit/)
+- [Awesome Embedded Rust](https://github.com/rust-embedded/awesome-embedded-rust)

@@ -3,6 +3,8 @@
 //! ## Examples
 //!
 //! - [Simple DMA example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/dma.rs)
+use arbitrary_int::{u10, u2, u3, u4};
+
 use crate::{
     clock::{PeripheralClock, PeripheralSelect},
     enable_nvic_interrupt, pac,
@@ -82,34 +84,30 @@ pub enum RPower {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct InvalidCtrlBlockAddrError;
 
-bitfield::bitfield! {
-    #[repr(transparent)]
-    #[derive(Clone, Copy)]
-    #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-    pub struct ChannelConfig(u32);
-    impl Debug;
-    u32;
-    pub raw, set_raw: 31,0;
-    u8;
-    pub dst_inc, set_dst_inc: 31, 30;
-    u8;
-    pub dst_size, set_dst_size: 29, 28;
-    u8;
-    pub src_inc, set_src_inc: 27, 26;
-    u8;
-    pub src_size, set_src_size: 25, 24;
-    u8;
-    pub dest_prot_ctrl, set_dest_prot_ctrl: 23, 21;
-    u8;
-    pub src_prot_ctrl, set_src_prot_ctrl: 20, 18;
-    u8;
-    pub r_power, set_r_power: 17, 14;
-    u16;
-    pub n_minus_1, set_n_minus_1: 13, 4;
-    bool;
-    pub next_useburst, set_next_useburst: 3;
-    u8;
-    pub cycle_ctrl, set_cycle_ctr: 2, 0;
+#[bitbybit::bitfield(u32)]
+#[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ChannelConfig {
+    #[bits(30..=31, rw)]
+    dest_inc: u2,
+    #[bits(28..=29, rw)]
+    dest_size: u2,
+    #[bits(26..=27, rw)]
+    src_inc: u2,
+    #[bits(24..=25, rw)]
+    src_size: u2,
+    #[bits(21..=23, rw)]
+    dest_prot_ctrl: u3,
+    #[bits(18..=20, rw)]
+    src_prot_ctrl: u3,
+    #[bits(14..=17, rw)]
+    r_power: u4,
+    #[bits(4..=13, rw)]
+    n_minus_1: u10,
+    #[bit(3, rw)]
+    next_useburst: bool,
+    #[bits(0..=2, rw)]
+    cycle_ctrl: u3,
 }
 
 #[repr(C)]
@@ -127,7 +125,7 @@ impl DmaChannelControl {
         Self {
             src_end_ptr: 0,
             dest_end_ptr: 0,
-            cfg: ChannelConfig(0),
+            cfg: ChannelConfig::new_with_raw_value(0),
             padding: 0,
         }
     }
@@ -428,20 +426,30 @@ impl DmaChannel {
             return Err(DmaTransferInitError::TransferSizeTooLarge(source.len()));
         }
         let len = source.len() - 1;
-        self.ch_ctrl_pri.cfg.set_raw(0);
+        self.ch_ctrl_pri.cfg = ChannelConfig::new_with_raw_value(0);
         self.ch_ctrl_pri.src_end_ptr = (source.as_ptr() as u32)
             .checked_add(len as u32)
             .ok_or(DmaTransferInitError::AddrOverflow)?;
         self.ch_ctrl_pri.dest_end_ptr = dest as u32;
         self.ch_ctrl_pri
             .cfg
-            .set_cycle_ctr(CycleControl::Basic as u8);
-        self.ch_ctrl_pri.cfg.set_src_size(DataSize::Byte as u8);
-        self.ch_ctrl_pri.cfg.set_src_inc(AddrIncrement::Byte as u8);
-        self.ch_ctrl_pri.cfg.set_dst_size(DataSize::Byte as u8);
-        self.ch_ctrl_pri.cfg.set_dst_inc(AddrIncrement::None as u8);
-        self.ch_ctrl_pri.cfg.set_n_minus_1(len as u16);
-        self.ch_ctrl_pri.cfg.set_r_power(RPower::Every8 as u8);
+            .set_cycle_ctrl(u3::new(CycleControl::Basic as u8));
+        self.ch_ctrl_pri
+            .cfg
+            .set_src_size(u2::new(DataSize::Byte as u8));
+        self.ch_ctrl_pri
+            .cfg
+            .set_src_inc(u2::new(AddrIncrement::Byte as u8));
+        self.ch_ctrl_pri
+            .cfg
+            .set_dest_size(u2::new(DataSize::Byte as u8));
+        self.ch_ctrl_pri
+            .cfg
+            .set_dest_inc(u2::new(AddrIncrement::None as u8));
+        self.ch_ctrl_pri.cfg.set_n_minus_1(u10::new(len as u16));
+        self.ch_ctrl_pri
+            .cfg
+            .set_r_power(u4::new(RPower::Every8 as u8));
         self.select_primary_structure();
         Ok(())
     }
@@ -470,16 +478,22 @@ impl DmaChannel {
         data_size: DataSize,
         addr_incr: AddrIncrement,
     ) {
-        self.ch_ctrl_pri.cfg.set_raw(0);
+        self.ch_ctrl_pri.cfg = ChannelConfig::new_with_raw_value(0);
         self.ch_ctrl_pri.src_end_ptr = src_end_ptr;
         self.ch_ctrl_pri.dest_end_ptr = dest_end_ptr;
-        self.ch_ctrl_pri.cfg.set_cycle_ctr(CycleControl::Auto as u8);
-        self.ch_ctrl_pri.cfg.set_src_size(data_size as u8);
-        self.ch_ctrl_pri.cfg.set_src_inc(addr_incr as u8);
-        self.ch_ctrl_pri.cfg.set_dst_size(data_size as u8);
-        self.ch_ctrl_pri.cfg.set_dst_inc(addr_incr as u8);
-        self.ch_ctrl_pri.cfg.set_n_minus_1(n_minus_one as u16);
-        self.ch_ctrl_pri.cfg.set_r_power(RPower::Every4 as u8);
+        self.ch_ctrl_pri
+            .cfg
+            .set_cycle_ctrl(u3::new(CycleControl::Auto as u8));
+        self.ch_ctrl_pri.cfg.set_src_size(u2::new(data_size as u8));
+        self.ch_ctrl_pri.cfg.set_src_inc(u2::new(addr_incr as u8));
+        self.ch_ctrl_pri.cfg.set_dest_size(u2::new(data_size as u8));
+        self.ch_ctrl_pri.cfg.set_dest_inc(u2::new(addr_incr as u8));
+        self.ch_ctrl_pri
+            .cfg
+            .set_n_minus_1(u10::new(n_minus_one as u16));
+        self.ch_ctrl_pri
+            .cfg
+            .set_r_power(u4::new(RPower::Every4 as u8));
         self.select_primary_structure();
     }
 }

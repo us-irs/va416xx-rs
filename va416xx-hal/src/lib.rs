@@ -48,6 +48,7 @@ pub mod timer;
 pub mod typelevel;
 pub mod uart;
 pub mod wdt;
+pub mod can;
 
 #[cfg(feature = "va41630")]
 pub mod nvm;

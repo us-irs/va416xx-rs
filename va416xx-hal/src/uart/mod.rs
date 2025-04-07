@@ -15,10 +15,10 @@ use core::ops::Deref;
 use embedded_hal_nb::serial::Read;
 use fugit::RateExtU32;
 
-use crate::clock::{Clocks, PeripheralSelect, SyscfgExt};
+use crate::clock::Clocks;
 use crate::gpio::PF13;
 use crate::time::Hertz;
-use crate::{disable_nvic_interrupt, enable_nvic_interrupt};
+use crate::{disable_nvic_interrupt, enable_nvic_interrupt, PeripheralSelect, SyscfgExt as _};
 use crate::{
     gpio::{
         AltFunc1, AltFunc2, AltFunc3, Pin, PA2, PA3, PB14, PB15, PC14, PC4, PC5, PD11, PD12, PE2,
@@ -348,7 +348,7 @@ pub struct BufferTooShortError {
 
 pub trait Instance: Deref<Target = uart_base::RegisterBlock> {
     const IDX: u8;
-    const PERIPH_SEL: PeripheralSelect;
+    const PERIPH_SEL: crate::PeripheralSelect;
     const PTR: *const uart_base::RegisterBlock;
     const IRQ_RX: pac::Interrupt;
     const IRQ_TX: pac::Interrupt;
@@ -636,7 +636,7 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
         config: impl Into<Config>,
         clocks: &Clocks,
     ) -> Self {
-        crate::clock::enable_peripheral_clock(syscfg, UartInstance::PERIPH_SEL);
+        crate::enable_peripheral_clock(syscfg, UartInstance::PERIPH_SEL);
         // This is done in the C HAL.
         syscfg.assert_periph_reset_for_two_cycles(UartInstance::PERIPH_SEL);
         Uart {
@@ -657,7 +657,7 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
         config: impl Into<Config>,
         clock: impl Into<Hertz>,
     ) -> Self {
-        crate::clock::enable_peripheral_clock(syscfg, UartInstance::PERIPH_SEL);
+        crate::enable_peripheral_clock(syscfg, UartInstance::PERIPH_SEL);
         Uart {
             inner: UartBase {
                 uart,

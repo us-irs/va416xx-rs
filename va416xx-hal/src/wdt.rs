@@ -4,12 +4,8 @@
 //!
 //! - [Watchdog simple example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/wdt.rs)
 use crate::time::Hertz;
-use crate::{
-    clock::{Clocks, PeripheralSelect},
-    pac,
-    prelude::SyscfgExt,
-};
-use crate::{disable_nvic_interrupt, enable_nvic_interrupt};
+use crate::{clock::Clocks, pac};
+use crate::{disable_nvic_interrupt, enable_nvic_interrupt, PeripheralSelect, SyscfgExt as _};
 
 pub const WDT_UNLOCK_VALUE: u32 = 0x1ACC_E551;
 

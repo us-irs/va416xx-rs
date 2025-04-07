@@ -5,10 +5,7 @@
 //! - [ADC and DAC example](https://github.com/us-irs/va416xx-rs/blob/main/examples/simple/examples/dac-adc.rs)
 use core::ops::Deref;
 
-use crate::{
-    clock::{Clocks, PeripheralSelect, SyscfgExt},
-    pac,
-};
+use crate::{clock::Clocks, pac, PeripheralSelect, SyscfgExt as _};
 
 pub type DacRegisterBlock = pac::dac0::RegisterBlock;
 

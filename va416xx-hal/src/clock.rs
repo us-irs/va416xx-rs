@@ -12,50 +12,12 @@
 //! - [UART example on the PEB1 board](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/uart.rs)
 #[cfg(not(feature = "va41628"))]
 use crate::adc::ADC_MAX_CLK;
-use crate::pac;
+use crate::{pac, PeripheralSelect, SyscfgExt as _};
 
 use crate::time::Hertz;
 
 pub const HBO_FREQ: Hertz = Hertz::from_raw(20_000_000);
 pub const XTAL_OSC_TSTART_MS: u32 = 15;
-
-#[derive(Debug, Copy, Clone, PartialEq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum PeripheralSelect {
-    Spi0 = 0,
-    Spi1 = 1,
-    Spi2 = 2,
-    Spi3 = 3,
-    Uart0 = 4,
-    Uart1 = 5,
-    Uart2 = 6,
-    I2c0 = 7,
-    I2c1 = 8,
-    I2c2 = 9,
-    Can0 = 10,
-    Can1 = 11,
-    Rng = 12,
-    Adc = 13,
-    Dac = 14,
-    Dma = 15,
-    Ebi = 16,
-    Eth = 17,
-    Spw = 18,
-    Clkgen = 19,
-    IrqRouter = 20,
-    IoConfig = 21,
-    Utility = 22,
-    Watchdog = 23,
-    PortA = 24,
-    PortB = 25,
-    PortC = 26,
-    PortD = 27,
-    PortE = 28,
-    PortF = 29,
-    PortG = 30,
-}
-
-pub type PeripheralClock = PeripheralSelect;
 
 #[derive(Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -68,81 +30,6 @@ pub enum FilterClkSel {
     Clk5 = 5,
     Clk6 = 6,
     Clk7 = 7,
-}
-
-#[inline(always)]
-pub fn enable_peripheral_clock(syscfg: &mut pac::Sysconfig, clock: PeripheralSelect) {
-    syscfg
-        .peripheral_clk_enable()
-        .modify(|r, w| unsafe { w.bits(r.bits() | (1 << clock as u8)) });
-}
-
-#[inline(always)]
-pub fn disable_peripheral_clock(syscfg: &mut pac::Sysconfig, clock: PeripheralSelect) {
-    syscfg
-        .peripheral_clk_enable()
-        .modify(|r, w| unsafe { w.bits(r.bits() & !(1 << clock as u8)) });
-}
-
-#[inline(always)]
-pub fn assert_periph_reset(syscfg: &mut pac::Sysconfig, periph: PeripheralSelect) {
-    syscfg
-        .peripheral_reset()
-        .modify(|r, w| unsafe { w.bits(r.bits() & !(1 << periph as u8)) });
-}
-
-#[inline(always)]
-pub fn deassert_periph_reset(syscfg: &mut pac::Sysconfig, periph: PeripheralSelect) {
-    syscfg
-        .peripheral_reset()
-        .modify(|r, w| unsafe { w.bits(r.bits() | (1 << periph as u8)) });
-}
-
-#[inline(always)]
-fn assert_periph_reset_for_two_cycles(syscfg: &mut pac::Sysconfig, periph: PeripheralSelect) {
-    assert_periph_reset(syscfg, periph);
-    cortex_m::asm::nop();
-    cortex_m::asm::nop();
-    deassert_periph_reset(syscfg, periph);
-}
-
-pub trait SyscfgExt {
-    fn enable_peripheral_clock(&mut self, clock: PeripheralClock);
-
-    fn disable_peripheral_clock(&mut self, clock: PeripheralClock);
-
-    fn assert_periph_reset(&mut self, periph: PeripheralSelect);
-
-    fn deassert_periph_reset(&mut self, periph: PeripheralSelect);
-
-    fn assert_periph_reset_for_two_cycles(&mut self, periph: PeripheralSelect);
-}
-
-impl SyscfgExt for pac::Sysconfig {
-    #[inline(always)]
-    fn enable_peripheral_clock(&mut self, clock: PeripheralClock) {
-        enable_peripheral_clock(self, clock)
-    }
-
-    #[inline(always)]
-    fn disable_peripheral_clock(&mut self, clock: PeripheralClock) {
-        disable_peripheral_clock(self, clock)
-    }
-
-    #[inline(always)]
-    fn assert_periph_reset(&mut self, clock: PeripheralSelect) {
-        assert_periph_reset(self, clock)
-    }
-
-    #[inline(always)]
-    fn deassert_periph_reset(&mut self, clock: PeripheralSelect) {
-        deassert_periph_reset(self, clock)
-    }
-
-    #[inline(always)]
-    fn assert_periph_reset_for_two_cycles(&mut self, periph: PeripheralSelect) {
-        assert_periph_reset_for_two_cycles(self, periph)
-    }
 }
 
 /// Refer to chapter 8 (p.57) of the programmers guide for detailed information.

@@ -1,8 +1,5 @@
 //! IRQ Router peripheral support.
-use crate::{
-    clock::{PeripheralSelect, SyscfgExt},
-    pac,
-};
+use crate::{pac, PeripheralSelect, SyscfgExt as _};
 
 /// This enables and initiates the peripheral.
 ///

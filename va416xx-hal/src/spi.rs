@@ -12,7 +12,7 @@ use core::{convert::Infallible, marker::PhantomData, ops::Deref};
 use embedded_hal::spi::{Mode, MODE_0};
 
 use crate::{
-    clock::{Clocks, PeripheralSelect, SyscfgExt},
+    clock::Clocks,
     gpio::{
         AltFunc1, AltFunc2, AltFunc3, Pin, PA0, PA1, PA2, PA3, PA4, PA5, PA6, PA7, PA8, PA9, PB0,
         PB1, PB12, PB13, PB14, PB15, PB2, PB3, PB4, PC0, PC1, PC10, PC11, PC7, PC8, PC9, PE12,
@@ -21,6 +21,7 @@ use crate::{
     pac,
     time::Hertz,
     typelevel::{NoneT, Sealed},
+    PeripheralSelect, SyscfgExt as _,
 };
 
 #[cfg(not(feature = "va41628"))]
@@ -1046,7 +1047,7 @@ where
         pins: (Sck, Miso, Mosi),
         spi_cfg: SpiConfig,
     ) -> Self {
-        crate::clock::enable_peripheral_clock(syscfg, SpiI::PERIPH_SEL);
+        crate::enable_peripheral_clock(syscfg, SpiI::PERIPH_SEL);
         // This is done in the C HAL.
         syscfg.assert_periph_reset_for_two_cycles(SpiI::PERIPH_SEL);
         let SpiConfig {

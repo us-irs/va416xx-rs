@@ -287,7 +287,7 @@ impl Adc<ChannelTagEnabled> {
 
 impl<TagEnabled> Adc<TagEnabled> {
     fn generic_new(syscfg: &mut pac::Sysconfig, adc: pac::Adc, _clocks: &Clocks) -> Self {
-        syscfg.enable_peripheral_clock(crate::clock::PeripheralSelect::Adc);
+        syscfg.enable_peripheral_clock(crate::PeripheralSelect::Adc);
         adc.ctrl().write(|w| unsafe { w.bits(0) });
         let adc = Self {
             adc,

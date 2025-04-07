@@ -3,13 +3,7 @@
 //! ## Examples
 //!
 //! - [PEB1 accelerometer example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/peb1-accelerometer.rs)
-use crate::{
-    clock::{Clocks, PeripheralSelect},
-    pac,
-    prelude::SyscfgExt,
-    time::Hertz,
-    typelevel::Sealed,
-};
+use crate::{clock::Clocks, pac, time::Hertz, typelevel::Sealed, PeripheralSelect, SyscfgExt as _};
 use core::{marker::PhantomData, ops::Deref};
 use embedded_hal::i2c::{self, Operation, SevenBitAddress, TenBitAddress};
 

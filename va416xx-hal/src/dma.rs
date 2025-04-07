@@ -5,11 +5,7 @@
 //! - [Simple DMA example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/dma.rs)
 use arbitrary_int::{u10, u2, u3, u4};
 
-use crate::{
-    clock::{PeripheralClock, PeripheralSelect},
-    enable_nvic_interrupt, pac,
-    prelude::*,
-};
+use crate::{enable_nvic_interrupt, pac, PeripheralClock, PeripheralSelect, SyscfgExt as _};
 
 const MAX_DMA_TRANSFERS_PER_CYCLE: usize = 1024;
 const BASE_PTR_ADDR_MASK: u32 = 0b1111111;

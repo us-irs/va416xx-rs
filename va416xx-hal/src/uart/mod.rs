@@ -38,6 +38,21 @@ pub enum Bank {
     Uart2 = 2,
 }
 
+impl Bank {
+    /// Retrieve the peripheral register block.
+    ///
+    /// # Safety
+    ///
+    /// Circumvents the HAL safety guarantees.
+    pub const unsafe fn reg_block(&self) -> &'static uart_base::RegisterBlock {
+        match self {
+            Bank::Uart0 => unsafe { &(*pac::Uart0::ptr()) },
+            Bank::Uart1 => unsafe { &(*pac::Uart1::ptr()) },
+            Bank::Uart2 => unsafe { &(*pac::Uart2::ptr()) },
+        }
+    }
+}
+
 //==================================================================================================
 // Type-Level support
 //==================================================================================================
@@ -418,21 +433,6 @@ impl Instance for Uart2 {
     }
     fn ptr() -> *const uart_base::RegisterBlock {
         Self::ptr() as *const _
-    }
-}
-
-impl Bank {
-    /// Retrieve the peripheral register block.
-    ///
-    /// # Safety
-    ///
-    /// Circumvents the HAL safety guarantees.
-    pub unsafe fn reg_block(&self) -> &'static uart_base::RegisterBlock {
-        match self {
-            Bank::Uart0 => unsafe { pac::Uart0::reg_block() },
-            Bank::Uart1 => unsafe { pac::Uart1::reg_block() },
-            Bank::Uart2 => unsafe { pac::Uart2::reg_block() },
-        }
     }
 }
 

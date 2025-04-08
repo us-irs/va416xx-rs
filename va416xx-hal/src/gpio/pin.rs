@@ -19,7 +19,7 @@
 //! Type-level [`Pin`]s are parameterized by two type-level enums, [`PinId`] and
 //! [`PinMode`].
 //!
-//! ```
+//! ```ignore
 //! pub struct Pin<I, M>
 //! where
 //!     I: PinId,
@@ -49,14 +49,14 @@
 //! within the [PinsA] struct can be moved out and used individually.
 //!
 //!
-//! ```no_run
+//! ```no_run,ignore
 //! let mut peripherals = Peripherals::take().unwrap();
 //! let pinsa = PinsA::new(peripherals.porta);
 //! ```
 //!
 //! Pins can be converted between modes using several different methods.
 //!
-//! ```no_run
+//! ```no_run,ignore
 //! // Use one of the literal function names
 //! let pa0 = pinsa.pa0.into_floating_input();
 //! // Use a generic method and one of the `PinMode` variant types

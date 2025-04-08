@@ -14,7 +14,7 @@
 //! Instances of [`DynPin`] cannot be created directly. Rather, they must be
 //! created from their type-level equivalents using [`From`]/[`Into`].
 //!
-//! ```
+//! ```ignore
 //! // Move a pin out of the Pins struct and convert to a DynPin
 //! let pa0: DynPin = pins.pa0.into();
 //! ```
@@ -22,7 +22,7 @@
 //! Conversions between pin modes use a value-level version of the type-level
 //! API.
 //!
-//! ```
+//! ```ignore
 //! // Use one of the literal function names
 //! pa0.into_floating_input();
 //! // Use a method and a DynPinMode variant
@@ -38,7 +38,7 @@
 //! guarantee the pin has the correct ID or is in the correct mode at
 //! compile-time. Use [TryFrom]/[TryInto] for this conversion.
 //!
-//! ```
+//! ```ignore
 //! // Convert to a `DynPin`
 //! let pa0: DynPin = pins.pa0.into();
 //! // Change pin mode

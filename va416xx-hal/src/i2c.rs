@@ -3,7 +3,9 @@
 //! ## Examples
 //!
 //! - [PEB1 accelerometer example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/peb1-accelerometer.rs)
-use crate::{clock::Clocks, pac, time::Hertz, typelevel::Sealed, PeripheralSelect, SyscfgExt as _};
+use crate::{
+    clock::Clocks, enable_peripheral_clock, pac, time::Hertz, typelevel::Sealed, PeripheralSelect,
+};
 use core::{marker::PhantomData, ops::Deref};
 use embedded_hal::i2c::{self, Operation, SevenBitAddress, TenBitAddress};
 
@@ -318,13 +320,12 @@ impl<I2C> I2cBase<I2C> {
 impl<I2c: Instance> I2cBase<I2c> {
     pub fn new(
         i2c: I2c,
-        syscfg: &mut pac::Sysconfig,
         clocks: &Clocks,
         speed_mode: I2cSpeed,
         ms_cfg: Option<&MasterConfig>,
         sl_cfg: Option<&SlaveConfig>,
     ) -> Result<Self, ClockTooSlowForFastI2cError> {
-        syscfg.enable_peripheral_clock(I2c::PERIPH_SEL);
+        enable_peripheral_clock(I2c::PERIPH_SEL);
 
         let mut i2c_base = I2cBase {
             i2c,
@@ -476,13 +477,12 @@ pub struct I2cMaster<I2c, Addr = SevenBitAddress> {
 impl<I2c: Instance, Addr> I2cMaster<I2c, Addr> {
     pub fn new(
         i2c: I2c,
-        sys_cfg: &mut pac::Sysconfig,
         cfg: MasterConfig,
         clocks: &Clocks,
         speed_mode: I2cSpeed,
     ) -> Result<Self, ClockTooSlowForFastI2cError> {
         Ok(I2cMaster {
-            i2c_base: I2cBase::new(i2c, sys_cfg, clocks, speed_mode, Some(&cfg), None)?,
+            i2c_base: I2cBase::new(i2c, clocks, speed_mode, Some(&cfg), None)?,
             addr: PhantomData,
         }
         .enable_master())
@@ -737,13 +737,12 @@ pub struct I2cSlave<I2c, Addr = SevenBitAddress> {
 impl<I2c: Instance, Addr> I2cSlave<I2c, Addr> {
     fn new_generic(
         i2c: I2c,
-        sys_cfg: &mut pac::Sysconfig,
         cfg: SlaveConfig,
         clocks: &Clocks,
         speed_mode: I2cSpeed,
     ) -> Result<Self, ClockTooSlowForFastI2cError> {
         Ok(I2cSlave {
-            i2c_base: I2cBase::new(i2c, sys_cfg, clocks, speed_mode, None, Some(&cfg))?,
+            i2c_base: I2cBase::new(i2c, clocks, speed_mode, None, Some(&cfg))?,
             addr: PhantomData,
         }
         .enable_slave())
@@ -884,7 +883,6 @@ impl<I2c: Instance> I2cSlave<I2c, SevenBitAddress> {
     /// Create a new I2C slave for seven bit addresses
     pub fn new(
         i2c: I2c,
-        sys_cfg: &mut pac::Sysconfig,
         cfg: SlaveConfig,
         clocks: &Clocks,
         speed_mode: I2cSpeed,
@@ -892,18 +890,17 @@ impl<I2c: Instance> I2cSlave<I2c, SevenBitAddress> {
         if let I2cAddress::TenBit(_) = cfg.addr {
             return Err(InitError::WrongAddrMode);
         }
-        Ok(Self::new_generic(i2c, sys_cfg, cfg, clocks, speed_mode)?)
+        Ok(Self::new_generic(i2c, cfg, clocks, speed_mode)?)
     }
 }
 
 impl<I2c: Instance> I2cSlave<I2c, TenBitAddress> {
     pub fn new_ten_bit_addr(
         i2c: I2c,
-        sys_cfg: &mut pac::Sysconfig,
         cfg: SlaveConfig,
         clocks: &Clocks,
         speed_mode: I2cSpeed,
     ) -> Result<Self, ClockTooSlowForFastI2cError> {
-        Self::new_generic(i2c, sys_cfg, cfg, clocks, speed_mode)
+        Self::new_generic(i2c, cfg, clocks, speed_mode)
     }
 }

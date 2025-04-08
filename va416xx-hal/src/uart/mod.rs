@@ -18,7 +18,7 @@ use fugit::RateExtU32;
 use crate::clock::Clocks;
 use crate::gpio::PF13;
 use crate::time::Hertz;
-use crate::{disable_nvic_interrupt, enable_nvic_interrupt, PeripheralSelect, SyscfgExt as _};
+use crate::{disable_nvic_interrupt, enable_nvic_interrupt, PeripheralSelect};
 use crate::{
     gpio::{
         AltFunc1, AltFunc2, AltFunc3, Pin, PA2, PA3, PB14, PB15, PC14, PC4, PC5, PD11, PD12, PE2,
@@ -630,15 +630,14 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
     Uart<UartInstance, (TxPinInst, RxPinInst)>
 {
     pub fn new(
-        syscfg: &mut va416xx::Sysconfig,
         uart: UartInstance,
         pins: (TxPinInst, RxPinInst),
         config: impl Into<Config>,
         clocks: &Clocks,
     ) -> Self {
-        crate::enable_peripheral_clock(syscfg, UartInstance::PERIPH_SEL);
+        crate::enable_peripheral_clock(UartInstance::PERIPH_SEL);
         // This is done in the C HAL.
-        syscfg.assert_periph_reset_for_two_cycles(UartInstance::PERIPH_SEL);
+        crate::assert_periph_reset_for_two_cycles(UartInstance::PERIPH_SEL);
         Uart {
             inner: UartBase {
                 uart,
@@ -651,13 +650,12 @@ impl<TxPinInst: TxPin<UartInstance>, RxPinInst: RxPin<UartInstance>, UartInstanc
     }
 
     pub fn new_with_clock_freq(
-        syscfg: &mut va416xx::Sysconfig,
         uart: UartInstance,
         pins: (TxPinInst, RxPinInst),
         config: impl Into<Config>,
         clock: impl Into<Hertz>,
     ) -> Self {
-        crate::enable_peripheral_clock(syscfg, UartInstance::PERIPH_SEL);
+        crate::enable_peripheral_clock(UartInstance::PERIPH_SEL);
         Uart {
             inner: UartBase {
                 uart,

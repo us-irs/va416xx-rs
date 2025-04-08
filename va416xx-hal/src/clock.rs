@@ -396,16 +396,45 @@ impl Clocks {
     }
 
     /// Returns the frequency of the APB0 which is equal to the system clock.
+    ///
+    /// This clock is the reference clock for the following peripherals:
+    ///
+    /// - Ethernet
+    /// - SpaceWire
+    /// - IRQ Router
+    /// - DMA
+    /// - Clock Generator
     pub const fn apb0(&self) -> Hertz {
         self.sysclk()
     }
 
     /// Returns system clock divied by 2.
+    ///
+    /// This clock is the reference clock for the following peripherals:
+    ///
+    /// - Timer[15:0]
+    /// - UART2
+    /// - SPI
+    /// - I2C
+    /// - CAN
+    /// - GPIO
+    /// - IOCONFIG
+    /// - System Config
     pub const fn apb1(&self) -> Hertz {
         self.apb1
     }
 
     /// Returns system clock divied by 4.
+    ///
+    /// This clock is the reference clock for the following peripherals:
+    ///
+    /// - Timer[23:16]
+    /// - TRNG
+    /// - UART[1:0]
+    /// - DAC
+    /// - ADC
+    /// - Watchdog
+    /// - Utility
     pub const fn apb2(&self) -> Hertz {
         self.apb2
     }

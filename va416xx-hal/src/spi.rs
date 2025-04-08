@@ -21,7 +21,7 @@ use crate::{
     pac,
     time::Hertz,
     typelevel::{NoneT, Sealed},
-    PeripheralSelect, SyscfgExt as _,
+    PeripheralSelect,
 };
 
 #[cfg(not(feature = "va41628"))]
@@ -1041,15 +1041,14 @@ where
     ///     to be done once.
     /// * `syscfg` - Can be passed optionally to enable the peripheral clock
     pub fn new(
-        syscfg: &mut pac::Sysconfig,
         clocks: &crate::clock::Clocks,
         spi: SpiI,
         pins: (Sck, Miso, Mosi),
         spi_cfg: SpiConfig,
     ) -> Self {
-        crate::enable_peripheral_clock(syscfg, SpiI::PERIPH_SEL);
+        crate::enable_peripheral_clock(SpiI::PERIPH_SEL);
         // This is done in the C HAL.
-        syscfg.assert_periph_reset_for_two_cycles(SpiI::PERIPH_SEL);
+        crate::assert_periph_reset_for_two_cycles(SpiI::PERIPH_SEL);
         let SpiConfig {
             clk,
             init_mode,

@@ -97,39 +97,43 @@ pub enum PeripheralSelect {
 pub type PeripheralClock = PeripheralSelect;
 
 #[inline(always)]
-pub fn enable_peripheral_clock(syscfg: &mut pac::Sysconfig, clock: PeripheralSelect) {
-    syscfg
+pub fn enable_peripheral_clock(clock: PeripheralSelect) {
+    // Safety: Only bit of peripheral is modified.
+    unsafe { pac::Sysconfig::steal() }
         .peripheral_clk_enable()
         .modify(|r, w| unsafe { w.bits(r.bits() | (1 << clock as u8)) });
 }
 
 #[inline(always)]
-pub fn disable_peripheral_clock(syscfg: &mut pac::Sysconfig, clock: PeripheralSelect) {
-    syscfg
+pub fn disable_peripheral_clock(clock: PeripheralSelect) {
+    // Safety: Only bit of peripheral is modified.
+    unsafe { pac::Sysconfig::steal() }
         .peripheral_clk_enable()
         .modify(|r, w| unsafe { w.bits(r.bits() & !(1 << clock as u8)) });
 }
 
 #[inline(always)]
-pub fn assert_periph_reset(syscfg: &mut pac::Sysconfig, periph: PeripheralSelect) {
-    syscfg
+pub fn assert_periph_reset(periph: PeripheralSelect) {
+    // Safety: Only reset bit of peripheral is modified.
+    unsafe { pac::Sysconfig::steal() }
         .peripheral_reset()
         .modify(|r, w| unsafe { w.bits(r.bits() & !(1 << periph as u8)) });
 }
 
 #[inline(always)]
-pub fn deassert_periph_reset(syscfg: &mut pac::Sysconfig, periph: PeripheralSelect) {
-    syscfg
+pub fn deassert_periph_reset(periph: PeripheralSelect) {
+    // Safety: Only rest bit of peripheral is modified.
+    unsafe { pac::Sysconfig::steal() }
         .peripheral_reset()
         .modify(|r, w| unsafe { w.bits(r.bits() | (1 << periph as u8)) });
 }
 
 #[inline(always)]
-fn assert_periph_reset_for_two_cycles(syscfg: &mut pac::Sysconfig, periph: PeripheralSelect) {
-    assert_periph_reset(syscfg, periph);
+fn assert_periph_reset_for_two_cycles(periph: PeripheralSelect) {
+    assert_periph_reset(periph);
     cortex_m::asm::nop();
     cortex_m::asm::nop();
-    deassert_periph_reset(syscfg, periph);
+    deassert_periph_reset(periph);
 }
 
 #[derive(Debug, Eq, Copy, Clone, PartialEq)]
@@ -190,27 +194,27 @@ pub trait SyscfgExt {
 impl SyscfgExt for pac::Sysconfig {
     #[inline(always)]
     fn enable_peripheral_clock(&mut self, clock: PeripheralClock) {
-        enable_peripheral_clock(self, clock)
+        enable_peripheral_clock(clock)
     }
 
     #[inline(always)]
     fn disable_peripheral_clock(&mut self, clock: PeripheralClock) {
-        disable_peripheral_clock(self, clock)
+        disable_peripheral_clock(clock)
     }
 
     #[inline(always)]
     fn assert_periph_reset(&mut self, clock: PeripheralSelect) {
-        assert_periph_reset(self, clock)
+        assert_periph_reset(clock)
     }
 
     #[inline(always)]
     fn deassert_periph_reset(&mut self, clock: PeripheralSelect) {
-        deassert_periph_reset(self, clock)
+        deassert_periph_reset(clock)
     }
 
     #[inline(always)]
     fn assert_periph_reset_for_two_cycles(&mut self, periph: PeripheralSelect) {
-        assert_periph_reset_for_two_cycles(self, periph)
+        assert_periph_reset_for_two_cycles(periph)
     }
 }
 

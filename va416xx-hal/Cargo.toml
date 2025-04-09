@@ -21,6 +21,7 @@ embedded-hal-async = "1"
 embedded-hal = "1"
 embedded-io = "0.6"
 embedded-io-async = "0.6"
+embedded-can = "0.4"
 num_enum = { version = "0.7", default-features = false }
 typenum = "1"
 bitflags = "2"

@@ -1,31 +1,43 @@
 //! Custom register definitions for the CAN register block to circumvent PAC API / SVD
 //! shortcomings.
 
-use arbitrary_int::{u2, u3, u4, u7};
+use arbitrary_int::{u11, u15, u2, u3, u4, u7};
 
 pub const CAN_0_BASE: usize = 0x4001_4000;
 pub const CAN_1_BASE: usize = 0x4001_4400;
 
 #[derive(Debug)]
 #[bitbybit::bitenum(u4)]
-pub enum BufferStatus {
+pub enum BufferState {
+    /// Passive channel.
     RxNotActive = 0b0000,
-    RxReady = 0b0001,
-    RxBusy0 = 0b0010,
+    /// This condition indicated that SW wrote RxNotActive to a buffer when a data copy
+    /// process is still active.
+    RxBusy = 0b0001,
+    RxReady = 0b0010,
+    /// Indicated that data is being copied for the first time (RxRead -> RxBusy0).
+    RxBusy0 = 0b0011,
     RxFull = 0b0100,
+    /// Indicated that data is being copied for the second time (RxFull -> RxBusy2).
     RxBusy1 = 0b0101,
     RxOverrun = 0b0110,
     RxBusy2 = 0b0111,
     TxNotActive = 0b1000,
+    /// Automatical response to a remote frame.
     TxRtr = 0b1010,
+    /// Transmit one frame.
     TxOnce = 0b1100,
     TxBusy0 = 0b1101,
+    /// Transmit one frame, and changes to TxRtr after that. This can either be written by
+    /// software, or it will be written by the hardware after an auto response of the
+    /// [BufferState::TxRtr] state.
     TxOnceRtr = 0b1110,
     TxBusy2 = 0b1111,
 }
 
 /// Status control register for individual message buffers.
-#[bitbybit::bitfield(u32)]
+#[bitbybit::bitfield(u32, default = 0x0)]
+#[derive(Debug)]
 pub struct BufStatusAndControl {
     /// Data length code.
     #[bits(12..=15, rw)]
@@ -33,13 +45,13 @@ pub struct BufStatusAndControl {
     #[bits(4..=7, rw)]
     priority: u4,
     #[bits(0..=3, rw)]
-    status: Option<BufferStatus>,
+    status: Option<BufferState>,
 }
 
 #[derive(Debug)]
-pub struct Data16Bit(arbitrary_int::UInt<u32, 16>);
+pub struct Timestamp(arbitrary_int::UInt<u32, 16>);
 
-impl Data16Bit {
+impl Timestamp {
     pub fn new(value: u16) -> Self {
         Self(value.into())
     }
@@ -52,29 +64,38 @@ impl Data16Bit {
     }
 }
 
+#[bitbybit::bitfield(u32, default = 0x0)]
+#[derive(Debug)]
+pub struct TwoBytesData {
+    #[bits(8..=15, rw)]
+    data_upper_byte: u8,
+    #[bits(8..=15, rw)]
+    data_lower_byte: u8,
+}
+
 #[derive(derive_mmio::Mmio)]
 #[repr(C)]
 pub struct CanMsgBuf {
     stat_ctrl: BufStatusAndControl,
-    timestamp: Data16Bit,
-    data3: Data16Bit,
-    data2: Data16Bit,
-    data1: Data16Bit,
-    data0: Data16Bit,
-    id0: Data16Bit,
-    id1: Data16Bit,
+    timestamp: Timestamp,
+    data3: TwoBytesData,
+    data2: TwoBytesData,
+    data1: TwoBytesData,
+    data0: TwoBytesData,
+    id0: ExtendedId,
+    id1: BaseId,
 }
 
 impl MmioCanMsgBuf<'_> {
     pub fn reset(&mut self) {
         self.write_stat_ctrl(BufStatusAndControl::new_with_raw_value(0));
-        self.write_timestamp(Data16Bit::new(0));
-        self.write_data3(Data16Bit::new(0));
-        self.write_data2(Data16Bit::new(0));
-        self.write_data1(Data16Bit::new(0));
-        self.write_data0(Data16Bit::new(0));
-        self.write_id1(Data16Bit::new(0));
-        self.write_id0(Data16Bit::new(0));
+        self.write_timestamp(Timestamp::new(0));
+        self.write_data3(TwoBytesData::new_with_raw_value(0));
+        self.write_data2(TwoBytesData::new_with_raw_value(0));
+        self.write_data1(TwoBytesData::new_with_raw_value(0));
+        self.write_data0(TwoBytesData::new_with_raw_value(0));
+        self.write_id1(BaseId::new_with_raw_value(0));
+        self.write_id0(ExtendedId::new_with_raw_value(0));
     }
 }
 
@@ -136,7 +157,7 @@ pub struct Control {
     enable: bool,
 }
 
-#[bitbybit::bitfield(u32)]
+#[bitbybit::bitfield(u32, default = 0x0)]
 #[derive(Debug)]
 pub struct TimingConfig {
     #[bits(0..=2, rw)]
@@ -185,6 +206,35 @@ pub struct ErrorCounter {
     receive: u8,
 }
 
+/// This register is unused for standard frames.
+#[bitbybit::bitfield(u32, default = 0x0)]
+#[derive(Debug)]
+pub struct ExtendedId {
+    /// Mask for ID bits \[14:0\] of extended frames.
+    #[bits(1..=15, rw)]
+    mask_14_0: u15,
+    /// CAN XRTR bit.
+    #[bit(0, rw)]
+    xrtr: bool,
+}
+
+#[bitbybit::bitfield(u32, default = 0x0)]
+#[derive(Debug)]
+pub struct BaseId {
+    /// This will contain ID\[10:0\] for standard frames and bits [28:18] for extended frames.
+    #[bits(5..=15, rw)]
+    mask_28_18: u11,
+    /// This is the RTR bit for standard frames, and the SRR bit for extended frames.
+    #[bit(4, rw)]
+    rtr_or_srr: bool,
+    /// Identifier extension bit.
+    #[bit(3, rw)]
+    ide: bool,
+    /// Mask for ID bits \[17:15\] of extended frames.
+    #[bits(0..=2, rw)]
+    mask_17_15: u3,
+}
+
 #[derive(derive_mmio::Mmio)]
 #[repr(C)]
 pub struct Can {
@@ -216,20 +266,22 @@ pub struct Can {
     cmb12: CanMsgBuf,
     #[mmio(inner)]
     cmb13: CanMsgBuf,
+    // This CAN message buffer has different mask registers.
     #[mmio(inner)]
     cmb14: CanMsgBuf,
+    /// Hidden CAN message buffer. Only allowed to be used internally by the peripheral.
     #[mmio(inner)]
-    hcmb: CanMsgBuf,
+    _hcmb: CanMsgBuf,
     control: Control,
     timing: TimingConfig,
-    /// Global mask extension.
-    gmskx: u32,
-    /// Global mask base.
-    gmskb: u32,
-    /// Basic mask extension.
-    bmskx: u32,
-    /// Basic mask base.
-    bmskb: u32,
+    /// Global mask extension used for buffers 0 to 13.
+    gmskx: ExtendedId,
+    /// Global mask base used for buffers 0 to 13.
+    gmskb: BaseId,
+    /// Basic mask extension used for buffer 14.
+    bmskx: ExtendedId,
+    /// Basic mask base used for buffer 14.
+    bmskb: BaseId,
     ien: InterruptEnable,
     #[mmio(PureRead)]
     ipnd: InterruptPending,
@@ -274,7 +326,7 @@ impl Can {
 impl MmioCan<'_> {
     // TODO: It would be nice if derive-mmio could generate this for us..
     pub fn msg_buf_block_mut(&mut self, idx: usize) -> MmioCanMsgBuf<'static> {
-        assert!(idx < 16, "invalid index for CAN message buffer");
+        assert!(idx < 15, "invalid index for CAN message buffer");
         match idx {
             0 => unsafe { self.steal_cmb0() },
             1 => unsafe { self.steal_cmb1() },
@@ -291,7 +343,6 @@ impl MmioCan<'_> {
             12 => unsafe { self.steal_cmb12() },
             13 => unsafe { self.steal_cmb13() },
             14 => unsafe { self.steal_cmb14() },
-            15 => unsafe { self.steal_hcmb() },
             _ => unreachable!(),
         }
     }

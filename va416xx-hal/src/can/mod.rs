@@ -1,9 +1,18 @@
-use arbitrary_int::{u2, u3, u4, u7, Number};
+//! CAN driver.
+//!
+//! The VA416xx CAN module is based on the CP3UB26 module.
+use arbitrary_int::{u11, u15, u2, u3, u4, u7, Number};
+use embedded_can::Frame;
+use regs::{
+    BaseId, BufStatusAndControl, Control, DataDirection, ExtendedId, MmioCan, TimingConfig,
+};
 
 use crate::{clock::Clocks, enable_peripheral_clock, time::Hertz, PeripheralSelect};
 use libm::roundf;
 
+pub mod frame;
 pub mod regs;
+pub use frame::*;
 
 pub const PRESCALER_MIN: u8 = 2;
 pub const PRESCALER_MAX: u8 = 128;
@@ -23,10 +32,18 @@ pub enum CanId {
     Can1 = 1,
 }
 
-impl CanId {}
-
-pub struct Can {
-    id: CanId,
+impl CanId {
+    /// Steal the register block for the CAN ID.
+    ///
+    /// # Safety
+    ///
+    /// See safety of the [regs::Can::new_mmio_fixed_0].
+    pub unsafe fn steal_regs(&self) -> regs::MmioCan<'static> {
+        match self {
+            CanId::Can0 => unsafe { regs::Can::new_mmio_fixed_0() },
+            CanId::Can1 => unsafe { regs::Can::new_mmio_fixed_1() },
+        }
+    }
 }
 
 /// Sample point between 0 and 1.0 for the given time segments.
@@ -127,6 +144,10 @@ pub struct ClockConfig {
     tseg2: u8,
     sjw: u8,
 }
+
+#[derive(Debug, thiserror::Error)]
+#[error("invalid buffer index {0}")]
+pub struct InvalidBufferIndexError(usize);
 
 #[derive(Debug, thiserror::Error)]
 #[error("sjw must be less than or equal to the smaller tseg value")]
@@ -253,6 +274,11 @@ impl ClockConfig {
     }
 }
 
+pub struct Can {
+    regs: regs::MmioCan<'static>,
+    id: CanId,
+}
+
 impl Can {
     pub fn new<CanI: Instance>(_can: CanI, clk_config: ClockConfig) -> Self {
         enable_peripheral_clock(CanI::PERIPH_SEL);
@@ -262,15 +288,290 @@ impl Can {
         } else {
             unsafe { regs::Can::new_mmio_fixed_1() }
         };
+        // Disable the CAN bus before configuring it.
+        regs.write_control(Control::new_with_raw_value(0));
         for i in 0..15 {
             regs.msg_buf_block_mut(i).reset();
         }
-        Self { id }
+        regs.write_timing(
+            TimingConfig::builder()
+                .with_tseg2(clk_config.tseg2_reg_value())
+                .with_tseg1(clk_config.tseg1_reg_value())
+                .with_sync_jump_width(clk_config.sjw_reg_value())
+                .with_prescaler(clk_config.prescaler_reg_value())
+                .build(),
+        );
+        Self { regs, id }
     }
 
+    /// This configures the global mask so that acceptance is only determined by an exact match
+    /// with the ID in the receive message buffers. This is the default reset configuration for
+    /// the global mask as well.
+    pub fn set_global_mask_for_exact_id_match(&mut self) {
+        self.regs.write_gmskx(ExtendedId::new_with_raw_value(0));
+        self.regs.write_gmskb(BaseId::new_with_raw_value(0));
+    }
+
+    /// Similar to [Self::set_global_mask_for_exact_id_match] but masks the XRTR and RTR/SRR bits.
+    ///
+    /// This is useful for when transmitting remote frames with the RTR bit set. The hardware
+    /// will automatically go into the [regs::BufferState::RxReady] state after the transmission,
+    /// but the XRTR and RTR/SRR bits need to be masked for the response frame to be accepted
+    /// on that buffer.
+    pub fn set_global_mask_for_exact_id_match_with_rtr_masked(&mut self) {
+        self.regs.write_gmskx(
+            ExtendedId::builder()
+                .with_mask_14_0(u15::new(0))
+                .with_xrtr(true)
+                .build(),
+        );
+        self.regs.write_gmskb(
+            BaseId::builder()
+                .with_mask_28_18(u11::new(0))
+                .with_rtr_or_srr(true)
+                .with_ide(false)
+                .with_mask_17_15(u3::new(0))
+                .build(),
+        );
+    }
+
+    /// This configures the base mask for buffer 14 so that acceptance is only determined by an
+    /// exact match with the ID in the receive message buffers. This is the default reset
+    /// configuration for the global mask as well.
+    pub fn set_base_mask_for_exact_id_match(&mut self) {
+        self.regs.write_bmskx(ExtendedId::new_with_raw_value(0));
+        self.regs.write_bmskb(BaseId::new_with_raw_value(0));
+    }
+
+    /// This configures the base mask so that all CAN frames which are not handled by any other
+    /// buffers are accepted by the base buffer 14.
+    pub fn set_base_mask_for_all_match(&mut self) {
+        self.regs
+            .write_bmskx(ExtendedId::new_with_raw_value(0xffff));
+        self.regs.write_bmskb(BaseId::new_with_raw_value(0xffff));
+    }
+
+    #[inline]
+    pub fn regs(&mut self) -> &mut MmioCan<'static> {
+        &mut self.regs
+    }
+
+    #[inline]
     pub fn id(&self) -> CanId {
         self.id
     }
+
+    #[inline]
+    pub fn write_ctrl_reg(&mut self, ctrl: Control) {
+        self.regs.write_control(ctrl);
+    }
+
+    #[inline]
+    pub fn enable_bufflock(&mut self) {
+        self.regs.modify_control(|mut ctrl| {
+            ctrl.set_bufflock(true);
+            ctrl
+        });
+    }
+
+    #[inline]
+    pub fn enable(&mut self) {
+        self.regs.modify_control(|mut ctrl| {
+            ctrl.set_enable(true);
+            ctrl
+        });
+    }
+}
+
+#[derive(Debug)]
+pub enum ChannelState {
+    Idle,
+    Receiving,
+    Transmitting,
+    AwaitingRtrReply,
+}
+
+pub struct CanChannel {
+    can_id: CanId,
+    idx: usize,
+    regs: regs::MmioCanMsgBuf<'static>,
+    mode: ChannelState,
+}
+
+impl core::fmt::Debug for CanChannel {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        f.debug_struct("CanChannel")
+            .field("can_id", &self.can_id)
+            .field("idx", &self.idx)
+            .field("mode", &self.mode)
+            .finish()
+    }
+}
+
+impl CanChannel {
+    pub fn configure_for_reception_with_standard_id(
+        &mut self,
+        standard_id: embedded_can::StandardId,
+        set_rtr: bool,
+    ) -> Result<(), InvalidBufferIndexError> {
+        let mut id1_reg = standard_id.as_raw() << 5;
+        if set_rtr {
+            id1_reg |= 1 << 4;
+        }
+        self.regs
+            .write_id1(BaseId::new_with_raw_value(id1_reg as u32));
+
+        self.regs.write_stat_ctrl(
+            BufStatusAndControl::builder()
+                .with_dlc(u4::new(0))
+                .with_priority(u4::new(0))
+                .with_status(regs::BufferState::RxReady)
+                .build(),
+        );
+        Ok(())
+    }
+
+    pub fn configure_for_reception_with_extended_id(
+        &mut self,
+        extended_id: embedded_can::ExtendedId,
+        set_rtr: bool,
+    ) -> Result<(), InvalidBufferIndexError> {
+        let mut regs = unsafe { self.can_id.steal_regs() };
+        let mut cmb_block = regs.msg_buf_block_mut(self.idx);
+        let id_raw = extended_id.as_raw();
+        let id1_reg = (((id_raw >> 18) & 0x7FF) << 4) as u16 | ((id_raw >> 15) & 0b111) as u16;
+        cmb_block.write_id1(BaseId::new_with_raw_value(id1_reg as u32));
+        let id0_reg = ((id_raw & 0x7FFF) << 1) as u16 | set_rtr as u16;
+        cmb_block.write_id0(ExtendedId::new_with_raw_value(id0_reg as u32));
+        cmb_block.write_stat_ctrl(
+            BufStatusAndControl::builder()
+                .with_dlc(u4::new(0))
+                .with_priority(u4::new(0))
+                .with_status(regs::BufferState::RxReady)
+                .build(),
+        );
+        self.mode = ChannelState::Receiving;
+        Ok(())
+    }
+
+    pub fn configure_for_transmission(
+        &mut self,
+        tx_priority: u4,
+    ) -> Result<(), InvalidBufferIndexError> {
+        let mut regs = unsafe { self.can_id.steal_regs() };
+        let mut cmb_block = regs.msg_buf_block_mut(self.idx);
+        cmb_block.write_stat_ctrl(
+            BufStatusAndControl::builder()
+                .with_dlc(u4::new(0))
+                .with_priority(tx_priority)
+                .with_status(regs::BufferState::TxNotActive)
+                .build(),
+        );
+        self.mode = ChannelState::Receiving;
+        Ok(())
+    }
+
+    /// Reads a received CAN frame from the message buffer.
+    ///
+    /// This function does not check whether the pre-requisites for reading a CAN frame were
+    /// met and assumes this was already checked by the user.
+    pub fn read_frame_unchecked(&self) -> CanFrame {
+        let id0 = self.regs.read_id0();
+        let id1 = self.regs.read_id1();
+        let data0 = self.regs.read_data0();
+        let data1 = self.regs.read_data1();
+        let data2 = self.regs.read_data2();
+        let data3 = self.regs.read_data3();
+        let mut data: [u8; 8] = [0; 8];
+        let mut read_data = |dlc: u4| {
+            (0..dlc.as_usize()).for_each(|i| match i {
+                0 => data[i] = data3.data_upper_byte().as_u8(),
+                1 => data[i] = data3.data_lower_byte().as_u8(),
+                2 => data[i] = data2.data_upper_byte().as_u8(),
+                3 => data[i] = data2.data_lower_byte().as_u8(),
+                4 => data[i] = data1.data_upper_byte().as_u8(),
+                5 => data[i] = data1.data_lower_byte().as_u8(),
+                6 => data[i] = data0.data_upper_byte().as_u8(),
+                7 => data[i] = data0.data_lower_byte().as_u8(),
+                _ => unreachable!(),
+            });
+        };
+        let (id, rtr) = if !id1.ide() {
+            let id = embedded_can::Id::Standard(
+                embedded_can::StandardId::new(id1.mask_28_18().as_u16()).unwrap(),
+            );
+            if id1.rtr_or_srr() {
+                (id, true)
+            } else {
+                (id, false)
+            }
+        } else {
+            let id_raw = (id1.mask_28_18().as_u32() << 18)
+                | (id1.mask_17_15().as_u32() << 15)
+                | id0.mask_14_0().as_u32();
+            let id = embedded_can::Id::Extended(embedded_can::ExtendedId::new(id_raw).unwrap());
+            if id0.xrtr() {
+                (id, true)
+            } else {
+                (id, false)
+            }
+        };
+        if rtr {
+            CanFrameRtr::new(id, self.regs.read_stat_ctrl().dlc().as_usize()).into()
+        } else {
+            let dlc = self.regs.read_stat_ctrl().dlc();
+            read_data(dlc);
+            CanFrameNormal::new(id, &data[0..dlc.as_usize()]).into()
+        }
+    }
+
+    pub fn transmit_frame_unchecked(&mut self, frame: CanFrame) {
+        let is_remote = frame.is_remote_frame();
+        self.write_id(frame.id(), is_remote);
+        let dlc = frame.dlc();
+        self.regs.modify_stat_ctrl(|mut ctrl| {
+            ctrl.set_status(regs::BufferState::TxOnce);
+            ctrl
+        });
+    }
+
+    fn write_id(&mut self, id: embedded_can::Id, is_remote: bool) {
+        match id {
+            embedded_can::Id::Standard(standard_id) => {
+                self.regs.write_id1(
+                    BaseId::builder()
+                        .with_mask_28_18(u11::new(standard_id.as_raw()))
+                        .with_rtr_or_srr(is_remote)
+                        .with_ide(false)
+                        .with_mask_17_15(u3::new(0))
+                        .build(),
+                );
+                self.regs.write_id0(ExtendedId::new_with_raw_value(0));
+            }
+            embedded_can::Id::Extended(extended_id) => {
+                let id_raw = extended_id.as_raw();
+                self.regs.write_id1(
+                    BaseId::builder()
+                        .with_mask_28_18(u11::new(((id_raw >> 18) & 0x7FF) as u16))
+                        .with_rtr_or_srr(true)
+                        .with_ide(true)
+                        .with_mask_17_15(u3::new(((id_raw >> 15) & 0b111) as u8))
+                        .build(),
+                );
+                self.regs.write_id0(
+                    ExtendedId::builder()
+                        .with_mask_14_0(u15::new((id_raw & 0x7FFF) as u16))
+                        .with_xrtr(is_remote)
+                        .build(),
+                );
+            }
+        }
+    }
+}
+
+pub struct CanWorker {
+    can: Can,
+    channels: [CanChannel; 15],
 }
 
 #[cfg(test)]

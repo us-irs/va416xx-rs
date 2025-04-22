@@ -9,9 +9,9 @@ cortex-m-rt = "0.7"
 embedded-hal = "1"
 embedded-hal-nb = "1"
 embedded-io = "0.6"
-panic-rtt-target = { version = "0.2" }
-rtt-target = { version = "0.6" }
-rtt-log = "0.5"
+defmt-rtt = "0.4"
+defmt = "1"
+panic-probe = { version = "1", features = ["defmt"] }
 log = "0.4"
 crc = "3"
 rtic-sync = "1"
@@ -19,10 +19,10 @@ static_cell = "2"
 satrs = { version = "0.3.0-alpha.0", default-features = false }
 ringbuf = { version = "0.4", default-features = false }
 once_cell = { version = "1", default-features = false, features = ["critical-section"] }
-spacepackets = { version = "0.13", default-features = false }
+spacepackets = { version = "0.13", default-features = false, features = ["defmt"] }
 cobs = { version = "0.3", default-features = false }
 
-va416xx-hal = { version = "0.5", features = ["va41630"] }
+va416xx-hal = { version = "0.5", features = ["va41630", "defmt"] }
 
 rtic = { version = "2", features = ["thumbv7-backend"] }
 rtic-monotonics = { version = "2", features = ["cortex-m-systick"] }

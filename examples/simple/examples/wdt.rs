@@ -1,12 +1,14 @@
 // Code to test the watchdog timer.
 #![no_main]
 #![no_std]
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
 
 use core::cell::Cell;
 use cortex_m_rt::entry;
 use critical_section::Mutex;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::irq_router::enable_and_init_irq_router;
 use va416xx_hal::pac::{self, interrupt};
@@ -29,8 +31,7 @@ const WDT_ROLLOVER_MS: u32 = 100;
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!();
-    rprintln!("-- VA416xx WDT example application--");
+    defmt::println!("-- VA416xx WDT example application--");
     let cp = cortex_m::Peripherals::take().unwrap();
     let mut dp = pac::Peripherals::take().unwrap();
 
@@ -53,7 +54,7 @@ fn main() -> ! {
         }
         let interrupt_counter = critical_section::with(|cs| WDT_INTRPT_COUNT.borrow(cs).get());
         if interrupt_counter > last_interrupt_counter {
-            rprintln!("interrupt counter has increased to {}", interrupt_counter);
+            defmt::info!("interrupt counter has increased to {}", interrupt_counter);
             last_interrupt_counter = interrupt_counter;
         }
         match TEST_MODE {

@@ -1,13 +1,15 @@
 //! MS and Second counter implemented using the TIM0 and TIM1 peripheral
 #![no_main]
 #![no_std]
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
 
 use core::cell::Cell;
 use cortex_m::asm;
 use cortex_m_rt::entry;
 use critical_section::Mutex;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::{
     irq_router::enable_and_init_irq_router,
@@ -26,10 +28,9 @@ static SEC_COUNTER: Mutex<Cell<u32>> = Mutex::new(Cell::new(0));
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!();
     let mut dp = pac::Peripherals::take().unwrap();
     let mut last_ms = 0;
-    rprintln!("-- Vorago system ticks using timers --");
+    defmt::println!("-- Vorago system ticks using timers --");
     // Use the external clock connected to XTAL_N.
     let clocks = dp
         .clkgen
@@ -47,9 +48,9 @@ fn main() -> ! {
         if current_ms >= last_ms + 1000 {
             // To prevent drift.
             last_ms += 1000;
-            rprintln!("MS counter: {}", current_ms);
+            defmt::info!("MS counter: {}", current_ms);
             let second = critical_section::with(|cs| SEC_COUNTER.borrow(cs).get());
-            rprintln!("Second counter: {}", second);
+            defmt::info!("Second counter: {}", second);
         }
         asm::delay(1000);
     }

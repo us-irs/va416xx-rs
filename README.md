@@ -74,8 +74,8 @@ probe-rs run --chip VA416xx_RAM --protocol jtag target/thumbv7em-none-eabihf/deb
 to flash and run the blinky program on the RAM. There is also a `VA416xx` chip target
 available for persistent flashing.
 
-Runner configuration avilable in the `.cargo/def-config.toml` file to use `probe-rs` for
-convenience.
+Runner configuration is available in the `.cargo/def-config.toml` file to use `probe-rs` for
+convenience. `probe-rs` is also able to process and display `defmt` strings directly.
 
 ### Pre-Requisites
 
@@ -123,14 +123,23 @@ You can build the blinky example application with the following command
 cargo build --example blinky
 ```
 
-Start the GDB server first. The server needs to be started with a certain configuration and with
-a JLink script to disable ROM protection.
+Start the GDB server first. Depending on whether the application is flashed to RAM or the NVM
+flash memory, the server needs to be started with a different configuration
 For example, on Debian based system the following command can be used to do this (this command
 is also run when running the `jlink-gdb.sh` script)
+
+**RAM Flash**
 
 ```sh
 JLinkGDBServer -select USB -device Cortex-M4 -endian little -if SWD -speed 2000 \
   -LocalhostOnly -vd -jlinkscriptfile ./jlink/JLinkSettings.JLinkScript
+```
+
+**NVM Flash**
+
+```sh
+JLinkGDBServer -select USB -device VA416xx -endian little -if SWD -speed 2000 \
+  -LocalhostOnly -vd
 ```
 
 After this, you can flash and debug the application with the following command
@@ -144,7 +153,7 @@ runner configuration, for example with the following lines in your `.cargo/confi
 
 ```toml
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = "gdb-multiarch -q -x jlink/jlink.gdb"
+runner = "gdb-multiarch -q -x jlink/jlink.gdb -tui"
 ```
 
 After that, you can simply use `cargo run --example blinky` to flash the blinky
@@ -155,6 +164,15 @@ example.
 The Segger RTT viewer can be used to display log messages received from the target. The base
 address for the RTT block placement is 0x1fff8000. It is recommended to use a search range of
 0x1000 around that base address when using the RTT viewer.
+
+The RTT viewer will not be able to process `defmt` printouts. However, you can view the defmt
+logs by [installing defmt-print](https://crates.io/crates/defmt-print) first and then running
+
+```sh
+defmt-print -e <pathToElfFile> tcp
+```
+
+The path of the ELF file which is being debugged needs to be specified for this to work.
 
 ## Learning (Embedded) Rust
 

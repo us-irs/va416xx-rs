@@ -2,13 +2,16 @@
 #![no_main]
 #![no_std]
 
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
+
 use core::cell::Cell;
 
 use cortex_m_rt::entry;
 use critical_section::Mutex;
 use embedded_hal::delay::DelayNs;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::dma::{Dma, DmaCfg, DmaChannel, DmaCtrlBlock};
 use va416xx_hal::irq_router::enable_and_init_irq_router;
@@ -35,8 +38,7 @@ static mut DMA_DEST_BUF: [u16; 36] = [0; 36];
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!();
-    rprintln!("VA416xx DMA example");
+    defmt::println!("VA416xx DMA example");
 
     let mut dp = pac::Peripherals::take().unwrap();
     // Use the external clock connected to XTAL_N.
@@ -119,7 +121,7 @@ fn transfer_example_8_bit(
         let mut dma_done = false;
         critical_section::with(|cs| {
             if DMA_ACTIVE_FLAG.borrow(cs).get() {
-                rprintln!("DMA0 is active with 8 bit transfer");
+                defmt::info!("DMA0 is active with 8 bit transfer");
                 DMA_ACTIVE_FLAG.borrow(cs).set(false);
             }
             if DMA_DONE_FLAG.borrow(cs).get() {
@@ -127,7 +129,7 @@ fn transfer_example_8_bit(
             }
         });
         if dma_done {
-            rprintln!("8-bit transfer done");
+            defmt::info!("8-bit transfer done");
             break;
         }
         delay_ms.delay_ms(1);
@@ -177,7 +179,7 @@ fn transfer_example_16_bit(dma0: &mut DmaChannel, delay_ms: &mut CountdownTimer<
         let mut dma_done = false;
         critical_section::with(|cs| {
             if DMA_ACTIVE_FLAG.borrow(cs).get() {
-                rprintln!("DMA0 is active with 16-bit transfer");
+                defmt::info!("DMA0 is active with 16-bit transfer");
                 DMA_ACTIVE_FLAG.borrow(cs).set(false);
             }
             if DMA_DONE_FLAG.borrow(cs).get() {
@@ -185,7 +187,7 @@ fn transfer_example_16_bit(dma0: &mut DmaChannel, delay_ms: &mut CountdownTimer<
             }
         });
         if dma_done {
-            rprintln!("16-bit transfer done");
+            defmt::info!("16-bit transfer done");
             break;
         }
         delay_ms.delay_ms(1);
@@ -237,7 +239,7 @@ fn transfer_example_32_bit(
         let mut dma_done = false;
         critical_section::with(|cs| {
             if DMA_ACTIVE_FLAG.borrow(cs).get() {
-                rprintln!("DMA0 is active with 32-bit transfer");
+                defmt::info!("DMA0 is active with 32-bit transfer");
                 DMA_ACTIVE_FLAG.borrow(cs).set(false);
             }
             if DMA_DONE_FLAG.borrow(cs).get() {
@@ -245,7 +247,7 @@ fn transfer_example_32_bit(
             }
         });
         if dma_done {
-            rprintln!("32-bit transfer done");
+            defmt::info!("32-bit transfer done");
             break;
         }
         delay_ms.delay_ms(1);

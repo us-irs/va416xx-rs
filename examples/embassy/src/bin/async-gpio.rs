@@ -5,6 +5,10 @@
 //! [CHECK_XXX_TO_XXX] constants to true.
 #![no_std]
 #![no_main]
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
 
 use embassy_example::EXTCLK_FREQ;
 use embassy_executor::Spawner;
@@ -12,8 +16,6 @@ use embassy_sync::channel::{Receiver, Sender};
 use embassy_sync::{blocking_mutex::raw::ThreadModeRawMutex, channel::Channel};
 use embassy_time::{Duration, Instant, Timer};
 use embedded_hal_async::digital::Wait;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use va416xx_hal::clock::ClkgenExt;
 use va416xx_hal::gpio::{
     on_interrupt_for_async_gpio_for_port, InputDynPinAsync, InputPinAsync, PinsB, PinsC, PinsD,
@@ -66,8 +68,7 @@ static CHANNEL_PF0_TO_PF1: Channel<ThreadModeRawMutex, GpioCmd, 3> = Channel::ne
 
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
-    rtt_init_print!();
-    rprintln!("-- VA416xx Async GPIO Demo --");
+    defmt::println!("-- VA416xx Async GPIO Demo --");
 
     let mut dp = pac::Peripherals::take().unwrap();
 
@@ -114,7 +115,7 @@ async fn main(spawner: Spawner) {
             ))
             .unwrap();
         check_pin_to_pin_async_ops("PA0 to PA1", CHANNEL_PA0_TO_PA1.sender(), in_pin).await;
-        rprintln!("Example PA0 to PA1 done");
+        defmt::info!("Example PA0 to PA1 done");
     }
 
     if CHECK_PB0_TO_PB1 {
@@ -131,7 +132,7 @@ async fn main(spawner: Spawner) {
             ))
             .unwrap();
         check_pin_to_pin_async_ops("PB0 to PB1", CHANNEL_PB0_TO_PB1.sender(), in_pin).await;
-        rprintln!("Example PB0 to PB1 done");
+        defmt::info!("Example PB0 to PB1 done");
     }
 
     if CHECK_PC14_TO_PC15 {
@@ -147,7 +148,7 @@ async fn main(spawner: Spawner) {
             ))
             .unwrap();
         check_pin_to_pin_async_ops("PC14 to PC15", CHANNEL_PC14_TO_PC15.sender(), in_pin).await;
-        rprintln!("Example PC14 to PC15 done");
+        defmt::info!("Example PC14 to PC15 done");
     }
 
     if CHECK_PD2_TO_PD3 {
@@ -163,7 +164,7 @@ async fn main(spawner: Spawner) {
             ))
             .unwrap();
         check_pin_to_pin_async_ops("PD2 to PD3", CHANNEL_PD2_TO_PD3.sender(), in_pin).await;
-        rprintln!("Example PD2 to PD3 done");
+        defmt::info!("Example PD2 to PD3 done");
     }
 
     if CHECK_PE0_TO_PE1 {
@@ -179,7 +180,7 @@ async fn main(spawner: Spawner) {
             ))
             .unwrap();
         check_pin_to_pin_async_ops("PE0 to PE1", CHANNEL_PE0_TO_PE1.sender(), in_pin).await;
-        rprintln!("Example PE0 to PE1 done");
+        defmt::info!("Example PE0 to PE1 done");
     }
 
     if CHECK_PF0_TO_PF1 {
@@ -195,10 +196,10 @@ async fn main(spawner: Spawner) {
             ))
             .unwrap();
         check_pin_to_pin_async_ops("PF0 to PF1", CHANNEL_PF0_TO_PF1.sender(), in_pin).await;
-        rprintln!("Example PF0 to PF1 done");
+        defmt::info!("Example PF0 to PF1 done");
     }
 
-    rprintln!("Example done, toggling LED0");
+    defmt::info!("Example done, toggling LED0");
     loop {
         led.toggle();
         Timer::after(Duration::from_millis(500)).await;
@@ -210,46 +211,46 @@ async fn check_pin_to_pin_async_ops(
     sender: Sender<'static, ThreadModeRawMutex, GpioCmd, 3>,
     mut async_input: impl Wait,
 ) {
-    rprintln!(
+    defmt::info!(
         "{}: sending SetHigh command ({} ms)",
         ctx,
         Instant::now().as_millis()
     );
     sender.send(GpioCmd::new(GpioCmdType::SetHigh, 20)).await;
     async_input.wait_for_high().await.unwrap();
-    rprintln!(
+    defmt::info!(
         "{}: Input pin is high now ({} ms)",
         ctx,
         Instant::now().as_millis()
     );
 
-    rprintln!(
+    defmt::info!(
         "{}: sending SetLow command ({} ms)",
         ctx,
         Instant::now().as_millis()
     );
     sender.send(GpioCmd::new(GpioCmdType::SetLow, 20)).await;
     async_input.wait_for_low().await.unwrap();
-    rprintln!(
+    defmt::info!(
         "{}: Input pin is low now ({} ms)",
         ctx,
         Instant::now().as_millis()
     );
 
-    rprintln!(
+    defmt::info!(
         "{}: sending RisingEdge command ({} ms)",
         ctx,
         Instant::now().as_millis()
     );
     sender.send(GpioCmd::new(GpioCmdType::RisingEdge, 20)).await;
     async_input.wait_for_rising_edge().await.unwrap();
-    rprintln!(
+    defmt::info!(
         "{}: input pin had rising edge ({} ms)",
         ctx,
         Instant::now().as_millis()
     );
 
-    rprintln!(
+    defmt::info!(
         "{}: sending Falling command ({} ms)",
         ctx,
         Instant::now().as_millis()
@@ -258,13 +259,13 @@ async fn check_pin_to_pin_async_ops(
         .send(GpioCmd::new(GpioCmdType::FallingEdge, 20))
         .await;
     async_input.wait_for_falling_edge().await.unwrap();
-    rprintln!(
+    defmt::info!(
         "{}: input pin had a falling edge ({} ms)",
         ctx,
         Instant::now().as_millis()
     );
 
-    rprintln!(
+    defmt::info!(
         "{}: sending Falling command ({} ms)",
         ctx,
         Instant::now().as_millis()
@@ -273,20 +274,20 @@ async fn check_pin_to_pin_async_ops(
         .send(GpioCmd::new(GpioCmdType::FallingEdge, 20))
         .await;
     async_input.wait_for_any_edge().await.unwrap();
-    rprintln!(
+    defmt::info!(
         "{}: input pin had a falling (any) edge ({} ms)",
         ctx,
         Instant::now().as_millis()
     );
 
-    rprintln!(
+    defmt::info!(
         "{}: sending Falling command ({} ms)",
         ctx,
         Instant::now().as_millis()
     );
     sender.send(GpioCmd::new(GpioCmdType::RisingEdge, 20)).await;
     async_input.wait_for_any_edge().await.unwrap();
-    rprintln!(
+    defmt::info!(
         "{}: input pin had a rising (any) edge ({} ms)",
         ctx,
         Instant::now().as_millis()
@@ -305,29 +306,29 @@ async fn output_task(
         Timer::after(Duration::from_millis(next_cmd.after_delay.into())).await;
         match next_cmd.cmd_type {
             GpioCmdType::SetHigh => {
-                rprintln!("{}: Set output high", ctx);
+                defmt::info!("{}: Set output high", ctx);
                 out.set_high().unwrap();
             }
             GpioCmdType::SetLow => {
-                rprintln!("{}: Set output low", ctx);
+                defmt::info!("{}: Set output low", ctx);
                 out.set_low().unwrap();
             }
             GpioCmdType::RisingEdge => {
-                rprintln!("{}: Rising edge", ctx);
+                defmt::info!("{}: Rising edge", ctx);
                 if !out.is_low().unwrap() {
                     out.set_low().unwrap();
                 }
                 out.set_high().unwrap();
             }
             GpioCmdType::FallingEdge => {
-                rprintln!("{}: Falling edge", ctx);
+                defmt::info!("{}: Falling edge", ctx);
                 if !out.is_high().unwrap() {
                     out.set_high().unwrap();
                 }
                 out.set_low().unwrap();
             }
             GpioCmdType::CloseTask => {
-                rprintln!("{}: Closing task", ctx);
+                defmt::info!("{}: Closing task", ctx);
                 break;
             }
         }

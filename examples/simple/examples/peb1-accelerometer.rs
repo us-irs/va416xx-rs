@@ -2,11 +2,14 @@
 #![no_main]
 #![no_std]
 
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
+
 use accelerometer::{Accelerometer, RawAccelerometer};
 use cortex_m_rt::entry;
 use embedded_hal::delay::DelayNs;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::{
     i2c,
@@ -25,9 +28,8 @@ const DISPLAY_MODE: DisplayMode = DisplayMode::Normalized;
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!();
     let mut dp = pac::Peripherals::take().unwrap();
-    rprintln!("-- Vorago PEB1 accelerometer example --");
+    defmt::println!("-- Vorago PEB1 accelerometer example --");
     // Use the external clock connected to XTAL_N.
     let clocks = dp
         .clkgen

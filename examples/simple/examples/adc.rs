@@ -2,10 +2,13 @@
 #![no_main]
 #![no_std]
 
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
+
 use cortex_m_rt::entry;
 use embedded_hal::delay::DelayNs;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::{
     adc::{Adc, ChannelSelect, ChannelValue, MultiChannelSelect},
@@ -19,8 +22,7 @@ const ENABLE_BUF_PRINTOUT: bool = false;
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!();
-    rprintln!("VA416xx ADC example");
+    defmt::println!("VA416xx ADC example");
 
     let mut dp = pac::Peripherals::take().unwrap();
     // Use the external clock connected to XTAL_N.
@@ -38,7 +40,7 @@ fn main() -> ! {
         let single_value = adc
             .trigger_and_read_single_channel(va416xx_hal::adc::ChannelSelect::TempSensor)
             .expect("reading single channel value failed");
-        rprintln!(
+        defmt::info!(
             "Read single ADC value on temperature sensor channel: {:?}",
             single_value
         );
@@ -46,8 +48,8 @@ fn main() -> ! {
             .sweep_and_read_range(0, 7, &mut read_buf)
             .expect("ADC range read failed");
         if ENABLE_BUF_PRINTOUT {
-            rprintln!("ADC Range Read (0-8) read {} values", read_num);
-            rprintln!("ADC Range Read (0-8): {:?}", read_buf);
+            defmt::info!("ADC Range Read (0-8) read {} values", read_num);
+            defmt::info!("ADC Range Read (0-8): {:?}", read_buf);
         }
         assert_eq!(read_num, 8);
         for (idx, ch_val) in read_buf.iter().enumerate() {
@@ -63,7 +65,7 @@ fn main() -> ! {
         )
         .expect("ADC multiselect read failed");
         if ENABLE_BUF_PRINTOUT {
-            rprintln!("ADC Multiselect Read(0, 2 and 10): {:?}", &read_buf[0..3]);
+            defmt::info!("ADC Multiselect Read(0, 2 and 10): {:?}", &read_buf[0..3]);
         }
         assert_eq!(read_buf[0].channel(), ChannelSelect::AnIn0);
         assert_eq!(read_buf[1].channel(), ChannelSelect::AnIn2);

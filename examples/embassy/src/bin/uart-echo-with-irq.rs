@@ -9,6 +9,11 @@
 //! on the UART without requiring polling.
 #![no_std]
 #![no_main]
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
+
 use core::cell::RefCell;
 
 use embassy_example::EXTCLK_FREQ;
@@ -17,12 +22,10 @@ use embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex;
 use embassy_sync::blocking_mutex::Mutex;
 use embassy_time::{Duration, Ticker};
 use embedded_io::Write;
-use panic_rtt_target as _;
 use ringbuf::{
     traits::{Consumer, Observer, Producer},
     StaticRb,
 };
-use rtt_target::{rprintln, rtt_init_print};
 use va416xx_hal::{
     gpio::{OutputReadablePushPull, Pin, PinsG, PG5},
     pac::{self, interrupt},
@@ -49,8 +52,7 @@ static RINGBUF: SharedRingBuf = Mutex::new(RefCell::new(None));
 // a peripheral with embassy.
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
-    rtt_init_print!();
-    rprintln!("VA416xx UART-Embassy Example");
+    defmt::println!("VA416xx UART-Embassy Example");
 
     let mut dp = pac::Peripherals::take().unwrap();
 
@@ -153,9 +155,9 @@ fn UART0_RX() {
     }
 
     if errors.is_some() {
-        rprintln!("UART error: {:?}", errors);
+        defmt::info!("UART error: {:?}", errors);
     }
     if ringbuf_full {
-        rprintln!("ringbuffer is full, deleted oldest data");
+        defmt::info!("ringbuffer is full, deleted oldest data");
     }
 }

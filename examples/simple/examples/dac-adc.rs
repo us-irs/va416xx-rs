@@ -2,10 +2,13 @@
 #![no_main]
 #![no_std]
 
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
+
 use cortex_m_rt::entry;
 use embedded_hal::delay::DelayNs;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::{adc::Adc, dac::Dac, pac, prelude::*, timer::CountdownTimer};
 
@@ -25,8 +28,7 @@ const APP_MODE: AppMode = AppMode::DacAndAdc;
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!();
-    rprintln!("VA416xx DAC/ADC example");
+    defmt::println!("VA416xx DAC/ADC example");
 
     let mut dp = pac::Peripherals::take().unwrap();
     // Use the external clock connected to XTAL_N.
@@ -53,7 +55,7 @@ fn main() -> ! {
     let mut current_val = 0;
     loop {
         if let Some(dac) = &dac {
-            rprintln!("loading DAC with value {}", current_val);
+            defmt::info!("loading DAC with value {}", current_val);
             dac.load_and_trigger_manually(current_val)
                 .expect("loading DAC value failed");
             if current_val + DAC_INCREMENT >= 4096 {
@@ -70,7 +72,7 @@ fn main() -> ! {
             let ch_value = adc
                 .trigger_and_read_single_channel(va416xx_hal::adc::ChannelSelect::AnIn0)
                 .expect("reading ADC channel 0 failed");
-            rprintln!("Received channel value {:?}", ch_value);
+            defmt::info!("Received channel value {:?}", ch_value);
         }
 
         delay_provider.delay_ms(500);

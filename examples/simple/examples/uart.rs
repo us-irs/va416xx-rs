@@ -2,12 +2,14 @@
 // echo mode
 #![no_main]
 #![no_std]
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
 
 use cortex_m_rt::entry;
 use embedded_hal_nb::serial::Read;
 use embedded_io::Write;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::clock::ClkgenExt;
 use va416xx_hal::time::Hertz;
@@ -15,8 +17,7 @@ use va416xx_hal::{gpio::PinsG, pac, uart};
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!();
-    rprintln!("-- VA416xx UART example application--");
+    defmt::println!("-- VA416xx UART example application--");
 
     let mut dp = pac::Peripherals::take().unwrap();
 
@@ -45,12 +46,11 @@ fn main() -> ! {
         // Echo what is received on the serial link.
         match nb::block!(rx.read()) {
             Ok(recvd) => {
-                if let Err(e) = embedded_hal_nb::serial::Write::write(&mut tx, recvd) {
-                    rprintln!("UART TX error: {:?}", e);
-                }
+                // Infallible operation.
+                embedded_hal_nb::serial::Write::write(&mut tx, recvd).unwrap();
             }
             Err(e) => {
-                rprintln!("UART RX error {:?}", e);
+                defmt::info!("UART RX error {:?}", e);
             }
         }
     }

@@ -7,16 +7,12 @@ edition = "2021"
 cortex-m = "0.7"
 cortex-m-rt = "0.7"
 embedded-hal = "1"
-panic-rtt-target = { version = "0.2" }
-panic-halt = { version = "1" }
-rtt-target = { version = "0.6" }
+defmt-rtt = "0.4"
+defmt = "1"
+panic-probe = { version = "1", features = ["defmt"] }
 crc = "3"
 static_assertions = "1"
 
 [dependencies.va416xx-hal]
 version = "0.5"
-features = ["va41630"]
-
-[features]
-default = []
-rtt-panic = []
+features = ["va41630", "defmt"]

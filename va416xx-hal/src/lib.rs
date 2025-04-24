@@ -26,6 +26,8 @@
 //! faulty register reset values which might lead to weird bugs and glitches.
 #![no_std]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#[cfg(feature = "alloc")]
+extern crate alloc;
 #[cfg(test)]
 extern crate std;
 
@@ -33,8 +35,7 @@ use gpio::Port;
 pub use va416xx as device;
 pub use va416xx as pac;
 
-pub mod prelude;
-
+pub mod can;
 pub mod clock;
 pub mod dma;
 pub mod edac;
@@ -42,6 +43,7 @@ pub mod gpio;
 pub mod i2c;
 pub mod irq_router;
 pub mod pins;
+pub mod prelude;
 pub mod pwm;
 pub mod spi;
 pub mod time;

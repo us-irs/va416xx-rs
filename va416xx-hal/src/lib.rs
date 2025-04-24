@@ -34,7 +34,6 @@ pub use va416xx as device;
 pub use va416xx as pac;
 
 pub mod prelude;
-
 pub mod clock;
 pub mod dma;
 pub mod edac;
@@ -47,6 +46,7 @@ pub mod spi;
 pub mod time;
 pub mod timer;
 pub mod uart;
+pub mod can;
 pub mod wdt;
 
 #[cfg(feature = "va41630")]

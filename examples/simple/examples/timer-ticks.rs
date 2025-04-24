@@ -6,16 +6,16 @@ use panic_probe as _;
 // Import logger.
 use defmt_rtt as _;
 
-use core::cell::Cell;
+use core::sync::atomic::{AtomicU32, Ordering};
 use cortex_m::asm;
 use cortex_m_rt::entry;
-use critical_section::Mutex;
 use simple_examples::peb1;
 use va416xx_hal::{
+    clock::ClockConfigurator,
     irq_router::enable_and_init_irq_router,
     pac::{self, interrupt},
     prelude::*,
-    timer::{default_ms_irq_handler, set_up_ms_tick, CountdownTimer, MS_COUNTER},
+    timer::CountdownTimer,
 };
 
 #[allow(dead_code)]
@@ -24,32 +24,33 @@ enum LibType {
     Hal,
 }
 
-static SEC_COUNTER: Mutex<Cell<u32>> = Mutex::new(Cell::new(0));
+static MS_COUNTER: AtomicU32 = AtomicU32::new(0);
+static SEC_COUNTER: AtomicU32 = AtomicU32::new(0);
 
 #[entry]
 fn main() -> ! {
-    let mut dp = pac::Peripherals::take().unwrap();
+    let dp = pac::Peripherals::take().unwrap();
     let mut last_ms = 0;
     defmt::println!("-- Vorago system ticks using timers --");
     // Use the external clock connected to XTAL_N.
-    let clocks = dp
-        .clkgen
-        .constrain()
+    let clocks = ClockConfigurator::new(dp.clkgen)
         .xtal_n_clk_with_src_freq(peb1::EXTCLK_FREQ)
-        .freeze(&mut dp.sysconfig)
+        .freeze()
         .unwrap();
-    enable_and_init_irq_router(&mut dp.sysconfig, &dp.irq_router);
-    let _ = set_up_ms_tick(&mut dp.sysconfig, dp.tim0, &clocks);
-    let mut second_timer = CountdownTimer::new(&mut dp.sysconfig, dp.tim1, &clocks);
-    second_timer.listen();
+    enable_and_init_irq_router();
+    let mut ms_timer = CountdownTimer::new(dp.tim0, &clocks);
+    ms_timer.enable_interrupt(true);
+    ms_timer.start(1.Hz());
+    let mut second_timer = CountdownTimer::new(dp.tim1, &clocks);
+    second_timer.enable_interrupt(true);
     second_timer.start(1.Hz());
     loop {
-        let current_ms = critical_section::with(|cs| MS_COUNTER.borrow(cs).get());
+        let current_ms = MS_COUNTER.load(Ordering::Relaxed);
         if current_ms >= last_ms + 1000 {
             // To prevent drift.
             last_ms += 1000;
             defmt::info!("MS counter: {}", current_ms);
-            let second = critical_section::with(|cs| SEC_COUNTER.borrow(cs).get());
+            let second = SEC_COUNTER.load(Ordering::Relaxed);
             defmt::info!("Second counter: {}", second);
         }
         asm::delay(1000);
@@ -59,15 +60,11 @@ fn main() -> ! {
 #[interrupt]
 #[allow(non_snake_case)]
 fn TIM0() {
-    default_ms_irq_handler()
+    MS_COUNTER.fetch_add(1, Ordering::Relaxed);
 }
 
 #[interrupt]
 #[allow(non_snake_case)]
 fn TIM1() {
-    critical_section::with(|cs| {
-        let mut sec = SEC_COUNTER.borrow(cs).get();
-        sec += 1;
-        SEC_COUNTER.borrow(cs).set(sec);
-    });
+    SEC_COUNTER.fetch_add(1, Ordering::Relaxed);
 }

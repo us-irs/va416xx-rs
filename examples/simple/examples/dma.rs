@@ -6,6 +6,7 @@
 use panic_probe as _;
 // Import logger.
 use defmt_rtt as _;
+use va416xx_hal::clock::ClockConfigurator;
 
 use core::cell::Cell;
 
@@ -15,11 +16,8 @@ use embedded_hal::delay::DelayNs;
 use simple_examples::peb1;
 use va416xx_hal::dma::{Dma, DmaCfg, DmaChannel, DmaCtrlBlock};
 use va416xx_hal::irq_router::enable_and_init_irq_router;
+use va416xx_hal::pac::{self, interrupt};
 use va416xx_hal::timer::CountdownTimer;
-use va416xx_hal::{
-    pac::{self, interrupt},
-    prelude::*,
-};
 
 static DMA_DONE_FLAG: Mutex<Cell<bool>> = Mutex::new(Cell::new(false));
 static DMA_ACTIVE_FLAG: Mutex<Cell<bool>> = Mutex::new(Cell::new(false));
@@ -40,26 +38,23 @@ static mut DMA_DEST_BUF: [u16; 36] = [0; 36];
 fn main() -> ! {
     defmt::println!("VA416xx DMA example");
 
-    let mut dp = pac::Peripherals::take().unwrap();
+    let dp = pac::Peripherals::take().unwrap();
     // Use the external clock connected to XTAL_N.
-    let clocks = dp
-        .clkgen
-        .constrain()
+    let clocks = ClockConfigurator::new(dp.clkgen)
         .xtal_n_clk_with_src_freq(peb1::EXTCLK_FREQ)
-        .freeze(&mut dp.sysconfig)
+        .freeze()
         .unwrap();
-    enable_and_init_irq_router(&mut dp.sysconfig, &dp.irq_router);
+    enable_and_init_irq_router();
     // Safety: The DMA control block has an alignment rule of 128 and we constructed it directly
     // statically.
     let dma = Dma::new(
-        &mut dp.sysconfig,
         dp.dma,
         DmaCfg::default(),
         core::ptr::addr_of_mut!(DMA_CTRL_BLOCK),
     )
     .expect("error creating DMA");
     let (mut dma0, _, _, _) = dma.split();
-    let mut delay_ms = CountdownTimer::new(&mut dp.sysconfig, dp.tim0, &clocks);
+    let mut delay_ms = CountdownTimer::new(dp.tim0, &clocks);
     let mut src_buf_8_bit: [u8; 65] = [0; 65];
     let mut dest_buf_8_bit: [u8; 65] = [0; 65];
     let mut src_buf_32_bit: [u32; 17] = [0; 17];
@@ -90,7 +85,7 @@ fn transfer_example_8_bit(
     src_buf: &mut [u8; 65],
     dest_buf: &mut [u8; 65],
     dma0: &mut DmaChannel,
-    delay_ms: &mut CountdownTimer<pac::Tim0>,
+    delay: &mut CountdownTimer,
 ) {
     (0..64).for_each(|i| {
         src_buf[i] = i as u8;
@@ -132,7 +127,7 @@ fn transfer_example_8_bit(
             defmt::info!("8-bit transfer done");
             break;
         }
-        delay_ms.delay_ms(1);
+        delay.delay_ms(1);
     }
     (0..64).for_each(|i| {
         assert_eq!(dest_buf[i], i as u8);
@@ -142,7 +137,7 @@ fn transfer_example_8_bit(
     dest_buf.fill(0);
 }
 
-fn transfer_example_16_bit(dma0: &mut DmaChannel, delay_ms: &mut CountdownTimer<pac::Tim0>) {
+fn transfer_example_16_bit(dma0: &mut DmaChannel, delay_ms: &mut CountdownTimer) {
     let dest_buf_ref = unsafe { &mut *core::ptr::addr_of_mut!(DMA_DEST_BUF[0..33]) };
     unsafe {
         // Set values scaled from 0 to 65535 to verify this is really a 16-bit transfer.
@@ -207,7 +202,7 @@ fn transfer_example_32_bit(
     src_buf: &mut [u32; 17],
     dest_buf: &mut [u32; 17],
     dma0: &mut DmaChannel,
-    delay_ms: &mut CountdownTimer<pac::Tim0>,
+    delay_ms: &mut CountdownTimer,
 ) {
     // Set values scaled from 0 to 65535 to verify this is really a 16-bit transfer.
     (0..16).for_each(|i| {

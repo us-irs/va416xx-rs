@@ -19,7 +19,7 @@ pub mod accelerometer {
     };
 
     // Accelerometer located on the GPIO board.
-    pub type Accelerometer = Lis2dh12<I2cMaster<pac::I2c0>>;
+    pub type Accelerometer = Lis2dh12<I2cMaster>;
 
     #[derive(Debug)]
     pub enum ConstructorError {
@@ -30,14 +30,12 @@ pub mod accelerometer {
 
     pub fn new_with_addr_detection(
         i2c: pac::I2c0,
-        sysconfig: &mut pac::Sysconfig,
         clocks: &Clocks,
     ) -> Result<Accelerometer, ConstructorError> {
         let mut i2c_master = I2cMaster::new(
             i2c,
-            sysconfig,
-            MasterConfig::default(),
             clocks,
+            MasterConfig::default(),
             I2cSpeed::Regular100khz,
         )
         .map_err(ConstructorError::ClkError)?;
@@ -47,7 +45,7 @@ pub mod accelerometer {
     }
 
     pub fn new_with_i2cm(
-        i2c: I2cMaster<pac::I2c0>,
+        i2c: I2cMaster,
         addr: lis2dh12::SlaveAddr,
     ) -> Result<Accelerometer, lis2dh12::Error<i2c::Error>> {
         Lis2dh12::new(i2c, addr)

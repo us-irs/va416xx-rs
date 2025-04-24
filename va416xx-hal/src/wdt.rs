@@ -3,12 +3,12 @@
 //! ## Examples
 //!
 //! - [Watchdog simple example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/wdt.rs)
-use crate::time::Hertz;
-use crate::{
-    clock::{Clocks, PeripheralSelect},
-    pac,
-    prelude::SyscfgExt,
+use vorago_shared_periphs::{
+    enable_peripheral_clock, reset_peripheral_for_cycles, PeripheralSelect,
 };
+
+use crate::time::Hertz;
+use crate::{clock::Clocks, pac};
 use crate::{disable_nvic_interrupt, enable_nvic_interrupt};
 
 pub const WDT_UNLOCK_VALUE: u32 = 0x1ACC_E551;
@@ -39,23 +39,13 @@ pub fn disable_wdt_interrupts() {
 }
 
 impl Wdt {
-    pub fn new(
-        syscfg: &mut pac::Sysconfig,
-        wdt: pac::WatchDog,
-        clocks: &Clocks,
-        wdt_freq_ms: u32,
-    ) -> Self {
-        Self::start(syscfg, wdt, clocks, wdt_freq_ms)
+    pub fn new(wdt: pac::WatchDog, clocks: &Clocks, wdt_freq_ms: u32) -> Self {
+        Self::start(wdt, clocks, wdt_freq_ms)
     }
 
-    pub fn start(
-        syscfg: &mut pac::Sysconfig,
-        wdt: pac::WatchDog,
-        clocks: &Clocks,
-        wdt_freq_ms: u32,
-    ) -> Self {
-        syscfg.enable_peripheral_clock(PeripheralSelect::Watchdog);
-        syscfg.assert_periph_reset_for_two_cycles(PeripheralSelect::Watchdog);
+    pub fn start(wdt: pac::WatchDog, clocks: &Clocks, wdt_freq_ms: u32) -> Self {
+        enable_peripheral_clock(PeripheralSelect::Watchdog);
+        reset_peripheral_for_cycles(PeripheralSelect::Watchdog, 2);
 
         let wdt_clock = clocks.apb2();
         let mut wdt_ctrl = Self {

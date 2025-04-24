@@ -11,17 +11,8 @@ keywords = ["no-std", "hal", "cortex-m", "vorago", "va416xx"]
 categories = ["aerospace", "embedded", "no-std", "hardware-support"]
 
 [dependencies]
-critical-section = "1"
-
-embassy-sync = "0.6"
-embassy-executor = "0.7"
-embassy-time-driver = "0.2"
-embassy-time-queue-utils = "0.1"
-portable-atomic = "1"
-
-once_cell = { version = "1", default-features = false, features = ["critical-section"] }
-
-va416xx-hal = { version = ">=0.4, <=0.5" }
+vorago-shared-periphs = { git = "https://egit.irs.uni-stuttgart.de/rust/vorago-shared-periphs.git", features = ["vor4x"] }
+va416xx-hal = { path = "../va416xx-hal" }
 
 [features]
 default = ["irq-tim14-tim15"]

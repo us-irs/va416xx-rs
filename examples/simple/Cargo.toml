@@ -17,19 +17,11 @@ embedded-io = "0.6"
 panic-halt = "1"
 accelerometer = "0.12"
 
-va416xx-hal = { version = "0.5", features = ["va41630", "defmt"] }
+va416xx-hal = { version = "0.5", path = "../../va416xx-hal", features = ["va41630", "defmt"] }
 
 [dependencies.vorago-peb1]
 path = "../../vorago-peb1"
 optional = true
-
-[dependencies.rtic]
-version = "2"
-features = ["thumbv7-backend"]
-
-[dependencies.rtic-monotonics]
-version = "2"
-features = ["cortex-m-systick"]
 
 [features]
 default = ["va41630"]

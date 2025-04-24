@@ -5,22 +5,24 @@
 //! - [ADC and DAC example](https://github.com/us-irs/va416xx-rs/blob/main/examples/simple/examples/dac-adc.rs)
 use core::ops::Deref;
 
-use crate::{
-    clock::{Clocks, PeripheralSelect, SyscfgExt},
-    pac,
+use vorago_shared_periphs::{
+    disable_peripheral_clock, enable_peripheral_clock, reset_peripheral_for_cycles,
+    PeripheralSelect,
 };
+
+use crate::{clock::Clocks, pac};
 
 pub type DacRegisterBlock = pac::dac0::RegisterBlock;
 
 /// Common trait implemented by all PAC peripheral access structures. The register block
 /// format is the same for all DAC blocks.
-pub trait Instance: Deref<Target = DacRegisterBlock> {
+pub trait DacMarker: Deref<Target = DacRegisterBlock> {
     const IDX: u8;
 
     fn ptr() -> *const DacRegisterBlock;
 }
 
-impl Instance for pac::Dac0 {
+impl DacMarker for pac::Dac0 {
     const IDX: u8 = 0;
 
     #[inline(always)]
@@ -29,7 +31,7 @@ impl Instance for pac::Dac0 {
     }
 }
 
-impl Instance for pac::Dac1 {
+impl DacMarker for pac::Dac1 {
     const IDX: u8 = 1;
 
     #[inline(always)]
@@ -50,40 +52,37 @@ pub enum DacSettling {
     Apb2Times150 = 6,
 }
 
-pub struct Dac<DacInstance> {
-    dac: DacInstance,
-}
+pub struct Dac(*const DacRegisterBlock);
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ValueTooLarge;
 
-impl<DacInstance: Instance> Dac<DacInstance> {
+impl Dac {
     /// Create a new [Dac] driver instance.
     ///
     /// The [Clocks] structure is expected here as well to ensure the clock was set up properly.
-    pub fn new(
-        syscfg: &mut pac::Sysconfig,
-        dac: DacInstance,
-        dac_settling: DacSettling,
-        _clocks: &Clocks,
-    ) -> Self {
-        syscfg.enable_peripheral_clock(PeripheralSelect::Dac);
+    pub fn new<Dac: DacMarker>(dac: Dac, dac_settling: DacSettling, _clocks: &Clocks) -> Self {
+        enable_peripheral_clock(PeripheralSelect::Dac);
 
         dac.ctrl1().write(|w| {
             w.dac_en().set_bit();
             // SAFETY: Enum values are valid values only.
             unsafe { w.dac_settling().bits(dac_settling as u8) }
         });
-        let dac = Self { dac };
+        let mut dac = Self(Dac::ptr());
         dac.clear_fifo();
         dac.clear_irqs();
         dac
     }
 
+    pub const fn regs(&self) -> &DacRegisterBlock {
+        unsafe { &*self.0 }
+    }
+
     #[inline(always)]
-    pub fn clear_irqs(&self) {
-        self.dac.irq_clr().write(|w| {
+    pub fn clear_irqs(&mut self) {
+        self.regs().irq_clr().write(|w| {
             w.fifo_oflow().set_bit();
             w.fifo_uflow().set_bit();
             w.dac_done().set_bit();
@@ -92,31 +91,30 @@ impl<DacInstance: Instance> Dac<DacInstance> {
     }
 
     #[inline(always)]
-    pub fn clear_fifo(&self) {
-        self.dac.fifo_clr().write(|w| unsafe { w.bits(1) });
+    pub fn clear_fifo(&mut self) {
+        self.regs().fifo_clr().write(|w| unsafe { w.bits(1) });
     }
 
     /// Load next value into the FIFO.
     ///
     /// Uses the [nb] API to allow blocking and non-blocking usage.
     #[inline(always)]
-    pub fn load_value(&self, val: u16) -> nb::Result<(), ValueTooLarge> {
+    pub fn load_value(&mut self, val: u16) -> nb::Result<(), ValueTooLarge> {
         if val > 2_u16.pow(12) - 1 {
             return Err(nb::Error::Other(ValueTooLarge));
         }
-        if self.dac.status().read().fifo_entry_cnt().bits() >= 32_u8 {
+        let regs = self.regs();
+        if regs.status().read().fifo_entry_cnt().bits() >= 32_u8 {
             return Err(nb::Error::WouldBlock);
         }
-        self.dac
-            .fifo_data()
-            .write(|w| unsafe { w.bits(val.into()) });
+        regs.fifo_data().write(|w| unsafe { w.bits(val.into()) });
         Ok(())
     }
 
     /// This loads and triggers the next value immediately. It also clears the FIFO before
     /// loading the passed value.
     #[inline(always)]
-    pub fn load_and_trigger_manually(&self, val: u16) -> Result<(), ValueTooLarge> {
+    pub fn load_and_trigger_manually(&mut self, val: u16) -> Result<(), ValueTooLarge> {
         if val > 2_u16.pow(12) - 1 {
             return Err(ValueTooLarge);
         }
@@ -132,31 +130,30 @@ impl<DacInstance: Instance> Dac<DacInstance> {
     /// to be processed by the DAC.
     #[inline(always)]
     pub fn trigger_manually(&self) {
-        self.dac.ctrl0().write(|w| w.man_trig_en().set_bit());
+        self.regs().ctrl0().write(|w| w.man_trig_en().set_bit());
     }
 
     #[inline(always)]
     pub fn enable_external_trigger(&self) {
-        self.dac.ctrl0().write(|w| w.ext_trig_en().set_bit());
+        self.regs().ctrl0().write(|w| w.ext_trig_en().set_bit());
     }
 
     pub fn is_settled(&self) -> nb::Result<(), ()> {
-        if self.dac.status().read().dac_busy().bit_is_set() {
+        if self.regs().status().read().dac_busy().bit_is_set() {
             return Err(nb::Error::WouldBlock);
         }
         Ok(())
     }
 
     #[inline(always)]
-    pub fn reset(&mut self, syscfg: &mut pac::Sysconfig) {
-        syscfg.enable_peripheral_clock(PeripheralSelect::Dac);
-        syscfg.assert_periph_reset_for_two_cycles(PeripheralSelect::Dac);
+    pub fn reset(&mut self) {
+        enable_peripheral_clock(PeripheralSelect::Dac);
+        reset_peripheral_for_cycles(PeripheralSelect::Dac, 2);
     }
 
-    /// Relases the DAC, which also disables its peripheral clock.
+    /// Stops the DAC, which disables its peripheral clock.
     #[inline(always)]
-    pub fn release(self, syscfg: &mut pac::Sysconfig) -> DacInstance {
-        syscfg.disable_peripheral_clock(PeripheralSelect::Dac);
-        self.dac
+    pub fn stop(self) {
+        disable_peripheral_clock(PeripheralSelect::Dac);
     }
 }

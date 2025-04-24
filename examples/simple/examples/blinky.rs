@@ -8,15 +8,19 @@ use panic_probe as _;
 use defmt_rtt as _;
 
 use cortex_m_rt::entry;
-use va416xx_hal::{gpio::PinsG, pac};
+use va416xx_hal::{
+    gpio::{Output, PinState},
+    pac,
+    pins::PinsG,
+};
 
 #[entry]
 fn main() -> ! {
     defmt::println!("VA416xx HAL blinky example");
 
-    let mut dp = pac::Peripherals::take().unwrap();
-    let portg = PinsG::new(&mut dp.sysconfig, dp.portg);
-    let mut led = portg.pg5.into_readable_push_pull_output();
+    let dp = pac::Peripherals::take().unwrap();
+    let portg = PinsG::new(dp.portg);
+    let mut led = Output::new(portg.pg5, PinState::Low);
     loop {
         cortex_m::asm::delay(2_000_000);
         led.toggle();

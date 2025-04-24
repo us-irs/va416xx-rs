@@ -6,7 +6,6 @@ edition = "2021"
 [dependencies]
 cortex-m = "0.7"
 cortex-m-rt = "0.7"
-embedded-hal = "1"
 defmt-rtt = "0.4"
 defmt = "1"
 panic-probe = { version = "1", features = ["defmt"] }
@@ -16,3 +15,4 @@ static_assertions = "1"
 [dependencies.va416xx-hal]
 version = "0.5"
 features = ["va41630", "defmt"]
+path = "../va416xx-hal"

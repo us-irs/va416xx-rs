@@ -21,8 +21,10 @@ use embassy_executor::Spawner;
 use embassy_time::{Duration, Instant, Ticker};
 use embedded_io_async::Write;
 use va416xx_hal::{
-    gpio::PinsG,
+    clock::ClockConfigurator,
+    gpio::{Output, PinState},
     pac::{self, interrupt},
+    pins::PinsG,
     prelude::*,
     time::Hertz,
     uart::{
@@ -44,34 +46,22 @@ const STR_LIST: &[&str] = &[
 async fn main(_spawner: Spawner) {
     defmt::println!("-- VA108xx Async UART TX Demo --");
 
-    let mut dp = pac::Peripherals::take().unwrap();
+    let dp = pac::Peripherals::take().unwrap();
 
     // Initialize the systick interrupt & obtain the token to prove that we did
     // Use the external clock connected to XTAL_N.
-    let clocks = dp
-        .clkgen
-        .constrain()
+    let clocks = ClockConfigurator::new(dp.clkgen)
         .xtal_n_clk_with_src_freq(Hertz::from_raw(EXTCLK_FREQ))
-        .freeze(&mut dp.sysconfig)
+        .freeze()
         .unwrap();
     // Safety: Only called once here.
-    unsafe {
-        va416xx_embassy::init(
-            &mut dp.sysconfig,
-            &dp.irq_router,
-            dp.tim15,
-            dp.tim14,
-            &clocks,
-        );
-    }
+    va416xx_embassy::init(dp.tim15, dp.tim14, &clocks);
 
-    let portg = PinsG::new(&mut dp.sysconfig, dp.portg);
-    let mut led = portg.pg5.into_readable_push_pull_output();
+    let pinsg = PinsG::new(dp.portg);
+    let mut led = Output::new(pinsg.pg5, PinState::Low);
 
-    let tx = portg.pg0.into_funsel_1();
-    let rx = portg.pg1.into_funsel_1();
-
-    let uarta = uart::Uart::new(&mut dp.sysconfig, dp.uart0, (tx, rx), 115200.Hz(), &clocks);
+    let uarta =
+        uart::Uart::new(dp.uart0, pinsg.pg0, pinsg.pg1, &clocks, 115200.Hz().into()).unwrap();
     let (tx, _rx) = uarta.split();
     let mut async_tx = TxAsync::new(tx);
     let mut ticker = Ticker::every(Duration::from_secs(1));

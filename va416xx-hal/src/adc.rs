@@ -8,9 +8,9 @@ use core::marker::PhantomData;
 
 use crate::clock::Clocks;
 use crate::pac;
-use crate::prelude::*;
 use crate::time::Hertz;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
+use vorago_shared_periphs::{enable_peripheral_clock, PeripheralSelect};
 
 pub const ADC_MIN_CLK: Hertz = Hertz::from_raw(2_000_000);
 pub const ADC_MAX_CLK: Hertz = Hertz::from_raw(12_500_000);
@@ -151,8 +151,8 @@ pub struct Adc<TagEnabled = ChannelTagDisabled> {
 impl Adc<ChannelTagEnabled> {}
 
 impl Adc<ChannelTagDisabled> {
-    pub fn new(syscfg: &mut pac::Sysconfig, adc: pac::Adc, clocks: &Clocks) -> Self {
-        Self::generic_new(syscfg, adc, clocks)
+    pub fn new(adc: pac::Adc, clocks: &Clocks) -> Self {
+        Self::generic_new(adc, clocks)
     }
 
     pub fn trigger_and_read_single_channel(&self, ch: ChannelSelect) -> Result<u16, AdcEmptyError> {
@@ -209,12 +209,8 @@ impl Adc<ChannelTagDisabled> {
 }
 
 impl Adc<ChannelTagEnabled> {
-    pub fn new_with_channel_tag(
-        syscfg: &mut pac::Sysconfig,
-        adc: pac::Adc,
-        clocks: &Clocks,
-    ) -> Self {
-        let mut adc = Self::generic_new(syscfg, adc, clocks);
+    pub fn new_with_channel_tag(adc: pac::Adc, clocks: &Clocks) -> Self {
+        let mut adc = Self::generic_new(adc, clocks);
         adc.enable_channel_tag();
         adc
     }
@@ -286,8 +282,8 @@ impl Adc<ChannelTagEnabled> {
 }
 
 impl<TagEnabled> Adc<TagEnabled> {
-    fn generic_new(syscfg: &mut pac::Sysconfig, adc: pac::Adc, _clocks: &Clocks) -> Self {
-        syscfg.enable_peripheral_clock(crate::clock::PeripheralSelect::Adc);
+    fn generic_new(adc: pac::Adc, _clocks: &Clocks) -> Self {
+        enable_peripheral_clock(PeripheralSelect::Adc);
         adc.ctrl().write(|w| unsafe { w.bits(0) });
         let adc = Self {
             adc,

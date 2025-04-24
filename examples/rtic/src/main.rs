@@ -17,14 +17,15 @@ mod app {
     use rtic_monotonics::systick::prelude::*;
     use rtic_monotonics::Monotonic;
     use va416xx_hal::{
-        gpio::{OutputReadablePushPull, Pin, PinsG, PG5},
+        clock::ClockConfigurator,
+        gpio::{Output, PinState},
         pac,
-        prelude::*,
+        pins::PinsG,
     };
 
     #[local]
     struct Local {
-        led: Pin<PG5, OutputReadablePushPull>,
+        led: Output,
     }
 
     #[shared]
@@ -33,19 +34,16 @@ mod app {
     rtic_monotonics::systick_monotonic!(Mono, 1_000);
 
     #[init]
-    fn init(mut cx: init::Context) -> (Shared, Local) {
+    fn init(cx: init::Context) -> (Shared, Local) {
         defmt::println!("-- Vorago RTIC example application --");
         // Use the external clock connected to XTAL_N.
-        let clocks = cx
-            .device
-            .clkgen
-            .constrain()
+        let clocks = ClockConfigurator::new(cx.device.clkgen)
             .xtal_n_clk_with_src_freq(EXTCLK_FREQ)
-            .freeze(&mut cx.device.sysconfig)
+            .freeze()
             .unwrap();
         Mono::start(cx.core.SYST, clocks.sysclk().raw());
-        let portg = PinsG::new(&mut cx.device.sysconfig, cx.device.portg);
-        let led = portg.pg5.into_readable_push_pull_output();
+        let pinsg = PinsG::new(cx.device.portg);
+        let led = Output::new(pinsg.pg5, PinState::Low);
         blinky::spawn().ok();
         (Shared {}, Local { led })
     }

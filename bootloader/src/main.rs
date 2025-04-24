@@ -10,11 +10,10 @@ use crc::{Crc, CRC_32_ISO_HDLC};
 use defmt_rtt as _;
 use panic_probe as _;
 use va416xx_hal::{
-    clock::{pll_setup_delay, ClkDivSel, ClkselSys},
+    clock::{pll_setup_delay, ClkDivSel, ClkselSys, ClockConfigurator},
     edac,
     nvm::Nvm,
     pac::{self, interrupt},
-    prelude::*,
     time::Hertz,
     wdt::Wdt,
 };
@@ -104,23 +103,16 @@ fn main() -> ! {
     dp.sysconfig.rom_prot().write(|w| unsafe { w.bits(1) });
     setup_edac(&mut dp.sysconfig);
     // Use the external clock connected to XTAL_N.
-    let clocks = dp
-        .clkgen
-        .constrain()
+    let clocks = ClockConfigurator::new(dp.clkgen)
         .xtal_n_clk_with_src_freq(Hertz::from_raw(EXTCLK_FREQ))
-        .freeze(&mut dp.sysconfig)
+        .freeze()
         .unwrap();
     let mut opt_wdt = OptWdt(None);
     if WITH_WDT {
-        opt_wdt.0 = Some(Wdt::start(
-            &mut dp.sysconfig,
-            dp.watch_dog,
-            &clocks,
-            WDT_FREQ_MS,
-        ));
+        opt_wdt.0 = Some(Wdt::start(dp.watch_dog, &clocks, WDT_FREQ_MS));
     }
 
-    let nvm = Nvm::new(&mut dp.sysconfig, dp.spi3, &clocks);
+    let nvm = Nvm::new(dp.spi3, &clocks);
 
     if FLASH_SELF {
         let mut first_four_bytes: [u8; 4] = [0; 4];

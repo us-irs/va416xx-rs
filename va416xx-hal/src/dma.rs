@@ -3,11 +3,12 @@
 //! ## Examples
 //!
 //! - [Simple DMA example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/dma.rs)
-use crate::{
-    clock::{PeripheralClock, PeripheralSelect},
-    enable_nvic_interrupt, pac,
-    prelude::*,
+use arbitrary_int::{u10, u3};
+use vorago_shared_periphs::{
+    enable_peripheral_clock, reset_peripheral_for_cycles, PeripheralSelect,
 };
+
+use crate::{enable_nvic_interrupt, pac};
 
 const MAX_DMA_TRANSFERS_PER_CYCLE: usize = 1024;
 const BASE_PTR_ADDR_MASK: u32 = 0b1111111;
@@ -15,9 +16,10 @@ const BASE_PTR_ADDR_MASK: u32 = 0b1111111;
 /// DMA cycle control values.
 ///
 /// Refer to chapter 6.3.1 and 6.6.3 of the datasheet for more details.
-#[repr(u8)]
-#[derive(Debug, Clone, Copy)]
+#[bitbybit::bitenum(u3, exhaustive = true)]
+#[derive(Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[repr(u8)]
 pub enum CycleControl {
     /// Indicates that the data structure is invalid.
     Stop = 0b000,
@@ -42,7 +44,8 @@ pub enum CycleControl {
     PeriphScatterGatherAlternate = 0b111,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[bitbybit::bitenum(u2, exhaustive = true)]
+#[derive(Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum AddrIncrement {
     Byte = 0b00,
@@ -51,7 +54,8 @@ pub enum AddrIncrement {
     None = 0b11,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[bitbybit::bitenum(u2, exhaustive = false)]
+#[derive(Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum DataSize {
     Byte = 0b00,
@@ -60,7 +64,8 @@ pub enum DataSize {
 }
 
 /// This configuration controls how many DMA transfers can occur before the controller arbitrates.
-#[derive(Debug, Clone, Copy)]
+#[bitbybit::bitenum(u4, exhaustive = true)]
+#[derive(Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum RPower {
     EachTransfer = 0b0000,
@@ -73,8 +78,12 @@ pub enum RPower {
     Every128 = 0b0111,
     Every256 = 0b1000,
     Every512 = 0b1001,
-    Every1024Min = 0b1010,
-    Every1024 = 0b1111,
+    Every1024 = 0b1010,
+    Every1024Alt0 = 0b1011,
+    Every1024Alt1 = 0b1100,
+    Every1024Alt2 = 0b1101,
+    Every1024Alt3 = 0b1110,
+    Every1024Alt4 = 0b1111,
 }
 
 #[derive(Debug, PartialEq, Eq, thiserror::Error)]
@@ -82,6 +91,7 @@ pub enum RPower {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct InvalidCtrlBlockAddrError;
 
+/*
 bitfield::bitfield! {
     #[repr(transparent)]
     #[derive(Clone, Copy)]
@@ -111,6 +121,33 @@ bitfield::bitfield! {
     u8;
     pub cycle_ctrl, set_cycle_ctr: 2, 0;
 }
+*/
+
+#[bitbybit::bitfield(u32, default = 0x0)]
+#[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ChannelConfig {
+    #[bits(30..=31, rw)]
+    dst_inc: AddrIncrement,
+    #[bits(28..=29, rw)]
+    dst_size: Option<DataSize>,
+    #[bits(26..=27, rw)]
+    src_inc: AddrIncrement,
+    #[bits(24..=25, rw)]
+    src_size: Option<DataSize>,
+    #[bits(21..=23, rw)]
+    dest_prot_ctrl: u3,
+    #[bits(18..=20, rw)]
+    src_prot_ctrl: u3,
+    #[bits(14..=17, rw)]
+    r_power: RPower,
+    #[bits(4..=13, rw)]
+    n_minus_1: u10,
+    #[bit(3, rw)]
+    next_useburst: bool,
+    #[bits(0..=2, rw)]
+    cycle_ctrl: CycleControl,
+}
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -127,7 +164,7 @@ impl DmaChannelControl {
         Self {
             src_end_ptr: 0,
             dest_end_ptr: 0,
-            cfg: ChannelConfig(0),
+            cfg: ChannelConfig::new_with_raw_value(0),
             padding: 0,
         }
     }
@@ -428,20 +465,18 @@ impl DmaChannel {
             return Err(DmaTransferInitError::TransferSizeTooLarge(source.len()));
         }
         let len = source.len() - 1;
-        self.ch_ctrl_pri.cfg.set_raw(0);
+        self.ch_ctrl_pri.cfg = ChannelConfig::new_with_raw_value(0);
         self.ch_ctrl_pri.src_end_ptr = (source.as_ptr() as u32)
             .checked_add(len as u32)
             .ok_or(DmaTransferInitError::AddrOverflow)?;
         self.ch_ctrl_pri.dest_end_ptr = dest as u32;
-        self.ch_ctrl_pri
-            .cfg
-            .set_cycle_ctr(CycleControl::Basic as u8);
-        self.ch_ctrl_pri.cfg.set_src_size(DataSize::Byte as u8);
-        self.ch_ctrl_pri.cfg.set_src_inc(AddrIncrement::Byte as u8);
-        self.ch_ctrl_pri.cfg.set_dst_size(DataSize::Byte as u8);
-        self.ch_ctrl_pri.cfg.set_dst_inc(AddrIncrement::None as u8);
-        self.ch_ctrl_pri.cfg.set_n_minus_1(len as u16);
-        self.ch_ctrl_pri.cfg.set_r_power(RPower::Every8 as u8);
+        self.ch_ctrl_pri.cfg.set_cycle_ctrl(CycleControl::Basic);
+        self.ch_ctrl_pri.cfg.set_src_size(DataSize::Byte);
+        self.ch_ctrl_pri.cfg.set_src_inc(AddrIncrement::Byte);
+        self.ch_ctrl_pri.cfg.set_dst_size(DataSize::Byte);
+        self.ch_ctrl_pri.cfg.set_dst_inc(AddrIncrement::None);
+        self.ch_ctrl_pri.cfg.set_n_minus_1(u10::new(len as u16));
+        self.ch_ctrl_pri.cfg.set_r_power(RPower::Every8);
         self.select_primary_structure();
         Ok(())
     }
@@ -470,16 +505,18 @@ impl DmaChannel {
         data_size: DataSize,
         addr_incr: AddrIncrement,
     ) {
-        self.ch_ctrl_pri.cfg.set_raw(0);
+        self.ch_ctrl_pri.cfg = ChannelConfig::new_with_raw_value(0);
         self.ch_ctrl_pri.src_end_ptr = src_end_ptr;
         self.ch_ctrl_pri.dest_end_ptr = dest_end_ptr;
-        self.ch_ctrl_pri.cfg.set_cycle_ctr(CycleControl::Auto as u8);
-        self.ch_ctrl_pri.cfg.set_src_size(data_size as u8);
-        self.ch_ctrl_pri.cfg.set_src_inc(addr_incr as u8);
-        self.ch_ctrl_pri.cfg.set_dst_size(data_size as u8);
-        self.ch_ctrl_pri.cfg.set_dst_inc(addr_incr as u8);
-        self.ch_ctrl_pri.cfg.set_n_minus_1(n_minus_one as u16);
-        self.ch_ctrl_pri.cfg.set_r_power(RPower::Every4 as u8);
+        self.ch_ctrl_pri.cfg.set_cycle_ctrl(CycleControl::Auto);
+        self.ch_ctrl_pri.cfg.set_src_size(data_size);
+        self.ch_ctrl_pri.cfg.set_src_inc(addr_incr);
+        self.ch_ctrl_pri.cfg.set_dst_size(data_size);
+        self.ch_ctrl_pri.cfg.set_dst_inc(addr_incr);
+        self.ch_ctrl_pri
+            .cfg
+            .set_n_minus_1(u10::new(n_minus_one as u16));
+        self.ch_ctrl_pri.cfg.set_r_power(RPower::Every4);
         self.select_primary_structure();
     }
 }
@@ -495,7 +532,6 @@ impl Dma {
     /// Alternatively, the [DmaCtrlBlock::new_at_addr] function can be used to create the DMA
     /// control block at a specific address.
     pub fn new(
-        syscfg: &mut pac::Sysconfig,
         dma: pac::Dma,
         cfg: DmaCfg,
         ctrl_block: *mut DmaCtrlBlock,
@@ -505,8 +541,8 @@ impl Dma {
         if raw_addr & BASE_PTR_ADDR_MASK > 0 {
             return Err(InvalidCtrlBlockAddrError);
         }
-        syscfg.enable_peripheral_clock(PeripheralClock::Dma);
-        syscfg.assert_periph_reset_for_two_cycles(PeripheralSelect::Dma);
+        enable_peripheral_clock(PeripheralSelect::Dma);
+        reset_peripheral_for_cycles(PeripheralSelect::Dma, 2);
         let dma = Dma { dma, ctrl_block };
         dma.dma
             .ctrl_base_ptr()

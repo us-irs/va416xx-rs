@@ -2,18 +2,15 @@
 # runner = "gdb-multiarch -q -x jlink/jlink.gdb"
 # runner = "arm-none-eabi-gdb -q -x jlink/jlink-reva.gdb"
 # runner = "gdb-multiarch -q -x jlink/jlink-reva.gdb"
-
-# Probe-rs is currently problematic, possibly because of the
-# ROM protection?
 runner = "probe-rs run --chip VA416xx_RAM --protocol swd"
 
 rustflags = [
   "-C",
   "link-arg=-Tlink.x",
-  # "-C",
-  # "linker=flip-link",
-  # "-C",
-  # "link-arg=-Tdefmt.x",
+  "-C",
+  "linker=flip-link",
+  "-C",
+  "link-arg=-Tdefmt.x",
   # This is needed if your flash or ram addresses are not aligned to 0x10000 in memory.x
   # See https://github.com/rust-embedded/cortex-m-quickstart/pull/95
   "-C",
@@ -37,4 +34,4 @@ ut = "test --target=x86_64-unknown-linux-gnu"
 genbin = "objcopy --release -- -O binary app.bin"
 
 [env]
-DEFMT_LOG = "info"
+DEFMT_LOG = "debug"

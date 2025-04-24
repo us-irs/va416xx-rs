@@ -9,11 +9,13 @@ const EXTCLK_FREQ: Hertz = Hertz::from_raw(40_000_000);
 #[rtic::app(device = pac, dispatchers = [U1, U2, U3])]
 mod app {
     use super::*;
+    // Import panic provider.
+    use panic_probe as _;
+    // Import logger.
     use cortex_m::asm;
-    use panic_rtt_target as _;
+    use defmt_rtt as _;
     use rtic_monotonics::systick::prelude::*;
     use rtic_monotonics::Monotonic;
-    use rtt_target::{rprintln, rtt_init_default};
     use va416xx_hal::{
         gpio::{OutputReadablePushPull, Pin, PinsG, PG5},
         pac,
@@ -32,8 +34,7 @@ mod app {
 
     #[init]
     fn init(mut cx: init::Context) -> (Shared, Local) {
-        rtt_init_default!();
-        rprintln!("-- Vorago RTIC example application --");
+        defmt::println!("-- Vorago RTIC example application --");
         // Use the external clock connected to XTAL_N.
         let clocks = cx
             .device

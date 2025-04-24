@@ -11,12 +11,15 @@
 //!    RTT logs to see received data.
 #![no_std]
 #![no_main]
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
+
 use embassy_example::EXTCLK_FREQ;
 use embassy_executor::Spawner;
 use embassy_time::{Duration, Instant, Ticker};
 use embedded_io_async::Write;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use va416xx_hal::{
     gpio::PinsG,
     pac::{self, interrupt},
@@ -39,8 +42,7 @@ const STR_LIST: &[&str] = &[
 // main is itself an async function.
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
-    rtt_init_print!();
-    rprintln!("-- VA108xx Async UART TX Demo --");
+    defmt::println!("-- VA108xx Async UART TX Demo --");
 
     let mut dp = pac::Peripherals::take().unwrap();
 
@@ -75,7 +77,7 @@ async fn main(_spawner: Spawner) {
     let mut ticker = Ticker::every(Duration::from_secs(1));
     let mut idx = 0;
     loop {
-        rprintln!("Current time: {}", Instant::now().as_secs());
+        defmt::println!("Current time: {}", Instant::now().as_secs());
         led.toggle();
         let _written = async_tx
             .write(STR_LIST[idx].as_bytes())

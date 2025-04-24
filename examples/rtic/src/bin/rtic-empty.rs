@@ -4,8 +4,10 @@
 
 #[rtic::app(device = pac)]
 mod app {
-    use panic_rtt_target as _;
-    use rtt_target::{rprintln, rtt_init_default};
+    // Import panic provider.
+    use panic_probe as _;
+    // Import logger.
+    use defmt_rtt as _;
     use va416xx_hal::pac;
 
     #[local]
@@ -16,8 +18,7 @@ mod app {
 
     #[init]
     fn init(_ctx: init::Context) -> (Shared, Local) {
-        rtt_init_default!();
-        rprintln!("-- Vorago RTIC template --");
+        defmt::println!("-- Vorago RTIC template --");
         (Shared {}, Local {})
     }
 

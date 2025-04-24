@@ -1,5 +1,5 @@
-spacepackets == 0.24
-tmtccmd == 8.0.2
+spacepackets == 0.28
+com-interface == 0.1.0
 toml == 0.10
 pyelftools == 0.31
 crcmod == 1.7

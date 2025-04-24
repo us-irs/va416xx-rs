@@ -7,8 +7,9 @@ edition = "2021"
 cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
 cortex-m-rt = "0.7"
 critical-section = "1"
-panic-rtt-target = { version = "0.2" }
-rtt-target = { version = "0.6" }
+defmt-rtt = "0.4"
+defmt = "1"
+panic-probe = { version = "1", features = ["defmt"] }
 embedded-hal = "1"
 embedded-hal-nb = "1"
 nb = "1"
@@ -16,7 +17,7 @@ embedded-io = "0.6"
 panic-halt = "1"
 accelerometer = "0.12"
 
-va416xx-hal = { version = "0.5", features = ["va41630"] }
+va416xx-hal = { version = "0.5", features = ["va41630", "defmt"] }
 
 [dependencies.vorago-peb1]
 path = "../../vorago-peb1"

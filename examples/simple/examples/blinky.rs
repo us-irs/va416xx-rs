@@ -2,15 +2,17 @@
 #![no_main]
 #![no_std]
 
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
+
 use cortex_m_rt::entry;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use va416xx_hal::{gpio::PinsG, pac};
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!();
-    rprintln!("VA416xx HAL blinky example");
+    defmt::println!("VA416xx HAL blinky example");
 
     let mut dp = pac::Peripherals::take().unwrap();
     let portg = PinsG::new(&mut dp.sysconfig, dp.portg);

@@ -3,10 +3,13 @@
 //! If you do not use the loopback mode, MOSI and MISO need to be tied together on the board.
 #![no_main]
 #![no_std]
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
+
 use cortex_m_rt::entry;
 use embedded_hal::spi::{Mode, SpiBus, MODE_0};
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use simple_examples::peb1;
 use va416xx_hal::spi::{Spi, SpiClkConfig};
 use va416xx_hal::{
@@ -33,8 +36,7 @@ const FILL_WORD: u8 = 0x0f;
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!();
-    rprintln!("-- VA108xx SPI example application--");
+    defmt::println!("-- VA108xx SPI example application--");
     let cp = cortex_m::Peripherals::take().unwrap();
     let mut dp = pac::Peripherals::take().unwrap();
     // Use the external clock connected to XTAL_N.

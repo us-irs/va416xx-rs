@@ -19,7 +19,6 @@
 #![no_std]
 
 use once_cell::sync::OnceCell;
-use panic_rtt_target as _;
 use va416xx_hal::{clock::Clocks, edac, pac, time::Hertz, wdt::Wdt};
 
 const EXTCLK_FREQ: u32 = 40_000_000;
@@ -95,10 +94,12 @@ mod app {
     use super::*;
     use cortex_m::asm;
     use embedded_io::Write;
-    use panic_rtt_target as _;
+    // Import panic provider.
+    use panic_probe as _;
+    // Import logger.
+    use defmt_rtt as _;
     use rtic::Mutex;
     use rtic_monotonics::systick::prelude::*;
-    use rtt_target::rprintln;
     use satrs::pus::verification::VerificationReportCreator;
     use spacepackets::ecss::PusServiceId;
     use spacepackets::ecss::{
@@ -150,9 +151,7 @@ mod app {
 
     #[init]
     fn init(mut cx: init::Context) -> (Shared, Local) {
-        //rtt_init_default!();
-        rtt_log::init();
-        rprintln!("-- Vorago flashloader --");
+        defmt::println!("-- Vorago flashloader --");
         // Initialize the systick interrupt & obtain the token to prove that we did
         // Use the external clock connected to XTAL_N.
         let clocks = cx
@@ -272,7 +271,7 @@ mod app {
                         let decoded_size =
                             cobs::decode_in_place(&mut cx.local.rx_buf[1..result.bytes_read]);
                         if decoded_size.is_err() {
-                            log::warn!("COBS decoding failed");
+                            defmt::warn!("COBS decoding failed");
                         } else {
                             let decoded_size = decoded_size.unwrap();
                             if cx.local.tc_prod.sizes_prod.vacant_len() >= 1
@@ -285,11 +284,13 @@ mod app {
                                     .buf_prod
                                     .push_slice(&cx.local.rx_buf[1..1 + decoded_size]);
                             } else {
-                                log::warn!("COBS TC queue full");
+                                defmt::warn!("COBS TC queue full");
                             }
                         }
                     } else {
-                        log::warn!("COBS frame with invalid format, start and end bytes are not 0");
+                        defmt::warn!(
+                            "COBS frame with invalid format, start and end bytes are not 0"
+                        );
                     }
 
                     // Initiate next transfer.
@@ -299,11 +300,11 @@ mod app {
                         .expect("read operation failed");
                 }
                 if result.has_errors() {
-                    log::warn!("UART error: {:?}", result.errors.unwrap());
+                    defmt::warn!("UART error: {:?}", result.errors.unwrap());
                 }
             }
             Err(e) => {
-                log::warn!("UART error: {:?}", e);
+                defmt::warn!("UART error: {:?}", e);
             }
         }
     }
@@ -346,7 +347,7 @@ mod app {
     fn handle_valid_pus_tc(cx: &mut pus_tc_handler::Context) {
         let pus_tc = PusTcReader::new(cx.local.tc_buf);
         if pus_tc.is_err() {
-            log::warn!("PUS TC error: {}", pus_tc.unwrap_err());
+            defmt::warn!("PUS TC error: {}", pus_tc.unwrap_err());
             return;
         }
         let (pus_tc, _) = pus_tc.unwrap();
@@ -396,11 +397,11 @@ mod app {
                 write_and_send(&tm);
             };
             if pus_tc.subservice() == ActionId::CorruptImageA as u8 {
-                rprintln!("corrupting App Image A");
+                defmt::info!("corrupting App Image A");
                 corrupt_image(APP_A_START_ADDR);
             }
             if pus_tc.subservice() == ActionId::CorruptImageB as u8 {
-                rprintln!("corrupting App Image B");
+                defmt::info!("corrupting App Image B");
                 corrupt_image(APP_B_START_ADDR);
             }
         }
@@ -430,23 +431,21 @@ mod app {
             if pus_tc.subservice() == 2 {
                 let app_data = pus_tc.app_data();
                 if app_data.len() < 10 {
-                    log::warn!(
-                        target: "TC Handler",
+                    defmt::warn!(
                         "app data for raw memory write is too short: {}",
                         app_data.len()
                     );
                 }
                 let memory_id = app_data[0];
                 if memory_id != BOOT_NVM_MEMORY_ID {
-                    log::warn!(target: "TC Handler", "memory ID {} not supported", memory_id);
+                    defmt::warn!("memory ID {} not supported", memory_id);
                     // TODO: Error reporting
                     return;
                 }
                 let offset = u32::from_be_bytes(app_data[2..6].try_into().unwrap());
                 let data_len = u32::from_be_bytes(app_data[6..10].try_into().unwrap());
                 if 10 + data_len as usize > app_data.len() {
-                    log::warn!(
-                        target: "TC Handler",
+                    defmt::warn!(
                         "invalid data length {} for raw mem write detected",
                         data_len
                     );

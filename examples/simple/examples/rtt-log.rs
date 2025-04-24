@@ -2,9 +2,12 @@
 #![no_main]
 #![no_std]
 
+// Import panic provider.
+use panic_probe as _;
+// Import logger.
+use defmt_rtt as _;
+
 use cortex_m_rt::entry;
-use panic_rtt_target as _;
-use rtt_target::{rprintln, rtt_init_print};
 use va416xx_hal::pac;
 
 // Mask for the LED
@@ -12,6 +15,7 @@ const LED_PG5: u32 = 1 << 5;
 
 #[entry]
 fn main() -> ! {
+    defmt::println!("VA416xx RTT Demo");
     let dp = pac::Peripherals::take().unwrap();
     // Enable all peripheral clocks
     dp.sysconfig
@@ -22,11 +26,9 @@ fn main() -> ! {
         .datamask()
         .modify(|_, w| unsafe { w.bits(LED_PG5) });
 
-    rtt_init_print!();
-    rprintln!("VA416xx RTT Demo");
     let mut counter = 0;
     loop {
-        rprintln!("{}: Hello, world!", counter);
+        defmt::info!("{}: Hello, world!", counter);
         // Still toggle LED. If there are issues with the RTT log, the LED
         // blinking ensures that the application is actually running.
         dp.portg.togout().write(|w| unsafe { w.bits(LED_PG5) });

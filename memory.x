@@ -18,6 +18,5 @@ _stack_start = ORIGIN(RAM) + LENGTH(RAM);
 SECTIONS {
   .sram1 (NOLOAD) : ALIGN(8) {
     *(.sram1 .sram1.*);
-    . = ALIGN(4);
-    } > SRAM_1
+  } > SRAM_1
 };

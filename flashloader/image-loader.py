@@ -99,7 +99,7 @@ class ImageLoader:
         )
         self.verificator.add_tc(action_tc)
         self.com_if.send(bytes(action_tc.pack()))
-        self.await_for_command_copletion("boot image selection command")
+        self.await_for_command_completion("boot image selection command")
 
     def handle_ping_cmd(self):
         _LOGGER.info("Sending ping command")
@@ -112,7 +112,7 @@ class ImageLoader:
         )
         self.verificator.add_tc(ping_tc)
         self.com_if.send(bytes(ping_tc.pack()))
-        self.await_for_command_copletion("ping command")
+        self.await_for_command_completion("ping command")
 
     def handle_corruption_cmd(self, target: Target):
         if target == Target.BOOTLOADER:
@@ -134,11 +134,11 @@ class ImageLoader:
                 ),
             )
 
-    def await_for_command_copletion(self, context: str):
+    def await_for_command_completion(self, context: str):
         done = False
         now = time.time()
         while time.time() - now < 2.0:
-            if not self.com_if.data_available():
+            if self.com_if.data_available() == 0:
                 time.sleep(0.2)
                 continue
             for reply in self.com_if.receive():

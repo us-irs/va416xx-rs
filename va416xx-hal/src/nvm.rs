@@ -6,11 +6,14 @@
 //!
 //! - [Flashloader application](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/flashloader)
 use embedded_hal::spi::MODE_0;
+use vorago_shared_periphs::{
+    disable_peripheral_clock, enable_peripheral_clock, reset_peripheral_for_cycles,
+};
 
-use crate::clock::{Clocks, SyscfgExt};
+use crate::clock::Clocks;
 use crate::pac;
 use crate::spi::{
-    mode_to_cpo_cph_bit, spi_clk_config_from_div, Instance, WordProvider, BMSTART_BMSTOP_MASK,
+    mode_to_cpo_cph_bit, spi_clk_config_from_div, SpiMarker, WordProvider, BMSTART_BMSTOP_MASK,
 };
 
 const NVM_CLOCK_DIV: u16 = 2;
@@ -65,10 +68,10 @@ pub struct VerifyError {
 }
 
 impl Nvm {
-    pub fn new(syscfg: &mut pac::Sysconfig, spi: pac::Spi3, _clocks: &Clocks) -> Self {
-        crate::clock::enable_peripheral_clock(syscfg, pac::Spi3::PERIPH_SEL);
+    pub fn new(spi: pac::Spi3, _clocks: &Clocks) -> Self {
+        enable_peripheral_clock(pac::Spi3::PERIPH_SEL);
         // This is done in the C HAL.
-        syscfg.assert_periph_reset_for_two_cycles(pac::Spi3::PERIPH_SEL);
+        reset_peripheral_for_cycles(pac::Spi3::PERIPH_SEL, 2);
 
         let spi_clk_cfg = spi_clk_config_from_div(NVM_CLOCK_DIV).unwrap();
         let (cpo_bit, cph_bit) = mode_to_cpo_cph_bit(MODE_0);
@@ -234,17 +237,17 @@ impl Nvm {
     }
 
     /// Enable write-protection and disables the peripheral clock.
-    pub fn shutdown(&mut self, sys_cfg: &mut pac::Sysconfig) {
+    pub fn shutdown(&mut self) {
         self.wait_for_tx_idle();
         self.write_with_bmstop(FRAM_WREN);
         self.wait_for_tx_idle();
         self.write_single(WPEN_ENABLE_MASK | BP_0_ENABLE_MASK | BP_1_ENABLE_MASK);
-        crate::clock::disable_peripheral_clock(sys_cfg, pac::Spi3::PERIPH_SEL);
+        disable_peripheral_clock(pac::Spi3::PERIPH_SEL);
     }
 
     /// This function calls [Self::shutdown] and gives back the peripheral structure.
-    pub fn release(mut self, sys_cfg: &mut pac::Sysconfig) -> pac::Spi3 {
-        self.shutdown(sys_cfg);
+    pub fn release(mut self) -> pac::Spi3 {
+        self.shutdown();
         self.spi.take().unwrap()
     }
 
@@ -268,7 +271,7 @@ impl Nvm {
 impl Drop for Nvm {
     fn drop(&mut self) {
         if self.spi.is_some() {
-            self.shutdown(unsafe { &mut pac::Sysconfig::steal() });
+            self.shutdown();
         }
     }
 }

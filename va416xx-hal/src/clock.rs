@@ -1,10 +1,10 @@
 //! API for using the [crate::pac::Clkgen] peripheral.
 //!
 //! It also includes functionality to enable the peripheral clocks.
-//! Calling [ClkgenExt::constrain] on the [crate::pac::Clkgen] peripheral generates the
-//! [ClkgenCfgr] structure which can be used to configure and set up the clock.
+//! Calling [ClockConfigurator::new] returns a builder structure which allows
+//! setting up the clock.
 //!
-//! Calling [ClkgenCfgr::freeze] returns the frozen clock configuration inside the [Clocks]
+//! Calling [ClockConfigurator::freeze] returns the frozen clock configuration inside the [Clocks]
 //! structure. This structure can also be used to configure other structures provided by this HAL.
 //!
 //! # Examples
@@ -15,47 +15,10 @@ use crate::adc::ADC_MAX_CLK;
 use crate::pac;
 
 use crate::time::Hertz;
+pub use vorago_shared_periphs::clock::{Clocks, HBO_FREQ};
+use vorago_shared_periphs::{enable_peripheral_clock, PeripheralSelect};
 
-pub const HBO_FREQ: Hertz = Hertz::from_raw(20_000_000);
 pub const XTAL_OSC_TSTART_MS: u32 = 15;
-
-#[derive(Debug, Copy, Clone, PartialEq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum PeripheralSelect {
-    Spi0 = 0,
-    Spi1 = 1,
-    Spi2 = 2,
-    Spi3 = 3,
-    Uart0 = 4,
-    Uart1 = 5,
-    Uart2 = 6,
-    I2c0 = 7,
-    I2c1 = 8,
-    I2c2 = 9,
-    Can0 = 10,
-    Can1 = 11,
-    Rng = 12,
-    Adc = 13,
-    Dac = 14,
-    Dma = 15,
-    Ebi = 16,
-    Eth = 17,
-    Spw = 18,
-    Clkgen = 19,
-    IrqRouter = 20,
-    IoConfig = 21,
-    Utility = 22,
-    Watchdog = 23,
-    PortA = 24,
-    PortB = 25,
-    PortC = 26,
-    PortD = 27,
-    PortE = 28,
-    PortF = 29,
-    PortG = 30,
-}
-
-pub type PeripheralClock = PeripheralSelect;
 
 #[derive(Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -68,81 +31,6 @@ pub enum FilterClkSel {
     Clk5 = 5,
     Clk6 = 6,
     Clk7 = 7,
-}
-
-#[inline(always)]
-pub fn enable_peripheral_clock(syscfg: &mut pac::Sysconfig, clock: PeripheralSelect) {
-    syscfg
-        .peripheral_clk_enable()
-        .modify(|r, w| unsafe { w.bits(r.bits() | (1 << clock as u8)) });
-}
-
-#[inline(always)]
-pub fn disable_peripheral_clock(syscfg: &mut pac::Sysconfig, clock: PeripheralSelect) {
-    syscfg
-        .peripheral_clk_enable()
-        .modify(|r, w| unsafe { w.bits(r.bits() & !(1 << clock as u8)) });
-}
-
-#[inline(always)]
-pub fn assert_periph_reset(syscfg: &mut pac::Sysconfig, periph: PeripheralSelect) {
-    syscfg
-        .peripheral_reset()
-        .modify(|r, w| unsafe { w.bits(r.bits() & !(1 << periph as u8)) });
-}
-
-#[inline(always)]
-pub fn deassert_periph_reset(syscfg: &mut pac::Sysconfig, periph: PeripheralSelect) {
-    syscfg
-        .peripheral_reset()
-        .modify(|r, w| unsafe { w.bits(r.bits() | (1 << periph as u8)) });
-}
-
-#[inline(always)]
-fn assert_periph_reset_for_two_cycles(syscfg: &mut pac::Sysconfig, periph: PeripheralSelect) {
-    assert_periph_reset(syscfg, periph);
-    cortex_m::asm::nop();
-    cortex_m::asm::nop();
-    deassert_periph_reset(syscfg, periph);
-}
-
-pub trait SyscfgExt {
-    fn enable_peripheral_clock(&mut self, clock: PeripheralClock);
-
-    fn disable_peripheral_clock(&mut self, clock: PeripheralClock);
-
-    fn assert_periph_reset(&mut self, periph: PeripheralSelect);
-
-    fn deassert_periph_reset(&mut self, periph: PeripheralSelect);
-
-    fn assert_periph_reset_for_two_cycles(&mut self, periph: PeripheralSelect);
-}
-
-impl SyscfgExt for pac::Sysconfig {
-    #[inline(always)]
-    fn enable_peripheral_clock(&mut self, clock: PeripheralClock) {
-        enable_peripheral_clock(self, clock)
-    }
-
-    #[inline(always)]
-    fn disable_peripheral_clock(&mut self, clock: PeripheralClock) {
-        disable_peripheral_clock(self, clock)
-    }
-
-    #[inline(always)]
-    fn assert_periph_reset(&mut self, clock: PeripheralSelect) {
-        assert_periph_reset(self, clock)
-    }
-
-    #[inline(always)]
-    fn deassert_periph_reset(&mut self, clock: PeripheralSelect) {
-        deassert_periph_reset(self, clock)
-    }
-
-    #[inline(always)]
-    fn assert_periph_reset_for_two_cycles(&mut self, periph: PeripheralSelect) {
-        assert_periph_reset_for_two_cycles(self, periph)
-    }
 }
 
 /// Refer to chapter 8 (p.57) of the programmers guide for detailed information.
@@ -223,12 +111,12 @@ pub fn pll_setup_delay() {
 }
 
 pub trait ClkgenExt {
-    fn constrain(self) -> ClkgenCfgr;
+    fn constrain(self) -> ClockConfigurator;
 }
 
 impl ClkgenExt for pac::Clkgen {
-    fn constrain(self) -> ClkgenCfgr {
-        ClkgenCfgr {
+    fn constrain(self) -> ClockConfigurator {
+        ClockConfigurator {
             source_clk: None,
             ref_clk_sel: RefClkSel::None,
             clksel_sys: ClkselSys::Hbo,
@@ -239,21 +127,6 @@ impl ClkgenExt for pac::Clkgen {
             clkgen: self,
         }
     }
-}
-
-pub struct ClkgenCfgr {
-    ref_clk_sel: RefClkSel,
-    clksel_sys: ClkselSys,
-    clk_div_sel: ClkDivSel,
-    /// The source clock frequency which is either an external clock connected to XTAL_N, or a
-    /// crystal connected to the XTAL_OSC input.
-    source_clk: Option<Hertz>,
-    pll_cfg: Option<PllCfg>,
-    clk_lost_detection: bool,
-    /// Feature only works on revision B of the board.
-    #[cfg(feature = "revb")]
-    pll_lock_lost_detection: bool,
-    clkgen: pac::Clkgen,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -267,6 +140,21 @@ pub enum ClkCfgError {
     PllConfigNotSet,
     PllInitError,
     InconsistentCfg,
+}
+
+pub struct ClockConfigurator {
+    ref_clk_sel: RefClkSel,
+    clksel_sys: ClkselSys,
+    clk_div_sel: ClkDivSel,
+    /// The source clock frequency which is either an external clock connected to XTAL_N, or a
+    /// crystal connected to the XTAL_OSC input.
+    source_clk: Option<Hertz>,
+    pll_cfg: Option<PllCfg>,
+    clk_lost_detection: bool,
+    /// Feature only works on revision B of the board.
+    #[cfg(feature = "revb")]
+    pll_lock_lost_detection: bool,
+    clkgen: pac::Clkgen,
 }
 
 /// Delays a given amount of milliseconds.
@@ -283,7 +171,30 @@ pub fn hbo_clock_delay_ms(ms: u32) {
     }
 }
 
-impl ClkgenCfgr {
+impl ClockConfigurator {
+    /// Create a new clock configuration instance.
+    pub fn new(clkgen: pac::Clkgen) -> Self {
+        ClockConfigurator {
+            source_clk: None,
+            ref_clk_sel: RefClkSel::None,
+            clksel_sys: ClkselSys::Hbo,
+            clk_div_sel: ClkDivSel::Div1,
+            clk_lost_detection: false,
+            pll_lock_lost_detection: false,
+            pll_cfg: None,
+            clkgen,
+        }
+    }
+
+    /// Steals a new [ClockConfigurator] instance.
+    ///
+    /// # Safety
+    ///
+    /// Circumvents HAL ownership rules.
+    pub unsafe fn steal() -> Self {
+        Self::new(unsafe { pac::Clkgen::steal() })
+    }
+
     #[inline]
     pub fn source_clk(mut self, src_clk: Hertz) -> Self {
         self.source_clk = Some(src_clk);
@@ -334,7 +245,7 @@ impl ClkgenCfgr {
     /// might have had a reason for those, so I am going to keep them. Chances are, this
     /// process only has to be performed once, and it does not matter if it takes a few
     /// microseconds or milliseconds longer.
-    pub fn freeze(self, syscfg: &mut pac::Sysconfig) -> Result<Clocks, ClkCfgError> {
+    pub fn freeze(self) -> Result<Clocks, ClkCfgError> {
         // Sanitize configuration.
         if self.source_clk.is_none() {
             return Err(ClkCfgError::ClkSourceFreqNotSet);
@@ -349,7 +260,7 @@ impl ClkgenCfgr {
             return Err(ClkCfgError::PllConfigNotSet);
         }
 
-        syscfg.enable_peripheral_clock(PeripheralSelect::Clkgen);
+        enable_peripheral_clock(PeripheralSelect::Clkgen);
         let mut final_sysclk = self.source_clk.unwrap();
         // The HAL forces back the HBO clock here with a delay.. Even though this is
         // not stricly necessary when coming from a fresh start, it could be still become relevant
@@ -458,13 +369,11 @@ impl ClkgenCfgr {
             .ctrl0()
             .modify(|_, w| unsafe { w.clksel_sys().bits(self.clksel_sys as u8) });
 
-        Ok(Clocks {
-            sysclk: final_sysclk,
-            apb1: final_sysclk / 2,
-            apb2: final_sysclk / 4,
+        Ok(Clocks::__new(
+            final_sysclk,
             #[cfg(not(feature = "va41628"))]
-            adc_clk: self.cfg_adc_clk_div(final_sysclk),
-        })
+            self.cfg_adc_clk_div(final_sysclk),
+        ))
     }
 
     #[cfg(not(feature = "va41628"))]
@@ -484,54 +393,6 @@ impl ClkgenCfgr {
                 .modify(|_, w| unsafe { w.adc_clk_div_sel().bits(AdcClkDivSel::Div8 as u8) });
             final_sysclk / 8
         }
-    }
-}
-
-/// Frozen clock frequencies
-///
-/// The existence of this value indicates that the clock configuration can no longer be changed.
-/// The [self] module documentation gives some more information on how to retrieve an instance
-/// of this structure.
-#[derive(Copy, Clone, PartialEq, Eq, Debug)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct Clocks {
-    sysclk: Hertz,
-    apb1: Hertz,
-    apb2: Hertz,
-    #[cfg(not(feature = "va41628"))]
-    adc_clk: Hertz,
-}
-
-impl Clocks {
-    /// Returns the frequency of the HBO clock
-    pub const fn hbo(&self) -> Hertz {
-        HBO_FREQ
-    }
-
-    /// Returns the frequency of the APB0 which is equal to the system clock.
-    pub const fn apb0(&self) -> Hertz {
-        self.sysclk()
-    }
-
-    /// Returns system clock divied by 2.
-    pub const fn apb1(&self) -> Hertz {
-        self.apb1
-    }
-
-    /// Returns system clock divied by 4.
-    pub const fn apb2(&self) -> Hertz {
-        self.apb2
-    }
-
-    /// Returns the system (core) frequency
-    pub const fn sysclk(&self) -> Hertz {
-        self.sysclk
-    }
-
-    /// Returns the ADC clock frequency which has a separate divider.
-    #[cfg(not(feature = "va41628"))]
-    pub const fn adc_clk(&self) -> Hertz {
-        self.adc_clk
     }
 }
 

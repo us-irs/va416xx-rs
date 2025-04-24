@@ -5,6 +5,7 @@
 //! [CHECK_XXX_TO_XXX] constants to true.
 #![no_std]
 #![no_main]
+
 // Import panic provider.
 use panic_probe as _;
 // Import logger.
@@ -16,23 +17,19 @@ use embassy_sync::channel::{Receiver, Sender};
 use embassy_sync::{blocking_mutex::raw::ThreadModeRawMutex, channel::Channel};
 use embassy_time::{Duration, Instant, Timer};
 use embedded_hal_async::digital::Wait;
-use va416xx_hal::clock::ClkgenExt;
-use va416xx_hal::gpio::{
-    on_interrupt_for_async_gpio_for_port, InputDynPinAsync, InputPinAsync, PinsB, PinsC, PinsD,
-    PinsE, PinsF, PinsG, Port,
-};
+use va416xx_hal::clock::ClockConfigurator;
+use va416xx_hal::gpio::asynch::{on_interrupt_for_async_gpio_for_port, InputPinAsync};
+use va416xx_hal::gpio::{Input, Output, PinState, Port};
+use va416xx_hal::pac::{self, interrupt};
+use va416xx_hal::pins::{PinsA, PinsB, PinsC, PinsD, PinsE, PinsF, PinsG};
 use va416xx_hal::time::Hertz;
-use va416xx_hal::{
-    gpio::{DynPin, PinsA},
-    pac::{self, interrupt},
-};
 
 const CHECK_PA0_TO_PA1: bool = true;
-const CHECK_PB0_TO_PB1: bool = true;
-const CHECK_PC14_TO_PC15: bool = true;
-const CHECK_PD2_TO_PD3: bool = true;
-const CHECK_PE0_TO_PE1: bool = true;
-const CHECK_PF0_TO_PF1: bool = true;
+const CHECK_PB0_TO_PB1: bool = false;
+const CHECK_PC14_TO_PC15: bool = false;
+const CHECK_PD2_TO_PD3: bool = false;
+const CHECK_PE0_TO_PE1: bool = false;
+const CHECK_PF0_TO_PF1: bool = false;
 
 #[derive(Clone, Copy)]
 pub struct GpioCmd {
@@ -70,41 +67,30 @@ static CHANNEL_PF0_TO_PF1: Channel<ThreadModeRawMutex, GpioCmd, 3> = Channel::ne
 async fn main(spawner: Spawner) {
     defmt::println!("-- VA416xx Async GPIO Demo --");
 
-    let mut dp = pac::Peripherals::take().unwrap();
+    let dp = pac::Peripherals::take().unwrap();
 
     // Initialize the systick interrupt & obtain the token to prove that we did
     // Use the external clock connected to XTAL_N.
-    let clocks = dp
-        .clkgen
-        .constrain()
+    let clocks = ClockConfigurator::new(dp.clkgen)
         .xtal_n_clk_with_src_freq(Hertz::from_raw(EXTCLK_FREQ))
-        .freeze(&mut dp.sysconfig)
+        .freeze()
         .unwrap();
     // Safety: Only called once here.
-    unsafe {
-        va416xx_embassy::init(
-            &mut dp.sysconfig,
-            &dp.irq_router,
-            dp.tim15,
-            dp.tim14,
-            &clocks,
-        )
-    };
+    va416xx_embassy::init(dp.tim15, dp.tim14, &clocks);
 
-    let porta = PinsA::new(&mut dp.sysconfig, dp.porta);
-    let portb = PinsB::new(&mut dp.sysconfig, dp.portb);
-    let portc = PinsC::new(&mut dp.sysconfig, dp.portc);
-    let portd = PinsD::new(&mut dp.sysconfig, dp.portd);
-    let porte = PinsE::new(&mut dp.sysconfig, dp.porte);
-    let portf = PinsF::new(&mut dp.sysconfig, dp.portf);
+    let porta = PinsA::new(dp.porta);
+    let portb = PinsB::new(dp.portb);
+    let portc = PinsC::new(dp.portc);
+    let portd = PinsD::new(dp.portd);
+    let porte = PinsE::new(dp.porte);
+    let portf = PinsF::new(dp.portf);
 
-    let portg = PinsG::new(&mut dp.sysconfig, dp.portg);
-    let mut led = portg.pg5.into_readable_push_pull_output();
+    let portg = PinsG::new(dp.portg);
+    let mut led = Output::new(portg.pg5, PinState::Low);
 
     if CHECK_PA0_TO_PA1 {
-        let out_pin = porta.pa0.into_readable_push_pull_output();
-        let in_pin = porta.pa1.into_floating_input();
-        let out_pin = out_pin.downgrade();
+        let out_pin = Output::new(porta.pa0, PinState::Low);
+        let in_pin = Input::new_floating(porta.pa1);
         let in_pin = InputPinAsync::new(in_pin).unwrap();
 
         spawner
@@ -119,10 +105,9 @@ async fn main(spawner: Spawner) {
     }
 
     if CHECK_PB0_TO_PB1 {
-        let out_pin = portb.pb0.into_readable_push_pull_output();
-        let in_pin = portb.pb1.into_floating_input();
-        let out_pin = out_pin.downgrade();
-        let in_pin = InputDynPinAsync::new(in_pin.downgrade()).unwrap();
+        let out_pin = Output::new(portb.pb0, PinState::Low);
+        let in_pin = Input::new_floating(portb.pb1);
+        let in_pin = InputPinAsync::new(in_pin).unwrap();
 
         spawner
             .spawn(output_task(
@@ -136,10 +121,9 @@ async fn main(spawner: Spawner) {
     }
 
     if CHECK_PC14_TO_PC15 {
-        let out_pin = portc.pc14.into_readable_push_pull_output();
-        let in_pin = portc.pc15.into_floating_input();
-        let out_pin = out_pin.downgrade();
-        let in_pin = InputDynPinAsync::new(in_pin.downgrade()).unwrap();
+        let out_pin = Output::new(portc.pc14, PinState::Low);
+        let in_pin = Input::new_floating(portc.pc15);
+        let in_pin = InputPinAsync::new(in_pin).unwrap();
         spawner
             .spawn(output_task(
                 "PC14 to PC15",
@@ -152,10 +136,9 @@ async fn main(spawner: Spawner) {
     }
 
     if CHECK_PD2_TO_PD3 {
-        let out_pin = portd.pd2.into_readable_push_pull_output();
-        let in_pin = portd.pd3.into_floating_input();
-        let out_pin = out_pin.downgrade();
-        let in_pin = InputDynPinAsync::new(in_pin.downgrade()).unwrap();
+        let out_pin = Output::new(portd.pd2, PinState::Low);
+        let in_pin = Input::new_floating(portd.pd3);
+        let in_pin = InputPinAsync::new(in_pin).unwrap();
         spawner
             .spawn(output_task(
                 "PD2 to PD3",
@@ -168,10 +151,9 @@ async fn main(spawner: Spawner) {
     }
 
     if CHECK_PE0_TO_PE1 {
-        let out_pin = porte.pe0.into_readable_push_pull_output();
-        let in_pin = porte.pe1.into_floating_input();
-        let out_pin = out_pin.downgrade();
-        let in_pin = InputDynPinAsync::new(in_pin.downgrade()).unwrap();
+        let out_pin = Output::new(porte.pe0, PinState::Low);
+        let in_pin = Input::new_floating(porte.pe1);
+        let in_pin = InputPinAsync::new(in_pin).unwrap();
         spawner
             .spawn(output_task(
                 "PE0 to PE1",
@@ -184,10 +166,9 @@ async fn main(spawner: Spawner) {
     }
 
     if CHECK_PF0_TO_PF1 {
-        let out_pin = portf.pf0.into_readable_push_pull_output();
-        let in_pin = portf.pf1.into_floating_input();
-        let out_pin = out_pin.downgrade();
-        let in_pin = InputDynPinAsync::new(in_pin.downgrade()).unwrap();
+        let out_pin = Output::new(portf.pf0, PinState::Low);
+        let in_pin = Input::new_floating(portf.pf1);
+        let in_pin = InputPinAsync::new(in_pin).unwrap();
         spawner
             .spawn(output_task(
                 "PF0 to PF1",
@@ -298,7 +279,7 @@ async fn check_pin_to_pin_async_ops(
 #[embassy_executor::task(pool_size = 8)]
 async fn output_task(
     ctx: &'static str,
-    mut out: DynPin,
+    mut out: Output,
     receiver: Receiver<'static, ThreadModeRawMutex, GpioCmd, 3>,
 ) {
     loop {
@@ -307,25 +288,25 @@ async fn output_task(
         match next_cmd.cmd_type {
             GpioCmdType::SetHigh => {
                 defmt::info!("{}: Set output high", ctx);
-                out.set_high().unwrap();
+                out.set_high();
             }
             GpioCmdType::SetLow => {
                 defmt::info!("{}: Set output low", ctx);
-                out.set_low().unwrap();
+                out.set_low();
             }
             GpioCmdType::RisingEdge => {
                 defmt::info!("{}: Rising edge", ctx);
-                if !out.is_low().unwrap() {
-                    out.set_low().unwrap();
+                if !out.is_set_low() {
+                    out.set_low();
                 }
-                out.set_high().unwrap();
+                out.set_high();
             }
             GpioCmdType::FallingEdge => {
                 defmt::info!("{}: Falling edge", ctx);
-                if !out.is_high().unwrap() {
-                    out.set_high().unwrap();
+                if !out.is_set_high() {
+                    out.set_high();
                 }
-                out.set_low().unwrap();
+                out.set_low();
             }
             GpioCmdType::CloseTask => {
                 defmt::info!("{}: Closing task", ctx);

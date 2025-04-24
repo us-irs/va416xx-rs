@@ -11,35 +11,33 @@ use cortex_m_rt::entry;
 use embedded_hal_nb::serial::Read;
 use embedded_io::Write;
 use simple_examples::peb1;
-use va416xx_hal::clock::ClkgenExt;
+use va416xx_hal::clock::ClockConfigurator;
+use va416xx_hal::pins::PinsG;
 use va416xx_hal::time::Hertz;
-use va416xx_hal::{gpio::PinsG, pac, uart};
+use va416xx_hal::{pac, uart};
 
 #[entry]
 fn main() -> ! {
     defmt::println!("-- VA416xx UART example application--");
 
-    let mut dp = pac::Peripherals::take().unwrap();
+    let dp = pac::Peripherals::take().unwrap();
 
     // Use the external clock connected to XTAL_N.
-    let clocks = dp
-        .clkgen
-        .constrain()
+    let clocks = ClockConfigurator::new(dp.clkgen)
         .xtal_n_clk_with_src_freq(peb1::EXTCLK_FREQ)
-        .freeze(&mut dp.sysconfig)
+        .freeze()
         .unwrap();
 
-    let gpiob = PinsG::new(&mut dp.sysconfig, dp.portg);
-    let tx = gpiob.pg0.into_funsel_1();
-    let rx = gpiob.pg1.into_funsel_1();
+    let gpiog = PinsG::new(dp.portg);
 
     let uart0 = uart::Uart::new(
-        &mut dp.sysconfig,
         dp.uart0,
-        (tx, rx),
-        Hertz::from_raw(115200),
+        gpiog.pg0,
+        gpiog.pg1,
         &clocks,
-    );
+        Hertz::from_raw(115200).into(),
+    )
+    .unwrap();
     let (mut tx, mut rx) = uart0.split();
     writeln!(tx, "Hello World\n\r").unwrap();
     loop {

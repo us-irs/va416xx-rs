@@ -41,11 +41,11 @@ pub mod edac;
 pub mod gpio;
 pub mod i2c;
 pub mod irq_router;
+pub mod pins;
 pub mod pwm;
 pub mod spi;
 pub mod time;
 pub mod timer;
-pub mod typelevel;
 pub mod uart;
 pub mod wdt;
 
@@ -57,14 +57,11 @@ pub mod adc;
 #[cfg(not(feature = "va41628"))]
 pub mod dac;
 
-#[derive(Debug, Eq, Copy, Clone, PartialEq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum FunSel {
-    Sel0 = 0b00,
-    Sel1 = 0b01,
-    Sel2 = 0b10,
-    Sel3 = 0b11,
-}
+pub use vorago_shared_periphs::{
+    assert_peripheral_reset, deassert_peripheral_reset, disable_nvic_interrupt,
+    disable_peripheral_clock, enable_nvic_interrupt, enable_peripheral_clock,
+    reset_peripheral_for_cycles, FunSel, PeripheralSelect,
+};
 
 #[derive(Debug, PartialEq, Eq, thiserror::Error)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -100,18 +97,41 @@ pub fn port_function_select(
     Ok(())
 }
 
-/// Enable a specific interrupt using the NVIC peripheral.
-///
-/// # Safety
-///
-/// This function is `unsafe` because it can break mask-based critical sections.
-#[inline]
-pub unsafe fn enable_nvic_interrupt(irq: pac::Interrupt) {
-    cortex_m::peripheral::NVIC::unmask(irq);
+pub trait SyscfgExt {
+    fn enable_peripheral_clock(&mut self, clock: PeripheralSelect);
+
+    fn disable_peripheral_clock(&mut self, clock: PeripheralSelect);
+
+    fn assert_periph_reset(&mut self, periph: PeripheralSelect);
+
+    fn deassert_periph_reset(&mut self, periph: PeripheralSelect);
+
+    fn reset_peripheral_reset_for_cycles(&mut self, periph: PeripheralSelect, cycles: usize);
 }
 
-/// Disable a specific interrupt using the NVIC peripheral.
-#[inline]
-pub fn disable_nvic_interrupt(irq: pac::Interrupt) {
-    cortex_m::peripheral::NVIC::mask(irq);
+impl SyscfgExt for pac::Sysconfig {
+    #[inline(always)]
+    fn enable_peripheral_clock(&mut self, clock: PeripheralSelect) {
+        enable_peripheral_clock(clock)
+    }
+
+    #[inline(always)]
+    fn disable_peripheral_clock(&mut self, clock: PeripheralSelect) {
+        disable_peripheral_clock(clock)
+    }
+
+    #[inline(always)]
+    fn assert_periph_reset(&mut self, clock: PeripheralSelect) {
+        assert_peripheral_reset(clock)
+    }
+
+    #[inline(always)]
+    fn deassert_periph_reset(&mut self, clock: PeripheralSelect) {
+        deassert_peripheral_reset(clock)
+    }
+
+    #[inline(always)]
+    fn reset_peripheral_reset_for_cycles(&mut self, periph: PeripheralSelect, cycles: usize) {
+        reset_peripheral_for_cycles(periph, cycles)
+    }
 }

@@ -27,15 +27,15 @@ use ringbuf::{
     StaticRb,
 };
 use va416xx_hal::{
-    gpio::{OutputReadablePushPull, Pin, PinsG, PG5},
+    clock::ClockConfigurator,
+    gpio::{Output, PinState},
     pac::{self, interrupt},
-    prelude::*,
+    pins::PinsG,
     time::Hertz,
     uart,
 };
 
-pub type SharedUart =
-    Mutex<CriticalSectionRawMutex, RefCell<Option<uart::RxWithInterrupt<pac::Uart0>>>>;
+pub type SharedUart = Mutex<CriticalSectionRawMutex, RefCell<Option<uart::RxWithInterrupt>>>;
 static RX: SharedUart = Mutex::new(RefCell::new(None));
 
 const BAUDRATE: u32 = 115200;
@@ -54,39 +54,27 @@ static RINGBUF: SharedRingBuf = Mutex::new(RefCell::new(None));
 async fn main(spawner: Spawner) {
     defmt::println!("VA416xx UART-Embassy Example");
 
-    let mut dp = pac::Peripherals::take().unwrap();
+    let dp = pac::Peripherals::take().unwrap();
 
     // Initialize the systick interrupt & obtain the token to prove that we did
     // Use the external clock connected to XTAL_N.
-    let clocks = dp
-        .clkgen
-        .constrain()
+    let clocks = ClockConfigurator::new(dp.clkgen)
         .xtal_n_clk_with_src_freq(Hertz::from_raw(EXTCLK_FREQ))
-        .freeze(&mut dp.sysconfig)
+        .freeze()
         .unwrap();
     // Safety: Only called once here.
-    unsafe {
-        va416xx_embassy::init(
-            &mut dp.sysconfig,
-            &dp.irq_router,
-            dp.tim15,
-            dp.tim14,
-            &clocks,
-        )
-    };
+    va416xx_embassy::init(dp.tim15, dp.tim14, &clocks);
 
-    let portg = PinsG::new(&mut dp.sysconfig, dp.portg);
-
-    let tx = portg.pg0.into_funsel_1();
-    let rx = portg.pg1.into_funsel_1();
+    let portg = PinsG::new(dp.portg);
 
     let uart0 = uart::Uart::new(
-        &mut dp.sysconfig,
         dp.uart0,
-        (tx, rx),
-        Hertz::from_raw(BAUDRATE),
+        portg.pg0,
+        portg.pg1,
         &clocks,
-    );
+        Hertz::from_raw(BAUDRATE).into(),
+    )
+    .unwrap();
     let (mut tx, rx) = uart0.split();
     let mut rx = rx.into_rx_with_irq();
     rx.start();
@@ -97,7 +85,7 @@ async fn main(spawner: Spawner) {
         static_rb.borrow_mut().replace(StaticRb::default());
     });
 
-    let led = portg.pg5.into_readable_push_pull_output();
+    let led = Output::new(portg.pg5, PinState::Low);
     let mut ticker = Ticker::every(Duration::from_millis(50));
     let mut processing_buf: [u8; RING_BUF_SIZE] = [0; RING_BUF_SIZE];
     let mut read_bytes = 0;
@@ -117,7 +105,7 @@ async fn main(spawner: Spawner) {
 }
 
 #[embassy_executor::task]
-async fn blinky(mut led: Pin<PG5, OutputReadablePushPull>) {
+async fn blinky(mut led: Output) {
     let mut ticker = Ticker::every(Duration::from_millis(500));
     loop {
         led.toggle();

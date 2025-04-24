@@ -21,11 +21,11 @@
 //! itself by using the `irq-tim14-tim15` feature flag. This library exposes three combinations:
 //!
 //! - `irq-tim14-tim15`: Uses [pac::Interrupt::TIM14] for alarm and [pac::Interrupt::TIM15]
-//!    for timekeeper
+//!   for timekeeper
 //! - `irq-tim13-tim14`: Uses [pac::Interrupt::TIM13] for alarm and [pac::Interrupt::TIM14]
-//!    for timekeeper
+//!   for timekeeper
 //! - `irq-tim22-tim23`: Uses [pac::Interrupt::TIM22] for alarm and [pac::Interrupt::TIM23]
-//!    for timekeeper
+//!   for timekeeper
 //!
 //! You can disable the default features and then specify one of the features above to use the
 //! documented combination of IRQs. It is also possible to specify custom IRQs by importing and
@@ -38,34 +38,13 @@
 //! [embassy example projects](https://egit.irs.uni-stuttgart.de/rust/va108xx-rs/src/branch/main/examples/embassy)
 #![no_std]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
-use core::{
-    cell::{Cell, RefCell},
-    sync::atomic::{AtomicU32, Ordering},
-};
-
-use critical_section::{CriticalSection, Mutex};
-
-use embassy_time_driver::{time_driver_impl, Driver, TICK_HZ};
-use embassy_time_queue_utils::Queue;
-use once_cell::sync::OnceCell;
 use va416xx_hal::{
     clock::Clocks,
-    enable_nvic_interrupt,
     irq_router::enable_and_init_irq_router,
     pac::{self, interrupt},
-    pwm::ValidTim,
-    timer::{
-        assert_tim_reset_for_two_cycles, enable_tim_clk, get_tim_raw, TimRegInterface,
-        TIM_IRQ_OFFSET,
-    },
+    timer::{TimMarker, TIM_IRQ_OFFSET},
 };
-
-time_driver_impl!(
-    static TIME_DRIVER: TimerDriver = TimerDriver {
-        periods: AtomicU32::new(0),
-        alarms: Mutex::new(AlarmState::new()),
-        queue: Mutex::new(RefCell::new(Queue::new())),
-});
+use vorago_shared_periphs::embassy::time_driver;
 
 /// Macro to define the IRQ handlers for the time driver.
 ///
@@ -110,289 +89,29 @@ embassy_time_driver_irqs!(timekeeper_irq = TIM14, alarm_irq = TIM13);
 #[cfg(feature = "irq-tim22-tim23")]
 embassy_time_driver_irqs!(timekeeper_irq = TIM23, alarm_irq = TIM22);
 
-/// Expose the time driver so the user can specify the IRQ handlers themselves.
-pub fn time_driver() -> &'static TimerDriver {
-    &TIME_DRIVER
-}
-
 /// Initialization method for embassy
 ///
 /// If the interrupt handlers are provided by the library, the ID of the
 /// used TIM peripherals has to match the ID of the passed timer peripherals. Currently, this
 /// can only be checked at run-time, and a run-time assertion will panic on the embassy
 /// initialization in case of a missmatch.
-///
-/// # Safety
-///
-/// This has to be called once at initialization time to initiate the time driver for
-/// embassy.
-pub unsafe fn init<
-    TimekeeperTim: TimRegInterface + ValidTim,
-    AlarmTim: TimRegInterface + ValidTim,
->(
-    syscfg: &mut pac::Sysconfig,
-    irq_router: &pac::IrqRouter,
+pub fn init<TimekeeperTim: TimMarker, AlarmTim: TimMarker>(
     timekeeper: TimekeeperTim,
     alarm: AlarmTim,
     clocks: &Clocks,
 ) {
     #[cfg(feature = "_irqs-in-lib")]
     assert_eq!(
-        TimekeeperTim::ID,
+        TimekeeperTim::ID.value(),
         TIMEKEEPER_IRQ as u8 - TIM_IRQ_OFFSET as u8,
         "Timekeeper TIM and IRQ missmatch"
     );
     #[cfg(feature = "_irqs-in-lib")]
     assert_eq!(
-        AlarmTim::ID,
+        AlarmTim::ID.value(),
         ALARM_IRQ as u8 - TIM_IRQ_OFFSET as u8,
         "Alarm TIM and IRQ missmatch"
     );
-    enable_and_init_irq_router(syscfg, irq_router);
-    TIME_DRIVER.init(syscfg, timekeeper, alarm, clocks)
-}
-
-struct AlarmState {
-    timestamp: Cell<u64>,
-}
-
-impl AlarmState {
-    const fn new() -> Self {
-        Self {
-            timestamp: Cell::new(u64::MAX),
-        }
-    }
-}
-
-unsafe impl Send for AlarmState {}
-
-static SCALE: OnceCell<u64> = OnceCell::new();
-static TIMEKEEPER_TIM: OnceCell<u8> = OnceCell::new();
-static ALARM_TIM: OnceCell<u8> = OnceCell::new();
-
-pub struct TimerDriver {
-    periods: AtomicU32,
-    /// Timestamp at which to fire alarm. u64::MAX if no alarm is scheduled.
-    alarms: Mutex<AlarmState>,
-    queue: Mutex<RefCell<Queue>>,
-}
-
-impl TimerDriver {
-    fn init<TimekeeperTim: TimRegInterface + ValidTim, AlarmTim: TimRegInterface + ValidTim>(
-        &self,
-        syscfg: &mut pac::Sysconfig,
-        timekeeper_tim: TimekeeperTim,
-        alarm_tim: AlarmTim,
-        clocks: &Clocks,
-    ) {
-        if ALARM_TIM.get().is_some() || TIMEKEEPER_TIM.get().is_some() {
-            return;
-        }
-        ALARM_TIM.set(alarm_tim.tim_id()).ok();
-        TIMEKEEPER_TIM.set(timekeeper_tim.tim_id()).ok();
-        enable_tim_clk(syscfg, timekeeper_tim.tim_id());
-        assert_tim_reset_for_two_cycles(syscfg, alarm_tim.tim_id());
-
-        // Initiate scale value here. This is required to convert timer ticks back to a timestamp.
-        SCALE
-            .set((TimekeeperTim::clock(clocks).raw() / TICK_HZ as u32) as u64)
-            .unwrap();
-        let timekeeper_tim_regs = timekeeper_tim.reg_block();
-        timekeeper_tim_regs
-            .rst_value()
-            .write(|w| unsafe { w.bits(u32::MAX) });
-        // Decrementing counter.
-        timekeeper_tim_regs
-            .cnt_value()
-            .write(|w| unsafe { w.bits(u32::MAX) });
-        // Switch on. Timekeeping should always be done.
-        unsafe {
-            enable_nvic_interrupt(TimekeeperTim::IRQ);
-        }
-        timekeeper_tim_regs
-            .ctrl()
-            .modify(|_, w| w.irq_enb().set_bit());
-        timekeeper_tim_regs.enable().write(|w| unsafe { w.bits(1) });
-
-        enable_tim_clk(syscfg, AlarmTim::ID);
-        assert_tim_reset_for_two_cycles(syscfg, AlarmTim::ID);
-        let alarm_tim_regs = alarm_tim.reg_block();
-        // Explicitely disable alarm timer until needed.
-        alarm_tim_regs.ctrl().modify(|_, w| {
-            w.irq_enb().clear_bit();
-            w.enable().clear_bit()
-        });
-        // Enable general interrupts. The IRQ enable of the peripheral remains cleared.
-        unsafe {
-            enable_nvic_interrupt(AlarmTim::IRQ);
-        }
-    }
-
-    fn timekeeper_tim() -> &'static pac::tim0::RegisterBlock {
-        TIMEKEEPER_TIM
-            .get()
-            .map(|idx| unsafe { get_tim_raw(*idx as usize) })
-            .unwrap()
-    }
-    fn alarm_tim() -> &'static pac::tim0::RegisterBlock {
-        ALARM_TIM
-            .get()
-            .map(|idx| unsafe { get_tim_raw(*idx as usize) })
-            .unwrap()
-    }
-
-    /// Should be called inside the IRQ of the timekeeper timer.
-    ///
-    /// # Safety
-    ///
-    /// This function has to be called once by the TIM IRQ used for the timekeeping.
-    pub unsafe fn on_interrupt_timekeeping(&self) {
-        self.next_period();
-    }
-
-    /// Should be called inside the IRQ of the alarm timer.
-    ///
-    /// # Safety
-    ///
-    ///This function has to be called once by the TIM IRQ used for the timekeeping.
-    pub unsafe fn on_interrupt_alarm(&self) {
-        critical_section::with(|cs| {
-            if self.alarms.borrow(cs).timestamp.get() <= self.now() {
-                self.trigger_alarm(cs)
-            }
-        })
-    }
-
-    fn next_period(&self) {
-        let period = self.periods.fetch_add(1, Ordering::AcqRel) + 1;
-        let t = (period as u64) << 32;
-        critical_section::with(|cs| {
-            let alarm = &self.alarms.borrow(cs);
-            let at = alarm.timestamp.get();
-            if at < t {
-                self.trigger_alarm(cs);
-            } else {
-                let alarm_tim = Self::alarm_tim();
-
-                let remaining_ticks = (at - t) * *SCALE.get().unwrap();
-                if remaining_ticks <= u32::MAX as u64 {
-                    alarm_tim.enable().write(|w| unsafe { w.bits(0) });
-                    alarm_tim
-                        .cnt_value()
-                        .write(|w| unsafe { w.bits(remaining_ticks as u32) });
-                    alarm_tim.ctrl().modify(|_, w| w.irq_enb().set_bit());
-                    alarm_tim.enable().write(|w| unsafe { w.bits(1) });
-                }
-            }
-        })
-    }
-
-    fn trigger_alarm(&self, cs: CriticalSection) {
-        Self::alarm_tim().ctrl().modify(|_, w| {
-            w.irq_enb().clear_bit();
-            w.enable().clear_bit()
-        });
-
-        let alarm = &self.alarms.borrow(cs);
-        // Setting the maximum value disables the alarm.
-        alarm.timestamp.set(u64::MAX);
-
-        // Call after clearing alarm, so the callback can set another alarm.
-        let mut next = self
-            .queue
-            .borrow(cs)
-            .borrow_mut()
-            .next_expiration(self.now());
-        while !self.set_alarm(cs, next) {
-            next = self
-                .queue
-                .borrow(cs)
-                .borrow_mut()
-                .next_expiration(self.now());
-        }
-    }
-
-    fn set_alarm(&self, cs: CriticalSection, timestamp: u64) -> bool {
-        if SCALE.get().is_none() {
-            return false;
-        }
-        let alarm_tim = Self::alarm_tim();
-        alarm_tim.ctrl().modify(|_, w| {
-            w.irq_enb().clear_bit();
-            w.enable().clear_bit()
-        });
-
-        let alarm = self.alarms.borrow(cs);
-        alarm.timestamp.set(timestamp);
-
-        let t = self.now();
-        if timestamp <= t {
-            alarm.timestamp.set(u64::MAX);
-            return false;
-        }
-
-        // If it hasn't triggered yet, setup the relevant reset value, regardless of whether
-        // the interrupts are enabled or not. When they are enabled at a later point, the
-        // right value is already set.
-
-        // If the timestamp is in the next few ticks, add a bit of buffer to be sure the alarm
-        // is not missed.
-        //
-        // This means that an alarm can be delayed for up to 2 ticks (from t+1 to t+3), but this is allowed
-        // by the Alarm trait contract. What's not allowed is triggering alarms *before* their scheduled time,
-        // and we don't do that here.
-        let safe_timestamp = timestamp.max(t + 3);
-        let timer_ticks = (safe_timestamp - t).checked_mul(*SCALE.get().unwrap());
-        alarm_tim.rst_value().write(|w| unsafe { w.bits(u32::MAX) });
-        if timer_ticks.is_some_and(|v| v <= u32::MAX as u64) {
-            alarm_tim
-                .cnt_value()
-                .write(|w| unsafe { w.bits(timer_ticks.unwrap() as u32) });
-            alarm_tim.ctrl().modify(|_, w| w.irq_enb().set_bit());
-            alarm_tim.enable().write(|w| unsafe { w.bits(1) });
-        }
-        // If it's too far in the future, don't enable timer yet.
-        // It will be enabled later by `next_period`.
-
-        true
-    }
-}
-
-impl Driver for TimerDriver {
-    fn now(&self) -> u64 {
-        if SCALE.get().is_none() {
-            return 0;
-        }
-        let mut period1: u32;
-        let mut period2: u32;
-        let mut counter_val: u32;
-
-        loop {
-            // Acquire ensures that we get the latest value of `periods` and
-            // no instructions can be reordered before the load.
-            period1 = self.periods.load(Ordering::Acquire);
-
-            counter_val = u32::MAX - Self::timekeeper_tim().cnt_value().read().bits();
-
-            // Double read to protect against race conditions when the counter is overflowing.
-            period2 = self.periods.load(Ordering::Relaxed);
-            if period1 == period2 {
-                let now = (((period1 as u64) << 32) | counter_val as u64) / *SCALE.get().unwrap();
-                return now;
-            }
-        }
-    }
-
-    fn schedule_wake(&self, at: u64, waker: &core::task::Waker) {
-        critical_section::with(|cs| {
-            let mut queue = self.queue.borrow(cs).borrow_mut();
-
-            if queue.schedule_wake(at, waker) {
-                let mut next = queue.next_expiration(self.now());
-                while !self.set_alarm(cs, next) {
-                    next = queue.next_expiration(self.now());
-                }
-            }
-        })
-    }
+    enable_and_init_irq_router();
+    time_driver().__init(timekeeper, alarm, clocks)
 }

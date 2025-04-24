@@ -4,10 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-cfg-if = "1"
-cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
 cortex-m-rt = "0.7"
-embedded-hal = "1"
+cfg-if = "1"
 embedded-io = "0.6"
 embedded-hal-async = "1"
 embedded-io-async = "0.6"
@@ -18,7 +16,6 @@ defmt = "1"
 panic-probe = { version = "1", features = ["defmt"] }
 static_cell = "2"
 critical-section = "1"
-once_cell = { version = "1", default-features = false, features = ["critical-section"] }
 ringbuf = { version = "0.4", default-features = false }
 
 embassy-sync = "0.6"
@@ -29,11 +26,14 @@ embassy-executor = { version = "0.7", features = [
   "executor-interrupt"
 ]}
 
-va416xx-hal = { version = "0.5", features = ["defmt"] }
-va416xx-embassy = { version = "0.1", default-features = false }
+va416xx-hal = { version = "0.5", path = "../../va416xx-hal", features = ["defmt"] }
+va416xx-embassy = { version = "0.1", path = "../../va416xx-embassy", default-features = false }
 
 [features]
 default = ["ticks-hz-1_000", "va416xx-embassy/irq-tim14-tim15"]
 custom-irqs = []
 ticks-hz-1_000 = ["embassy-time/tick-hz-1_000"]
 ticks-hz-32_768 = ["embassy-time/tick-hz-32_768"]
+
+[package.metadata.cargo-machete]
+ignored = ["cortex-m-rt"]

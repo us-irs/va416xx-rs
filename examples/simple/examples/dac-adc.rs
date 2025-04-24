@@ -10,7 +10,7 @@ use defmt_rtt as _;
 use cortex_m_rt::entry;
 use embedded_hal::delay::DelayNs;
 use simple_examples::peb1;
-use va416xx_hal::{adc::Adc, dac::Dac, pac, prelude::*, timer::CountdownTimer};
+use va416xx_hal::{adc::Adc, clock::ClockConfigurator, dac::Dac, pac, timer::CountdownTimer};
 
 const DAC_INCREMENT: u16 = 256;
 
@@ -30,18 +30,15 @@ const APP_MODE: AppMode = AppMode::DacAndAdc;
 fn main() -> ! {
     defmt::println!("VA416xx DAC/ADC example");
 
-    let mut dp = pac::Peripherals::take().unwrap();
+    let dp = pac::Peripherals::take().unwrap();
     // Use the external clock connected to XTAL_N.
-    let clocks = dp
-        .clkgen
-        .constrain()
+    let clocks = ClockConfigurator::new(dp.clkgen)
         .xtal_n_clk_with_src_freq(peb1::EXTCLK_FREQ)
-        .freeze(&mut dp.sysconfig)
+        .freeze()
         .unwrap();
     let mut dac = None;
     if APP_MODE == AppMode::DacOnly || APP_MODE == AppMode::DacAndAdc {
         dac = Some(Dac::new(
-            &mut dp.sysconfig,
             dp.dac0,
             va416xx_hal::dac::DacSettling::Apb2Times100,
             &clocks,
@@ -49,12 +46,12 @@ fn main() -> ! {
     }
     let mut adc = None;
     if APP_MODE == AppMode::AdcOnly || APP_MODE == AppMode::DacAndAdc {
-        adc = Some(Adc::new(&mut dp.sysconfig, dp.adc, &clocks));
+        adc = Some(Adc::new(dp.adc, &clocks));
     }
-    let mut delay_provider = CountdownTimer::new(&mut dp.sysconfig, dp.tim0, &clocks);
+    let mut delay_provider = CountdownTimer::new(dp.tim0, &clocks);
     let mut current_val = 0;
     loop {
-        if let Some(dac) = &dac {
+        if let Some(dac) = &mut dac {
             defmt::info!("loading DAC with value {}", current_val);
             dac.load_and_trigger_manually(current_val)
                 .expect("loading DAC value failed");

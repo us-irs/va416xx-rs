@@ -32,6 +32,7 @@ const MAX_TM_FRAME_SIZE: usize = cobs::max_encoding_length(MAX_TM_SIZE);
 const UART_BAUDRATE: u32 = 115200;
 const BOOT_NVM_MEMORY_ID: u8 = 1;
 const RX_DEBUGGING: bool = false;
+const TX_DEBUGGING: bool = false;
 
 pub enum ActionId {
     CorruptImageA = 128,
@@ -105,14 +106,14 @@ mod app {
     use spacepackets::ecss::{
         tc::PusTcReader, tm::PusTmCreator, EcssEnumU8, PusPacket, WritablePusPacket,
     };
+    use va416xx_hal::clock::ClockConfigurator;
     use va416xx_hal::irq_router::enable_and_init_irq_router;
     use va416xx_hal::uart::IrqContextTimeoutOrMaxSize;
     use va416xx_hal::{
-        clock::ClkgenExt,
         edac,
-        gpio::PinsG,
         nvm::Nvm,
         pac,
+        pins::PinsG,
         uart::{self, Uart},
     };
 
@@ -128,8 +129,8 @@ mod app {
 
     #[local]
     struct Local {
-        uart_rx: uart::RxWithInterrupt<pac::Uart0>,
-        uart_tx: uart::Tx<pac::Uart0>,
+        uart_rx: uart::RxWithInterrupt,
+        uart_tx: uart::Tx,
         rx_context: IrqContextTimeoutOrMaxSize,
         rom_spi: Option<pac::Spi3>,
         // We handle all TM in one task.
@@ -154,28 +155,24 @@ mod app {
         defmt::println!("-- Vorago flashloader --");
         // Initialize the systick interrupt & obtain the token to prove that we did
         // Use the external clock connected to XTAL_N.
-        let clocks = cx
-            .device
-            .clkgen
-            .constrain()
+        let clocks = ClockConfigurator::new(cx.device.clkgen)
             .xtal_n_clk_with_src_freq(Hertz::from_raw(EXTCLK_FREQ))
-            .freeze(&mut cx.device.sysconfig)
+            .freeze()
             .unwrap();
 
-        enable_and_init_irq_router(&mut cx.device.sysconfig, &cx.device.irq_router);
+        enable_and_init_irq_router();
         setup_edac(&mut cx.device.sysconfig);
 
-        let gpiog = PinsG::new(&mut cx.device.sysconfig, cx.device.portg);
-        let tx = gpiog.pg0.into_funsel_1();
-        let rx = gpiog.pg1.into_funsel_1();
+        let gpiog = PinsG::new(cx.device.portg);
 
         let uart0 = Uart::new(
-            &mut cx.device.sysconfig,
             cx.device.uart0,
-            (tx, rx),
-            Hertz::from_raw(UART_BAUDRATE),
+            gpiog.pg0,
+            gpiog.pg1,
             &clocks,
-        );
+            Hertz::from_raw(UART_BAUDRATE).into(),
+        )
+        .unwrap();
         let (tx, rx) = uart0.split();
 
         let verif_reporter = VerificationReportCreator::new(0).unwrap();
@@ -259,8 +256,8 @@ mod app {
         {
             Ok(result) => {
                 if RX_DEBUGGING {
-                    log::debug!("RX Info: {:?}", cx.local.rx_context);
-                    log::debug!("RX Result: {:?}", result);
+                    defmt::info!("RX Info: {:?}", cx.local.rx_context);
+                    defmt::info!("RX Result: {:?}", result);
                 }
                 if result.complete() {
                     // Check frame validity (must have COBS format) and decode the frame.
@@ -331,7 +328,7 @@ mod app {
                 continue;
             }
             let packet_len = packet_len.unwrap();
-            log::info!(target: "TC Handler", "received packet with length {}", packet_len);
+            defmt::info!("received packet with length {}", packet_len);
             assert_eq!(
                 cx.local
                     .tc_cons
@@ -378,9 +375,7 @@ mod app {
             let mut corrupt_image = |base_addr: u32| {
                 // Safety: We only use this for NVM handling and we only do NVM
                 // handling here.
-                let mut sys_cfg = unsafe { pac::Sysconfig::steal() };
                 let nvm = Nvm::new(
-                    &mut sys_cfg,
                     cx.local.rom_spi.take().unwrap(),
                     CLOCKS.get().as_ref().unwrap(),
                 );
@@ -388,7 +383,7 @@ mod app {
                 nvm.read_data(base_addr + 32, &mut buf);
                 buf[0] += 1;
                 nvm.write_data(base_addr + 32, &buf);
-                *cx.local.rom_spi = Some(nvm.release(&mut sys_cfg));
+                *cx.local.rom_spi = Some(nvm.release());
                 let tm = cx
                     .local
                     .verif_reporter
@@ -406,7 +401,7 @@ mod app {
             }
         }
         if pus_tc.service() == PusServiceId::Test as u8 && pus_tc.subservice() == 1 {
-            log::info!(target: "TC Handler", "received ping TC");
+            defmt::info!("received ping TC");
             let tm = cx
                 .local
                 .verif_reporter
@@ -453,31 +448,22 @@ mod app {
                     return;
                 }
                 let data = &app_data[10..10 + data_len as usize];
-                log::info!(
-                    target: "TC Handler",
-                    "writing {} bytes at offset {} to NVM",
-                    data_len,
-                    offset
-                );
+                defmt::info!("writing {} bytes at offset {} to NVM", data_len, offset);
                 // Safety: We only use this for NVM handling and we only do NVM
                 // handling here.
-                let mut sys_cfg = unsafe { pac::Sysconfig::steal() };
                 let nvm = Nvm::new(
-                    &mut sys_cfg,
                     cx.local.rom_spi.take().unwrap(),
                     CLOCKS.get().as_ref().unwrap(),
                 );
                 nvm.write_data(offset, data);
-                *cx.local.rom_spi = Some(nvm.release(&mut sys_cfg));
+                *cx.local.rom_spi = Some(nvm.release());
                 let tm = cx
                     .local
                     .verif_reporter
                     .completion_success(cx.local.src_data_buf, started_token, 0, 0, &[])
                     .expect("completion success failed");
                 write_and_send(&tm);
-                log::info!(
-                    target: "TC Handler",
-                    "NVM operation done");
+                defmt::info!("NVM operation done");
             }
         }
     }
@@ -506,9 +492,12 @@ mod app {
                     &mut cx.local.encoded_buf[1..],
                 );
                 cx.local.encoded_buf[send_size + 1] = 0;
+                if TX_DEBUGGING {
+                    defmt::debug!("UART TX: Sending data with size {}", send_size + 2);
+                }
                 cx.local
                     .uart_tx
-                    .write(&cx.local.encoded_buf[0..send_size + 2])
+                    .write_all(&cx.local.encoded_buf[0..send_size + 2])
                     .unwrap();
                 Mono::delay(2.millis()).await;
             }

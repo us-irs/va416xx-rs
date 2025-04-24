@@ -1,8 +1,9 @@
 //! IRQ Router peripheral support.
-use crate::{
-    clock::{PeripheralSelect, SyscfgExt},
-    pac,
+use vorago_shared_periphs::{
+    enable_peripheral_clock, reset_peripheral_for_cycles, PeripheralSelect,
 };
+
+use crate::pac;
 
 /// This enables and initiates the peripheral.
 ///
@@ -11,9 +12,10 @@ use crate::{
 /// are inconsistent here, and the registers being non-zero can actually lead to weird bugs
 /// when working with interrupts. Registers DMASELx and ADCSEL/DMASELx will reset to 0x7f and 0x1f
 /// respectively instead of 0x00.
-pub fn enable_and_init_irq_router(sysconfig: &mut pac::Sysconfig, irq_router: &pac::IrqRouter) {
-    sysconfig.enable_peripheral_clock(PeripheralSelect::IrqRouter);
-    sysconfig.assert_periph_reset_for_two_cycles(PeripheralSelect::IrqRouter);
+pub fn enable_and_init_irq_router() {
+    let irq_router = unsafe { pac::IrqRouter::steal() };
+    enable_peripheral_clock(PeripheralSelect::IrqRouter);
+    reset_peripheral_for_cycles(PeripheralSelect::IrqRouter, 2);
     unsafe {
         irq_router.dmasel0().write_with_zero(|w| w);
         irq_router.dmasel1().write_with_zero(|w| w);

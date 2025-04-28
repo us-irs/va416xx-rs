@@ -2,6 +2,7 @@
 #[error("invalid data size error {0}")]
 pub struct InvalidDataSizeError(usize);
 
+#[derive(Debug)]
 pub struct CanFrameNormal {
     id: embedded_can::Id,
     size: usize,
@@ -33,6 +34,7 @@ impl CanFrameNormal {
     }
 }
 
+#[derive(Debug)]
 pub struct CanFrameRtr {
     id: embedded_can::Id,
     dlc: usize,
@@ -52,6 +54,7 @@ impl CanFrameRtr {
     }
 }
 
+#[derive(Debug)]
 pub enum CanFrame {
     Normal(CanFrameNormal),
     Rtr(CanFrameRtr),

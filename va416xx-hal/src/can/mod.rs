@@ -1,18 +1,22 @@
 //! CAN driver.
 //!
 //! The VA416xx CAN module is based on the CP3UB26 module.
+use core::sync::atomic::AtomicBool;
+
 use arbitrary_int::{u11, u15, u2, u3, u4, u7, Number};
 use embedded_can::Frame;
-use regs::{
-    BaseId, BufStatusAndControl, Control, DataDirection, ExtendedId, MmioCan, TimingConfig,
-};
+use ll::CanChannelLowLevel;
+use regs::{BaseId, BufferState, Control, ExtendedId, MmioCan, TimingConfig};
 
 use crate::{clock::Clocks, enable_peripheral_clock, time::Hertz, PeripheralSelect};
 use libm::roundf;
 
 pub mod frame;
-pub mod regs;
 pub use frame::*;
+
+pub mod asynch;
+pub mod ll;
+pub mod regs;
 
 pub const PRESCALER_MIN: u8 = 2;
 pub const PRESCALER_MAX: u8 = 128;
@@ -26,6 +30,8 @@ pub const SJW_MAX: u8 = 4;
 pub const MIN_SAMPLE_POINT: f32 = 0.5;
 pub const MAX_BITRATE_DEVIATION: f32 = 0.005;
 
+static CHANNELS_TAKEN: [AtomicBool; 2] = [AtomicBool::new(false), AtomicBool::new(false)];
+
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum CanId {
     Can0 = 0,
@@ -38,7 +44,7 @@ impl CanId {
     /// # Safety
     ///
     /// See safety of the [regs::Can::new_mmio_fixed_0].
-    pub unsafe fn steal_regs(&self) -> regs::MmioCan<'static> {
+    pub const unsafe fn steal_regs(&self) -> regs::MmioCan<'static> {
         match self {
             CanId::Can0 => unsafe { regs::Can::new_mmio_fixed_0() },
             CanId::Can1 => unsafe { regs::Can::new_mmio_fixed_1() },
@@ -122,17 +128,17 @@ pub fn calculate_all_viable_clock_configs(
     Ok(configs)
 }
 
-pub trait Instance {
+pub trait CanMarker {
     const ID: CanId;
     const PERIPH_SEL: PeripheralSelect;
 }
 
-impl Instance for va416xx::Can0 {
+impl CanMarker for va416xx::Can0 {
     const ID: CanId = CanId::Can0;
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Can0;
 }
 
-impl Instance for va416xx::Can1 {
+impl CanMarker for va416xx::Can1 {
     const ID: CanId = CanId::Can1;
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Can1;
 }
@@ -280,7 +286,7 @@ pub struct Can {
 }
 
 impl Can {
-    pub fn new<CanI: Instance>(_can: CanI, clk_config: ClockConfig) -> Self {
+    pub fn new<CanI: CanMarker>(_can: CanI, clk_config: ClockConfig) -> Self {
         enable_peripheral_clock(CanI::PERIPH_SEL);
         let id = CanI::ID;
         let mut regs = if id == CanId::Can0 {
@@ -291,7 +297,7 @@ impl Can {
         // Disable the CAN bus before configuring it.
         regs.write_control(Control::new_with_raw_value(0));
         for i in 0..15 {
-            regs.msg_buf_block_mut(i).reset();
+            regs.cmbs(i).unwrap().reset();
         }
         regs.write_timing(
             TimingConfig::builder()
@@ -310,6 +316,13 @@ impl Can {
     pub fn set_global_mask_for_exact_id_match(&mut self) {
         self.regs.write_gmskx(ExtendedId::new_with_raw_value(0));
         self.regs.write_gmskb(BaseId::new_with_raw_value(0));
+    }
+
+    pub fn take_channels(&self) -> Option<CanChannels> {
+        if CHANNELS_TAKEN[self.id() as usize].swap(true, core::sync::atomic::Ordering::SeqCst) {
+            return None;
+        }
+        Some(CanChannels::new(self.id))
     }
 
     /// Similar to [Self::set_global_mask_for_exact_id_match] but masks the XRTR and RTR/SRR bits.
@@ -383,51 +396,123 @@ impl Can {
     }
 }
 
-#[derive(Debug)]
-pub enum ChannelState {
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum TxState {
+    Idle,
+    TransmissionIdle,
+    TransmittingDataFrame,
+    TransmittingRemoteFrame,
+    AwaitingRemoteFrameReply,
+}
+
+#[derive(Debug, thiserror::Error)]
+#[error("invalid tx state {0:?}")]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct InvalidTxStateError(pub TxState);
+
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum RxState {
     Idle,
     Receiving,
-    Transmitting,
-    AwaitingRtrReply,
 }
 
-pub struct CanChannel {
-    can_id: CanId,
-    idx: usize,
-    regs: regs::MmioCanMsgBuf<'static>,
-    mode: ChannelState,
+#[derive(Debug, thiserror::Error)]
+#[error("invalid rx state {0:?}")]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct InvalidRxStateError(pub RxState);
+
+#[derive(Debug)]
+pub struct CanTx {
+    ll: CanChannelLowLevel,
+    mode: TxState,
 }
 
-impl core::fmt::Debug for CanChannel {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        f.debug_struct("CanChannel")
-            .field("can_id", &self.can_id)
-            .field("idx", &self.idx)
-            .field("mode", &self.mode)
-            .finish()
+impl CanTx {
+    pub fn new(ll: CanChannelLowLevel) -> Self {
+        Self {
+            ll,
+            mode: TxState::Idle,
+        }
+    }
+
+    pub fn configure_for_transmission(
+        &mut self,
+        tx_priority: Option<u4>,
+    ) -> Result<(), InvalidBufferIndexError> {
+        self.ll.configure_for_transmission(tx_priority).unwrap();
+        self.mode = TxState::TransmissionIdle;
+        Ok(())
+    }
+
+    pub fn transmit_frame(&mut self, frame: CanFrame) -> Result<(), InvalidTxStateError> {
+        if self.mode == TxState::AwaitingRemoteFrameReply {
+            self.configure_for_transmission(None).unwrap();
+            self.mode = TxState::TransmissionIdle;
+        }
+        if self.mode != TxState::TransmissionIdle {
+            return Err(InvalidTxStateError(self.mode));
+        }
+        if !frame.is_remote_frame() {
+            self.mode = TxState::TransmittingDataFrame;
+        } else {
+            self.mode = TxState::TransmittingRemoteFrame;
+        }
+        self.ll.transmit_frame_unchecked(frame);
+        Ok(())
+    }
+
+    pub fn data_frame_transfer_done(&mut self) -> nb::Result<(), InvalidTxStateError> {
+        if self.mode != TxState::TransmittingDataFrame {
+            return Err(nb::Error::Other(InvalidTxStateError(self.mode)));
+        }
+        let status = self.ll.read_status();
+        if status.is_err() {
+            return Err(nb::Error::WouldBlock);
+        }
+        let status = status.unwrap();
+        if status == BufferState::TxNotActive {
+            self.mode = TxState::TransmissionIdle;
+            return Ok(());
+        }
+        Err(nb::Error::WouldBlock)
+    }
+
+    pub fn remote_frame_transfer_done(&mut self) -> nb::Result<CanRx, InvalidTxStateError> {
+        if self.mode != TxState::TransmittingRemoteFrame {
+            return Err(nb::Error::Other(InvalidTxStateError(self.mode)));
+        }
+        let status = self.ll.read_status();
+        if status.is_err() {
+            return Err(nb::Error::WouldBlock);
+        }
+        let status = status.unwrap();
+        if status == BufferState::RxReady {
+            self.mode = TxState::AwaitingRemoteFrameReply;
+            return Ok(CanRx {
+                ll: unsafe { self.ll.clone() },
+                mode: RxState::Receiving,
+            });
+        }
+        Err(nb::Error::WouldBlock)
     }
 }
 
-impl CanChannel {
+pub struct CanRx {
+    ll: CanChannelLowLevel,
+    mode: RxState,
+}
+
+impl CanRx {
     pub fn configure_for_reception_with_standard_id(
         &mut self,
         standard_id: embedded_can::StandardId,
         set_rtr: bool,
     ) -> Result<(), InvalidBufferIndexError> {
-        let mut id1_reg = standard_id.as_raw() << 5;
-        if set_rtr {
-            id1_reg |= 1 << 4;
-        }
-        self.regs
-            .write_id1(BaseId::new_with_raw_value(id1_reg as u32));
-
-        self.regs.write_stat_ctrl(
-            BufStatusAndControl::builder()
-                .with_dlc(u4::new(0))
-                .with_priority(u4::new(0))
-                .with_status(regs::BufferState::RxReady)
-                .build(),
-        );
+        self.ll
+            .configure_for_reception_with_standard_id(standard_id, set_rtr)?;
+        self.mode = RxState::Receiving;
         Ok(())
     }
 
@@ -436,142 +521,81 @@ impl CanChannel {
         extended_id: embedded_can::ExtendedId,
         set_rtr: bool,
     ) -> Result<(), InvalidBufferIndexError> {
-        let mut regs = unsafe { self.can_id.steal_regs() };
-        let mut cmb_block = regs.msg_buf_block_mut(self.idx);
-        let id_raw = extended_id.as_raw();
-        let id1_reg = (((id_raw >> 18) & 0x7FF) << 4) as u16 | ((id_raw >> 15) & 0b111) as u16;
-        cmb_block.write_id1(BaseId::new_with_raw_value(id1_reg as u32));
-        let id0_reg = ((id_raw & 0x7FFF) << 1) as u16 | set_rtr as u16;
-        cmb_block.write_id0(ExtendedId::new_with_raw_value(id0_reg as u32));
-        cmb_block.write_stat_ctrl(
-            BufStatusAndControl::builder()
-                .with_dlc(u4::new(0))
-                .with_priority(u4::new(0))
-                .with_status(regs::BufferState::RxReady)
-                .build(),
-        );
-        self.mode = ChannelState::Receiving;
+        self.ll
+            .configure_for_reception_with_extended_id(extended_id, set_rtr)?;
+        self.mode = RxState::Receiving;
         Ok(())
     }
 
-    pub fn configure_for_transmission(
+    pub fn receive(
         &mut self,
-        tx_priority: u4,
-    ) -> Result<(), InvalidBufferIndexError> {
-        let mut regs = unsafe { self.can_id.steal_regs() };
-        let mut cmb_block = regs.msg_buf_block_mut(self.idx);
-        cmb_block.write_stat_ctrl(
-            BufStatusAndControl::builder()
-                .with_dlc(u4::new(0))
-                .with_priority(tx_priority)
-                .with_status(regs::BufferState::TxNotActive)
-                .build(),
-        );
-        self.mode = ChannelState::Receiving;
-        Ok(())
-    }
-
-    /// Reads a received CAN frame from the message buffer.
-    ///
-    /// This function does not check whether the pre-requisites for reading a CAN frame were
-    /// met and assumes this was already checked by the user.
-    pub fn read_frame_unchecked(&self) -> CanFrame {
-        let id0 = self.regs.read_id0();
-        let id1 = self.regs.read_id1();
-        let data0 = self.regs.read_data0();
-        let data1 = self.regs.read_data1();
-        let data2 = self.regs.read_data2();
-        let data3 = self.regs.read_data3();
-        let mut data: [u8; 8] = [0; 8];
-        let mut read_data = |dlc: u4| {
-            (0..dlc.as_usize()).for_each(|i| match i {
-                0 => data[i] = data3.data_upper_byte().as_u8(),
-                1 => data[i] = data3.data_lower_byte().as_u8(),
-                2 => data[i] = data2.data_upper_byte().as_u8(),
-                3 => data[i] = data2.data_lower_byte().as_u8(),
-                4 => data[i] = data1.data_upper_byte().as_u8(),
-                5 => data[i] = data1.data_lower_byte().as_u8(),
-                6 => data[i] = data0.data_upper_byte().as_u8(),
-                7 => data[i] = data0.data_lower_byte().as_u8(),
-                _ => unreachable!(),
-            });
-        };
-        let (id, rtr) = if !id1.ide() {
-            let id = embedded_can::Id::Standard(
-                embedded_can::StandardId::new(id1.mask_28_18().as_u16()).unwrap(),
-            );
-            if id1.rtr_or_srr() {
-                (id, true)
-            } else {
-                (id, false)
-            }
-        } else {
-            let id_raw = (id1.mask_28_18().as_u32() << 18)
-                | (id1.mask_17_15().as_u32() << 15)
-                | id0.mask_14_0().as_u32();
-            let id = embedded_can::Id::Extended(embedded_can::ExtendedId::new(id_raw).unwrap());
-            if id0.xrtr() {
-                (id, true)
-            } else {
-                (id, false)
-            }
-        };
-        if rtr {
-            CanFrameRtr::new(id, self.regs.read_stat_ctrl().dlc().as_usize()).into()
-        } else {
-            let dlc = self.regs.read_stat_ctrl().dlc();
-            read_data(dlc);
-            CanFrameNormal::new(id, &data[0..dlc.as_usize()]).into()
+        reconfigure_for_reception: bool,
+    ) -> nb::Result<CanFrame, InvalidRxStateError> {
+        if self.mode != RxState::Receiving {
+            return Err(nb::Error::Other(InvalidRxStateError(self.mode)));
         }
-    }
-
-    pub fn transmit_frame_unchecked(&mut self, frame: CanFrame) {
-        let is_remote = frame.is_remote_frame();
-        self.write_id(frame.id(), is_remote);
-        let dlc = frame.dlc();
-        self.regs.modify_stat_ctrl(|mut ctrl| {
-            ctrl.set_status(regs::BufferState::TxOnce);
-            ctrl
-        });
-    }
-
-    fn write_id(&mut self, id: embedded_can::Id, is_remote: bool) {
-        match id {
-            embedded_can::Id::Standard(standard_id) => {
-                self.regs.write_id1(
-                    BaseId::builder()
-                        .with_mask_28_18(u11::new(standard_id.as_raw()))
-                        .with_rtr_or_srr(is_remote)
-                        .with_ide(false)
-                        .with_mask_17_15(u3::new(0))
-                        .build(),
-                );
-                self.regs.write_id0(ExtendedId::new_with_raw_value(0));
-            }
-            embedded_can::Id::Extended(extended_id) => {
-                let id_raw = extended_id.as_raw();
-                self.regs.write_id1(
-                    BaseId::builder()
-                        .with_mask_28_18(u11::new(((id_raw >> 18) & 0x7FF) as u16))
-                        .with_rtr_or_srr(true)
-                        .with_ide(true)
-                        .with_mask_17_15(u3::new(((id_raw >> 15) & 0b111) as u8))
-                        .build(),
-                );
-                self.regs.write_id0(
-                    ExtendedId::builder()
-                        .with_mask_14_0(u15::new((id_raw & 0x7FFF) as u16))
-                        .with_xrtr(is_remote)
-                        .build(),
-                );
-            }
+        let status = self.ll.read_status();
+        if status.is_err() {
+            return Err(nb::Error::WouldBlock);
         }
+        let status = status.unwrap();
+        if status == BufferState::RxReady || status == BufferState::RxOverrun {
+            self.mode = RxState::Idle;
+            if reconfigure_for_reception {
+                self.ll.write_status(BufferState::RxReady);
+            }
+            return Ok(self.ll.read_frame_unchecked());
+        }
+        Err(nb::Error::WouldBlock)
     }
 }
 
-pub struct CanWorker {
-    can: Can,
-    channels: [CanChannel; 15],
+pub struct CanChannels {
+    id: CanId,
+    channels: [Option<CanChannelLowLevel>; 15],
+}
+
+impl CanChannels {
+    const fn new(id: CanId) -> Self {
+        Self {
+            id,
+            channels: [
+                Some(CanChannelLowLevel::steal_unchecked(id, 0)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 1)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 2)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 3)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 4)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 5)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 6)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 7)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 8)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 9)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 10)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 11)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 12)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 13)),
+                Some(CanChannelLowLevel::steal_unchecked(id, 14)),
+            ],
+        }
+    }
+
+    pub const fn can_id(&self) -> CanId {
+        self.id
+    }
+
+    pub fn take(&mut self, idx: usize) -> Option<CanChannelLowLevel> {
+        if idx > 14 {
+            return None;
+        }
+        self.channels[idx].take()
+    }
+
+    pub fn give(&mut self, idx: usize, channel: CanChannelLowLevel) {
+        if idx > 14 {
+            panic!("invalid buffer index for CAN channel");
+        }
+        self.channels[idx] = Some(channel);
+    }
 }
 
 #[cfg(test)]

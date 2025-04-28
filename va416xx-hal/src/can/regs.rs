@@ -1,12 +1,12 @@
 //! Custom register definitions for the CAN register block to circumvent PAC API / SVD
 //! shortcomings.
 
-use arbitrary_int::{u11, u15, u2, u3, u4, u7};
+use arbitrary_int::{u11, u15, u2, u3, u4, u6, u7, Number};
 
 pub const CAN_0_BASE: usize = 0x4001_4000;
 pub const CAN_1_BASE: usize = 0x4001_4400;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 #[bitbybit::bitenum(u4)]
 pub enum BufferState {
     /// Passive channel.
@@ -197,6 +197,42 @@ pub struct InterruptPending {
     buffer: [bool; 15],
 }
 
+#[derive(Debug)]
+#[repr(usize)]
+pub enum CanInterruptId {
+    None = 0b00000,
+    Error = 0b10000,
+    Buffer(usize),
+}
+
+#[bitbybit::bitfield(u32)]
+#[derive(Debug)]
+pub struct StatusPending {
+    #[bits(5..=7, r)]
+    ns: u3,
+    #[bit(4, r)]
+    irq: bool,
+    #[bits(0..=3, r)]
+    ist: u4,
+}
+
+impl StatusPending {
+    pub fn interrupt_id(&self) -> Option<CanInterruptId> {
+        if !self.irq() && self.ist().value() == 0 {
+            return Some(CanInterruptId::None);
+        }
+
+        //let raw_value = ((self.irq() as u8) << 4) | self.ist().as_u8();
+        if self.irq() && self.ist().value() == 0 {
+            return Some(CanInterruptId::Error);
+        }
+        if !self.irq() {
+            return None;
+        }
+        Some(CanInterruptId::Buffer(self.ist().as_usize()))
+    }
+}
+
 #[bitbybit::bitfield(u32)]
 #[derive(Debug)]
 pub struct ErrorCounter {
@@ -235,40 +271,89 @@ pub struct BaseId {
     mask_17_15: u3,
 }
 
+#[derive(Debug, PartialEq, Eq)]
+#[bitbybit::bitenum(u4, exhaustive = true)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum ErrorFieldId {
+    Error = 0b0000,
+    ErrorDel = 0b0001,
+    ErrorEcho = 0b0010,
+    BusIdle = 0b0011,
+    Ack = 0b0100,
+    Eof = 0b0101,
+    Intermission = 0b0110,
+    SuspendTransmission = 0b0111,
+    Sof = 0b1000,
+    Arbitration = 0b1001,
+    Ide = 0b1010,
+    ExtendedArbitration = 0b1011,
+    R1R0 = 0b1100,
+    Dlc = 0b1101,
+    Data = 0b1110,
+    Crc = 0b1111,
+}
+
+#[bitbybit::bitfield(u32)]
+pub struct DiagnosticRegister {
+    /// Shows the output value on the CAN TX pin at the time of the error.
+    #[bit(14, r)]
+    drive: bool,
+    /// Shows the bus value on the CAN RX pin as sampled by the CAN module at the time of the
+    /// error.
+    #[bit(13, r)]
+    mon: bool,
+    /// Indicated whether the CRC is invalid. This bit should only be checked if the EFID field
+    /// is [ErrorFieldId::Ack].
+    #[bit(12, r)]
+    crc: bool,
+    /// Indicated whether the bit stuffing rule was violated at the time the error occured.
+    #[bit(11, r)]
+    stuff: bool,
+    /// Indicated whether the CAN module was an active transmitter at the time the error occured.
+    #[bit(10, r)]
+    txe: bool,
+    #[bits(4..=9, r)]
+    ebid: u6,
+    #[bits(0..=3, r)]
+    efid: ErrorFieldId,
+}
+
+impl core::fmt::Debug for DiagnosticRegister {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        f.debug_struct("DiagnosticRegister")
+            .field("efid", &self.efid())
+            .field("ebid", &self.ebid())
+            .field("txe", &self.txe())
+            .field("stuff", &self.stuff())
+            .field("crc", &self.crc())
+            .field("mon", &self.mon())
+            .field("drive", &self.drive())
+            .finish()
+    }
+}
+
+#[cfg(feature = "defmt")]
+impl defmt::Format for DiagnosticRegister {
+    fn format(&self, fmt: defmt::Formatter) {
+        defmt::write!(
+            fmt,
+            "DiagnosticRegister {{ efid: {}, ebid: {}, txe: {}, stuff: {}, crc: {}, mon: {}, drive: {} }}",
+            self.efid(),
+            self.ebid(),
+            self.txe(),
+            self.stuff(),
+            self.crc(),
+            self.mon(),
+            self.drive()
+        )
+    }
+}
+
 #[derive(derive_mmio::Mmio)]
 #[repr(C)]
 pub struct Can {
     #[mmio(inner)]
-    cmb0: CanMsgBuf,
-    #[mmio(inner)]
-    cmb1: CanMsgBuf,
-    #[mmio(inner)]
-    cmb2: CanMsgBuf,
-    #[mmio(inner)]
-    cmb3: CanMsgBuf,
-    #[mmio(inner)]
-    cmb4: CanMsgBuf,
-    #[mmio(inner)]
-    cmb5: CanMsgBuf,
-    #[mmio(inner)]
-    cmb6: CanMsgBuf,
-    #[mmio(inner)]
-    cmb7: CanMsgBuf,
-    #[mmio(inner)]
-    cmb8: CanMsgBuf,
-    #[mmio(inner)]
-    cmb9: CanMsgBuf,
-    #[mmio(inner)]
-    cmb10: CanMsgBuf,
-    #[mmio(inner)]
-    cmb11: CanMsgBuf,
-    #[mmio(inner)]
-    cmb12: CanMsgBuf,
-    #[mmio(inner)]
-    cmb13: CanMsgBuf,
-    // This CAN message buffer has different mask registers.
-    #[mmio(inner)]
-    cmb14: CanMsgBuf,
+    cmbs: [CanMsgBuf; 15],
     /// Hidden CAN message buffer. Only allowed to be used internally by the peripheral.
     #[mmio(inner)]
     _hcmb: CanMsgBuf,
@@ -290,11 +375,11 @@ pub struct Can {
     /// Interrupt Code Enable Register.
     icen: InterruptEnable,
     #[mmio(PureRead)]
-    status_pending: u32,
+    status_pending: StatusPending,
     #[mmio(PureRead)]
     error_counter: ErrorCounter,
     #[mmio(PureRead)]
-    diag: u32,
+    diag: DiagnosticRegister,
     #[mmio(PureRead)]
     timer: u32,
 }
@@ -320,30 +405,5 @@ impl Can {
     /// interfere with each other.
     pub const unsafe fn new_mmio_fixed_1() -> MmioCan<'static> {
         Self::new_mmio_at(CAN_1_BASE)
-    }
-}
-
-impl MmioCan<'_> {
-    // TODO: It would be nice if derive-mmio could generate this for us..
-    pub fn msg_buf_block_mut(&mut self, idx: usize) -> MmioCanMsgBuf<'static> {
-        assert!(idx < 15, "invalid index for CAN message buffer");
-        match idx {
-            0 => unsafe { self.steal_cmb0() },
-            1 => unsafe { self.steal_cmb1() },
-            2 => unsafe { self.steal_cmb2() },
-            3 => unsafe { self.steal_cmb3() },
-            4 => unsafe { self.steal_cmb4() },
-            5 => unsafe { self.steal_cmb5() },
-            6 => unsafe { self.steal_cmb6() },
-            7 => unsafe { self.steal_cmb7() },
-            8 => unsafe { self.steal_cmb8() },
-            9 => unsafe { self.steal_cmb9() },
-            10 => unsafe { self.steal_cmb10() },
-            11 => unsafe { self.steal_cmb11() },
-            12 => unsafe { self.steal_cmb12() },
-            13 => unsafe { self.steal_cmb13() },
-            14 => unsafe { self.steal_cmb14() },
-            _ => unreachable!(),
-        }
     }
 }

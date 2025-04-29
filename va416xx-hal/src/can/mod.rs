@@ -6,7 +6,7 @@ use core::sync::atomic::AtomicBool;
 use arbitrary_int::{u11, u15, u2, u3, u4, u7, Number};
 use embedded_can::Frame;
 use ll::CanChannelLowLevel;
-use regs::{BaseId, BufferState, Control, ExtendedId, MmioCan, TimingConfig};
+use regs::{BaseId, BufferState, Control, MmioCan, TimingConfig};
 
 use crate::{clock::Clocks, enable_peripheral_clock, time::Hertz, PeripheralSelect};
 use libm::roundf;
@@ -230,7 +230,7 @@ impl ClockConfig {
     }
 
     /// Calculate the clock configuration for the given input clock, the target bitrate and for a
-    /// set of timing parameters.
+    /// set of timing parameters. The CAN controller uses the APB1 clock.
     ///
     /// This function basically calculates the necessary prescaler to achieve the given timing
     /// parameters. It also performs sanity and validity checks for the calculated prescaler:
@@ -314,7 +314,7 @@ impl Can {
     /// with the ID in the receive message buffers. This is the default reset configuration for
     /// the global mask as well.
     pub fn set_global_mask_for_exact_id_match(&mut self) {
-        self.regs.write_gmskx(ExtendedId::new_with_raw_value(0));
+        self.regs.write_gmskx(regs::ExtendedId::new_with_raw_value(0));
         self.regs.write_gmskb(BaseId::new_with_raw_value(0));
     }
 
@@ -333,7 +333,7 @@ impl Can {
     /// on that buffer.
     pub fn set_global_mask_for_exact_id_match_with_rtr_masked(&mut self) {
         self.regs.write_gmskx(
-            ExtendedId::builder()
+            regs::ExtendedId::builder()
                 .with_mask_14_0(u15::new(0))
                 .with_xrtr(true)
                 .build(),
@@ -352,7 +352,7 @@ impl Can {
     /// exact match with the ID in the receive message buffers. This is the default reset
     /// configuration for the global mask as well.
     pub fn set_base_mask_for_exact_id_match(&mut self) {
-        self.regs.write_bmskx(ExtendedId::new_with_raw_value(0));
+        self.regs.write_bmskx(regs::ExtendedId::new_with_raw_value(0));
         self.regs.write_bmskb(BaseId::new_with_raw_value(0));
     }
 
@@ -360,7 +360,7 @@ impl Can {
     /// buffers are accepted by the base buffer 14.
     pub fn set_base_mask_for_all_match(&mut self) {
         self.regs
-            .write_bmskx(ExtendedId::new_with_raw_value(0xffff));
+            .write_bmskx(regs::ExtendedId::new_with_raw_value(0xffff));
         self.regs.write_bmskb(BaseId::new_with_raw_value(0xffff));
     }
 
@@ -380,9 +380,17 @@ impl Can {
     }
 
     #[inline]
-    pub fn enable_bufflock(&mut self) {
+    pub fn set_loopback(&mut self, enable: bool) {
+        self.regs.modify_control(|mut val| {
+            val.set_loopback(enable);
+            val
+        });
+    }
+
+    #[inline]
+    pub fn set_bufflock(&mut self, enable: bool) {
         self.regs.modify_control(|mut ctrl| {
-            ctrl.set_bufflock(true);
+            ctrl.set_bufflock(enable);
             ctrl
         });
     }
@@ -400,7 +408,6 @@ impl Can {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum TxState {
     Idle,
-    TransmissionIdle,
     TransmittingDataFrame,
     TransmittingRemoteFrame,
     AwaitingRemoteFrameReply,
@@ -430,28 +437,20 @@ pub struct CanTx {
 }
 
 impl CanTx {
-    pub fn new(ll: CanChannelLowLevel) -> Self {
+    pub fn new(mut ll: CanChannelLowLevel, tx_priority: Option<u4>) -> Self {
+        ll.configure_for_transmission(tx_priority).unwrap();
         Self {
             ll,
             mode: TxState::Idle,
         }
     }
 
-    pub fn configure_for_transmission(
-        &mut self,
-        tx_priority: Option<u4>,
-    ) -> Result<(), InvalidBufferIndexError> {
-        self.ll.configure_for_transmission(tx_priority).unwrap();
-        self.mode = TxState::TransmissionIdle;
-        Ok(())
-    }
-
     pub fn transmit_frame(&mut self, frame: CanFrame) -> Result<(), InvalidTxStateError> {
         if self.mode == TxState::AwaitingRemoteFrameReply {
-            self.configure_for_transmission(None).unwrap();
-            self.mode = TxState::TransmissionIdle;
+            self.ll.configure_for_transmission(None).unwrap();
+            self.mode = TxState::Idle;
         }
-        if self.mode != TxState::TransmissionIdle {
+        if self.mode != TxState::Idle {
             return Err(InvalidTxStateError(self.mode));
         }
         if !frame.is_remote_frame() {
@@ -467,13 +466,13 @@ impl CanTx {
         if self.mode != TxState::TransmittingDataFrame {
             return Err(nb::Error::Other(InvalidTxStateError(self.mode)));
         }
-        let status = self.ll.read_status();
+        let status = self.ll.read_state();
         if status.is_err() {
             return Err(nb::Error::WouldBlock);
         }
         let status = status.unwrap();
         if status == BufferState::TxNotActive {
-            self.mode = TxState::TransmissionIdle;
+            self.mode = TxState::Idle;
             return Ok(());
         }
         Err(nb::Error::WouldBlock)
@@ -483,7 +482,7 @@ impl CanTx {
         if self.mode != TxState::TransmittingRemoteFrame {
             return Err(nb::Error::Other(InvalidTxStateError(self.mode)));
         }
-        let status = self.ll.read_status();
+        let status = self.ll.read_state();
         if status.is_err() {
             return Err(nb::Error::WouldBlock);
         }
@@ -505,14 +504,19 @@ pub struct CanRx {
 }
 
 impl CanRx {
+    pub fn new(ll: CanChannelLowLevel) -> Self {
+        Self {
+            ll,
+            mode: RxState::Idle,
+        }
+    }
     pub fn configure_for_reception_with_standard_id(
         &mut self,
         standard_id: embedded_can::StandardId,
         set_rtr: bool,
     ) -> Result<(), InvalidBufferIndexError> {
-        self.ll
-            .configure_for_reception_with_standard_id(standard_id, set_rtr)?;
-        self.mode = RxState::Receiving;
+        self.ll.set_standard_id(standard_id, set_rtr)?;
+        self.configure_for_reception();
         Ok(())
     }
 
@@ -521,10 +525,14 @@ impl CanRx {
         extended_id: embedded_can::ExtendedId,
         set_rtr: bool,
     ) -> Result<(), InvalidBufferIndexError> {
-        self.ll
-            .configure_for_reception_with_extended_id(extended_id, set_rtr)?;
-        self.mode = RxState::Receiving;
+        self.ll.set_extended_id(extended_id, set_rtr)?;
+        self.configure_for_reception();
         Ok(())
+    }
+
+    pub fn configure_for_reception(&mut self) {
+        self.ll.configure_for_reception();
+        self.mode = RxState::Receiving;
     }
 
     pub fn receive(
@@ -534,7 +542,7 @@ impl CanRx {
         if self.mode != RxState::Receiving {
             return Err(nb::Error::Other(InvalidRxStateError(self.mode)));
         }
-        let status = self.ll.read_status();
+        let status = self.ll.read_state();
         if status.is_err() {
             return Err(nb::Error::WouldBlock);
         }
@@ -542,7 +550,7 @@ impl CanRx {
         if status == BufferState::RxReady || status == BufferState::RxOverrun {
             self.mode = RxState::Idle;
             if reconfigure_for_reception {
-                self.ll.write_status(BufferState::RxReady);
+                self.ll.write_state(BufferState::RxReady);
             }
             return Ok(self.ll.read_frame_unchecked());
         }
@@ -557,25 +565,28 @@ pub struct CanChannels {
 
 impl CanChannels {
     const fn new(id: CanId) -> Self {
-        Self {
-            id,
-            channels: [
-                Some(CanChannelLowLevel::steal_unchecked(id, 0)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 1)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 2)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 3)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 4)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 5)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 6)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 7)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 8)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 9)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 10)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 11)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 12)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 13)),
-                Some(CanChannelLowLevel::steal_unchecked(id, 14)),
-            ],
+        // Safety: Private function, ownership rules enforced by public API.
+        unsafe {
+            Self {
+                id,
+                channels: [
+                    Some(CanChannelLowLevel::steal_unchecked(id, 0)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 1)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 2)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 3)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 4)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 5)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 6)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 7)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 8)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 9)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 10)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 11)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 12)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 13)),
+                    Some(CanChannelLowLevel::steal_unchecked(id, 14)),
+                ],
+            }
         }
     }
 

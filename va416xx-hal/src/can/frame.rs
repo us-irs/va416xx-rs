@@ -1,3 +1,5 @@
+pub use embedded_can::{ExtendedId, Id, StandardId};
+
 #[derive(Debug, thiserror::Error)]
 #[error("invalid data size error {0}")]
 pub struct InvalidDataSizeError(usize);

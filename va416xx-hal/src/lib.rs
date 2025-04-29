@@ -33,7 +33,7 @@ use gpio::Port;
 pub use va416xx as device;
 pub use va416xx as pac;
 
-pub mod prelude;
+pub mod can;
 pub mod clock;
 pub mod dma;
 pub mod edac;
@@ -41,12 +41,12 @@ pub mod gpio;
 pub mod i2c;
 pub mod irq_router;
 pub mod pins;
+pub mod prelude;
 pub mod pwm;
 pub mod spi;
 pub mod time;
 pub mod timer;
 pub mod uart;
-pub mod can;
 pub mod wdt;
 
 #[cfg(feature = "va41630")]

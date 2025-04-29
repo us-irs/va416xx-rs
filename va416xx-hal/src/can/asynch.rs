@@ -53,6 +53,8 @@ pub enum InterruptResult {
     },
 }
 
+#[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum InterruptError {
     UnexpectedError,
     InvalidInterruptId(StatusPending),
@@ -95,35 +97,30 @@ pub fn on_interrupt_can(
         return Err(InterruptError::InvalidInterruptId(pending_id));
     }
     match pending_id.interrupt_id().unwrap() {
-        super::regs::CanInterruptId::None => {
-            return Ok(InterruptResult::NoInterrupt);
-        }
-        super::regs::CanInterruptId::Error => {
-            return Err(InterruptError::CanError(regs.read_diag()));
-        }
+        super::regs::CanInterruptId::None => Ok(InterruptResult::NoInterrupt),
+        super::regs::CanInterruptId::Error => Err(InterruptError::CanError(regs.read_diag())),
         super::regs::CanInterruptId::Buffer(idx) => {
             let mut channel = unsafe { CanChannelLowLevel::steal_unchecked(id, idx) };
-            let status = channel.read_status();
+            let status = channel.read_state();
             if status.is_err() {
                 let mut clr = InterruptClear::new_with_raw_value(0);
-                clr.set_buffer(idx as usize, true);
+                clr.set_buffer(idx, true);
                 regs.write_iclr(clr);
                 regs.modify_ien(|mut val| {
-                    val.set_buffer(idx as usize, false);
+                    val.set_buffer(idx, false);
                     val
                 });
                 return Err(InterruptError::InvalidStatus(status.unwrap_err()));
             }
             let buf_state = status.unwrap();
             if buf_state == BufferState::TxNotActive {
-                let tx_state = TX_STATES[idx as usize].load(Ordering::Relaxed);
+                let tx_state = TX_STATES[idx].load(Ordering::Relaxed);
                 clear_and_disable_interrupt(&mut regs, idx);
                 // Handle reading frames, updating states etc.
                 if tx_state == TxChannelState::TxDataFrame as u8 {
                     // Transmission complete.
-                    TX_STATES[idx as usize]
-                        .store(TxChannelState::Finished as u8, Ordering::Relaxed);
-                    TX_WAKERS[idx as usize].wake();
+                    TX_STATES[idx].store(TxChannelState::Finished as u8, Ordering::Relaxed);
+                    TX_WAKERS[idx].wake();
                     return Ok(InterruptResult::TransmissionEvent {
                         channel_index: idx,
                         id: TxEventId::TxDataFrame,
@@ -131,22 +128,21 @@ pub fn on_interrupt_can(
                 }
             }
             if buf_state == BufferState::RxReady {
-                let tx_state = TX_STATES[idx as usize].load(Ordering::Relaxed);
+                let tx_state = TX_STATES[idx].load(Ordering::Relaxed);
                 if tx_state == TxChannelState::TxRtrTransmission as u8 {
                     if reconfigure_tx_rtr_to_tx {
-                        channel.write_status(BufferState::TxNotActive);
+                        channel.write_state(BufferState::TxNotActive);
                         clear_and_disable_interrupt(&mut regs, idx);
                         // Transmission complete.
-                        TX_STATES[idx as usize]
-                            .store(TxChannelState::Idle as u8, Ordering::Relaxed);
+                        TX_STATES[idx].store(TxChannelState::Idle as u8, Ordering::Relaxed);
                     } else {
                         // Do not disable interrupt, channel is now used to receive the frame.
                         clear_interrupt(&mut regs, idx);
                         // Transmission complete.
-                        TX_STATES[idx as usize]
+                        TX_STATES[idx]
                             .store(TxChannelState::TxRtrReception as u8, Ordering::Relaxed);
                     }
-                    TX_WAKERS[idx as usize].wake();
+                    TX_WAKERS[idx].wake();
                     return Ok(InterruptResult::TransmissionEvent {
                         channel_index: idx,
                         id: TxEventId::TxRemoteFrame,
@@ -154,18 +150,18 @@ pub fn on_interrupt_can(
                 }
             }
             if buf_state == BufferState::RxOverrun || buf_state == BufferState::RxFull {
-                let tx_state = TX_STATES[idx as usize].load(Ordering::Relaxed);
+                let tx_state = TX_STATES[idx].load(Ordering::Relaxed);
                 // Do not disable interrupt and assume continuous reception.
                 clear_interrupt(&mut regs, idx);
                 let frame = channel.read_frame_unchecked();
                 if tx_state == TxChannelState::TxRtrReception as u8 {
                     // Reception of response complete. We can release the channel for TX (or RX)
                     // usage again.
-                    TX_STATES[idx as usize].store(TxChannelState::Idle as u8, Ordering::Relaxed);
-                    channel.write_status(BufferState::TxNotActive);
+                    TX_STATES[idx].store(TxChannelState::Idle as u8, Ordering::Relaxed);
+                    channel.write_state(BufferState::TxNotActive);
                 } else {
                     // Assume continous reception of frames.
-                    channel.write_status(BufferState::RxReady);
+                    channel.write_state(BufferState::RxReady);
                 }
                 return Ok(InterruptResult::ReceivedFrame {
                     channel_index: idx,
@@ -205,7 +201,7 @@ fn clear_interrupt(regs: &mut MmioCan<'static>, idx: usize) {
 fn clear_and_disable_interrupt(regs: &mut MmioCan<'static>, idx: usize) {
     clear_interrupt(regs, idx);
     regs.modify_ien(|mut val| {
-        val.set_buffer(idx as usize, false);
+        val.set_buffer(idx, false);
         val
     });
 }

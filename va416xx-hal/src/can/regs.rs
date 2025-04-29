@@ -8,6 +8,7 @@ pub const CAN_1_BASE: usize = 0x4001_4400;
 
 #[derive(Debug, PartialEq, Eq)]
 #[bitbybit::bitenum(u4)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum BufferState {
     /// Passive channel.
     RxNotActive = 0b0000,
@@ -207,6 +208,7 @@ pub enum CanInterruptId {
 
 #[bitbybit::bitfield(u32)]
 #[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct StatusPending {
     #[bits(5..=7, r)]
     ns: u3,

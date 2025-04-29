@@ -63,12 +63,12 @@ impl CanChannelLowLevel {
     }
 
     #[inline]
-    pub fn read_status(&self) -> Result<BufferState, u8> {
+    pub fn read_state(&self) -> Result<BufferState, u8> {
         self.msg_buf.read_stat_ctrl().status()
     }
 
     #[inline]
-    pub fn write_status(&mut self, buffer_state: BufferState) {
+    pub fn write_state(&mut self, buffer_state: BufferState) {
         self.msg_buf.modify_stat_ctrl(|mut val| {
             val.set_status(buffer_state);
             val
@@ -90,7 +90,7 @@ impl CanChannelLowLevel {
         Ok(())
     }
 
-    pub fn configure_for_reception_with_standard_id(
+    pub fn set_standard_id(
         &mut self,
         standard_id: embedded_can::StandardId,
         set_rtr: bool,
@@ -101,18 +101,10 @@ impl CanChannelLowLevel {
         }
         self.msg_buf
             .write_id1(BaseId::new_with_raw_value(id1_reg as u32));
-
-        self.msg_buf.write_stat_ctrl(
-            BufStatusAndControl::builder()
-                .with_dlc(u4::new(0))
-                .with_priority(u4::new(0))
-                .with_status(BufferState::RxReady)
-                .build(),
-        );
         Ok(())
     }
 
-    pub fn configure_for_reception_with_extended_id(
+    pub fn set_extended_id(
         &mut self,
         extended_id: embedded_can::ExtendedId,
         set_rtr: bool,
@@ -124,6 +116,10 @@ impl CanChannelLowLevel {
         let id0_reg = ((id_raw & 0x7FFF) << 1) as u16 | set_rtr as u16;
         self.msg_buf
             .write_id0(ExtendedId::new_with_raw_value(id0_reg as u32));
+        Ok(())
+    }
+
+    pub fn configure_for_reception(&mut self) {
         self.msg_buf.write_stat_ctrl(
             BufStatusAndControl::builder()
                 .with_dlc(u4::new(0))
@@ -131,7 +127,6 @@ impl CanChannelLowLevel {
                 .with_status(BufferState::RxReady)
                 .build(),
         );
-        Ok(())
     }
 
     pub fn transmit_frame_unchecked(&mut self, frame: CanFrame) {

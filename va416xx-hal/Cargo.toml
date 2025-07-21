@@ -13,9 +13,9 @@ categories = ["embedded", "no-std", "hardware-support"]
 [dependencies]
 cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
 va416xx = { version = "0.4", features = ["critical-section"], default-features = false }
-derive-mmio = { version = "0.4", git = "https://github.com/knurling-rs/derive-mmio.git" }
+derive-mmio = { git = "https://github.com/knurling-rs/derive-mmio.git",  version = "0.6" }
 static_assertions = "1.1"
-vorago-shared-periphs = { git = "https://egit.irs.uni-stuttgart.de/rust/vorago-shared-periphs.git", features = ["vor4x"] }
+vorago-shared-periphs = { path = "../../vorago-shared-periphs", features = ["vor4x"] }
 
 libm = "0.2"
 nb = "1"

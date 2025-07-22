@@ -8,12 +8,11 @@ cortex-m = "0.7"
 cortex-m-rt = "0.7"
 cfg-if = "1"
 embedded-io = "0.6"
-embedded-can = "0.4"
 embedded-hal-async = "1"
 embedded-io-async = "0.6"
 
 heapless = "0.8"
-defmt-rtt = "0.4"
+defmt-rtt = "1"
 defmt = "1"
 panic-probe = { version = "1", features = ["print-defmt"] }
 static_cell = "2"
@@ -21,7 +20,7 @@ critical-section = "1"
 ringbuf = { version = "0.4", default-features = false }
 
 nb = "1"
-embassy-sync = "0.6"
+embassy-sync = "0.7"
 embassy-time = "0.4"
 embassy-executor = { version = "0.7", features = [
   "arch-cortex-m",

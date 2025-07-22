@@ -357,10 +357,10 @@ impl defmt::Format for DiagnosticRegister {
 #[mmio(const_inner)]
 #[repr(C)]
 pub struct Can {
-    #[mmio(inner)]
+    #[mmio(Inner)]
     cmbs: [CanMsgBuf; 15],
     /// Hidden CAN message buffer. Only allowed to be used internally by the peripheral.
-    #[mmio(inner)]
+    #[mmio(Inner)]
     _hcmb: CanMsgBuf,
     control: Control,
     timing: TimingConfig,

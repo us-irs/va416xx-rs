@@ -64,7 +64,7 @@ care of installing the pre-requisites first.
 ### Pre-Requisites
 
 1. [SEGGER J-Link tools](https://www.segger.com/downloads/jlink/) installed
-2. [Rust `thumb7em-none-eaibhf` toolchain](https://doc.rust-lang.org/nightly/rustc/platform-support/thumbv7em-none-eabi.html).
+2. [Rust `thumbv7em-none-eaibhf` toolchain](https://doc.rust-lang.org/nightly/rustc/platform-support/thumbv7em-none-eabi.html).
    Use the following command to install it:
 
    ```sh

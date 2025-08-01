@@ -61,6 +61,16 @@ You can then adapt the files in `.vscode` to your needs.
 You can use CLI or VS Code for flashing, running and debugging. In any case, take
 care of installing the pre-requisites first.
 
+### Pre-Requisites
+
+1. [SEGGER J-Link tools](https://www.segger.com/downloads/jlink/) installed
+2. [Rust `thumb7em-none-eaibhf` toolchain](https://doc.rust-lang.org/nightly/rustc/platform-support/thumbv7em-none-eabi.html).
+   Use the following command to install it:
+
+   ```sh
+   rustup target add thumbv7em-none-eabihf
+   ```
+
 ### Using CLI with probe-rs
 
 Install [probe-rs](https://probe.rs/docs/getting-started/installation/) first.
@@ -79,15 +89,6 @@ available for persistent flashing.
 
 Runner configuration is available in the `.cargo/def-config.toml` file to use `probe-rs` for
 convenience. `probe-rs` is also able to process and display `defmt` strings directly.
-
-### Pre-Requisites
-
-1. [SEGGER J-Link tools](https://www.segger.com/downloads/jlink/) installed
-2. [gdb-multiarch](https://packages.debian.org/sid/gdb-multiarch) or similar
-   cross-architecture debugger installed. All commands here assume `gdb-multiarch`.
-
-### Using CLI
-
 
 ### Using VS Code
 

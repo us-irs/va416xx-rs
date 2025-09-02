@@ -17,6 +17,4 @@ impl crate::RegisterSpec for DregCalSpec {
 #[doc = "`read()` method returns [`dreg_cal::R`](R) reader structure"]
 impl crate::Readable for DregCalSpec {}
 #[doc = "`reset()` method sets DREG_CAL to value 0"]
-impl crate::Resettable for DregCalSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DregCalSpec {}

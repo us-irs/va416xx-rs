@@ -70,37 +70,37 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Error Field Identifier"]
     #[inline(always)]
-    pub fn efid(&mut self) -> EfidW<CediagSpec> {
+    pub fn efid(&mut self) -> EfidW<'_, CediagSpec> {
         EfidW::new(self, 0)
     }
     #[doc = "Bits 4:9 - Error Bit Identifier"]
     #[inline(always)]
-    pub fn ebid(&mut self) -> EbidW<CediagSpec> {
+    pub fn ebid(&mut self) -> EbidW<'_, CediagSpec> {
         EbidW::new(self, 4)
     }
     #[doc = "Bit 10 - Transmit Error"]
     #[inline(always)]
-    pub fn txe(&mut self) -> TxeW<CediagSpec> {
+    pub fn txe(&mut self) -> TxeW<'_, CediagSpec> {
         TxeW::new(self, 10)
     }
     #[doc = "Bit 11 - Stuff Error"]
     #[inline(always)]
-    pub fn stuff(&mut self) -> StuffW<CediagSpec> {
+    pub fn stuff(&mut self) -> StuffW<'_, CediagSpec> {
         StuffW::new(self, 11)
     }
     #[doc = "Bit 12 - CRC"]
     #[inline(always)]
-    pub fn crc(&mut self) -> CrcW<CediagSpec> {
+    pub fn crc(&mut self) -> CrcW<'_, CediagSpec> {
         CrcW::new(self, 12)
     }
     #[doc = "Bit 13 - Monitor"]
     #[inline(always)]
-    pub fn mon(&mut self) -> MonW<CediagSpec> {
+    pub fn mon(&mut self) -> MonW<'_, CediagSpec> {
         MonW::new(self, 13)
     }
     #[doc = "Bit 14 - Drive"]
     #[inline(always)]
-    pub fn drive(&mut self) -> DriveW<CediagSpec> {
+    pub fn drive(&mut self) -> DriveW<'_, CediagSpec> {
         DriveW::new(self, 14)
     }
 }
@@ -114,10 +114,6 @@ impl crate::Readable for CediagSpec {}
 #[doc = "`write(|w| ..)` method takes [`cediag::W`](W) writer structure"]
 impl crate::Writable for CediagSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CEDIAG to value 0"]
-impl crate::Resettable for CediagSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CediagSpec {}

@@ -88,47 +88,47 @@ impl R {
 impl W {
     #[doc = "Bit 0 - I2C CLK Enabled"]
     #[inline(always)]
-    pub fn clkenabled(&mut self) -> ClkenabledW<CtrlSpec> {
+    pub fn clkenabled(&mut self) -> ClkenabledW<'_, CtrlSpec> {
         ClkenabledW::new(self, 0)
     }
     #[doc = "Bit 1 - I2C Activated"]
     #[inline(always)]
-    pub fn enabled(&mut self) -> EnabledW<CtrlSpec> {
+    pub fn enabled(&mut self) -> EnabledW<'_, CtrlSpec> {
         EnabledW::new(self, 1)
     }
     #[doc = "Bit 2 - I2C Active"]
     #[inline(always)]
-    pub fn enable(&mut self) -> EnableW<CtrlSpec> {
+    pub fn enable(&mut self) -> EnableW<'_, CtrlSpec> {
         EnableW::new(self, 2)
     }
     #[doc = "Bit 3 - TX FIFIO Empty Mode"]
     #[inline(always)]
-    pub fn txfemd(&mut self) -> TxfemdW<CtrlSpec> {
+    pub fn txfemd(&mut self) -> TxfemdW<'_, CtrlSpec> {
         TxfemdW::new(self, 3)
     }
     #[doc = "Bit 4 - RX FIFO Full Mode"]
     #[inline(always)]
-    pub fn rxffmd(&mut self) -> RxffmdW<CtrlSpec> {
+    pub fn rxffmd(&mut self) -> RxffmdW<'_, CtrlSpec> {
         RxffmdW::new(self, 4)
     }
     #[doc = "Bit 5 - Enable Input Analog Glitch Filter"]
     #[inline(always)]
-    pub fn algfilter(&mut self) -> AlgfilterW<CtrlSpec> {
+    pub fn algfilter(&mut self) -> AlgfilterW<'_, CtrlSpec> {
         AlgfilterW::new(self, 5)
     }
     #[doc = "Bit 6 - Enable Input Digital Glitch Filter"]
     #[inline(always)]
-    pub fn dlgfilter(&mut self) -> DlgfilterW<CtrlSpec> {
+    pub fn dlgfilter(&mut self) -> DlgfilterW<'_, CtrlSpec> {
         DlgfilterW::new(self, 6)
     }
     #[doc = "Bit 8 - Enable LoopBack Mode"]
     #[inline(always)]
-    pub fn loopback(&mut self) -> LoopbackW<CtrlSpec> {
+    pub fn loopback(&mut self) -> LoopbackW<'_, CtrlSpec> {
         LoopbackW::new(self, 8)
     }
     #[doc = "Bit 9 - Enable Timing Config Register"]
     #[inline(always)]
-    pub fn tmconfigenb(&mut self) -> TmconfigenbW<CtrlSpec> {
+    pub fn tmconfigenb(&mut self) -> TmconfigenbW<'_, CtrlSpec> {
         TmconfigenbW::new(self, 9)
     }
 }
@@ -142,10 +142,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlSpec {}

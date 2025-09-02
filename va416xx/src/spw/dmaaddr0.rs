@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Address"]
     #[inline(always)]
-    pub fn addr(&mut self) -> AddrW<Dmaaddr0Spec> {
+    pub fn addr(&mut self) -> AddrW<'_, Dmaaddr0Spec> {
         AddrW::new(self, 0)
     }
     #[doc = "Bits 8:15 - Mask"]
     #[inline(always)]
-    pub fn mask(&mut self) -> MaskW<Dmaaddr0Spec> {
+    pub fn mask(&mut self) -> MaskW<'_, Dmaaddr0Spec> {
         MaskW::new(self, 8)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for Dmaaddr0Spec {}
 #[doc = "`write(|w| ..)` method takes [`dmaaddr0::W`](W) writer structure"]
 impl crate::Writable for Dmaaddr0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMAADDR0 to value 0"]
-impl crate::Resettable for Dmaaddr0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Dmaaddr0Spec {}

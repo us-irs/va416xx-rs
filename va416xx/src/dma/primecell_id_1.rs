@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - PrimeCell Identification"]
     #[inline(always)]
-    pub fn primecell_id_1(&mut self) -> PrimecellId1W<PrimecellId1Spec> {
+    pub fn primecell_id_1(&mut self) -> PrimecellId1W<'_, PrimecellId1Spec> {
         PrimecellId1W::new(self, 0)
     }
 }
@@ -30,8 +30,6 @@ impl crate::Readable for PrimecellId1Spec {}
 #[doc = "`write(|w| ..)` method takes [`primecell_id_1::W`](W) writer structure"]
 impl crate::Writable for PrimecellId1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PRIMECELL_ID_1 to value 0xf0"]
 impl crate::Resettable for PrimecellId1Spec {

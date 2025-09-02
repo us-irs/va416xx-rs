@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:30 - Enable FastMode"]
     #[inline(always)]
-    pub fn value(&mut self) -> ValueW<ClkscaleSpec> {
+    pub fn value(&mut self) -> ValueW<'_, ClkscaleSpec> {
         ValueW::new(self, 0)
     }
     #[doc = "Bit 31 - Enable FastMode"]
     #[inline(always)]
-    pub fn fastmode(&mut self) -> FastmodeW<ClkscaleSpec> {
+    pub fn fastmode(&mut self) -> FastmodeW<'_, ClkscaleSpec> {
         FastmodeW::new(self, 31)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for ClkscaleSpec {}
 #[doc = "`write(|w| ..)` method takes [`clkscale::W`](W) writer structure"]
 impl crate::Writable for ClkscaleSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CLKSCALE to value 0"]
-impl crate::Resettable for ClkscaleSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ClkscaleSpec {}

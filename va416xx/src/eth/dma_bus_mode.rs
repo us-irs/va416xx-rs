@@ -133,72 +133,72 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Software Reset (Read, Write Set, and Self Clear)"]
     #[inline(always)]
-    pub fn swr(&mut self) -> SwrW<DmaBusModeSpec> {
+    pub fn swr(&mut self) -> SwrW<'_, DmaBusModeSpec> {
         SwrW::new(self, 0)
     }
     #[doc = "Bit 1 - DMA Arbitration Scheme"]
     #[inline(always)]
-    pub fn da(&mut self) -> DaW<DmaBusModeSpec> {
+    pub fn da(&mut self) -> DaW<'_, DmaBusModeSpec> {
         DaW::new(self, 1)
     }
     #[doc = "Bits 2:6 - Descriptor Skip Length"]
     #[inline(always)]
-    pub fn dsl(&mut self) -> DslW<DmaBusModeSpec> {
+    pub fn dsl(&mut self) -> DslW<'_, DmaBusModeSpec> {
         DslW::new(self, 2)
     }
     #[doc = "Bits 8:13 - Programmable Burst Lengthe"]
     #[inline(always)]
-    pub fn pbl(&mut self) -> PblW<DmaBusModeSpec> {
+    pub fn pbl(&mut self) -> PblW<'_, DmaBusModeSpec> {
         PblW::new(self, 8)
     }
     #[doc = "Bits 14:15 - Priority Ratio"]
     #[inline(always)]
-    pub fn pr(&mut self) -> PrW<DmaBusModeSpec> {
+    pub fn pr(&mut self) -> PrW<'_, DmaBusModeSpec> {
         PrW::new(self, 14)
     }
     #[doc = "Bit 16 - Fixed Burste"]
     #[inline(always)]
-    pub fn fb(&mut self) -> FbW<DmaBusModeSpec> {
+    pub fn fb(&mut self) -> FbW<'_, DmaBusModeSpec> {
         FbW::new(self, 16)
     }
     #[doc = "Bits 17:22 - Rx DMA PBL"]
     #[inline(always)]
-    pub fn rpbl(&mut self) -> RpblW<DmaBusModeSpec> {
+    pub fn rpbl(&mut self) -> RpblW<'_, DmaBusModeSpec> {
         RpblW::new(self, 17)
     }
     #[doc = "Bit 23 - Use Separate PBL"]
     #[inline(always)]
-    pub fn usp(&mut self) -> UspW<DmaBusModeSpec> {
+    pub fn usp(&mut self) -> UspW<'_, DmaBusModeSpec> {
         UspW::new(self, 23)
     }
     #[doc = "Bit 24 - PBLx8 Mode"]
     #[inline(always)]
-    pub fn pblx8(&mut self) -> Pblx8W<DmaBusModeSpec> {
+    pub fn pblx8(&mut self) -> Pblx8W<'_, DmaBusModeSpec> {
         Pblx8W::new(self, 24)
     }
     #[doc = "Bit 25 - Address-Aligned Beats"]
     #[inline(always)]
-    pub fn aal(&mut self) -> AalW<DmaBusModeSpec> {
+    pub fn aal(&mut self) -> AalW<'_, DmaBusModeSpec> {
         AalW::new(self, 25)
     }
     #[doc = "Bit 26 - Mixed Burst"]
     #[inline(always)]
-    pub fn mb(&mut self) -> MbW<DmaBusModeSpec> {
+    pub fn mb(&mut self) -> MbW<'_, DmaBusModeSpec> {
         MbW::new(self, 26)
     }
     #[doc = "Bit 27 - Transmit Priority"]
     #[inline(always)]
-    pub fn txpr(&mut self) -> TxprW<DmaBusModeSpec> {
+    pub fn txpr(&mut self) -> TxprW<'_, DmaBusModeSpec> {
         TxprW::new(self, 27)
     }
     #[doc = "Bits 28:29 - Channel Priority Weights"]
     #[inline(always)]
-    pub fn prwg(&mut self) -> PrwgW<DmaBusModeSpec> {
+    pub fn prwg(&mut self) -> PrwgW<'_, DmaBusModeSpec> {
         PrwgW::new(self, 28)
     }
     #[doc = "Bit 31 - Rebuild INCRx Burst"]
     #[inline(always)]
-    pub fn rib(&mut self) -> RibW<DmaBusModeSpec> {
+    pub fn rib(&mut self) -> RibW<'_, DmaBusModeSpec> {
         RibW::new(self, 31)
     }
 }
@@ -212,8 +212,6 @@ impl crate::Readable for DmaBusModeSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_bus_mode::W`](W) writer structure"]
 impl crate::Writable for DmaBusModeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_BUS_MODE to value 0x0002_0101"]
 impl crate::Resettable for DmaBusModeSpec {

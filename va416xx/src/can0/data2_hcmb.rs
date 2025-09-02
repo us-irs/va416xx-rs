@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Data Byte 6"]
     #[inline(always)]
-    pub fn byte6(&mut self) -> Byte6W<Data2HcmbSpec> {
+    pub fn byte6(&mut self) -> Byte6W<'_, Data2HcmbSpec> {
         Byte6W::new(self, 0)
     }
     #[doc = "Bits 8:15 - Data Byte 5"]
     #[inline(always)]
-    pub fn byte5(&mut self) -> Byte5W<Data2HcmbSpec> {
+    pub fn byte5(&mut self) -> Byte5W<'_, Data2HcmbSpec> {
         Byte5W::new(self, 8)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for Data2HcmbSpec {}
 #[doc = "`write(|w| ..)` method takes [`data2_hcmb::W`](W) writer structure"]
 impl crate::Writable for Data2HcmbSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DATA2_HCMB to value 0"]
-impl crate::Resettable for Data2HcmbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Data2HcmbSpec {}

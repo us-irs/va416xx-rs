@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:13 - Watchdog Timeout"]
     #[inline(always)]
-    pub fn wto(&mut self) -> WtoW<MacWdogToSpec> {
+    pub fn wto(&mut self) -> WtoW<'_, MacWdogToSpec> {
         WtoW::new(self, 0)
     }
     #[doc = "Bit 16 - Programmable Watchdog Enable"]
     #[inline(always)]
-    pub fn pwe(&mut self) -> PweW<MacWdogToSpec> {
+    pub fn pwe(&mut self) -> PweW<'_, MacWdogToSpec> {
         PweW::new(self, 16)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for MacWdogToSpec {}
 #[doc = "`write(|w| ..)` method takes [`mac_wdog_to::W`](W) writer structure"]
 impl crate::Writable for MacWdogToSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MAC_WDOG_TO to value 0"]
-impl crate::Resettable for MacWdogToSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MacWdogToSpec {}

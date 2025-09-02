@@ -70,37 +70,37 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Counters Reset"]
     #[inline(always)]
-    pub fn cntrst(&mut self) -> CntrstW<MmcCntrlSpec> {
+    pub fn cntrst(&mut self) -> CntrstW<'_, MmcCntrlSpec> {
         CntrstW::new(self, 0)
     }
     #[doc = "Bit 1 - Counter Stop Rollover"]
     #[inline(always)]
-    pub fn cntstopro(&mut self) -> CntstoproW<MmcCntrlSpec> {
+    pub fn cntstopro(&mut self) -> CntstoproW<'_, MmcCntrlSpec> {
         CntstoproW::new(self, 1)
     }
     #[doc = "Bit 2 - Reset on Read"]
     #[inline(always)]
-    pub fn rstonrd(&mut self) -> RstonrdW<MmcCntrlSpec> {
+    pub fn rstonrd(&mut self) -> RstonrdW<'_, MmcCntrlSpec> {
         RstonrdW::new(self, 2)
     }
     #[doc = "Bit 3 - MMC Counter Freeze"]
     #[inline(always)]
-    pub fn cntfreez(&mut self) -> CntfreezW<MmcCntrlSpec> {
+    pub fn cntfreez(&mut self) -> CntfreezW<'_, MmcCntrlSpec> {
         CntfreezW::new(self, 3)
     }
     #[doc = "Bit 4 - Counters Preset"]
     #[inline(always)]
-    pub fn cntprst(&mut self) -> CntprstW<MmcCntrlSpec> {
+    pub fn cntprst(&mut self) -> CntprstW<'_, MmcCntrlSpec> {
         CntprstW::new(self, 4)
     }
     #[doc = "Bit 5 - Full-Half Preset"]
     #[inline(always)]
-    pub fn cntprstlvl(&mut self) -> CntprstlvlW<MmcCntrlSpec> {
+    pub fn cntprstlvl(&mut self) -> CntprstlvlW<'_, MmcCntrlSpec> {
         CntprstlvlW::new(self, 5)
     }
     #[doc = "Bit 8 - Update MMC Counters for Dropped Broadcast Frames"]
     #[inline(always)]
-    pub fn ucdbc(&mut self) -> UcdbcW<MmcCntrlSpec> {
+    pub fn ucdbc(&mut self) -> UcdbcW<'_, MmcCntrlSpec> {
         UcdbcW::new(self, 8)
     }
 }
@@ -114,10 +114,6 @@ impl crate::Readable for MmcCntrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`mmc_cntrl::W`](W) writer structure"]
 impl crate::Writable for MmcCntrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MMC_CNTRL to value 0"]
-impl crate::Resettable for MmcCntrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MmcCntrlSpec {}

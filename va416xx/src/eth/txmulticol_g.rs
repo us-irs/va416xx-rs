@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxmulticolGSpec {
 #[doc = "`read()` method returns [`txmulticol_g::R`](R) reader structure"]
 impl crate::Readable for TxmulticolGSpec {}
 #[doc = "`reset()` method sets TXMULTICOL_G to value 0"]
-impl crate::Resettable for TxmulticolGSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxmulticolGSpec {}

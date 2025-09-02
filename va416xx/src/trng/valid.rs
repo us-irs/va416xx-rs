@@ -17,6 +17,4 @@ impl crate::RegisterSpec for ValidSpec {
 #[doc = "`read()` method returns [`valid::R`](R) reader structure"]
 impl crate::Readable for ValidSpec {}
 #[doc = "`reset()` method sets VALID to value 0"]
-impl crate::Resettable for ValidSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ValidSpec {}

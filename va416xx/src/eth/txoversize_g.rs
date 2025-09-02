@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxoversizeGSpec {
 #[doc = "`read()` method returns [`txoversize_g::R`](R) reader structure"]
 impl crate::Readable for TxoversizeGSpec {}
 #[doc = "`reset()` method sets TXOVERSIZE_G to value 0"]
-impl crate::Resettable for TxoversizeGSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxoversizeGSpec {}

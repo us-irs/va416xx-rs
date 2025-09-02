@@ -17,6 +17,4 @@ impl crate::RegisterSpec for BistCntr0Spec {
 #[doc = "`read()` method returns [`bist_cntr0::R`](R) reader structure"]
 impl crate::Readable for BistCntr0Spec {}
 #[doc = "`reset()` method sets BIST_CNTR0 to value 0"]
-impl crate::Resettable for BistCntr0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for BistCntr0Spec {}

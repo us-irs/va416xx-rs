@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:14 - Buffer Interrupt Clear\\[14:0\\]"]
     #[inline(always)]
-    pub fn iclr(&mut self) -> IclrW<CiclrSpec> {
+    pub fn iclr(&mut self) -> IclrW<'_, CiclrSpec> {
         IclrW::new(self, 0)
     }
     #[doc = "Bit 15 - Error Interrupt Clear"]
     #[inline(always)]
-    pub fn eiclr(&mut self) -> EiclrW<CiclrSpec> {
+    pub fn eiclr(&mut self) -> EiclrW<'_, CiclrSpec> {
         EiclrW::new(self, 15)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for CiclrSpec {}
 #[doc = "`write(|w| ..)` method takes [`ciclr::W`](W) writer structure"]
 impl crate::Writable for CiclrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CICLR to value 0"]
-impl crate::Resettable for CiclrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CiclrSpec {}

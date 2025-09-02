@@ -17,6 +17,4 @@ impl crate::RegisterSpec for Tx128to255octGbSpec {
 #[doc = "`read()` method returns [`tx128to255oct_gb::R`](R) reader structure"]
 impl crate::Readable for Tx128to255octGbSpec {}
 #[doc = "`reset()` method sets TX128TO255OCT_GB to value 0"]
-impl crate::Resettable for Tx128to255octGbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Tx128to255octGbSpec {}

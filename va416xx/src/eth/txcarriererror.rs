@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxcarriererrorSpec {
 #[doc = "`read()` method returns [`txcarriererror::R`](R) reader structure"]
 impl crate::Readable for TxcarriererrorSpec {}
 #[doc = "`reset()` method sets TXCARRIERERROR to value 0"]
-impl crate::Resettable for TxcarriererrorSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxcarriererrorSpec {}

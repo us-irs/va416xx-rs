@@ -38,6 +38,4 @@ impl crate::RegisterSpec for StatSpec {
 #[doc = "`read()` method returns [`stat::R`](R) reader structure"]
 impl crate::Readable for StatSpec {}
 #[doc = "`reset()` method sets STAT to value 0"]
-impl crate::Resettable for StatSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for StatSpec {}

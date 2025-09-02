@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Base Pointer for Alternate DMA Control Register"]
     #[inline(always)]
-    pub fn alt_ctrl_base_ptr(&mut self) -> AltCtrlBasePtrW<AltCtrlBasePtrSpec> {
+    pub fn alt_ctrl_base_ptr(&mut self) -> AltCtrlBasePtrW<'_, AltCtrlBasePtrSpec> {
         AltCtrlBasePtrW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for AltCtrlBasePtrSpec {}
 #[doc = "`write(|w| ..)` method takes [`alt_ctrl_base_ptr::W`](W) writer structure"]
 impl crate::Writable for AltCtrlBasePtrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ALT_CTRL_BASE_PTR to value 0"]
-impl crate::Resettable for AltCtrlBasePtrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for AltCtrlBasePtrSpec {}

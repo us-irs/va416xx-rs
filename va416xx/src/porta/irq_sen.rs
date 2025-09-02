@@ -19,10 +19,6 @@ impl crate::Readable for IrqSenSpec {}
 #[doc = "`write(|w| ..)` method takes [`irq_sen::W`](W) writer structure"]
 impl crate::Writable for IrqSenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IRQ_SEN to value 0"]
-impl crate::Resettable for IrqSenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IrqSenSpec {}

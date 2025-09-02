@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxmcastframeGbSpec {
 #[doc = "`read()` method returns [`txmcastframe_gb::R`](R) reader structure"]
 impl crate::Readable for TxmcastframeGbSpec {}
 #[doc = "`reset()` method sets TXMCASTFRAME_GB to value 0"]
-impl crate::Resettable for TxmcastframeGbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxmcastframeGbSpec {}

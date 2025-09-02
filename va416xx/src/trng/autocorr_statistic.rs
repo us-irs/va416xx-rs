@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:13 - Count each time an autocorrelation test starts"]
     #[inline(always)]
-    pub fn autocorr_trys(&mut self) -> AutocorrTrysW<AutocorrStatisticSpec> {
+    pub fn autocorr_trys(&mut self) -> AutocorrTrysW<'_, AutocorrStatisticSpec> {
         AutocorrTrysW::new(self, 0)
     }
     #[doc = "Bits 14:21 - Count each time an autocorrelation test fails"]
     #[inline(always)]
-    pub fn autocorr_fails(&mut self) -> AutocorrFailsW<AutocorrStatisticSpec> {
+    pub fn autocorr_fails(&mut self) -> AutocorrFailsW<'_, AutocorrStatisticSpec> {
         AutocorrFailsW::new(self, 14)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for AutocorrStatisticSpec {}
 #[doc = "`write(|w| ..)` method takes [`autocorr_statistic::W`](W) writer structure"]
 impl crate::Writable for AutocorrStatisticSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets AUTOCORR_STATISTIC to value 0"]
-impl crate::Resettable for AutocorrStatisticSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for AutocorrStatisticSpec {}

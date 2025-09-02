@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Read write mask"]
     #[inline(always)]
-    pub fn rwmask(&mut self) -> RwmaskW<S0AddressmaskbSpec> {
+    pub fn rwmask(&mut self) -> RwmaskW<'_, S0AddressmaskbSpec> {
         RwmaskW::new(self, 0)
     }
     #[doc = "Bits 1:10 - Address mask value"]
     #[inline(always)]
-    pub fn mask(&mut self) -> MaskW<S0AddressmaskbSpec> {
+    pub fn mask(&mut self) -> MaskW<'_, S0AddressmaskbSpec> {
         MaskW::new(self, 1)
     }
 }
@@ -44,8 +44,6 @@ impl crate::Readable for S0AddressmaskbSpec {}
 #[doc = "`write(|w| ..)` method takes [`s0_addressmaskb::W`](W) writer structure"]
 impl crate::Writable for S0AddressmaskbSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets S0_ADDRESSMASKB to value 0x07fe"]
 impl crate::Resettable for S0AddressmaskbSpec {

@@ -70,37 +70,37 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Flow Control Busy or Backpressure Activate"]
     #[inline(always)]
-    pub fn fcb_bpa(&mut self) -> FcbBpaW<MacFlowCtrlSpec> {
+    pub fn fcb_bpa(&mut self) -> FcbBpaW<'_, MacFlowCtrlSpec> {
         FcbBpaW::new(self, 0)
     }
     #[doc = "Bit 1 - Transmit Flow Control Enable"]
     #[inline(always)]
-    pub fn tfe(&mut self) -> TfeW<MacFlowCtrlSpec> {
+    pub fn tfe(&mut self) -> TfeW<'_, MacFlowCtrlSpec> {
         TfeW::new(self, 1)
     }
     #[doc = "Bit 2 - Receive Flow Control Enable"]
     #[inline(always)]
-    pub fn rfe(&mut self) -> RfeW<MacFlowCtrlSpec> {
+    pub fn rfe(&mut self) -> RfeW<'_, MacFlowCtrlSpec> {
         RfeW::new(self, 2)
     }
     #[doc = "Bit 3 - Unicast Pause Frame Detect"]
     #[inline(always)]
-    pub fn up(&mut self) -> UpW<MacFlowCtrlSpec> {
+    pub fn up(&mut self) -> UpW<'_, MacFlowCtrlSpec> {
         UpW::new(self, 3)
     }
     #[doc = "Bits 4:5 - Pause Low Threshold"]
     #[inline(always)]
-    pub fn plt(&mut self) -> PltW<MacFlowCtrlSpec> {
+    pub fn plt(&mut self) -> PltW<'_, MacFlowCtrlSpec> {
         PltW::new(self, 4)
     }
     #[doc = "Bit 7 - Disable Zero-Quanta Pause"]
     #[inline(always)]
-    pub fn dzpq(&mut self) -> DzpqW<MacFlowCtrlSpec> {
+    pub fn dzpq(&mut self) -> DzpqW<'_, MacFlowCtrlSpec> {
         DzpqW::new(self, 7)
     }
     #[doc = "Bits 16:31 - Pause time"]
     #[inline(always)]
-    pub fn pt(&mut self) -> PtW<MacFlowCtrlSpec> {
+    pub fn pt(&mut self) -> PtW<'_, MacFlowCtrlSpec> {
         PtW::new(self, 16)
     }
 }
@@ -114,10 +114,6 @@ impl crate::Readable for MacFlowCtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`mac_flow_ctrl::W`](W) writer structure"]
 impl crate::Writable for MacFlowCtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MAC_FLOW_CTRL to value 0"]
-impl crate::Resettable for MacFlowCtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MacFlowCtrlSpec {}

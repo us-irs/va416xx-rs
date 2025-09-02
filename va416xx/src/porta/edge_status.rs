@@ -19,10 +19,6 @@ impl crate::Readable for EdgeStatusSpec {}
 #[doc = "`write(|w| ..)` method takes [`edge_status::W`](W) writer structure"]
 impl crate::Writable for EdgeStatusSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EDGE_STATUS to value 0"]
-impl crate::Resettable for EdgeStatusSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for EdgeStatusSpec {}

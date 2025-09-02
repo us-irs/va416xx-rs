@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Cleared on Reset. Pointer updated by the DMA during operation."]
     #[inline(always)]
-    pub fn currdesaptr(&mut self) -> CurrdesaptrW<DmaCurrRxDescSpec> {
+    pub fn currdesaptr(&mut self) -> CurrdesaptrW<'_, DmaCurrRxDescSpec> {
         CurrdesaptrW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for DmaCurrRxDescSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_curr_rx_desc::W`](W) writer structure"]
 impl crate::Writable for DmaCurrRxDescSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_CURR_RX_DESC to value 0"]
-impl crate::Resettable for DmaCurrRxDescSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DmaCurrRxDescSpec {}

@@ -7,7 +7,7 @@ pub type DataW<'a, REG> = crate::FieldWriter<'a, REG, 12, u16>;
 impl W {
     #[doc = "Bits 0:11 - Data for FIFO write"]
     #[inline(always)]
-    pub fn data(&mut self) -> DataW<FifoDataSpec> {
+    pub fn data(&mut self) -> DataW<'_, FifoDataSpec> {
         DataW::new(self, 0)
     }
 }
@@ -21,10 +21,6 @@ impl crate::Readable for FifoDataSpec {}
 #[doc = "`write(|w| ..)` method takes [`fifo_data::W`](W) writer structure"]
 impl crate::Writable for FifoDataSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets FIFO_DATA to value 0"]
-impl crate::Resettable for FifoDataSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for FifoDataSpec {}

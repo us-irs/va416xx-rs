@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bit 10 - Enables external trigger"]
     #[inline(always)]
-    pub fn ext_trig_en(&mut self) -> ExtTrigEnW<Ctrl0Spec> {
+    pub fn ext_trig_en(&mut self) -> ExtTrigEnW<'_, Ctrl0Spec> {
         ExtTrigEnW::new(self, 10)
     }
     #[doc = "Bit 11 - Enables manual trigger"]
     #[inline(always)]
-    pub fn man_trig_en(&mut self) -> ManTrigEnW<Ctrl0Spec> {
+    pub fn man_trig_en(&mut self) -> ManTrigEnW<'_, Ctrl0Spec> {
         ManTrigEnW::new(self, 11)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for Ctrl0Spec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl0::W`](W) writer structure"]
 impl crate::Writable for Ctrl0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL0 to value 0"]
-impl crate::Resettable for Ctrl0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ctrl0Spec {}

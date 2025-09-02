@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:5 - The current value of the system time counter"]
     #[inline(always)]
-    pub fn timecnt(&mut self) -> TimecntW<TcSpec> {
+    pub fn timecnt(&mut self) -> TimecntW<'_, TcSpec> {
         TimecntW::new(self, 0)
     }
     #[doc = "Bits 6:7 - The current value of the time control flags"]
     #[inline(always)]
-    pub fn tirq_end(&mut self) -> TirqEndW<TcSpec> {
+    pub fn tirq_end(&mut self) -> TirqEndW<'_, TcSpec> {
         TirqEndW::new(self, 6)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for TcSpec {}
 #[doc = "`write(|w| ..)` method takes [`tc::W`](W) writer structure"]
 impl crate::Writable for TcSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TC to value 0"]
-impl crate::Resettable for TcSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TcSpec {}

@@ -19,10 +19,6 @@ impl crate::Readable for SyndDataSpec {}
 #[doc = "`write(|w| ..)` method takes [`synd_data::W`](W) writer structure"]
 impl crate::Writable for SyndDataSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SYND_DATA to value 0"]
-impl crate::Resettable for SyndDataSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SyndDataSpec {}

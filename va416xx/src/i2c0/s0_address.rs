@@ -34,17 +34,17 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Read/Write value"]
     #[inline(always)]
-    pub fn rw(&mut self) -> RwW<S0AddressSpec> {
+    pub fn rw(&mut self) -> RwW<'_, S0AddressSpec> {
         RwW::new(self, 0)
     }
     #[doc = "Bits 1:10 - Address value"]
     #[inline(always)]
-    pub fn address(&mut self) -> AddressW<S0AddressSpec> {
+    pub fn address(&mut self) -> AddressW<'_, S0AddressSpec> {
         AddressW::new(self, 1)
     }
     #[doc = "Bit 15 - Enable 10b address mode"]
     #[inline(always)]
-    pub fn a10mode(&mut self) -> A10modeW<S0AddressSpec> {
+    pub fn a10mode(&mut self) -> A10modeW<'_, S0AddressSpec> {
         A10modeW::new(self, 15)
     }
 }
@@ -58,10 +58,6 @@ impl crate::Readable for S0AddressSpec {}
 #[doc = "`write(|w| ..)` method takes [`s0_address::W`](W) writer structure"]
 impl crate::Writable for S0AddressSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets S0_ADDRESS to value 0"]
-impl crate::Resettable for S0AddressSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for S0AddressSpec {}

@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:6 - DMA trigger source selection value"]
     #[inline(always)]
-    pub fn dmasel(&mut self) -> DmaselW<Dmasel2Spec> {
+    pub fn dmasel(&mut self) -> DmaselW<'_, Dmasel2Spec> {
         DmaselW::new(self, 0)
     }
 }
@@ -30,8 +30,6 @@ impl crate::Readable for Dmasel2Spec {}
 #[doc = "`write(|w| ..)` method takes [`dmasel2::W`](W) writer structure"]
 impl crate::Writable for Dmasel2Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMASEL2 to value 0x7f"]
 impl crate::Resettable for Dmasel2Spec {

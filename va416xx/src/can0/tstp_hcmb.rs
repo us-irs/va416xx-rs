@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - Timestamp"]
     #[inline(always)]
-    pub fn timestamp(&mut self) -> TimestampW<TstpHcmbSpec> {
+    pub fn timestamp(&mut self) -> TimestampW<'_, TstpHcmbSpec> {
         TimestampW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for TstpHcmbSpec {}
 #[doc = "`write(|w| ..)` method takes [`tstp_hcmb::W`](W) writer structure"]
 impl crate::Writable for TstpHcmbSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TSTP_HCMB to value 0"]
-impl crate::Resettable for TstpHcmbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TstpHcmbSpec {}

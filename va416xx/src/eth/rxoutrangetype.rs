@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxoutrangetypeSpec {
 #[doc = "`read()` method returns [`rxoutrangetype::R`](R) reader structure"]
 impl crate::Readable for RxoutrangetypeSpec {}
 #[doc = "`reset()` method sets RXOUTRANGETYPE to value 0"]
-impl crate::Resettable for RxoutrangetypeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxoutrangetypeSpec {}

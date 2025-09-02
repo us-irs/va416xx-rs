@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Channel PRI_ALT clear"]
     #[inline(always)]
-    pub fn ch0(&mut self) -> Ch0W<ChnlPriAltClrSpec> {
+    pub fn ch0(&mut self) -> Ch0W<'_, ChnlPriAltClrSpec> {
         Ch0W::new(self, 0)
     }
     #[doc = "Bit 1 - Channel PRI_ALT clear"]
     #[inline(always)]
-    pub fn ch1(&mut self) -> Ch1W<ChnlPriAltClrSpec> {
+    pub fn ch1(&mut self) -> Ch1W<'_, ChnlPriAltClrSpec> {
         Ch1W::new(self, 1)
     }
     #[doc = "Bit 2 - Channel PRI_ALT clear"]
     #[inline(always)]
-    pub fn ch2(&mut self) -> Ch2W<ChnlPriAltClrSpec> {
+    pub fn ch2(&mut self) -> Ch2W<'_, ChnlPriAltClrSpec> {
         Ch2W::new(self, 2)
     }
     #[doc = "Bit 3 - Channel PRI_ALT clear"]
     #[inline(always)]
-    pub fn ch3(&mut self) -> Ch3W<ChnlPriAltClrSpec> {
+    pub fn ch3(&mut self) -> Ch3W<'_, ChnlPriAltClrSpec> {
         Ch3W::new(self, 3)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for ChnlPriAltClrSpec {}
 #[doc = "`write(|w| ..)` method takes [`chnl_pri_alt_clr::W`](W) writer structure"]
 impl crate::Writable for ChnlPriAltClrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CHNL_PRI_ALT_CLR to value 0"]
-impl crate::Resettable for ChnlPriAltClrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChnlPriAltClrSpec {}

@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxvlanframesGbSpec {
 #[doc = "`read()` method returns [`rxvlanframes_gb::R`](R) reader structure"]
 impl crate::Readable for RxvlanframesGbSpec {}
 #[doc = "`reset()` method sets RXVLANFRAMES_GB to value 0"]
-impl crate::Resettable for RxvlanframesGbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxvlanframesGbSpec {}

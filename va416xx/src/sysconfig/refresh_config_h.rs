@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Upper 8-bits of the Refresh Rate Counter. Registers are refreshed every DIVCOUNT+1 cycles"]
     #[inline(always)]
-    pub fn divcount(&mut self) -> DivcountW<RefreshConfigHSpec> {
+    pub fn divcount(&mut self) -> DivcountW<'_, RefreshConfigHSpec> {
         DivcountW::new(self, 0)
     }
     #[doc = "Bits 30:31 - Special Test Mode Configuration. 00/01=normal. 10=Force refresh off. 11=Force refresh on constantly."]
     #[inline(always)]
-    pub fn testmode(&mut self) -> TestmodeW<RefreshConfigHSpec> {
+    pub fn testmode(&mut self) -> TestmodeW<'_, RefreshConfigHSpec> {
         TestmodeW::new(self, 30)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for RefreshConfigHSpec {}
 #[doc = "`write(|w| ..)` method takes [`refresh_config_h::W`](W) writer structure"]
 impl crate::Writable for RefreshConfigHSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets REFRESH_CONFIG_H to value 0"]
-impl crate::Resettable for RefreshConfigHSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RefreshConfigHSpec {}

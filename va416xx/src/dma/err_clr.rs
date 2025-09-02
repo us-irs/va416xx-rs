@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Error Clear"]
     #[inline(always)]
-    pub fn err_clr(&mut self) -> ErrClrW<ErrClrSpec> {
+    pub fn err_clr(&mut self) -> ErrClrW<'_, ErrClrSpec> {
         ErrClrW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for ErrClrSpec {}
 #[doc = "`write(|w| ..)` method takes [`err_clr::W`](W) writer structure"]
 impl crate::Writable for ErrClrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ERR_CLR to value 0"]
-impl crate::Resettable for ErrClrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ErrClrSpec {}

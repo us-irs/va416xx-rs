@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:4 - Sets the FIFO_ENTRY_CNT value that asserts the FIFO_DEPTH_TRIG interrupt"]
     #[inline(always)]
-    pub fn level(&mut self) -> LevelW<RxfifoirqtrgSpec> {
+    pub fn level(&mut self) -> LevelW<'_, RxfifoirqtrgSpec> {
         LevelW::new(self, 0)
     }
 }
@@ -30,8 +30,6 @@ impl crate::Readable for RxfifoirqtrgSpec {}
 #[doc = "`write(|w| ..)` method takes [`rxfifoirqtrg::W`](W) writer structure"]
 impl crate::Writable for RxfifoirqtrgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets RXFIFOIRQTRG to value 0x10"]
 impl crate::Resettable for RxfifoirqtrgSpec {

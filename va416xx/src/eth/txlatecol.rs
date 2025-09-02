@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxlatecolSpec {
 #[doc = "`read()` method returns [`txlatecol::R`](R) reader structure"]
 impl crate::Readable for TxlatecolSpec {}
 #[doc = "`reset()` method sets TXLATECOL to value 0"]
-impl crate::Resettable for TxlatecolSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxlatecolSpec {}

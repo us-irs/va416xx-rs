@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - RMAP destination key"]
     #[inline(always)]
-    pub fn destkey(&mut self) -> DestkeyW<DkeySpec> {
+    pub fn destkey(&mut self) -> DestkeyW<'_, DkeySpec> {
         DestkeyW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for DkeySpec {}
 #[doc = "`write(|w| ..)` method takes [`dkey::W`](W) writer structure"]
 impl crate::Writable for DkeySpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DKEY to value 0"]
-impl crate::Resettable for DkeySpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DkeySpec {}

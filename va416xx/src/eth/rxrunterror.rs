@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxrunterrorSpec {
 #[doc = "`read()` method returns [`rxrunterror::R`](R) reader structure"]
 impl crate::Readable for RxrunterrorSpec {}
 #[doc = "`reset()` method sets RXRUNTERROR to value 0"]
-impl crate::Resettable for RxrunterrorSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxrunterrorSpec {}

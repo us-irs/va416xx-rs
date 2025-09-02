@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bit 0 - RX Overrun"]
     #[inline(always)]
-    pub fn rorim(&mut self) -> RorimW<IrqEnbSpec> {
+    pub fn rorim(&mut self) -> RorimW<'_, IrqEnbSpec> {
         RorimW::new(self, 0)
     }
     #[doc = "Bit 1 - RX Timeout"]
     #[inline(always)]
-    pub fn rtim(&mut self) -> RtimW<IrqEnbSpec> {
+    pub fn rtim(&mut self) -> RtimW<'_, IrqEnbSpec> {
         RtimW::new(self, 1)
     }
     #[doc = "Bit 2 - RX Fifo is at least half full"]
     #[inline(always)]
-    pub fn rxim(&mut self) -> RximW<IrqEnbSpec> {
+    pub fn rxim(&mut self) -> RximW<'_, IrqEnbSpec> {
         RximW::new(self, 2)
     }
     #[doc = "Bit 3 - TX Fifo is at least half empty"]
     #[inline(always)]
-    pub fn txim(&mut self) -> TximW<IrqEnbSpec> {
+    pub fn txim(&mut self) -> TximW<'_, IrqEnbSpec> {
         TximW::new(self, 3)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for IrqEnbSpec {}
 #[doc = "`write(|w| ..)` method takes [`irq_enb::W`](W) writer structure"]
 impl crate::Writable for IrqEnbSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IRQ_ENB to value 0"]
-impl crate::Resettable for IrqEnbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IrqEnbSpec {}

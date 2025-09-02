@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - VLAN Tag identifier for Receive Frames"]
     #[inline(always)]
-    pub fn vl(&mut self) -> VlW<MacVlanTagSpec> {
+    pub fn vl(&mut self) -> VlW<'_, MacVlanTagSpec> {
         VlW::new(self, 0)
     }
     #[doc = "Bit 16 - Enable 12-Bit VLAN Tag Comparison"]
     #[inline(always)]
-    pub fn etv(&mut self) -> EtvW<MacVlanTagSpec> {
+    pub fn etv(&mut self) -> EtvW<'_, MacVlanTagSpec> {
         EtvW::new(self, 16)
     }
     #[doc = "Bit 17 - VLAN Tag Inverse Match Enable"]
     #[inline(always)]
-    pub fn vtim(&mut self) -> VtimW<MacVlanTagSpec> {
+    pub fn vtim(&mut self) -> VtimW<'_, MacVlanTagSpec> {
         VtimW::new(self, 17)
     }
     #[doc = "Bit 18 - Enable S-VLAN"]
     #[inline(always)]
-    pub fn esvl(&mut self) -> EsvlW<MacVlanTagSpec> {
+    pub fn esvl(&mut self) -> EsvlW<'_, MacVlanTagSpec> {
         EsvlW::new(self, 18)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for MacVlanTagSpec {}
 #[doc = "`write(|w| ..)` method takes [`mac_vlan_tag::W`](W) writer structure"]
 impl crate::Writable for MacVlanTagSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MAC_VLAN_TAG to value 0"]
-impl crate::Resettable for MacVlanTagSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MacVlanTagSpec {}

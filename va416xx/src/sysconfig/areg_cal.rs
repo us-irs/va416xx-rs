@@ -17,6 +17,4 @@ impl crate::RegisterSpec for AregCalSpec {
 #[doc = "`read()` method returns [`areg_cal::R`](R) reader structure"]
 impl crate::Readable for AregCalSpec {}
 #[doc = "`reset()` method sets AREG_CAL to value 0"]
-impl crate::Resettable for AregCalSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for AregCalSpec {}

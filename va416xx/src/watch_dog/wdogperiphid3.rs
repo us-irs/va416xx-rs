@@ -17,6 +17,4 @@ impl crate::RegisterSpec for Wdogperiphid3Spec {
 #[doc = "`read()` method returns [`wdogperiphid3::R`](R) reader structure"]
 impl crate::Readable for Wdogperiphid3Spec {}
 #[doc = "`reset()` method sets WDOGPERIPHID3 to value 0"]
-impl crate::Resettable for Wdogperiphid3Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Wdogperiphid3Spec {}

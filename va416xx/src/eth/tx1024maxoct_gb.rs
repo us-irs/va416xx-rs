@@ -17,6 +17,4 @@ impl crate::RegisterSpec for Tx1024maxoctGbSpec {
 #[doc = "`read()` method returns [`tx1024maxoct_gb::R`](R) reader structure"]
 impl crate::Readable for Tx1024maxoctGbSpec {}
 #[doc = "`reset()` method sets TX1024MAXOCT_GB to value 0"]
-impl crate::Resettable for Tx1024maxoctGbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Tx1024maxoctGbSpec {}

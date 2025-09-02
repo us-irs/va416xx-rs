@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Lower 32-bits of the Refresh Rate Counter. Registers are refreshed every DIVCOUNT+1 cycles"]
     #[inline(always)]
-    pub fn divcount(&mut self) -> DivcountW<RefreshConfigLSpec> {
+    pub fn divcount(&mut self) -> DivcountW<'_, RefreshConfigLSpec> {
         DivcountW::new(self, 0)
     }
 }
@@ -30,8 +30,6 @@ impl crate::Readable for RefreshConfigLSpec {}
 #[doc = "`write(|w| ..)` method takes [`refresh_config_l::W`](W) writer structure"]
 impl crate::Writable for RefreshConfigLSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets REFRESH_CONFIG_L to value 0x0f"]
 impl crate::Resettable for RefreshConfigLSpec {

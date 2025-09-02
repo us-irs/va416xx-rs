@@ -19,10 +19,6 @@ impl crate::Readable for RstValueSpec {}
 #[doc = "`write(|w| ..)` method takes [`rst_value::W`](W) writer structure"]
 impl crate::Writable for RstValueSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets RST_VALUE to value 0"]
-impl crate::Resettable for RstValueSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RstValueSpec {}

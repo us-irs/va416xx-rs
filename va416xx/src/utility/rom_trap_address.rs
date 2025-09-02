@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 2:30 - Address bits for trap match"]
     #[inline(always)]
-    pub fn addr(&mut self) -> AddrW<RomTrapAddressSpec> {
+    pub fn addr(&mut self) -> AddrW<'_, RomTrapAddressSpec> {
         AddrW::new(self, 2)
     }
     #[doc = "Bit 31 - Enable Trap mode"]
     #[inline(always)]
-    pub fn enable(&mut self) -> EnableW<RomTrapAddressSpec> {
+    pub fn enable(&mut self) -> EnableW<'_, RomTrapAddressSpec> {
         EnableW::new(self, 31)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for RomTrapAddressSpec {}
 #[doc = "`write(|w| ..)` method takes [`rom_trap_address::W`](W) writer structure"]
 impl crate::Writable for RomTrapAddressSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ROM_TRAP_ADDRESS to value 0"]
-impl crate::Resettable for RomTrapAddressSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RomTrapAddressSpec {}

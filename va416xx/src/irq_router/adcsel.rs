@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:4 - ADC trigger source selection value"]
     #[inline(always)]
-    pub fn adcsel(&mut self) -> AdcselW<AdcselSpec> {
+    pub fn adcsel(&mut self) -> AdcselW<'_, AdcselSpec> {
         AdcselW::new(self, 0)
     }
 }
@@ -30,8 +30,6 @@ impl crate::Readable for AdcselSpec {}
 #[doc = "`write(|w| ..)` method takes [`adcsel::W`](W) writer structure"]
 impl crate::Writable for AdcselSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ADCSEL to value 0x1f"]
 impl crate::Resettable for AdcselSpec {

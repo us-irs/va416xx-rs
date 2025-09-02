@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Transmit Error Counter"]
     #[inline(always)]
-    pub fn tec(&mut self) -> TecW<CanecSpec> {
+    pub fn tec(&mut self) -> TecW<'_, CanecSpec> {
         TecW::new(self, 0)
     }
     #[doc = "Bits 8:15 - Receive Error Counter"]
     #[inline(always)]
-    pub fn rec(&mut self) -> RecW<CanecSpec> {
+    pub fn rec(&mut self) -> RecW<'_, CanecSpec> {
         RecW::new(self, 8)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for CanecSpec {}
 #[doc = "`write(|w| ..)` method takes [`canec::W`](W) writer structure"]
 impl crate::Writable for CanecSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CANEC to value 0"]
-impl crate::Resettable for CanecSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CanecSpec {}

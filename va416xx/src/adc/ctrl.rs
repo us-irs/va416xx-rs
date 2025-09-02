@@ -61,32 +61,32 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - Enables the channel for data collection"]
     #[inline(always)]
-    pub fn chan_en(&mut self) -> ChanEnW<CtrlSpec> {
+    pub fn chan_en(&mut self) -> ChanEnW<'_, CtrlSpec> {
         ChanEnW::new(self, 0)
     }
     #[doc = "Bit 16 - Enables the channel tag to be saved with the ADC data"]
     #[inline(always)]
-    pub fn chan_tag_en(&mut self) -> ChanTagEnW<CtrlSpec> {
+    pub fn chan_tag_en(&mut self) -> ChanTagEnW<'_, CtrlSpec> {
         ChanTagEnW::new(self, 16)
     }
     #[doc = "Bit 17 - ADC data acquisition for all enabled channel"]
     #[inline(always)]
-    pub fn sweep_en(&mut self) -> SweepEnW<CtrlSpec> {
+    pub fn sweep_en(&mut self) -> SweepEnW<'_, CtrlSpec> {
         SweepEnW::new(self, 17)
     }
     #[doc = "Bit 18 - Allows the external trigger to start analog acquisition"]
     #[inline(always)]
-    pub fn ext_trig_en(&mut self) -> ExtTrigEnW<CtrlSpec> {
+    pub fn ext_trig_en(&mut self) -> ExtTrigEnW<'_, CtrlSpec> {
         ExtTrigEnW::new(self, 18)
     }
     #[doc = "Bit 19 - Starts analog acquisition"]
     #[inline(always)]
-    pub fn manual_trig(&mut self) -> ManualTrigW<CtrlSpec> {
+    pub fn manual_trig(&mut self) -> ManualTrigW<'_, CtrlSpec> {
         ManualTrigW::new(self, 19)
     }
     #[doc = "Bits 20:23 - Conversion count describes the number of conversions to be applied for triggers/sweeps. (N+1 conversions)"]
     #[inline(always)]
-    pub fn conv_cnt(&mut self) -> ConvCntW<CtrlSpec> {
+    pub fn conv_cnt(&mut self) -> ConvCntW<'_, CtrlSpec> {
         ConvCntW::new(self, 20)
     }
 }
@@ -100,10 +100,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlSpec {}

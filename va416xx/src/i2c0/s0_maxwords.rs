@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:10 - Max Word Count"]
     #[inline(always)]
-    pub fn maxword(&mut self) -> MaxwordW<S0MaxwordsSpec> {
+    pub fn maxword(&mut self) -> MaxwordW<'_, S0MaxwordsSpec> {
         MaxwordW::new(self, 0)
     }
     #[doc = "Bit 31 - Enables the max word count"]
     #[inline(always)]
-    pub fn enable(&mut self) -> EnableW<S0MaxwordsSpec> {
+    pub fn enable(&mut self) -> EnableW<'_, S0MaxwordsSpec> {
         EnableW::new(self, 31)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for S0MaxwordsSpec {}
 #[doc = "`write(|w| ..)` method takes [`s0_maxwords::W`](W) writer structure"]
 impl crate::Writable for S0MaxwordsSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets S0_MAXWORDS to value 0"]
-impl crate::Resettable for S0MaxwordsSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for S0MaxwordsSpec {}

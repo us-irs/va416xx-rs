@@ -7,12 +7,12 @@ pub type ChnlProtCtrlW<'a, REG> = crate::FieldWriter<'a, REG, 3>;
 impl W {
     #[doc = "Bit 0 - PLL Symbol; Feedback cycle slip output (CLKOUT frequency low)"]
     #[inline(always)]
-    pub fn master_enable(&mut self) -> MasterEnableW<CfgSpec> {
+    pub fn master_enable(&mut self) -> MasterEnableW<'_, CfgSpec> {
         MasterEnableW::new(self, 0)
     }
     #[doc = "Bits 5:7 - HPROT\\[3:0\\]"]
     #[inline(always)]
-    pub fn chnl_prot_ctrl(&mut self) -> ChnlProtCtrlW<CfgSpec> {
+    pub fn chnl_prot_ctrl(&mut self) -> ChnlProtCtrlW<'_, CfgSpec> {
         ChnlProtCtrlW::new(self, 5)
     }
 }
@@ -24,10 +24,6 @@ impl crate::RegisterSpec for CfgSpec {
 #[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
 impl crate::Writable for CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG to value 0"]
-impl crate::Resettable for CfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CfgSpec {}

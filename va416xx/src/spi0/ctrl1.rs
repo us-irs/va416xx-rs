@@ -97,52 +97,52 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Loop Back"]
     #[inline(always)]
-    pub fn lbm(&mut self) -> LbmW<Ctrl1Spec> {
+    pub fn lbm(&mut self) -> LbmW<'_, Ctrl1Spec> {
         LbmW::new(self, 0)
     }
     #[doc = "Bit 1 - Enable"]
     #[inline(always)]
-    pub fn enable(&mut self) -> EnableW<Ctrl1Spec> {
+    pub fn enable(&mut self) -> EnableW<'_, Ctrl1Spec> {
         EnableW::new(self, 1)
     }
     #[doc = "Bit 2 - Master/Slave (0:Master, 1:Slave)"]
     #[inline(always)]
-    pub fn ms(&mut self) -> MsW<Ctrl1Spec> {
+    pub fn ms(&mut self) -> MsW<'_, Ctrl1Spec> {
         MsW::new(self, 2)
     }
     #[doc = "Bit 3 - Slave output Disable"]
     #[inline(always)]
-    pub fn sod(&mut self) -> SodW<Ctrl1Spec> {
+    pub fn sod(&mut self) -> SodW<'_, Ctrl1Spec> {
         SodW::new(self, 3)
     }
     #[doc = "Bits 4:6 - Slave Select"]
     #[inline(always)]
-    pub fn ss(&mut self) -> SsW<Ctrl1Spec> {
+    pub fn ss(&mut self) -> SsW<'_, Ctrl1Spec> {
         SsW::new(self, 4)
     }
     #[doc = "Bit 7 - Block Mode Enable"]
     #[inline(always)]
-    pub fn blockmode(&mut self) -> BlockmodeW<Ctrl1Spec> {
+    pub fn blockmode(&mut self) -> BlockmodeW<'_, Ctrl1Spec> {
         BlockmodeW::new(self, 7)
     }
     #[doc = "Bit 8 - Block Mode Start Status Enable"]
     #[inline(always)]
-    pub fn bmstart(&mut self) -> BmstartW<Ctrl1Spec> {
+    pub fn bmstart(&mut self) -> BmstartW<'_, Ctrl1Spec> {
         BmstartW::new(self, 8)
     }
     #[doc = "Bit 9 - Block Mode Stall Enable"]
     #[inline(always)]
-    pub fn bmstall(&mut self) -> BmstallW<Ctrl1Spec> {
+    pub fn bmstall(&mut self) -> BmstallW<'_, Ctrl1Spec> {
         BmstallW::new(self, 9)
     }
     #[doc = "Bit 10 - Master Delayed Capture Enable"]
     #[inline(always)]
-    pub fn mdlycap(&mut self) -> MdlycapW<Ctrl1Spec> {
+    pub fn mdlycap(&mut self) -> MdlycapW<'_, Ctrl1Spec> {
         MdlycapW::new(self, 10)
     }
     #[doc = "Bit 11 - Master Tx Pause Enable"]
     #[inline(always)]
-    pub fn mtxpause(&mut self) -> MtxpauseW<Ctrl1Spec> {
+    pub fn mtxpause(&mut self) -> MtxpauseW<'_, Ctrl1Spec> {
         MtxpauseW::new(self, 11)
     }
 }
@@ -156,10 +156,6 @@ impl crate::Readable for Ctrl1Spec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl1::W`](W) writer structure"]
 impl crate::Writable for Ctrl1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL1 to value 0"]
-impl crate::Resettable for Ctrl1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ctrl1Spec {}

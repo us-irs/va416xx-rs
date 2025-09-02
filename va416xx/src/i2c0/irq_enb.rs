@@ -133,72 +133,72 @@ impl R {
 impl W {
     #[doc = "Bit 0 - I2C Bus is Idle"]
     #[inline(always)]
-    pub fn i2cidle(&mut self) -> I2cidleW<IrqEnbSpec> {
+    pub fn i2cidle(&mut self) -> I2cidleW<'_, IrqEnbSpec> {
         I2cidleW::new(self, 0)
     }
     #[doc = "Bit 1 - Controller is Idle"]
     #[inline(always)]
-    pub fn idle(&mut self) -> IdleW<IrqEnbSpec> {
+    pub fn idle(&mut self) -> IdleW<'_, IrqEnbSpec> {
         IdleW::new(self, 1)
     }
     #[doc = "Bit 2 - Controller is Waiting"]
     #[inline(always)]
-    pub fn waiting(&mut self) -> WaitingW<IrqEnbSpec> {
+    pub fn waiting(&mut self) -> WaitingW<'_, IrqEnbSpec> {
         WaitingW::new(self, 2)
     }
     #[doc = "Bit 3 - Controller is Stalled"]
     #[inline(always)]
-    pub fn stalled(&mut self) -> StalledW<IrqEnbSpec> {
+    pub fn stalled(&mut self) -> StalledW<'_, IrqEnbSpec> {
         StalledW::new(self, 3)
     }
     #[doc = "Bit 4 - I2C Arbitration was lost"]
     #[inline(always)]
-    pub fn arblost(&mut self) -> ArblostW<IrqEnbSpec> {
+    pub fn arblost(&mut self) -> ArblostW<'_, IrqEnbSpec> {
         ArblostW::new(self, 4)
     }
     #[doc = "Bit 5 - I2C Address was not Acknowledged"]
     #[inline(always)]
-    pub fn nackaddr(&mut self) -> NackaddrW<IrqEnbSpec> {
+    pub fn nackaddr(&mut self) -> NackaddrW<'_, IrqEnbSpec> {
         NackaddrW::new(self, 5)
     }
     #[doc = "Bit 6 - I2C Data was not Acknowledged"]
     #[inline(always)]
-    pub fn nackdata(&mut self) -> NackdataW<IrqEnbSpec> {
+    pub fn nackdata(&mut self) -> NackdataW<'_, IrqEnbSpec> {
         NackdataW::new(self, 6)
     }
     #[doc = "Bit 7 - I2C Clock Low Timeout"]
     #[inline(always)]
-    pub fn clkloto(&mut self) -> ClklotoW<IrqEnbSpec> {
+    pub fn clkloto(&mut self) -> ClklotoW<'_, IrqEnbSpec> {
         ClklotoW::new(self, 7)
     }
     #[doc = "Bit 10 - TX FIFO Overflowed"]
     #[inline(always)]
-    pub fn txoverflow(&mut self) -> TxoverflowW<IrqEnbSpec> {
+    pub fn txoverflow(&mut self) -> TxoverflowW<'_, IrqEnbSpec> {
         TxoverflowW::new(self, 10)
     }
     #[doc = "Bit 11 - TX FIFO Overflowed"]
     #[inline(always)]
-    pub fn rxoverflow(&mut self) -> RxoverflowW<IrqEnbSpec> {
+    pub fn rxoverflow(&mut self) -> RxoverflowW<'_, IrqEnbSpec> {
         RxoverflowW::new(self, 11)
     }
     #[doc = "Bit 12 - TX FIFO Ready"]
     #[inline(always)]
-    pub fn txready(&mut self) -> TxreadyW<IrqEnbSpec> {
+    pub fn txready(&mut self) -> TxreadyW<'_, IrqEnbSpec> {
         TxreadyW::new(self, 12)
     }
     #[doc = "Bit 13 - RX FIFO Ready"]
     #[inline(always)]
-    pub fn rxready(&mut self) -> RxreadyW<IrqEnbSpec> {
+    pub fn rxready(&mut self) -> RxreadyW<'_, IrqEnbSpec> {
         RxreadyW::new(self, 13)
     }
     #[doc = "Bit 14 - TX FIFO Empty"]
     #[inline(always)]
-    pub fn txempty(&mut self) -> TxemptyW<IrqEnbSpec> {
+    pub fn txempty(&mut self) -> TxemptyW<'_, IrqEnbSpec> {
         TxemptyW::new(self, 14)
     }
     #[doc = "Bit 15 - RX FIFO Full"]
     #[inline(always)]
-    pub fn rxfull(&mut self) -> RxfullW<IrqEnbSpec> {
+    pub fn rxfull(&mut self) -> RxfullW<'_, IrqEnbSpec> {
         RxfullW::new(self, 15)
     }
 }
@@ -212,10 +212,6 @@ impl crate::Readable for IrqEnbSpec {}
 #[doc = "`write(|w| ..)` method takes [`irq_enb::W`](W) writer structure"]
 impl crate::Writable for IrqEnbSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IRQ_ENB to value 0"]
-impl crate::Resettable for IrqEnbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IrqEnbSpec {}

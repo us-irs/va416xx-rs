@@ -18,12 +18,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:23 - Counter divide value"]
     #[inline(always)]
-    pub fn value(&mut self) -> ValueW<RomScrubSpec> {
+    pub fn value(&mut self) -> ValueW<'_, RomScrubSpec> {
         ValueW::new(self, 0)
     }
     #[doc = "Bit 31 - Reset Counter"]
     #[inline(always)]
-    pub fn reset(&mut self) -> ResetW<RomScrubSpec> {
+    pub fn reset(&mut self) -> ResetW<'_, RomScrubSpec> {
         ResetW::new(self, 31)
     }
 }
@@ -37,10 +37,7 @@ impl crate::Readable for RomScrubSpec {}
 #[doc = "`write(|w| ..)` method takes [`rom_scrub::W`](W) writer structure"]
 impl crate::Writable for RomScrubSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
     const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0x8000_0000;
 }
 #[doc = "`reset()` method sets ROM_SCRUB to value 0"]
-impl crate::Resettable for RomScrubSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RomScrubSpec {}

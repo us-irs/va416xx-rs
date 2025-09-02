@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:4 - Half full level for the Rx FIFO"]
     #[inline(always)]
-    pub fn level(&mut self) -> LevelW<S0RxfifoirqtrgSpec> {
+    pub fn level(&mut self) -> LevelW<'_, S0RxfifoirqtrgSpec> {
         LevelW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for S0RxfifoirqtrgSpec {}
 #[doc = "`write(|w| ..)` method takes [`s0_rxfifoirqtrg::W`](W) writer structure"]
 impl crate::Writable for S0RxfifoirqtrgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets S0_RXFIFOIRQTRG to value 0"]
-impl crate::Resettable for S0RxfifoirqtrgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for S0RxfifoirqtrgSpec {}

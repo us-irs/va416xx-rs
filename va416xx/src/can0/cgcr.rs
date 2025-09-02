@@ -115,62 +115,62 @@ impl R {
 impl W {
     #[doc = "Bit 0 - CAN Enable"]
     #[inline(always)]
-    pub fn canen(&mut self) -> CanenW<CgcrSpec> {
+    pub fn canen(&mut self) -> CanenW<'_, CgcrSpec> {
         CanenW::new(self, 0)
     }
     #[doc = "Bit 1 - RW,Control Receive"]
     #[inline(always)]
-    pub fn crx(&mut self) -> CrxW<CgcrSpec> {
+    pub fn crx(&mut self) -> CrxW<'_, CgcrSpec> {
         CrxW::new(self, 1)
     }
     #[doc = "Bit 2 - RW,Control Transmit"]
     #[inline(always)]
-    pub fn ctx(&mut self) -> CtxW<CgcrSpec> {
+    pub fn ctx(&mut self) -> CtxW<'_, CgcrSpec> {
         CtxW::new(self, 2)
     }
     #[doc = "Bit 3 - Buffer Lock"]
     #[inline(always)]
-    pub fn bufflock(&mut self) -> BufflockW<CgcrSpec> {
+    pub fn bufflock(&mut self) -> BufflockW<'_, CgcrSpec> {
         BufflockW::new(self, 3)
     }
     #[doc = "Bit 4 - Time Sync Enable"]
     #[inline(always)]
-    pub fn tstpen(&mut self) -> TstpenW<CgcrSpec> {
+    pub fn tstpen(&mut self) -> TstpenW<'_, CgcrSpec> {
         TstpenW::new(self, 4)
     }
     #[doc = "Bit 5 - Data Direction"]
     #[inline(always)]
-    pub fn ddir(&mut self) -> DdirW<CgcrSpec> {
+    pub fn ddir(&mut self) -> DdirW<'_, CgcrSpec> {
         DdirW::new(self, 5)
     }
     #[doc = "Bit 6 - Listen Only"]
     #[inline(always)]
-    pub fn lo(&mut self) -> LoW<CgcrSpec> {
+    pub fn lo(&mut self) -> LoW<'_, CgcrSpec> {
         LoW::new(self, 6)
     }
     #[doc = "Bit 7 - Ignore Acknowledge"]
     #[inline(always)]
-    pub fn ignack(&mut self) -> IgnackW<CgcrSpec> {
+    pub fn ignack(&mut self) -> IgnackW<'_, CgcrSpec> {
         IgnackW::new(self, 7)
     }
     #[doc = "Bit 8 - Loopback"]
     #[inline(always)]
-    pub fn loopback(&mut self) -> LoopbackW<CgcrSpec> {
+    pub fn loopback(&mut self) -> LoopbackW<'_, CgcrSpec> {
         LoopbackW::new(self, 8)
     }
     #[doc = "Bit 9 - Internal"]
     #[inline(always)]
-    pub fn internal(&mut self) -> InternalW<CgcrSpec> {
+    pub fn internal(&mut self) -> InternalW<'_, CgcrSpec> {
         InternalW::new(self, 9)
     }
     #[doc = "Bit 10 - Diagnostic Enable"]
     #[inline(always)]
-    pub fn diagen(&mut self) -> DiagenW<CgcrSpec> {
+    pub fn diagen(&mut self) -> DiagenW<'_, CgcrSpec> {
         DiagenW::new(self, 10)
     }
     #[doc = "Bit 11 - Error Interrupt Type"]
     #[inline(always)]
-    pub fn eit(&mut self) -> EitW<CgcrSpec> {
+    pub fn eit(&mut self) -> EitW<'_, CgcrSpec> {
         EitW::new(self, 11)
     }
 }
@@ -184,10 +184,6 @@ impl crate::Readable for CgcrSpec {}
 #[doc = "`write(|w| ..)` method takes [`cgcr::W`](W) writer structure"]
 impl crate::Writable for CgcrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CGCR to value 0"]
-impl crate::Resettable for CgcrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CgcrSpec {}

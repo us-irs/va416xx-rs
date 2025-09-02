@@ -115,62 +115,62 @@ impl R {
 impl W {
     #[doc = "Bit 0 - A new time count value was received"]
     #[inline(always)]
-    pub fn to(&mut self) -> ToW<StsSpec> {
+    pub fn to(&mut self) -> ToW<'_, StsSpec> {
         ToW::new(self, 0)
     }
     #[doc = "Bit 1 - Credit has occurred"]
     #[inline(always)]
-    pub fn ce(&mut self) -> CeW<StsSpec> {
+    pub fn ce(&mut self) -> CeW<'_, StsSpec> {
         CeW::new(self, 1)
     }
     #[doc = "Bit 2 - Escape error has occurred"]
     #[inline(always)]
-    pub fn er(&mut self) -> ErW<StsSpec> {
+    pub fn er(&mut self) -> ErW<'_, StsSpec> {
         ErW::new(self, 2)
     }
     #[doc = "Bit 3 - Disconnection error has occurred"]
     #[inline(always)]
-    pub fn de(&mut self) -> DeW<StsSpec> {
+    pub fn de(&mut self) -> DeW<'_, StsSpec> {
         DeW::new(self, 3)
     }
     #[doc = "Bit 4 - Parity error has occurred"]
     #[inline(always)]
-    pub fn pe(&mut self) -> PeW<StsSpec> {
+    pub fn pe(&mut self) -> PeW<'_, StsSpec> {
         PeW::new(self, 4)
     }
     #[doc = "Bit 6 - A synchronization problem has occurred when receiving NChars"]
     #[inline(always)]
-    pub fn we(&mut self) -> WeW<StsSpec> {
+    pub fn we(&mut self) -> WeW<'_, StsSpec> {
         WeW::new(self, 6)
     }
     #[doc = "Bit 7 - Packet is received with an invalid destination address field"]
     #[inline(always)]
-    pub fn ia(&mut self) -> IaW<StsSpec> {
+    pub fn ia(&mut self) -> IaW<'_, StsSpec> {
         IaW::new(self, 7)
     }
     #[doc = "Bit 8 - Set to one when a packet is received with an EOP after the first byte for a non-RMAP packet and after the second byte for a RMAP packet"]
     #[inline(always)]
-    pub fn ee(&mut self) -> EeW<StsSpec> {
+    pub fn ee(&mut self) -> EeW<'_, StsSpec> {
         EeW::new(self, 8)
     }
     #[doc = "Bit 9 - Active port"]
     #[inline(always)]
-    pub fn ap(&mut self) -> ApW<StsSpec> {
+    pub fn ap(&mut self) -> ApW<'_, StsSpec> {
         ApW::new(self, 9)
     }
     #[doc = "Bits 21:23 - Link State"]
     #[inline(always)]
-    pub fn ls(&mut self) -> LsW<StsSpec> {
+    pub fn ls(&mut self) -> LsW<'_, StsSpec> {
         LsW::new(self, 21)
     }
     #[doc = "Bits 24:25 - Number of Transmit Descriptors"]
     #[inline(always)]
-    pub fn ntxd(&mut self) -> NtxdW<StsSpec> {
+    pub fn ntxd(&mut self) -> NtxdW<'_, StsSpec> {
         NtxdW::new(self, 24)
     }
     #[doc = "Bits 26:27 - Number of Receive Descriptors"]
     #[inline(always)]
-    pub fn nrxd(&mut self) -> NrxdW<StsSpec> {
+    pub fn nrxd(&mut self) -> NrxdW<'_, StsSpec> {
         NrxdW::new(self, 26)
     }
 }
@@ -184,8 +184,6 @@ impl crate::Readable for StsSpec {}
 #[doc = "`write(|w| ..)` method takes [`sts::W`](W) writer structure"]
 impl crate::Writable for StsSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets STS to value 0x0640_0000"]
 impl crate::Resettable for StsSpec {

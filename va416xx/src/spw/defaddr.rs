@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - 8-bit node address used for node identification on the SpaceWire network"]
     #[inline(always)]
-    pub fn defaddr(&mut self) -> DefaddrW<DefaddrSpec> {
+    pub fn defaddr(&mut self) -> DefaddrW<'_, DefaddrSpec> {
         DefaddrW::new(self, 0)
     }
     #[doc = "Bits 8:15 - 8-bit default mask used for node identification on the SpaceWire network"]
     #[inline(always)]
-    pub fn defmask(&mut self) -> DefmaskW<DefaddrSpec> {
+    pub fn defmask(&mut self) -> DefmaskW<'_, DefaddrSpec> {
         DefmaskW::new(self, 8)
     }
 }
@@ -44,8 +44,6 @@ impl crate::Readable for DefaddrSpec {}
 #[doc = "`write(|w| ..)` method takes [`defaddr::W`](W) writer structure"]
 impl crate::Writable for DefaddrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DEFADDR to value 0xfe"]
 impl crate::Resettable for DefaddrSpec {

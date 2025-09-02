@@ -61,32 +61,32 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Lower bound address for CEN0"]
     #[inline(always)]
-    pub fn addrlow0(&mut self) -> Addrlow0W<EbiCfg0Spec> {
+    pub fn addrlow0(&mut self) -> Addrlow0W<'_, EbiCfg0Spec> {
         Addrlow0W::new(self, 0)
     }
     #[doc = "Bits 8:15 - Upper bound address for CEN0"]
     #[inline(always)]
-    pub fn addrhigh0(&mut self) -> Addrhigh0W<EbiCfg0Spec> {
+    pub fn addrhigh0(&mut self) -> Addrhigh0W<'_, EbiCfg0Spec> {
         Addrhigh0W::new(self, 8)
     }
     #[doc = "Bits 16:18 - Number of cycles for a read - N plus 1"]
     #[inline(always)]
-    pub fn cfgreadcycle(&mut self) -> CfgreadcycleW<EbiCfg0Spec> {
+    pub fn cfgreadcycle(&mut self) -> CfgreadcycleW<'_, EbiCfg0Spec> {
         CfgreadcycleW::new(self, 16)
     }
     #[doc = "Bits 19:21 - Number of cycles for a write - N plus 1"]
     #[inline(always)]
-    pub fn cfgwritecycle(&mut self) -> CfgwritecycleW<EbiCfg0Spec> {
+    pub fn cfgwritecycle(&mut self) -> CfgwritecycleW<'_, EbiCfg0Spec> {
         CfgwritecycleW::new(self, 19)
     }
     #[doc = "Bits 22:24 - Number of cycles for turnaround - N plus 1"]
     #[inline(always)]
-    pub fn cfgturnaroundcycle(&mut self) -> CfgturnaroundcycleW<EbiCfg0Spec> {
+    pub fn cfgturnaroundcycle(&mut self) -> CfgturnaroundcycleW<'_, EbiCfg0Spec> {
         CfgturnaroundcycleW::new(self, 22)
     }
     #[doc = "Bit 25 - 8 bit (0) or 16 bit (1) port size"]
     #[inline(always)]
-    pub fn cfgsize(&mut self) -> CfgsizeW<EbiCfg0Spec> {
+    pub fn cfgsize(&mut self) -> CfgsizeW<'_, EbiCfg0Spec> {
         CfgsizeW::new(self, 25)
     }
 }
@@ -100,10 +100,6 @@ impl crate::Readable for EbiCfg0Spec {}
 #[doc = "`write(|w| ..)` method takes [`ebi_cfg0::W`](W) writer structure"]
 impl crate::Writable for EbiCfg0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EBI_CFG0 to value 0"]
-impl crate::Resettable for EbiCfg0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for EbiCfg0Spec {}

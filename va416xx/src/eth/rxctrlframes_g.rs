@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxctrlframesGSpec {
 #[doc = "`read()` method returns [`rxctrlframes_g::R`](R) reader structure"]
 impl crate::Readable for RxctrlframesGSpec {}
 #[doc = "`reset()` method sets RXCTRLFRAMES_G to value 0"]
-impl crate::Resettable for RxctrlframesGSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxctrlframesGSpec {}

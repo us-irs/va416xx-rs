@@ -45,7 +45,7 @@ impl RegisterBlock {
     }
     #[doc = "0x04 - Data In Raw Register by Byte"]
     #[inline(always)]
-    pub const fn datainrawbyte0(&self, n: usize) -> &Datainrawbyte {
+    pub const fn datainrawbyte(&self, n: usize) -> &Datainrawbyte {
         #[allow(clippy::no_effect)]
         [(); 4][n];
         unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(4).add(n).cast() }
@@ -53,7 +53,7 @@ impl RegisterBlock {
     #[doc = "Iterator for array of:"]
     #[doc = "0x04 - Data In Raw Register by Byte"]
     #[inline(always)]
-    pub fn datainrawbyte0_iter(&self) -> impl Iterator<Item = &Datainrawbyte> {
+    pub fn datainrawbyte_iter(&self) -> impl Iterator<Item = &Datainrawbyte> {
         (0..4)
             .map(move |n| unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(4).add(n).cast() })
     }
@@ -83,7 +83,7 @@ impl RegisterBlock {
     }
     #[doc = "0x0c - Data Out Register by Byte"]
     #[inline(always)]
-    pub const fn dataoutrawbyte0(&self, n: usize) -> &Dataoutrawbyte {
+    pub const fn dataoutrawbyte(&self, n: usize) -> &Dataoutrawbyte {
         #[allow(clippy::no_effect)]
         [(); 4][n];
         unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(12).add(n).cast() }
@@ -91,7 +91,7 @@ impl RegisterBlock {
     #[doc = "Iterator for array of:"]
     #[doc = "0x0c - Data Out Register by Byte"]
     #[inline(always)]
-    pub fn dataoutrawbyte0_iter(&self) -> impl Iterator<Item = &Dataoutrawbyte> {
+    pub fn dataoutrawbyte_iter(&self) -> impl Iterator<Item = &Dataoutrawbyte> {
         (0..4)
             .map(move |n| unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(12).add(n).cast() })
     }
@@ -102,7 +102,7 @@ impl RegisterBlock {
     }
     #[doc = "0x10 - Set Out Register by Byte"]
     #[inline(always)]
-    pub const fn setoutbyte0(&self, n: usize) -> &Setoutbyte {
+    pub const fn setoutbyte(&self, n: usize) -> &Setoutbyte {
         #[allow(clippy::no_effect)]
         [(); 4][n];
         unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(16).add(n).cast() }
@@ -110,7 +110,7 @@ impl RegisterBlock {
     #[doc = "Iterator for array of:"]
     #[doc = "0x10 - Set Out Register by Byte"]
     #[inline(always)]
-    pub fn setoutbyte0_iter(&self) -> impl Iterator<Item = &Setoutbyte> {
+    pub fn setoutbyte_iter(&self) -> impl Iterator<Item = &Setoutbyte> {
         (0..4)
             .map(move |n| unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(16).add(n).cast() })
     }
@@ -121,7 +121,7 @@ impl RegisterBlock {
     }
     #[doc = "0x14 - Clear Out Register by Byte"]
     #[inline(always)]
-    pub const fn clroutbyte0(&self, n: usize) -> &Clroutbyte {
+    pub const fn clroutbyte(&self, n: usize) -> &Clroutbyte {
         #[allow(clippy::no_effect)]
         [(); 4][n];
         unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(20).add(n).cast() }
@@ -129,7 +129,7 @@ impl RegisterBlock {
     #[doc = "Iterator for array of:"]
     #[doc = "0x14 - Clear Out Register by Byte"]
     #[inline(always)]
-    pub fn clroutbyte0_iter(&self) -> impl Iterator<Item = &Clroutbyte> {
+    pub fn clroutbyte_iter(&self) -> impl Iterator<Item = &Clroutbyte> {
         (0..4)
             .map(move |n| unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(20).add(n).cast() })
     }
@@ -140,7 +140,7 @@ impl RegisterBlock {
     }
     #[doc = "0x18 - Toggle Out Register by Byte"]
     #[inline(always)]
-    pub const fn togoutbyte0(&self, n: usize) -> &Togoutbyte {
+    pub const fn togoutbyte(&self, n: usize) -> &Togoutbyte {
         #[allow(clippy::no_effect)]
         [(); 4][n];
         unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(24).add(n).cast() }
@@ -148,7 +148,7 @@ impl RegisterBlock {
     #[doc = "Iterator for array of:"]
     #[doc = "0x18 - Toggle Out Register by Byte"]
     #[inline(always)]
-    pub fn togoutbyte0_iter(&self) -> impl Iterator<Item = &Togoutbyte> {
+    pub fn togoutbyte_iter(&self) -> impl Iterator<Item = &Togoutbyte> {
         (0..4)
             .map(move |n| unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(24).add(n).cast() })
     }
@@ -178,7 +178,7 @@ impl RegisterBlock {
     }
     #[doc = "0x20 - Direction Register by Byte"]
     #[inline(always)]
-    pub const fn dirbyte0(&self, n: usize) -> &Dirbyte {
+    pub const fn dirbyte(&self, n: usize) -> &Dirbyte {
         #[allow(clippy::no_effect)]
         [(); 4][n];
         unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(32).add(n).cast() }
@@ -186,7 +186,7 @@ impl RegisterBlock {
     #[doc = "Iterator for array of:"]
     #[doc = "0x20 - Direction Register by Byte"]
     #[inline(always)]
-    pub fn dirbyte0_iter(&self) -> impl Iterator<Item = &Dirbyte> {
+    pub fn dirbyte_iter(&self) -> impl Iterator<Item = &Dirbyte> {
         (0..4)
             .map(move |n| unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(32).add(n).cast() })
     }
@@ -197,7 +197,7 @@ impl RegisterBlock {
     }
     #[doc = "0x24 - Pulse Mode Register by Byte"]
     #[inline(always)]
-    pub const fn pulsebyte0(&self, n: usize) -> &Pulsebyte {
+    pub const fn pulsebyte(&self, n: usize) -> &Pulsebyte {
         #[allow(clippy::no_effect)]
         [(); 4][n];
         unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(36).add(n).cast() }
@@ -205,7 +205,7 @@ impl RegisterBlock {
     #[doc = "Iterator for array of:"]
     #[doc = "0x24 - Pulse Mode Register by Byte"]
     #[inline(always)]
-    pub fn pulsebyte0_iter(&self) -> impl Iterator<Item = &Pulsebyte> {
+    pub fn pulsebyte_iter(&self) -> impl Iterator<Item = &Pulsebyte> {
         (0..4)
             .map(move |n| unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(36).add(n).cast() })
     }
@@ -216,7 +216,7 @@ impl RegisterBlock {
     }
     #[doc = "0x28 - Pulse Base Mode Register by Byte"]
     #[inline(always)]
-    pub const fn pulsebasebyte0(&self, n: usize) -> &Pulsebasebyte {
+    pub const fn pulsebasebyte(&self, n: usize) -> &Pulsebasebyte {
         #[allow(clippy::no_effect)]
         [(); 4][n];
         unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(40).add(n).cast() }
@@ -224,7 +224,7 @@ impl RegisterBlock {
     #[doc = "Iterator for array of:"]
     #[doc = "0x28 - Pulse Base Mode Register by Byte"]
     #[inline(always)]
-    pub fn pulsebasebyte0_iter(&self) -> impl Iterator<Item = &Pulsebasebyte> {
+    pub fn pulsebasebyte_iter(&self) -> impl Iterator<Item = &Pulsebasebyte> {
         (0..4)
             .map(move |n| unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(40).add(n).cast() })
     }
@@ -235,7 +235,7 @@ impl RegisterBlock {
     }
     #[doc = "0x2c - Delay1 Register by Byte"]
     #[inline(always)]
-    pub const fn delay1byte0(&self, n: usize) -> &Delay1byte {
+    pub const fn delay1byte(&self, n: usize) -> &Delay1byte {
         #[allow(clippy::no_effect)]
         [(); 4][n];
         unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(44).add(n).cast() }
@@ -243,7 +243,7 @@ impl RegisterBlock {
     #[doc = "Iterator for array of:"]
     #[doc = "0x2c - Delay1 Register by Byte"]
     #[inline(always)]
-    pub fn delay1byte0_iter(&self) -> impl Iterator<Item = &Delay1byte> {
+    pub fn delay1byte_iter(&self) -> impl Iterator<Item = &Delay1byte> {
         (0..4)
             .map(move |n| unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(44).add(n).cast() })
     }
@@ -254,7 +254,7 @@ impl RegisterBlock {
     }
     #[doc = "0x30 - Delay2 Register by Byte"]
     #[inline(always)]
-    pub const fn delay2byte0(&self, n: usize) -> &Delay2byte {
+    pub const fn delay2byte(&self, n: usize) -> &Delay2byte {
         #[allow(clippy::no_effect)]
         [(); 4][n];
         unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(48).add(n).cast() }
@@ -262,7 +262,7 @@ impl RegisterBlock {
     #[doc = "Iterator for array of:"]
     #[doc = "0x30 - Delay2 Register by Byte"]
     #[inline(always)]
-    pub fn delay2byte0_iter(&self) -> impl Iterator<Item = &Delay2byte> {
+    pub fn delay2byte_iter(&self) -> impl Iterator<Item = &Delay2byte> {
         (0..4)
             .map(move |n| unsafe { &*core::ptr::from_ref(self).cast::<u8>().add(48).add(n).cast() })
     }
@@ -312,14 +312,12 @@ impl RegisterBlock {
         &self.perid
     }
 }
-#[doc = "DATAIN (r) register accessor: Data In Register\n\nYou can [`read`](crate::Reg::read) this register and get [`datain::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@datain`]
-module"]
+#[doc = "DATAIN (r) register accessor: Data In Register\n\nYou can [`read`](crate::Reg::read) this register and get [`datain::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@datain`] module"]
 #[doc(alias = "DATAIN")]
 pub type Datain = crate::Reg<datain::DatainSpec>;
 #[doc = "Data In Register"]
 pub mod datain;
-#[doc = "DATAINBYTE (r) register accessor: Data In Register by Byte\n\nYou can [`read`](crate::Reg::read) this register and get [`datainbyte::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@datainbyte`]
-module"]
+#[doc = "DATAINBYTE (r) register accessor: Data In Register by Byte\n\nYou can [`read`](crate::Reg::read) this register and get [`datainbyte::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@datainbyte`] module"]
 #[doc(alias = "DATAINBYTE")]
 pub type Datainbyte = crate::Reg<datainbyte::DatainbyteSpec>;
 #[doc = "Data In Register by Byte"]
@@ -328,14 +326,12 @@ pub use datain as datainraw;
 pub use datainbyte as datainrawbyte;
 pub use Datain as Datainraw;
 pub use Datainbyte as Datainrawbyte;
-#[doc = "DATAOUT (w) register accessor: Data Out Register\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dataout::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dataout`]
-module"]
+#[doc = "DATAOUT (w) register accessor: Data Out Register\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dataout::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dataout`] module"]
 #[doc(alias = "DATAOUT")]
 pub type Dataout = crate::Reg<dataout::DataoutSpec>;
 #[doc = "Data Out Register"]
 pub mod dataout;
-#[doc = "DATAOUTBYTE (w) register accessor: Data Out Register by Byte\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dataoutbyte::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dataoutbyte`]
-module"]
+#[doc = "DATAOUTBYTE (w) register accessor: Data Out Register by Byte\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dataoutbyte::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dataoutbyte`] module"]
 #[doc(alias = "DATAOUTBYTE")]
 pub type Dataoutbyte = crate::Reg<dataoutbyte::DataoutbyteSpec>;
 #[doc = "Data Out Register by Byte"]
@@ -356,14 +352,12 @@ pub use Dataoutbyte as Dataoutrawbyte;
 pub use Dataoutbyte as Setoutbyte;
 pub use Dataoutbyte as Clroutbyte;
 pub use Dataoutbyte as Togoutbyte;
-#[doc = "DATAMASK (rw) register accessor: Data mask Register\n\nYou can [`read`](crate::Reg::read) this register and get [`datamask::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`datamask::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@datamask`]
-module"]
+#[doc = "DATAMASK (rw) register accessor: Data mask Register\n\nYou can [`read`](crate::Reg::read) this register and get [`datamask::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`datamask::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@datamask`] module"]
 #[doc(alias = "DATAMASK")]
 pub type Datamask = crate::Reg<datamask::DatamaskSpec>;
 #[doc = "Data mask Register"]
 pub mod datamask;
-#[doc = "DATAMASKBYTE (rw) register accessor: Data Out Register by Byte\n\nYou can [`read`](crate::Reg::read) this register and get [`datamaskbyte::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`datamaskbyte::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@datamaskbyte`]
-module"]
+#[doc = "DATAMASKBYTE (rw) register accessor: Data Out Register by Byte\n\nYou can [`read`](crate::Reg::read) this register and get [`datamaskbyte::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`datamaskbyte::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@datamaskbyte`] module"]
 #[doc(alias = "DATAMASKBYTE")]
 pub type Datamaskbyte = crate::Reg<datamaskbyte::DatamaskbyteSpec>;
 #[doc = "Data Out Register by Byte"]
@@ -388,50 +382,42 @@ pub use Datamaskbyte as Pulsebyte;
 pub use Datamaskbyte as Pulsebasebyte;
 pub use Datamaskbyte as Delay1byte;
 pub use Datamaskbyte as Delay2byte;
-#[doc = "IRQ_SEN (rw) register accessor: Interrupt Sense Register (1:Level Sensitive, 0:Edge Sensitive)\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_sen::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_sen::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_sen`]
-module"]
+#[doc = "IRQ_SEN (rw) register accessor: Interrupt Sense Register (1:Level Sensitive, 0:Edge Sensitive)\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_sen::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_sen::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_sen`] module"]
 #[doc(alias = "IRQ_SEN")]
 pub type IrqSen = crate::Reg<irq_sen::IrqSenSpec>;
 #[doc = "Interrupt Sense Register (1:Level Sensitive, 0:Edge Sensitive)"]
 pub mod irq_sen;
-#[doc = "IRQ_EDGE (rw) register accessor: Interrupt Both Edge Register (1:Both Edges, 0:Single Edge)\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_edge::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_edge::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_edge`]
-module"]
+#[doc = "IRQ_EDGE (rw) register accessor: Interrupt Both Edge Register (1:Both Edges, 0:Single Edge)\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_edge::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_edge::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_edge`] module"]
 #[doc(alias = "IRQ_EDGE")]
 pub type IrqEdge = crate::Reg<irq_edge::IrqEdgeSpec>;
 #[doc = "Interrupt Both Edge Register (1:Both Edges, 0:Single Edge)"]
 pub mod irq_edge;
-#[doc = "IRQ_EVT (rw) register accessor: Interrupt Event Register (1:HighLevel/L->H Edge, 0:LowLevel/H->L Edge)\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_evt::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_evt::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_evt`]
-module"]
+#[doc = "IRQ_EVT (rw) register accessor: Interrupt Event Register (1:HighLevel/L->H Edge, 0:LowLevel/H->L Edge)\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_evt::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_evt::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_evt`] module"]
 #[doc(alias = "IRQ_EVT")]
 pub type IrqEvt = crate::Reg<irq_evt::IrqEvtSpec>;
 #[doc = "Interrupt Event Register (1:HighLevel/L->H Edge, 0:LowLevel/H->L Edge)"]
 pub mod irq_evt;
-#[doc = "IRQ_ENB (rw) register accessor: Interrupt Enable Register\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_enb::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_enb::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_enb`]
-module"]
+#[doc = "IRQ_ENB (rw) register accessor: Interrupt Enable Register\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_enb::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`irq_enb::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_enb`] module"]
 #[doc(alias = "IRQ_ENB")]
 pub type IrqEnb = crate::Reg<irq_enb::IrqEnbSpec>;
 #[doc = "Interrupt Enable Register"]
 pub mod irq_enb;
-#[doc = "IRQ_RAW (r) register accessor: Raw Interrupt Status\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_raw::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_raw`]
-module"]
+#[doc = "IRQ_RAW (r) register accessor: Raw Interrupt Status\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_raw::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_raw`] module"]
 #[doc(alias = "IRQ_RAW")]
 pub type IrqRaw = crate::Reg<irq_raw::IrqRawSpec>;
 #[doc = "Raw Interrupt Status"]
 pub mod irq_raw;
-#[doc = "IRQ_END (r) register accessor: Masked Interrupt Status\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_end::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_end`]
-module"]
+#[doc = "IRQ_END (r) register accessor: Masked Interrupt Status\n\nYou can [`read`](crate::Reg::read) this register and get [`irq_end::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@irq_end`] module"]
 #[doc(alias = "IRQ_END")]
 pub type IrqEnd = crate::Reg<irq_end::IrqEndSpec>;
 #[doc = "Masked Interrupt Status"]
 pub mod irq_end;
-#[doc = "EDGE_STATUS (rw) register accessor: Edge Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`edge_status::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`edge_status::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@edge_status`]
-module"]
+#[doc = "EDGE_STATUS (rw) register accessor: Edge Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`edge_status::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`edge_status::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@edge_status`] module"]
 #[doc(alias = "EDGE_STATUS")]
 pub type EdgeStatus = crate::Reg<edge_status::EdgeStatusSpec>;
 #[doc = "Edge Status Register"]
 pub mod edge_status;
-#[doc = "PERID (r) register accessor: Peripheral ID Register\n\nYou can [`read`](crate::Reg::read) this register and get [`perid::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@perid`]
-module"]
+#[doc = "PERID (r) register accessor: Peripheral ID Register\n\nYou can [`read`](crate::Reg::read) this register and get [`perid::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@perid`] module"]
 #[doc(alias = "PERID")]
 pub type Perid = crate::Reg<perid::PeridSpec>;
 #[doc = "Peripheral ID Register"]

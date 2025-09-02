@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - Selects the number of inverters (out of four possible selections) in the ring oscillator"]
     #[inline(always)]
-    pub fn rnd_src_sel(&mut self) -> RndSrcSelW<ConfigSpec> {
+    pub fn rnd_src_sel(&mut self) -> RndSrcSelW<'_, ConfigSpec> {
         RndSrcSelW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for ConfigSpec {}
 #[doc = "`write(|w| ..)` method takes [`config::W`](W) writer structure"]
 impl crate::Writable for ConfigSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CONFIG to value 0"]
-impl crate::Resettable for ConfigSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ConfigSpec {}

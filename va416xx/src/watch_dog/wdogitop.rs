@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Set output value"]
     #[inline(always)]
-    pub fn wdogres(&mut self) -> WdogresW<WdogitopSpec> {
+    pub fn wdogres(&mut self) -> WdogresW<'_, WdogitopSpec> {
         WdogresW::new(self, 0)
     }
     #[doc = "Bit 1 - Set output value"]
     #[inline(always)]
-    pub fn wdogint(&mut self) -> WdogintW<WdogitopSpec> {
+    pub fn wdogint(&mut self) -> WdogintW<'_, WdogitopSpec> {
         WdogintW::new(self, 1)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for WdogitopSpec {}
 #[doc = "`write(|w| ..)` method takes [`wdogitop::W`](W) writer structure"]
 impl crate::Writable for WdogitopSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets WDOGITOP to value 0"]
-impl crate::Resettable for WdogitopSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for WdogitopSpec {}

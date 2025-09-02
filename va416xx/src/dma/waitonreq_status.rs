@@ -38,6 +38,4 @@ impl crate::RegisterSpec for WaitonreqStatusSpec {
 #[doc = "`read()` method returns [`waitonreq_status::R`](R) reader structure"]
 impl crate::Readable for WaitonreqStatusSpec {}
 #[doc = "`reset()` method sets WAITONREQ_STATUS to value 0"]
-impl crate::Resettable for WaitonreqStatusSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for WaitonreqStatusSpec {}

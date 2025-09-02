@@ -6,13 +6,9 @@ pub type W = crate::W<BmskxSpec>;
 pub type XrtrR = crate::BitReader;
 #[doc = "Field `XRTR` writer - Extended Remote transmission Request Bit"]
 pub type XrtrW<'a, REG> = crate::BitWriter<'a, REG>;
-#[doc = "Field `BM` reader - BM\\[14:0\\]
-used when an extended frame is received. ID\\[14:0\\]
-in extended, unused standard"]
+#[doc = "Field `BM` reader - BM\\[14:0\\] used when an extended frame is received. ID\\[14:0\\] in extended, unused standard"]
 pub type BmR = crate::FieldReader<u16>;
-#[doc = "Field `BM` writer - BM\\[14:0\\]
-used when an extended frame is received. ID\\[14:0\\]
-in extended, unused standard"]
+#[doc = "Field `BM` writer - BM\\[14:0\\] used when an extended frame is received. ID\\[14:0\\] in extended, unused standard"]
 pub type BmW<'a, REG> = crate::FieldWriter<'a, REG, 15, u16>;
 impl R {
     #[doc = "Bit 0 - Extended Remote transmission Request Bit"]
@@ -20,9 +16,7 @@ impl R {
     pub fn xrtr(&self) -> XrtrR {
         XrtrR::new((self.bits & 1) != 0)
     }
-    #[doc = "Bits 1:15 - BM\\[14:0\\]
-used when an extended frame is received. ID\\[14:0\\]
-in extended, unused standard"]
+    #[doc = "Bits 1:15 - BM\\[14:0\\] used when an extended frame is received. ID\\[14:0\\] in extended, unused standard"]
     #[inline(always)]
     pub fn bm(&self) -> BmR {
         BmR::new(((self.bits >> 1) & 0x7fff) as u16)
@@ -31,14 +25,12 @@ in extended, unused standard"]
 impl W {
     #[doc = "Bit 0 - Extended Remote transmission Request Bit"]
     #[inline(always)]
-    pub fn xrtr(&mut self) -> XrtrW<BmskxSpec> {
+    pub fn xrtr(&mut self) -> XrtrW<'_, BmskxSpec> {
         XrtrW::new(self, 0)
     }
-    #[doc = "Bits 1:15 - BM\\[14:0\\]
-used when an extended frame is received. ID\\[14:0\\]
-in extended, unused standard"]
+    #[doc = "Bits 1:15 - BM\\[14:0\\] used when an extended frame is received. ID\\[14:0\\] in extended, unused standard"]
     #[inline(always)]
-    pub fn bm(&mut self) -> BmW<BmskxSpec> {
+    pub fn bm(&mut self) -> BmW<'_, BmskxSpec> {
         BmW::new(self, 1)
     }
 }
@@ -52,10 +44,6 @@ impl crate::Readable for BmskxSpec {}
 #[doc = "`write(|w| ..)` method takes [`bmskx::W`](W) writer structure"]
 impl crate::Writable for BmskxSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets BMSKX to value 0"]
-impl crate::Resettable for BmskxSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for BmskxSpec {}

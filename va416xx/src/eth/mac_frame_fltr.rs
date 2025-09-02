@@ -124,67 +124,67 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Promiscuous Mode"]
     #[inline(always)]
-    pub fn pr(&mut self) -> PrW<MacFrameFltrSpec> {
+    pub fn pr(&mut self) -> PrW<'_, MacFrameFltrSpec> {
         PrW::new(self, 0)
     }
     #[doc = "Bit 1 - Hash Unicast"]
     #[inline(always)]
-    pub fn huc(&mut self) -> HucW<MacFrameFltrSpec> {
+    pub fn huc(&mut self) -> HucW<'_, MacFrameFltrSpec> {
         HucW::new(self, 1)
     }
     #[doc = "Bit 2 - Hash Multicast"]
     #[inline(always)]
-    pub fn hmc(&mut self) -> HmcW<MacFrameFltrSpec> {
+    pub fn hmc(&mut self) -> HmcW<'_, MacFrameFltrSpec> {
         HmcW::new(self, 2)
     }
     #[doc = "Bit 3 - DA Inverse Filtering"]
     #[inline(always)]
-    pub fn daif(&mut self) -> DaifW<MacFrameFltrSpec> {
+    pub fn daif(&mut self) -> DaifW<'_, MacFrameFltrSpec> {
         DaifW::new(self, 3)
     }
     #[doc = "Bit 4 - Pass All Multicast"]
     #[inline(always)]
-    pub fn pm(&mut self) -> PmW<MacFrameFltrSpec> {
+    pub fn pm(&mut self) -> PmW<'_, MacFrameFltrSpec> {
         PmW::new(self, 4)
     }
     #[doc = "Bit 5 - Disable Broadcast Frames"]
     #[inline(always)]
-    pub fn dbf(&mut self) -> DbfW<MacFrameFltrSpec> {
+    pub fn dbf(&mut self) -> DbfW<'_, MacFrameFltrSpec> {
         DbfW::new(self, 5)
     }
     #[doc = "Bits 6:7 - Pass Control Frames"]
     #[inline(always)]
-    pub fn pcf(&mut self) -> PcfW<MacFrameFltrSpec> {
+    pub fn pcf(&mut self) -> PcfW<'_, MacFrameFltrSpec> {
         PcfW::new(self, 6)
     }
     #[doc = "Bit 8 - SA Inverse Filtering"]
     #[inline(always)]
-    pub fn saif(&mut self) -> SaifW<MacFrameFltrSpec> {
+    pub fn saif(&mut self) -> SaifW<'_, MacFrameFltrSpec> {
         SaifW::new(self, 8)
     }
     #[doc = "Bit 9 - Source Address Filter Enable"]
     #[inline(always)]
-    pub fn saf(&mut self) -> SafW<MacFrameFltrSpec> {
+    pub fn saf(&mut self) -> SafW<'_, MacFrameFltrSpec> {
         SafW::new(self, 9)
     }
     #[doc = "Bit 10 - Hash or Perfect Filter"]
     #[inline(always)]
-    pub fn hdf(&mut self) -> HdfW<MacFrameFltrSpec> {
+    pub fn hdf(&mut self) -> HdfW<'_, MacFrameFltrSpec> {
         HdfW::new(self, 10)
     }
     #[doc = "Bit 16 - VLAN Tag Filter Enable"]
     #[inline(always)]
-    pub fn vfte(&mut self) -> VfteW<MacFrameFltrSpec> {
+    pub fn vfte(&mut self) -> VfteW<'_, MacFrameFltrSpec> {
         VfteW::new(self, 16)
     }
     #[doc = "Bit 21 - Drop non TCP/UDP over IP Frames"]
     #[inline(always)]
-    pub fn dntu(&mut self) -> DntuW<MacFrameFltrSpec> {
+    pub fn dntu(&mut self) -> DntuW<'_, MacFrameFltrSpec> {
         DntuW::new(self, 21)
     }
     #[doc = "Bit 31 - Receive All"]
     #[inline(always)]
-    pub fn ra(&mut self) -> RaW<MacFrameFltrSpec> {
+    pub fn ra(&mut self) -> RaW<'_, MacFrameFltrSpec> {
         RaW::new(self, 31)
     }
 }
@@ -198,10 +198,6 @@ impl crate::Readable for MacFrameFltrSpec {}
 #[doc = "`write(|w| ..)` method takes [`mac_frame_fltr::W`](W) writer structure"]
 impl crate::Writable for MacFrameFltrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MAC_FRAME_FLTR to value 0"]
-impl crate::Resettable for MacFrameFltrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MacFrameFltrSpec {}

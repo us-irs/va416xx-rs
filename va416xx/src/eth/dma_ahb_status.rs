@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bit 0 - When high, indicates that the AHB master interface FSMs are in the non-idle state"]
     #[inline(always)]
-    pub fn ahbmastrsts(&mut self) -> AhbmastrstsW<DmaAhbStatusSpec> {
+    pub fn ahbmastrsts(&mut self) -> AhbmastrstsW<'_, DmaAhbStatusSpec> {
         AhbmastrstsW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for DmaAhbStatusSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_ahb_status::W`](W) writer structure"]
 impl crate::Writable for DmaAhbStatusSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_AHB_STATUS to value 0"]
-impl crate::Resettable for DmaAhbStatusSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DmaAhbStatusSpec {}

@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - This field indicates the number of frames missed by the controller because of the Host Receive Buffer being unavailable."]
     #[inline(always)]
-    pub fn misfrmcnt(&mut self) -> MisfrmcntW<DmaMissOverCounterSpec> {
+    pub fn misfrmcnt(&mut self) -> MisfrmcntW<'_, DmaMissOverCounterSpec> {
         MisfrmcntW::new(self, 0)
     }
     #[doc = "Bit 16 - This bit is set every time Missed Frame Counter (Bits\\[15:0\\]) overflows"]
     #[inline(always)]
-    pub fn miscntovf(&mut self) -> MiscntovfW<DmaMissOverCounterSpec> {
+    pub fn miscntovf(&mut self) -> MiscntovfW<'_, DmaMissOverCounterSpec> {
         MiscntovfW::new(self, 16)
     }
     #[doc = "Bits 17:27 - This field indicates the number of frames missed by the application"]
     #[inline(always)]
-    pub fn ovffrmcnt(&mut self) -> OvffrmcntW<DmaMissOverCounterSpec> {
+    pub fn ovffrmcnt(&mut self) -> OvffrmcntW<'_, DmaMissOverCounterSpec> {
         OvffrmcntW::new(self, 17)
     }
     #[doc = "Bit 28 - This bit is set every time the Overflow Frame Counter (Bits\\[27:17\\])overflows"]
     #[inline(always)]
-    pub fn ovfcntovf(&mut self) -> OvfcntovfW<DmaMissOverCounterSpec> {
+    pub fn ovfcntovf(&mut self) -> OvfcntovfW<'_, DmaMissOverCounterSpec> {
         OvfcntovfW::new(self, 28)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for DmaMissOverCounterSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_miss_over_counter::W`](W) writer structure"]
 impl crate::Writable for DmaMissOverCounterSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_MISS_OVER_COUNTER to value 0"]
-impl crate::Resettable for DmaMissOverCounterSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DmaMissOverCounterSpec {}

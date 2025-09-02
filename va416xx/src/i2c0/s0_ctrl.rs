@@ -52,27 +52,27 @@ impl R {
 impl W {
     #[doc = "Bit 0 - I2C Enabled"]
     #[inline(always)]
-    pub fn clkenabled(&mut self) -> ClkenabledW<S0CtrlSpec> {
+    pub fn clkenabled(&mut self) -> ClkenabledW<'_, S0CtrlSpec> {
         ClkenabledW::new(self, 0)
     }
     #[doc = "Bit 1 - I2C Activated"]
     #[inline(always)]
-    pub fn enabled(&mut self) -> EnabledW<S0CtrlSpec> {
+    pub fn enabled(&mut self) -> EnabledW<'_, S0CtrlSpec> {
         EnabledW::new(self, 1)
     }
     #[doc = "Bit 2 - I2C Active"]
     #[inline(always)]
-    pub fn enable(&mut self) -> EnableW<S0CtrlSpec> {
+    pub fn enable(&mut self) -> EnableW<'_, S0CtrlSpec> {
         EnableW::new(self, 2)
     }
     #[doc = "Bit 3 - TX FIFIO Empty Mode"]
     #[inline(always)]
-    pub fn txfemd(&mut self) -> TxfemdW<S0CtrlSpec> {
+    pub fn txfemd(&mut self) -> TxfemdW<'_, S0CtrlSpec> {
         TxfemdW::new(self, 3)
     }
     #[doc = "Bit 4 - RX FIFO Full Mode"]
     #[inline(always)]
-    pub fn rxffmd(&mut self) -> RxffmdW<S0CtrlSpec> {
+    pub fn rxffmd(&mut self) -> RxffmdW<'_, S0CtrlSpec> {
         RxffmdW::new(self, 4)
     }
 }
@@ -86,10 +86,6 @@ impl crate::Readable for S0CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`s0_ctrl::W`](W) writer structure"]
 impl crate::Writable for S0CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets S0_CTRL to value 0"]
-impl crate::Resettable for S0CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for S0CtrlSpec {}

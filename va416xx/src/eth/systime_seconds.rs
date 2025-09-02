@@ -17,6 +17,4 @@ impl crate::RegisterSpec for SystimeSecondsSpec {
 #[doc = "`read()` method returns [`systime_seconds::R`](R) reader structure"]
 impl crate::Readable for SystimeSecondsSpec {}
 #[doc = "`reset()` method sets SYSTIME_SECONDS to value 0"]
-impl crate::Resettable for SystimeSecondsSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SystimeSecondsSpec {}

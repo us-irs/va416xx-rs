@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Error Clear"]
     #[inline(always)]
-    pub fn int_test_en(&mut self) -> IntTestEnW<IntegrationCfgSpec> {
+    pub fn int_test_en(&mut self) -> IntTestEnW<'_, IntegrationCfgSpec> {
         IntTestEnW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for IntegrationCfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`integration_cfg::W`](W) writer structure"]
 impl crate::Writable for IntegrationCfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets INTEGRATION_CFG to value 0"]
-impl crate::Resettable for IntegrationCfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IntegrationCfgSpec {}

@@ -241,132 +241,132 @@ impl R {
 impl W {
     #[doc = "Bit 0 - MMC Receive Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxgbfrmis(&mut self) -> RxgbfrmisW<MmcIntrRxSpec> {
+    pub fn rxgbfrmis(&mut self) -> RxgbfrmisW<'_, MmcIntrRxSpec> {
         RxgbfrmisW::new(self, 0)
     }
     #[doc = "Bit 1 - MMC Receive Good Bad Octet Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxgboctis(&mut self) -> RxgboctisW<MmcIntrRxSpec> {
+    pub fn rxgboctis(&mut self) -> RxgboctisW<'_, MmcIntrRxSpec> {
         RxgboctisW::new(self, 1)
     }
     #[doc = "Bit 2 - MMC Receive Good Octet Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxgoctis(&mut self) -> RxgoctisW<MmcIntrRxSpec> {
+    pub fn rxgoctis(&mut self) -> RxgoctisW<'_, MmcIntrRxSpec> {
         RxgoctisW::new(self, 2)
     }
     #[doc = "Bit 3 - MMC Receive Broadcast Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxbcgfis(&mut self) -> RxbcgfisW<MmcIntrRxSpec> {
+    pub fn rxbcgfis(&mut self) -> RxbcgfisW<'_, MmcIntrRxSpec> {
         RxbcgfisW::new(self, 3)
     }
     #[doc = "Bit 4 - MMC Receive Multicast Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxmcgfis(&mut self) -> RxmcgfisW<MmcIntrRxSpec> {
+    pub fn rxmcgfis(&mut self) -> RxmcgfisW<'_, MmcIntrRxSpec> {
         RxmcgfisW::new(self, 4)
     }
     #[doc = "Bit 5 - MMC Receive CRC Error Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxcrcerfis(&mut self) -> RxcrcerfisW<MmcIntrRxSpec> {
+    pub fn rxcrcerfis(&mut self) -> RxcrcerfisW<'_, MmcIntrRxSpec> {
         RxcrcerfisW::new(self, 5)
     }
     #[doc = "Bit 6 - MMC Receive Alignment Error Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxalgnerfis(&mut self) -> RxalgnerfisW<MmcIntrRxSpec> {
+    pub fn rxalgnerfis(&mut self) -> RxalgnerfisW<'_, MmcIntrRxSpec> {
         RxalgnerfisW::new(self, 6)
     }
     #[doc = "Bit 7 - MMC Receive Runt Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxruntfis(&mut self) -> RxruntfisW<MmcIntrRxSpec> {
+    pub fn rxruntfis(&mut self) -> RxruntfisW<'_, MmcIntrRxSpec> {
         RxruntfisW::new(self, 7)
     }
     #[doc = "Bit 8 - MMC Receive Jabber Error Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxjaberfis(&mut self) -> RxjaberfisW<MmcIntrRxSpec> {
+    pub fn rxjaberfis(&mut self) -> RxjaberfisW<'_, MmcIntrRxSpec> {
         RxjaberfisW::new(self, 8)
     }
     #[doc = "Bit 9 - MMC Receive Undersize Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxusizegfis(&mut self) -> RxusizegfisW<MmcIntrRxSpec> {
+    pub fn rxusizegfis(&mut self) -> RxusizegfisW<'_, MmcIntrRxSpec> {
         RxusizegfisW::new(self, 9)
     }
     #[doc = "Bit 10 - MMC Receive Oversize Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxosizegfis(&mut self) -> RxosizegfisW<MmcIntrRxSpec> {
+    pub fn rxosizegfis(&mut self) -> RxosizegfisW<'_, MmcIntrRxSpec> {
         RxosizegfisW::new(self, 10)
     }
     #[doc = "Bit 11 - MMC Receive 64 Octet Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rx64octgbfis(&mut self) -> Rx64octgbfisW<MmcIntrRxSpec> {
+    pub fn rx64octgbfis(&mut self) -> Rx64octgbfisW<'_, MmcIntrRxSpec> {
         Rx64octgbfisW::new(self, 11)
     }
     #[doc = "Bit 12 - MMC Receive 65 to 127 Octet Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rx65t127octgbfis(&mut self) -> Rx65t127octgbfisW<MmcIntrRxSpec> {
+    pub fn rx65t127octgbfis(&mut self) -> Rx65t127octgbfisW<'_, MmcIntrRxSpec> {
         Rx65t127octgbfisW::new(self, 12)
     }
     #[doc = "Bit 13 - MMC Receive 128 to 255 Octet Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rx128t255octgbfis(&mut self) -> Rx128t255octgbfisW<MmcIntrRxSpec> {
+    pub fn rx128t255octgbfis(&mut self) -> Rx128t255octgbfisW<'_, MmcIntrRxSpec> {
         Rx128t255octgbfisW::new(self, 13)
     }
     #[doc = "Bit 14 - MMC Receive 256 to 511 Octet Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rx256t511octgbfis(&mut self) -> Rx256t511octgbfisW<MmcIntrRxSpec> {
+    pub fn rx256t511octgbfis(&mut self) -> Rx256t511octgbfisW<'_, MmcIntrRxSpec> {
         Rx256t511octgbfisW::new(self, 14)
     }
     #[doc = "Bit 15 - MMC Receive 512 to 1023 Octet Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rx512t1023octgbfis(&mut self) -> Rx512t1023octgbfisW<MmcIntrRxSpec> {
+    pub fn rx512t1023octgbfis(&mut self) -> Rx512t1023octgbfisW<'_, MmcIntrRxSpec> {
         Rx512t1023octgbfisW::new(self, 15)
     }
     #[doc = "Bit 16 - MMC Receive 1024 to Maximum Octet Good Bad Frame Counter Interrupt Status."]
     #[inline(always)]
-    pub fn rx1024tmaxoctgbfis(&mut self) -> Rx1024tmaxoctgbfisW<MmcIntrRxSpec> {
+    pub fn rx1024tmaxoctgbfis(&mut self) -> Rx1024tmaxoctgbfisW<'_, MmcIntrRxSpec> {
         Rx1024tmaxoctgbfisW::new(self, 16)
     }
     #[doc = "Bit 17 - MMC Receive Unicast Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxucgfis(&mut self) -> RxucgfisW<MmcIntrRxSpec> {
+    pub fn rxucgfis(&mut self) -> RxucgfisW<'_, MmcIntrRxSpec> {
         RxucgfisW::new(self, 17)
     }
     #[doc = "Bit 18 - MMC Receive Length Error Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxlenerfis(&mut self) -> RxlenerfisW<MmcIntrRxSpec> {
+    pub fn rxlenerfis(&mut self) -> RxlenerfisW<'_, MmcIntrRxSpec> {
         RxlenerfisW::new(self, 18)
     }
     #[doc = "Bit 19 - MMC Receive Out Of Range Error Frame Counter Interrupt Status."]
     #[inline(always)]
-    pub fn rxorangefis(&mut self) -> RxorangefisW<MmcIntrRxSpec> {
+    pub fn rxorangefis(&mut self) -> RxorangefisW<'_, MmcIntrRxSpec> {
         RxorangefisW::new(self, 19)
     }
     #[doc = "Bit 20 - MMC Receive Pause Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxpausfis(&mut self) -> RxpausfisW<MmcIntrRxSpec> {
+    pub fn rxpausfis(&mut self) -> RxpausfisW<'_, MmcIntrRxSpec> {
         RxpausfisW::new(self, 20)
     }
     #[doc = "Bit 21 - MMC Receive FIFO Overflow Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxfovfis(&mut self) -> RxfovfisW<MmcIntrRxSpec> {
+    pub fn rxfovfis(&mut self) -> RxfovfisW<'_, MmcIntrRxSpec> {
         RxfovfisW::new(self, 21)
     }
     #[doc = "Bit 22 - MMC Receive VLAN Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxvlangbfis(&mut self) -> RxvlangbfisW<MmcIntrRxSpec> {
+    pub fn rxvlangbfis(&mut self) -> RxvlangbfisW<'_, MmcIntrRxSpec> {
         RxvlangbfisW::new(self, 22)
     }
     #[doc = "Bit 23 - MMC Receive Watchdog Error Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxwdogfis(&mut self) -> RxwdogfisW<MmcIntrRxSpec> {
+    pub fn rxwdogfis(&mut self) -> RxwdogfisW<'_, MmcIntrRxSpec> {
         RxwdogfisW::new(self, 23)
     }
     #[doc = "Bit 24 - MMC Receive Error Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxrcverrfis(&mut self) -> RxrcverrfisW<MmcIntrRxSpec> {
+    pub fn rxrcverrfis(&mut self) -> RxrcverrfisW<'_, MmcIntrRxSpec> {
         RxrcverrfisW::new(self, 24)
     }
     #[doc = "Bit 25 - MMC Receive Control Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn rxctrlfis(&mut self) -> RxctrlfisW<MmcIntrRxSpec> {
+    pub fn rxctrlfis(&mut self) -> RxctrlfisW<'_, MmcIntrRxSpec> {
         RxctrlfisW::new(self, 25)
     }
 }
@@ -380,10 +380,6 @@ impl crate::Readable for MmcIntrRxSpec {}
 #[doc = "`write(|w| ..)` method takes [`mmc_intr_rx::W`](W) writer structure"]
 impl crate::Writable for MmcIntrRxSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MMC_INTR_RX to value 0"]
-impl crate::Resettable for MmcIntrRxSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MmcIntrRxSpec {}

@@ -70,37 +70,37 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enables the interrupt for FIFO empty"]
     #[inline(always)]
-    pub fn fifo_empty(&mut self) -> FifoEmptyW<IrqEnbSpec> {
+    pub fn fifo_empty(&mut self) -> FifoEmptyW<'_, IrqEnbSpec> {
         FifoEmptyW::new(self, 0)
     }
     #[doc = "Bit 1 - Enables the interrupt for FIFO full"]
     #[inline(always)]
-    pub fn fifo_full(&mut self) -> FifoFullW<IrqEnbSpec> {
+    pub fn fifo_full(&mut self) -> FifoFullW<'_, IrqEnbSpec> {
         FifoFullW::new(self, 1)
     }
     #[doc = "Bit 2 - Enables the interrupt for a FIFO overflow"]
     #[inline(always)]
-    pub fn fifo_oflow(&mut self) -> FifoOflowW<IrqEnbSpec> {
+    pub fn fifo_oflow(&mut self) -> FifoOflowW<'_, IrqEnbSpec> {
         FifoOflowW::new(self, 2)
     }
     #[doc = "Bit 3 - Enables the interrupt for a FIFO underflow"]
     #[inline(always)]
-    pub fn fifo_uflow(&mut self) -> FifoUflowW<IrqEnbSpec> {
+    pub fn fifo_uflow(&mut self) -> FifoUflowW<'_, IrqEnbSpec> {
         FifoUflowW::new(self, 3)
     }
     #[doc = "Bit 4 - Enables the interrupt for an ADC data acquisition completion"]
     #[inline(always)]
-    pub fn adc_done(&mut self) -> AdcDoneW<IrqEnbSpec> {
+    pub fn adc_done(&mut self) -> AdcDoneW<'_, IrqEnbSpec> {
         AdcDoneW::new(self, 4)
     }
     #[doc = "Bit 5 - Enables the interrupt for a trigger error"]
     #[inline(always)]
-    pub fn trig_error(&mut self) -> TrigErrorW<IrqEnbSpec> {
+    pub fn trig_error(&mut self) -> TrigErrorW<'_, IrqEnbSpec> {
         TrigErrorW::new(self, 5)
     }
     #[doc = "Bit 6 - Enables the interrupt for the FIFO entry count meets or exceeds the trigger level"]
     #[inline(always)]
-    pub fn fifo_depth_trig(&mut self) -> FifoDepthTrigW<IrqEnbSpec> {
+    pub fn fifo_depth_trig(&mut self) -> FifoDepthTrigW<'_, IrqEnbSpec> {
         FifoDepthTrigW::new(self, 6)
     }
 }
@@ -114,10 +114,6 @@ impl crate::Readable for IrqEnbSpec {}
 #[doc = "`write(|w| ..)` method takes [`irq_enb::W`](W) writer structure"]
 impl crate::Writable for IrqEnbSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IRQ_ENB to value 0"]
-impl crate::Resettable for IrqEnbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IrqEnbSpec {}

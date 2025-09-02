@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Part Number"]
     #[inline(always)]
-    pub fn part_number_0(&mut self) -> PartNumber0W<PeriphId0Spec> {
+    pub fn part_number_0(&mut self) -> PartNumber0W<'_, PeriphId0Spec> {
         PartNumber0W::new(self, 0)
     }
 }
@@ -30,8 +30,6 @@ impl crate::Readable for PeriphId0Spec {}
 #[doc = "`write(|w| ..)` method takes [`periph_id_0::W`](W) writer structure"]
 impl crate::Writable for PeriphId0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PERIPH_ID_0 to value 0x30"]
 impl crate::Resettable for PeriphId0Spec {

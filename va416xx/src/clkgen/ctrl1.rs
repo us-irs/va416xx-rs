@@ -61,32 +61,32 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Resets/Rearms the SYS_CLK lost detection feature"]
     #[inline(always)]
-    pub fn sys_clk_lost_det_rearm(&mut self) -> SysClkLostDetRearmW<Ctrl1Spec> {
+    pub fn sys_clk_lost_det_rearm(&mut self) -> SysClkLostDetRearmW<'_, Ctrl1Spec> {
         SysClkLostDetRearmW::new(self, 0)
     }
     #[doc = "Bit 1 - Resets/Rearms the PLL lock detect circuit"]
     #[inline(always)]
-    pub fn pll_lck_det_rearm(&mut self) -> PllLckDetRearmW<Ctrl1Spec> {
+    pub fn pll_lck_det_rearm(&mut self) -> PllLckDetRearmW<'_, Ctrl1Spec> {
         PllLckDetRearmW::new(self, 1)
     }
     #[doc = "Bit 2 - Enables the PLL lock lost detection circuit"]
     #[inline(always)]
-    pub fn pll_lost_lock_det_en(&mut self) -> PllLostLockDetEnW<Ctrl1Spec> {
+    pub fn pll_lost_lock_det_en(&mut self) -> PllLostLockDetEnW<'_, Ctrl1Spec> {
         PllLostLockDetEnW::new(self, 2)
     }
     #[doc = "Bit 3 - Enables the crystal oscillator"]
     #[inline(always)]
-    pub fn xtal_en(&mut self) -> XtalEnW<Ctrl1Spec> {
+    pub fn xtal_en(&mut self) -> XtalEnW<'_, Ctrl1Spec> {
         XtalEnW::new(self, 3)
     }
     #[doc = "Bit 4 - Enables XTAL_N output"]
     #[inline(always)]
-    pub fn xtal_n_en(&mut self) -> XtalNEnW<Ctrl1Spec> {
+    pub fn xtal_n_en(&mut self) -> XtalNEnW<'_, Ctrl1Spec> {
         XtalNEnW::new(self, 4)
     }
     #[doc = "Bits 5:6 - Clock divider select for ADC"]
     #[inline(always)]
-    pub fn adc_clk_div_sel(&mut self) -> AdcClkDivSelW<Ctrl1Spec> {
+    pub fn adc_clk_div_sel(&mut self) -> AdcClkDivSelW<'_, Ctrl1Spec> {
         AdcClkDivSelW::new(self, 5)
     }
 }
@@ -100,10 +100,6 @@ impl crate::Readable for Ctrl1Spec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl1::W`](W) writer structure"]
 impl crate::Writable for Ctrl1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL1 to value 0"]
-impl crate::Resettable for Ctrl1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ctrl1Spec {}

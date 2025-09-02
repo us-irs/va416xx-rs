@@ -178,97 +178,97 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - Preamble Length for Transmit frames"]
     #[inline(always)]
-    pub fn prelen(&mut self) -> PrelenW<MacConfigSpec> {
+    pub fn prelen(&mut self) -> PrelenW<'_, MacConfigSpec> {
         PrelenW::new(self, 0)
     }
     #[doc = "Bit 2 - Receiver Enable"]
     #[inline(always)]
-    pub fn re(&mut self) -> ReW<MacConfigSpec> {
+    pub fn re(&mut self) -> ReW<'_, MacConfigSpec> {
         ReW::new(self, 2)
     }
     #[doc = "Bit 3 - Transmitter Enable"]
     #[inline(always)]
-    pub fn te(&mut self) -> TeW<MacConfigSpec> {
+    pub fn te(&mut self) -> TeW<'_, MacConfigSpec> {
         TeW::new(self, 3)
     }
     #[doc = "Bit 4 - Deferral Check"]
     #[inline(always)]
-    pub fn dc(&mut self) -> DcW<MacConfigSpec> {
+    pub fn dc(&mut self) -> DcW<'_, MacConfigSpec> {
         DcW::new(self, 4)
     }
     #[doc = "Bits 5:6 - Back-Off-Limit"]
     #[inline(always)]
-    pub fn bl(&mut self) -> BlW<MacConfigSpec> {
+    pub fn bl(&mut self) -> BlW<'_, MacConfigSpec> {
         BlW::new(self, 5)
     }
     #[doc = "Bit 7 - Automatic Pad, or CRC Stripping"]
     #[inline(always)]
-    pub fn acs(&mut self) -> AcsW<MacConfigSpec> {
+    pub fn acs(&mut self) -> AcsW<'_, MacConfigSpec> {
         AcsW::new(self, 7)
     }
     #[doc = "Bit 9 - Disable Retry"]
     #[inline(always)]
-    pub fn dr(&mut self) -> DrW<MacConfigSpec> {
+    pub fn dr(&mut self) -> DrW<'_, MacConfigSpec> {
         DrW::new(self, 9)
     }
     #[doc = "Bit 10 - Checksum Offload"]
     #[inline(always)]
-    pub fn ipc(&mut self) -> IpcW<MacConfigSpec> {
+    pub fn ipc(&mut self) -> IpcW<'_, MacConfigSpec> {
         IpcW::new(self, 10)
     }
     #[doc = "Bit 11 - Duplex Mode"]
     #[inline(always)]
-    pub fn dm(&mut self) -> DmW<MacConfigSpec> {
+    pub fn dm(&mut self) -> DmW<'_, MacConfigSpec> {
         DmW::new(self, 11)
     }
     #[doc = "Bit 12 - Loopback Mode"]
     #[inline(always)]
-    pub fn lm(&mut self) -> LmW<MacConfigSpec> {
+    pub fn lm(&mut self) -> LmW<'_, MacConfigSpec> {
         LmW::new(self, 12)
     }
     #[doc = "Bit 13 - Disable Receive Own"]
     #[inline(always)]
-    pub fn dro(&mut self) -> DroW<MacConfigSpec> {
+    pub fn dro(&mut self) -> DroW<'_, MacConfigSpec> {
         DroW::new(self, 13)
     }
     #[doc = "Bit 14 - Speed"]
     #[inline(always)]
-    pub fn fes(&mut self) -> FesW<MacConfigSpec> {
+    pub fn fes(&mut self) -> FesW<'_, MacConfigSpec> {
         FesW::new(self, 14)
     }
     #[doc = "Bit 15 - Port Select"]
     #[inline(always)]
-    pub fn ps(&mut self) -> PsW<MacConfigSpec> {
+    pub fn ps(&mut self) -> PsW<'_, MacConfigSpec> {
         PsW::new(self, 15)
     }
     #[doc = "Bit 16 - Disable Carrier Sense During Transmission"]
     #[inline(always)]
-    pub fn dcrs(&mut self) -> DcrsW<MacConfigSpec> {
+    pub fn dcrs(&mut self) -> DcrsW<'_, MacConfigSpec> {
         DcrsW::new(self, 16)
     }
     #[doc = "Bits 17:19 - Inter-Frame Gap"]
     #[inline(always)]
-    pub fn ifg(&mut self) -> IfgW<MacConfigSpec> {
+    pub fn ifg(&mut self) -> IfgW<'_, MacConfigSpec> {
         IfgW::new(self, 17)
     }
     #[doc = "Bit 20 - Jumbo Frame Enable"]
     #[inline(always)]
-    pub fn je(&mut self) -> JeW<MacConfigSpec> {
+    pub fn je(&mut self) -> JeW<'_, MacConfigSpec> {
         JeW::new(self, 20)
     }
     #[doc = "Bit 21 - Frame Burst Enable"]
     #[inline(always)]
-    pub fn be(&mut self) -> BeW<MacConfigSpec> {
+    pub fn be(&mut self) -> BeW<'_, MacConfigSpec> {
         BeW::new(self, 21)
     }
     #[doc = "Bit 22 - Jabber Disable"]
     #[inline(always)]
-    pub fn jd(&mut self) -> JdW<MacConfigSpec> {
+    pub fn jd(&mut self) -> JdW<'_, MacConfigSpec> {
         JdW::new(self, 22)
     }
     #[doc = "Bit 23 - Watchdog disable"]
     #[inline(always)]
-    pub fn wd(&mut self) -> WdW<MacConfigSpec> {
+    pub fn wd(&mut self) -> WdW<'_, MacConfigSpec> {
         WdW::new(self, 23)
     }
 }
@@ -282,10 +282,6 @@ impl crate::Readable for MacConfigSpec {}
 #[doc = "`write(|w| ..)` method takes [`mac_config::W`](W) writer structure"]
 impl crate::Writable for MacConfigSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MAC_CONFIG to value 0"]
-impl crate::Resettable for MacConfigSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MacConfigSpec {}

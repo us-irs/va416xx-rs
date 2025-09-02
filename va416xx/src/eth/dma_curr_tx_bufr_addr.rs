@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Cleared on Reset. Pointer updated by the DMA during operation."]
     #[inline(always)]
-    pub fn curtbufaptr(&mut self) -> CurtbufaptrW<DmaCurrTxBufrAddrSpec> {
+    pub fn curtbufaptr(&mut self) -> CurtbufaptrW<'_, DmaCurrTxBufrAddrSpec> {
         CurtbufaptrW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for DmaCurrTxBufrAddrSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_curr_tx_bufr_addr::W`](W) writer structure"]
 impl crate::Writable for DmaCurrTxBufrAddrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_CURR_TX_BUFR_ADDR to value 0"]
-impl crate::Resettable for DmaCurrTxBufrAddrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DmaCurrTxBufrAddrSpec {}

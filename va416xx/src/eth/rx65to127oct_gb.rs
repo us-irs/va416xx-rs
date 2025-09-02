@@ -17,6 +17,4 @@ impl crate::RegisterSpec for Rx65to127octGbSpec {
 #[doc = "`read()` method returns [`rx65to127oct_gb::R`](R) reader structure"]
 impl crate::Readable for Rx65to127octGbSpec {}
 #[doc = "`reset()` method sets RX65TO127OCT_GB to value 0"]
-impl crate::Resettable for Rx65to127octGbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Rx65to127octGbSpec {}

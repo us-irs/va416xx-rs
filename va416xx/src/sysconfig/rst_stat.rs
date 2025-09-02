@@ -59,27 +59,27 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Power On Reset Status"]
     #[inline(always)]
-    pub fn por(&mut self) -> PorW<RstStatSpec> {
+    pub fn por(&mut self) -> PorW<'_, RstStatSpec> {
         PorW::new(self, 0)
     }
     #[doc = "Bit 1 - External Reset Status"]
     #[inline(always)]
-    pub fn extrst(&mut self) -> ExtrstW<RstStatSpec> {
+    pub fn extrst(&mut self) -> ExtrstW<'_, RstStatSpec> {
         ExtrstW::new(self, 1)
     }
     #[doc = "Bit 2 - SYSRESETREQ Reset Status"]
     #[inline(always)]
-    pub fn sysrstreq(&mut self) -> SysrstreqW<RstStatSpec> {
+    pub fn sysrstreq(&mut self) -> SysrstreqW<'_, RstStatSpec> {
         SysrstreqW::new(self, 2)
     }
     #[doc = "Bit 3 - LOOKUP Reset Status"]
     #[inline(always)]
-    pub fn lookup(&mut self) -> LookupW<RstStatSpec> {
+    pub fn lookup(&mut self) -> LookupW<'_, RstStatSpec> {
         LookupW::new(self, 3)
     }
     #[doc = "Bit 4 - WATCHDOG Reset Status"]
     #[inline(always)]
-    pub fn watchdog(&mut self) -> WatchdogW<RstStatSpec> {
+    pub fn watchdog(&mut self) -> WatchdogW<'_, RstStatSpec> {
         WatchdogW::new(self, 4)
     }
 }
@@ -93,10 +93,6 @@ impl crate::Readable for RstStatSpec {}
 #[doc = "`write(|w| ..)` method takes [`rst_stat::W`](W) writer structure"]
 impl crate::Writable for RstStatSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets RST_STAT to value 0"]
-impl crate::Resettable for RstStatSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RstStatSpec {}

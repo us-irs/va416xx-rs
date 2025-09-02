@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxpauseframesSpec {
 #[doc = "`read()` method returns [`txpauseframes::R`](R) reader structure"]
 impl crate::Readable for TxpauseframesSpec {}
 #[doc = "`reset()` method sets TXPAUSEFRAMES to value 0"]
-impl crate::Resettable for TxpauseframesSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxpauseframesSpec {}

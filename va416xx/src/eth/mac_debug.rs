@@ -94,6 +94,4 @@ impl crate::RegisterSpec for MacDebugSpec {
 #[doc = "`read()` method returns [`mac_debug::R`](R) reader structure"]
 impl crate::Readable for MacDebugSpec {}
 #[doc = "`reset()` method sets MAC_DEBUG to value 0"]
-impl crate::Resettable for MacDebugSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MacDebugSpec {}

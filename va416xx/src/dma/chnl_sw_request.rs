@@ -11,22 +11,22 @@ pub type Ch3W<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Channel SW request"]
     #[inline(always)]
-    pub fn ch0(&mut self) -> Ch0W<ChnlSwRequestSpec> {
+    pub fn ch0(&mut self) -> Ch0W<'_, ChnlSwRequestSpec> {
         Ch0W::new(self, 0)
     }
     #[doc = "Bit 1 - Channel SW request"]
     #[inline(always)]
-    pub fn ch1(&mut self) -> Ch1W<ChnlSwRequestSpec> {
+    pub fn ch1(&mut self) -> Ch1W<'_, ChnlSwRequestSpec> {
         Ch1W::new(self, 1)
     }
     #[doc = "Bit 2 - Channel SW request"]
     #[inline(always)]
-    pub fn ch2(&mut self) -> Ch2W<ChnlSwRequestSpec> {
+    pub fn ch2(&mut self) -> Ch2W<'_, ChnlSwRequestSpec> {
         Ch2W::new(self, 2)
     }
     #[doc = "Bit 3 - Channel SW request"]
     #[inline(always)]
-    pub fn ch3(&mut self) -> Ch3W<ChnlSwRequestSpec> {
+    pub fn ch3(&mut self) -> Ch3W<'_, ChnlSwRequestSpec> {
         Ch3W::new(self, 3)
     }
 }
@@ -38,10 +38,6 @@ impl crate::RegisterSpec for ChnlSwRequestSpec {
 #[doc = "`write(|w| ..)` method takes [`chnl_sw_request::W`](W) writer structure"]
 impl crate::Writable for ChnlSwRequestSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CHNL_SW_REQUEST to value 0"]
-impl crate::Resettable for ChnlSwRequestSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChnlSwRequestSpec {}

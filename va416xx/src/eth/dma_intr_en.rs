@@ -142,77 +142,77 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Transmit Interrupt Enable"]
     #[inline(always)]
-    pub fn tie(&mut self) -> TieW<DmaIntrEnSpec> {
+    pub fn tie(&mut self) -> TieW<'_, DmaIntrEnSpec> {
         TieW::new(self, 0)
     }
     #[doc = "Bit 1 - Transmit Stopped Enable"]
     #[inline(always)]
-    pub fn tse(&mut self) -> TseW<DmaIntrEnSpec> {
+    pub fn tse(&mut self) -> TseW<'_, DmaIntrEnSpec> {
         TseW::new(self, 1)
     }
     #[doc = "Bit 2 - Transmit Buffer Unavailable Enable"]
     #[inline(always)]
-    pub fn tue(&mut self) -> TueW<DmaIntrEnSpec> {
+    pub fn tue(&mut self) -> TueW<'_, DmaIntrEnSpec> {
         TueW::new(self, 2)
     }
     #[doc = "Bit 3 - Transmit Jabber Timeout Enable"]
     #[inline(always)]
-    pub fn the(&mut self) -> TheW<DmaIntrEnSpec> {
+    pub fn the(&mut self) -> TheW<'_, DmaIntrEnSpec> {
         TheW::new(self, 3)
     }
     #[doc = "Bit 4 - Overflow Interrupt Enable"]
     #[inline(always)]
-    pub fn ove(&mut self) -> OveW<DmaIntrEnSpec> {
+    pub fn ove(&mut self) -> OveW<'_, DmaIntrEnSpec> {
         OveW::new(self, 4)
     }
     #[doc = "Bit 5 - Underflow Interrupt Enable"]
     #[inline(always)]
-    pub fn une(&mut self) -> UneW<DmaIntrEnSpec> {
+    pub fn une(&mut self) -> UneW<'_, DmaIntrEnSpec> {
         UneW::new(self, 5)
     }
     #[doc = "Bit 6 - Receive Interrupt Enable"]
     #[inline(always)]
-    pub fn rie(&mut self) -> RieW<DmaIntrEnSpec> {
+    pub fn rie(&mut self) -> RieW<'_, DmaIntrEnSpec> {
         RieW::new(self, 6)
     }
     #[doc = "Bit 7 - Receive Buffer Unavailable Enable"]
     #[inline(always)]
-    pub fn rue(&mut self) -> RueW<DmaIntrEnSpec> {
+    pub fn rue(&mut self) -> RueW<'_, DmaIntrEnSpec> {
         RueW::new(self, 7)
     }
     #[doc = "Bit 8 - Receive Stopped Enable"]
     #[inline(always)]
-    pub fn rse(&mut self) -> RseW<DmaIntrEnSpec> {
+    pub fn rse(&mut self) -> RseW<'_, DmaIntrEnSpec> {
         RseW::new(self, 8)
     }
     #[doc = "Bit 9 - Receive Watchdog Timeout Enable"]
     #[inline(always)]
-    pub fn rwe(&mut self) -> RweW<DmaIntrEnSpec> {
+    pub fn rwe(&mut self) -> RweW<'_, DmaIntrEnSpec> {
         RweW::new(self, 9)
     }
     #[doc = "Bit 10 - Early Transmit Interrupt Enable"]
     #[inline(always)]
-    pub fn ete(&mut self) -> EteW<DmaIntrEnSpec> {
+    pub fn ete(&mut self) -> EteW<'_, DmaIntrEnSpec> {
         EteW::new(self, 10)
     }
     #[doc = "Bit 13 - Fatal Bus Error Enable"]
     #[inline(always)]
-    pub fn fbe(&mut self) -> FbeW<DmaIntrEnSpec> {
+    pub fn fbe(&mut self) -> FbeW<'_, DmaIntrEnSpec> {
         FbeW::new(self, 13)
     }
     #[doc = "Bit 14 - Early Receive Interrupt Enable"]
     #[inline(always)]
-    pub fn ere(&mut self) -> EreW<DmaIntrEnSpec> {
+    pub fn ere(&mut self) -> EreW<'_, DmaIntrEnSpec> {
         EreW::new(self, 14)
     }
     #[doc = "Bit 15 - Abnormal Interrupt Summary Enable"]
     #[inline(always)]
-    pub fn aie(&mut self) -> AieW<DmaIntrEnSpec> {
+    pub fn aie(&mut self) -> AieW<'_, DmaIntrEnSpec> {
         AieW::new(self, 15)
     }
     #[doc = "Bit 16 - Normal Interrupt Summary Enable"]
     #[inline(always)]
-    pub fn nie(&mut self) -> NieW<DmaIntrEnSpec> {
+    pub fn nie(&mut self) -> NieW<'_, DmaIntrEnSpec> {
         NieW::new(self, 16)
     }
 }
@@ -226,10 +226,6 @@ impl crate::Readable for DmaIntrEnSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_intr_en::W`](W) writer structure"]
 impl crate::Writable for DmaIntrEnSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_INTR_EN to value 0"]
-impl crate::Resettable for DmaIntrEnSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DmaIntrEnSpec {}

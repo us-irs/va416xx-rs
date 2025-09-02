@@ -142,77 +142,77 @@ impl R {
 impl W {
     #[doc = "Bit 1 - Start or Stop Receive"]
     #[inline(always)]
-    pub fn sr(&mut self) -> SrW<DmaOperModeSpec> {
+    pub fn sr(&mut self) -> SrW<'_, DmaOperModeSpec> {
         SrW::new(self, 1)
     }
     #[doc = "Bit 2 - Operate on Second Frame"]
     #[inline(always)]
-    pub fn osf(&mut self) -> OsfW<DmaOperModeSpec> {
+    pub fn osf(&mut self) -> OsfW<'_, DmaOperModeSpec> {
         OsfW::new(self, 2)
     }
     #[doc = "Bits 3:4 - Receive Threshold Control"]
     #[inline(always)]
-    pub fn rtc(&mut self) -> RtcW<DmaOperModeSpec> {
+    pub fn rtc(&mut self) -> RtcW<'_, DmaOperModeSpec> {
         RtcW::new(self, 3)
     }
     #[doc = "Bit 5 - Drop Giant Frames"]
     #[inline(always)]
-    pub fn dgf(&mut self) -> DgfW<DmaOperModeSpec> {
+    pub fn dgf(&mut self) -> DgfW<'_, DmaOperModeSpec> {
         DgfW::new(self, 5)
     }
     #[doc = "Bit 6 - Forward Undersized Good Frames"]
     #[inline(always)]
-    pub fn fuf(&mut self) -> FufW<DmaOperModeSpec> {
+    pub fn fuf(&mut self) -> FufW<'_, DmaOperModeSpec> {
         FufW::new(self, 6)
     }
     #[doc = "Bit 7 - Forward Error Frames"]
     #[inline(always)]
-    pub fn fef(&mut self) -> FefW<DmaOperModeSpec> {
+    pub fn fef(&mut self) -> FefW<'_, DmaOperModeSpec> {
         FefW::new(self, 7)
     }
     #[doc = "Bits 9:10 - Threshold for Activating Flow Control"]
     #[inline(always)]
-    pub fn rfa(&mut self) -> RfaW<DmaOperModeSpec> {
+    pub fn rfa(&mut self) -> RfaW<'_, DmaOperModeSpec> {
         RfaW::new(self, 9)
     }
     #[doc = "Bits 11:12 - Threshold for Deactivating Flow Control"]
     #[inline(always)]
-    pub fn rfd(&mut self) -> RfdW<DmaOperModeSpec> {
+    pub fn rfd(&mut self) -> RfdW<'_, DmaOperModeSpec> {
         RfdW::new(self, 11)
     }
     #[doc = "Bit 13 - Start or Stop Transmission Command"]
     #[inline(always)]
-    pub fn st(&mut self) -> StW<DmaOperModeSpec> {
+    pub fn st(&mut self) -> StW<'_, DmaOperModeSpec> {
         StW::new(self, 13)
     }
     #[doc = "Bits 14:16 - Transmit Threshold Control"]
     #[inline(always)]
-    pub fn ttc(&mut self) -> TtcW<DmaOperModeSpec> {
+    pub fn ttc(&mut self) -> TtcW<'_, DmaOperModeSpec> {
         TtcW::new(self, 14)
     }
     #[doc = "Bit 20 - Flush Transmit FIFO"]
     #[inline(always)]
-    pub fn ftf(&mut self) -> FtfW<DmaOperModeSpec> {
+    pub fn ftf(&mut self) -> FtfW<'_, DmaOperModeSpec> {
         FtfW::new(self, 20)
     }
     #[doc = "Bit 21 - Transmit Store and Forward"]
     #[inline(always)]
-    pub fn tsf(&mut self) -> TsfW<DmaOperModeSpec> {
+    pub fn tsf(&mut self) -> TsfW<'_, DmaOperModeSpec> {
         TsfW::new(self, 21)
     }
     #[doc = "Bit 24 - Disable Flushing of Received Frames"]
     #[inline(always)]
-    pub fn dff(&mut self) -> DffW<DmaOperModeSpec> {
+    pub fn dff(&mut self) -> DffW<'_, DmaOperModeSpec> {
         DffW::new(self, 24)
     }
     #[doc = "Bit 25 - Receive Store and Forward"]
     #[inline(always)]
-    pub fn rsf(&mut self) -> RsfW<DmaOperModeSpec> {
+    pub fn rsf(&mut self) -> RsfW<'_, DmaOperModeSpec> {
         RsfW::new(self, 25)
     }
     #[doc = "Bit 26 - Disable Dropping of TCP/IP Checksum Error Frames"]
     #[inline(always)]
-    pub fn dt(&mut self) -> DtW<DmaOperModeSpec> {
+    pub fn dt(&mut self) -> DtW<'_, DmaOperModeSpec> {
         DtW::new(self, 26)
     }
 }
@@ -226,10 +226,6 @@ impl crate::Readable for DmaOperModeSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_oper_mode::W`](W) writer structure"]
 impl crate::Writable for DmaOperModeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_OPER_MODE to value 0"]
-impl crate::Resettable for DmaOperModeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DmaOperModeSpec {}

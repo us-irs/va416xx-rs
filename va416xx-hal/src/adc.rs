@@ -54,6 +54,7 @@ pub enum ChannelSelect {
 bitflags::bitflags! {
     /// This structure is used by the ADC multi-select API to
     /// allow selecting multiple channels in a convenient manner.
+    #[derive(Debug)]
     pub struct MultiChannelSelect: u16 {
         const AnIn0 = 1;
         const AnIn1 = 1 << 1;

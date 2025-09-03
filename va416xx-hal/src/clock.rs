@@ -22,7 +22,7 @@ pub const XTAL_OSC_TSTART_MS: u32 = 15;
 
 #[derive(Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum FilterClkSel {
+pub enum FilterClockSelect {
     SysClk = 0,
     Clk1 = 1,
     Clk2 = 2,
@@ -36,7 +36,7 @@ pub enum FilterClkSel {
 /// Refer to chapter 8 (p.57) of the programmers guide for detailed information.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum ClkselSys {
+pub enum ClockSelect {
     // Internal Heart-Beat Osciallator. Not tightly controlled (+/-20 %). Not recommended as the regular clock!
     Hbo = 0b00,
     // External clock signal on XTAL_N line, 1-100 MHz
@@ -55,7 +55,7 @@ pub enum ClkselSys {
 /// Refer to chapter 8 (p.57) of the programmers guide for detailed information.
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum RefClkSel {
+pub enum ReferenceClockSelect {
     #[default]
     None = 0b00,
     XtalOsc = 0b01,
@@ -64,7 +64,7 @@ pub enum RefClkSel {
 
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum ClkDivSel {
+pub enum ClockDivisorSelect {
     #[default]
     Div1 = 0b00,
     Div2 = 0b01,
@@ -74,7 +74,7 @@ pub enum ClkDivSel {
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum AdcClkDivSel {
+pub enum AdcClockDivisorSelect {
     Div8 = 0b00,
     Div4 = 0b01,
     Div2 = 0b10,
@@ -83,7 +83,7 @@ pub enum AdcClkDivSel {
 
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct PllCfg {
+pub struct PllConfig {
     /// Reference clock divider.
     pub clkr: u8,
     /// Clock divider on feedback path
@@ -94,12 +94,13 @@ pub struct PllCfg {
     pub bwadj: u8,
 }
 
-pub fn clk_after_div(clk: Hertz, div_sel: ClkDivSel) -> Hertz {
+#[inline]
+pub const fn clock_after_division(clk: Hertz, div_sel: ClockDivisorSelect) -> Hertz {
     match div_sel {
-        ClkDivSel::Div1 => clk,
-        ClkDivSel::Div2 => clk / 2,
-        ClkDivSel::Div4 => clk / 4,
-        ClkDivSel::Div8 => clk / 8,
+        ClockDivisorSelect::Div1 => clk,
+        ClockDivisorSelect::Div2 => Hertz::from_raw(clk.raw() / 2),
+        ClockDivisorSelect::Div4 => Hertz::from_raw(clk.raw() / 4),
+        ClockDivisorSelect::Div8 => Hertz::from_raw(clk.raw() / 8),
     }
 }
 
@@ -118,9 +119,9 @@ impl ClkgenExt for pac::Clkgen {
     fn constrain(self) -> ClockConfigurator {
         ClockConfigurator {
             source_clk: None,
-            ref_clk_sel: RefClkSel::None,
-            clksel_sys: ClkselSys::Hbo,
-            clk_div_sel: ClkDivSel::Div1,
+            ref_clk_sel: ReferenceClockSelect::None,
+            clksel_sys: ClockSelect::Hbo,
+            clk_div_sel: ClockDivisorSelect::Div1,
             clk_lost_detection: false,
             pll_lock_lost_detection: false,
             pll_cfg: None,
@@ -131,11 +132,11 @@ impl ClkgenExt for pac::Clkgen {
 
 #[derive(Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct ClkSourceFreqNotSet;
+pub struct ClockSourceFrequencyNotSet;
 
 #[derive(Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum ClkCfgError {
+pub enum ClockConfigError {
     ClkSourceFreqNotSet,
     PllConfigNotSet,
     PllInitError,
@@ -143,13 +144,13 @@ pub enum ClkCfgError {
 }
 
 pub struct ClockConfigurator {
-    ref_clk_sel: RefClkSel,
-    clksel_sys: ClkselSys,
-    clk_div_sel: ClkDivSel,
+    ref_clk_sel: ReferenceClockSelect,
+    clksel_sys: ClockSelect,
+    clk_div_sel: ClockDivisorSelect,
     /// The source clock frequency which is either an external clock connected to XTAL_N, or a
     /// crystal connected to the XTAL_OSC input.
     source_clk: Option<Hertz>,
-    pll_cfg: Option<PllCfg>,
+    pll_cfg: Option<PllConfig>,
     clk_lost_detection: bool,
     /// Feature only works on revision B of the board.
     #[cfg(feature = "revb")]
@@ -176,9 +177,9 @@ impl ClockConfigurator {
     pub fn new(clkgen: pac::Clkgen) -> Self {
         ClockConfigurator {
             source_clk: None,
-            ref_clk_sel: RefClkSel::None,
-            clksel_sys: ClkselSys::Hbo,
-            clk_div_sel: ClkDivSel::Div1,
+            ref_clk_sel: ReferenceClockSelect::None,
+            clksel_sys: ClockSelect::Hbo,
+            clk_div_sel: ClockDivisorSelect::Div1,
             clk_lost_detection: false,
             pll_lock_lost_detection: false,
             pll_cfg: None,
@@ -207,8 +208,8 @@ impl ClockConfigurator {
     /// It sets the internal configuration to [ClkselSys::XtalN] and [RefClkSel::XtalN].
     #[inline]
     pub fn xtal_n_clk(mut self) -> Self {
-        self.clksel_sys = ClkselSys::XtalN;
-        self.ref_clk_sel = RefClkSel::XtalN;
+        self.clksel_sys = ClockSelect::XtalN;
+        self.ref_clk_sel = ReferenceClockSelect::XtalN;
         self
     }
 
@@ -219,19 +220,19 @@ impl ClockConfigurator {
     }
 
     #[inline]
-    pub fn clksel_sys(mut self, clksel_sys: ClkselSys) -> Self {
+    pub fn clksel_sys(mut self, clksel_sys: ClockSelect) -> Self {
         self.clksel_sys = clksel_sys;
         self
     }
 
     #[inline]
-    pub fn pll_cfg(mut self, pll_cfg: PllCfg) -> Self {
+    pub fn pll_cfg(mut self, pll_cfg: PllConfig) -> Self {
         self.pll_cfg = Some(pll_cfg);
         self
     }
 
     #[inline]
-    pub fn ref_clk_sel(mut self, ref_clk_sel: RefClkSel) -> Self {
+    pub fn ref_clk_sel(mut self, ref_clk_sel: ReferenceClockSelect) -> Self {
         self.ref_clk_sel = ref_clk_sel;
         self
     }
@@ -245,19 +246,22 @@ impl ClockConfigurator {
     /// might have had a reason for those, so I am going to keep them. Chances are, this
     /// process only has to be performed once, and it does not matter if it takes a few
     /// microseconds or milliseconds longer.
-    pub fn freeze(self) -> Result<Clocks, ClkCfgError> {
+    pub fn freeze(self) -> Result<Clocks, ClockConfigError> {
         // Sanitize configuration.
         if self.source_clk.is_none() {
-            return Err(ClkCfgError::ClkSourceFreqNotSet);
+            return Err(ClockConfigError::ClkSourceFreqNotSet);
         }
-        if self.clksel_sys == ClkselSys::XtalOsc && self.ref_clk_sel != RefClkSel::XtalOsc {
-            return Err(ClkCfgError::InconsistentCfg);
+        if self.clksel_sys == ClockSelect::XtalOsc
+            && self.ref_clk_sel != ReferenceClockSelect::XtalOsc
+        {
+            return Err(ClockConfigError::InconsistentCfg);
         }
-        if self.clksel_sys == ClkselSys::XtalN && self.ref_clk_sel != RefClkSel::XtalN {
-            return Err(ClkCfgError::InconsistentCfg);
+        if self.clksel_sys == ClockSelect::XtalN && self.ref_clk_sel != ReferenceClockSelect::XtalN
+        {
+            return Err(ClockConfigError::InconsistentCfg);
         }
-        if self.clksel_sys == ClkselSys::Pll && self.pll_cfg.is_none() {
-            return Err(ClkCfgError::PllConfigNotSet);
+        if self.clksel_sys == ClockSelect::Pll && self.pll_cfg.is_none() {
+            return Err(ClockConfigError::PllConfigNotSet);
         }
 
         enable_peripheral_clock(PeripheralSelect::Clkgen);
@@ -268,11 +272,11 @@ impl ClockConfigurator {
         // Therefore, we do it here as well.
         self.clkgen
             .ctrl0()
-            .modify(|_, w| unsafe { w.clksel_sys().bits(ClkselSys::Hbo as u8) });
+            .modify(|_, w| unsafe { w.clksel_sys().bits(ClockSelect::Hbo as u8) });
         pll_setup_delay();
         self.clkgen
             .ctrl0()
-            .modify(|_, w| unsafe { w.clk_div_sel().bits(ClkDivSel::Div1 as u8) });
+            .modify(|_, w| unsafe { w.clk_div_sel().bits(ClockDivisorSelect::Div1 as u8) });
 
         // Set up oscillator and PLL input clock.
         self.clkgen
@@ -284,12 +288,12 @@ impl ClockConfigurator {
             w
         });
         match self.ref_clk_sel {
-            RefClkSel::None => pll_setup_delay(),
-            RefClkSel::XtalOsc => {
+            ReferenceClockSelect::None => pll_setup_delay(),
+            ReferenceClockSelect::XtalOsc => {
                 self.clkgen.ctrl1().modify(|_, w| w.xtal_en().set_bit());
                 hbo_clock_delay_ms(XTAL_OSC_TSTART_MS);
             }
-            RefClkSel::XtalN => {
+            ReferenceClockSelect::XtalN => {
                 self.clkgen.ctrl1().modify(|_, w| w.xtal_n_en().set_bit());
                 pll_setup_delay()
             }
@@ -340,7 +344,7 @@ impl ClockConfigurator {
                         // This is what the HAL does. We could continue, but then we would at least
                         // have to somehow report a partial error.. Chances are, the user does not
                         // want to continue with a broken PLL clock.
-                        return Err(ClkCfgError::PllInitError);
+                        return Err(ClockConfigError::PllInitError);
                     }
                 }
             }
@@ -360,7 +364,7 @@ impl ClockConfigurator {
         self.clkgen
             .ctrl0()
             .modify(|_, w| unsafe { w.clk_div_sel().bits(self.clk_div_sel as u8) });
-        final_sysclk = clk_after_div(final_sysclk, self.clk_div_sel);
+        final_sysclk = clock_after_division(final_sysclk, self.clk_div_sel);
 
         // The HAL does this. I don't know why..
         pll_setup_delay();
@@ -383,14 +387,14 @@ impl ClockConfigurator {
         // NOTE: Not using divide by 1 or /2 ratio in REVA silicon because of triggering issue
         // For this reason, keep SYSCLK above 8MHz to have the ADC /4 ratio in range)
         if final_sysclk.raw() <= ADC_MAX_CLK.raw() * 4 {
-            self.clkgen
-                .ctrl1()
-                .modify(|_, w| unsafe { w.adc_clk_div_sel().bits(AdcClkDivSel::Div4 as u8) });
+            self.clkgen.ctrl1().modify(|_, w| unsafe {
+                w.adc_clk_div_sel().bits(AdcClockDivisorSelect::Div4 as u8)
+            });
             final_sysclk / 4
         } else {
-            self.clkgen
-                .ctrl1()
-                .modify(|_, w| unsafe { w.adc_clk_div_sel().bits(AdcClkDivSel::Div8 as u8) });
+            self.clkgen.ctrl1().modify(|_, w| unsafe {
+                w.adc_clk_div_sel().bits(AdcClockDivisorSelect::Div8 as u8)
+            });
             final_sysclk / 8
         }
     }
@@ -433,7 +437,7 @@ mod tests {
     #[test]
     fn test_basic_div() {
         assert_eq!(
-            clk_after_div(Hertz::from_raw(10_000_000), super::ClkDivSel::Div2),
+            clock_after_division(Hertz::from_raw(10_000_000), super::ClockDivisorSelect::Div2),
             Hertz::from_raw(5_000_000)
         );
     }

@@ -16,13 +16,13 @@ pub type DacRegisterBlock = pac::dac0::RegisterBlock;
 
 /// Common trait implemented by all PAC peripheral access structures. The register block
 /// format is the same for all DAC blocks.
-pub trait DacMarker: Deref<Target = DacRegisterBlock> {
+pub trait DacInstance: Deref<Target = DacRegisterBlock> {
     const IDX: u8;
 
     fn ptr() -> *const DacRegisterBlock;
 }
 
-impl DacMarker for pac::Dac0 {
+impl DacInstance for pac::Dac0 {
     const IDX: u8 = 0;
 
     #[inline(always)]
@@ -31,7 +31,7 @@ impl DacMarker for pac::Dac0 {
     }
 }
 
-impl DacMarker for pac::Dac1 {
+impl DacInstance for pac::Dac1 {
     const IDX: u8 = 1;
 
     #[inline(always)]
@@ -62,7 +62,7 @@ impl Dac {
     /// Create a new [Dac] driver instance.
     ///
     /// The [Clocks] structure is expected here as well to ensure the clock was set up properly.
-    pub fn new<Dac: DacMarker>(dac: Dac, dac_settling: DacSettling, _clocks: &Clocks) -> Self {
+    pub fn new<Dac: DacInstance>(dac: Dac, dac_settling: DacSettling, _clocks: &Clocks) -> Self {
         enable_peripheral_clock(PeripheralSelect::Dac);
 
         dac.ctrl1().write(|w| {

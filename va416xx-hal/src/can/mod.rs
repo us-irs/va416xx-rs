@@ -50,6 +50,7 @@ pub const MAX_BITRATE_DEVIATION: f32 = 0.005;
 static CHANNELS_TAKEN: [AtomicBool; 2] = [AtomicBool::new(false), AtomicBool::new(false)];
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum CanId {
     Can0 = 0,
     Can1 = 1,
@@ -85,6 +86,7 @@ pub const fn calculate_sample_point(tseg1: u8, tseg2: u8) -> f32 {
 }
 
 #[derive(Debug, Clone, Copy)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ClockConfig {
     prescaler: u8,
     tseg1: u8,
@@ -280,19 +282,19 @@ pub const fn calculate_bitrate_deviation(actual_bitrate: f32, target_bitrate: He
     (actual_bitrate - target_bitrate.raw() as f32).abs() / target_bitrate.raw() as f32
 }
 
-pub trait CanMarker {
+pub trait CanInstance {
     const ID: CanId;
     const IRQ: va416xx::Interrupt;
     const PERIPH_SEL: PeripheralSelect;
 }
 
-impl CanMarker for va416xx::Can0 {
+impl CanInstance for va416xx::Can0 {
     const ID: CanId = CanId::Can0;
     const IRQ: va416xx::Interrupt = va416xx::Interrupt::CAN0;
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Can0;
 }
 
-impl CanMarker for va416xx::Can1 {
+impl CanInstance for va416xx::Can1 {
     const ID: CanId = CanId::Can1;
     const IRQ: va416xx::Interrupt = va416xx::Interrupt::CAN1;
     const PERIPH_SEL: PeripheralSelect = PeripheralSelect::Can1;
@@ -310,12 +312,14 @@ pub struct InvalidSjwError(u8);
 
 #[derive(Debug, thiserror::Error)]
 #[error("invalid sample point {sample_point}")]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct InvalidSamplePointError {
     /// Sample point, should be larger than 0.5 (50 %) but was not.
     sample_point: f32,
 }
 
 #[derive(Debug, thiserror::Error)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum ClockConfigError {
     #[error("invalid sjw: {0}")]
     InvalidSjw(#[from] InvalidSjwError),
@@ -342,7 +346,7 @@ pub struct Can {
 }
 
 impl Can {
-    pub fn new<CanI: CanMarker>(_can: CanI, clk_config: ClockConfig) -> Self {
+    pub fn new<CanI: CanInstance>(_can: CanI, clk_config: ClockConfig) -> Self {
         enable_peripheral_clock(CanI::PERIPH_SEL);
         let id = CanI::ID;
         let mut regs = if id == CanId::Can0 {

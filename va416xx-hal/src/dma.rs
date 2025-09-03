@@ -89,41 +89,7 @@ pub enum RPower {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct InvalidCtrlBlockAddrError;
 
-/*
-bitfield::bitfield! {
-    #[repr(transparent)]
-    #[derive(Clone, Copy)]
-    #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-    pub struct ChannelConfig(u32);
-    impl Debug;
-    u32;
-    pub raw, set_raw: 31,0;
-    u8;
-    pub dst_inc, set_dst_inc: 31, 30;
-    u8;
-    pub dst_size, set_dst_size: 29, 28;
-    u8;
-    pub src_inc, set_src_inc: 27, 26;
-    u8;
-    pub src_size, set_src_size: 25, 24;
-    u8;
-    pub dest_prot_ctrl, set_dest_prot_ctrl: 23, 21;
-    u8;
-    pub src_prot_ctrl, set_src_prot_ctrl: 20, 18;
-    u8;
-    pub r_power, set_r_power: 17, 14;
-    u16;
-    pub n_minus_1, set_n_minus_1: 13, 4;
-    bool;
-    pub next_useburst, set_next_useburst: 3;
-    u8;
-    pub cycle_ctrl, set_cycle_ctr: 2, 0;
-}
-*/
-
-#[bitbybit::bitfield(u32, default = 0x0)]
-#[derive(Debug)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[bitbybit::bitfield(u32, default = 0x0, debug, defmt_fields(feature = "defmt"))]
 pub struct ChannelConfig {
     #[bits(30..=31, rw)]
     dst_inc: AddrIncrement,
@@ -229,7 +195,7 @@ pub enum DmaTransferInitError {
 
 #[derive(Debug, Clone, Copy, Default)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct DmaCfg {
+pub struct DmaConfig {
     pub bufferable: bool,
     pub cacheable: bool,
     pub privileged: bool,
@@ -531,7 +497,7 @@ impl Dma {
     /// control block at a specific address.
     pub fn new(
         dma: pac::Dma,
-        cfg: DmaCfg,
+        cfg: DmaConfig,
         ctrl_block: *mut DmaCtrlBlock,
     ) -> Result<Self, InvalidCtrlBlockAddrError> {
         // The conversion to u32 is safe here because we are on a 32-bit system.
@@ -561,7 +527,7 @@ impl Dma {
     }
 
     #[inline(always)]
-    pub fn set_protection_bits(&self, cfg: &DmaCfg) {
+    pub fn set_protection_bits(&self, cfg: &DmaConfig) {
         self.dma.cfg().write(|w| unsafe {
             w.chnl_prot_ctrl().bits(
                 cfg.privileged as u8 | ((cfg.bufferable as u8) << 1) | ((cfg.cacheable as u8) << 2),

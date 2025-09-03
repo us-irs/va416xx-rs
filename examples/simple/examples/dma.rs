@@ -14,7 +14,7 @@ use cortex_m_rt::entry;
 use critical_section::Mutex;
 use embedded_hal::delay::DelayNs;
 use simple_examples::peb1;
-use va416xx_hal::dma::{Dma, DmaCfg, DmaChannel, DmaCtrlBlock};
+use va416xx_hal::dma::{Dma, DmaChannel, DmaConfig, DmaCtrlBlock};
 use va416xx_hal::irq_router::enable_and_init_irq_router;
 use va416xx_hal::pac::{self, interrupt};
 use va416xx_hal::timer::CountdownTimer;
@@ -49,7 +49,7 @@ fn main() -> ! {
     // statically.
     let dma = Dma::new(
         dp.dma,
-        DmaCfg::default(),
+        DmaConfig::default(),
         core::ptr::addr_of_mut!(DMA_CTRL_BLOCK),
     )
     .expect("error creating DMA");

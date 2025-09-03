@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Use `vorago-shared-hal` dependency to provide shared peripherals.
 - Bump `va416xx` to v0.5
 
+## Changed
+
+- Replaced `*Cfg`, `*Clk`, `*Sel` abbreviations in names by written out variant.
+
 # [v0.5.1] 2025-03-10
 
 ## Fixed

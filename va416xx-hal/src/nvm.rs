@@ -31,7 +31,8 @@ pub const FRAM_WRITE: u8 = 0x02;
 pub const FRAM_RDID: u8 = 0x9F;
 pub const FRAM_SLEEP: u8 = 0xB9;
 
-/* Address Masks */
+// Address Masks
+
 const ADDR_MSB_MASK: u32 = 0xFF0000;
 const ADDR_MID_MASK: u32 = 0x00FF00;
 const ADDR_LSB_MASK: u32 = 0x0000FF;

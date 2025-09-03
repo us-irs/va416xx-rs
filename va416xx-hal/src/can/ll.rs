@@ -3,7 +3,8 @@ use embedded_can::Frame;
 
 use super::{
     regs::{
-        self, BaseId, BufStatusAndControl, BufferState, ExtendedId, MmioCanMsgBuf, TwoBytesData,
+        self, BaseId, BufStatusAndControl, BufferState, ExtendedId, MmioCanMessageBuffer,
+        TwoBytesData,
     },
     CanFrame, CanFrameNormal, CanFrameRtr, CanId, InvalidBufferIndexError,
 };
@@ -12,7 +13,7 @@ pub struct CanChannelLowLevel {
     id: CanId,
     /// Message buffer index.
     idx: usize,
-    msg_buf: MmioCanMsgBuf<'static>,
+    msg_buf: MmioCanMessageBuffer<'static>,
 }
 
 impl core::fmt::Debug for CanChannelLowLevel {

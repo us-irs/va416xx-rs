@@ -37,8 +37,7 @@ pub enum BufferState {
 }
 
 /// Status control register for individual message buffers.
-#[bitbybit::bitfield(u32, default = 0x0)]
-#[derive(Debug)]
+#[bitbybit::bitfield(u32, default = 0x0, debug, defmt_fields(feature = "defmt"))]
 pub struct BufStatusAndControl {
     /// Data length code.
     #[bits(12..=15, rw)]
@@ -65,8 +64,7 @@ impl Timestamp {
     }
 }
 
-#[bitbybit::bitfield(u32, default = 0x0)]
-#[derive(Debug)]
+#[bitbybit::bitfield(u32, default = 0x0, debug, defmt_bitfields(feature = "defmt"))]
 pub struct TwoBytesData {
     #[bits(0..=7, rw)]
     data_lower_byte: u8,
@@ -76,7 +74,7 @@ pub struct TwoBytesData {
 
 #[derive(derive_mmio::Mmio)]
 #[repr(C)]
-pub struct CanMsgBuf {
+pub struct CanMessageBuffer {
     stat_ctrl: BufStatusAndControl,
     timestamp: Timestamp,
     data3: TwoBytesData,
@@ -87,9 +85,9 @@ pub struct CanMsgBuf {
     id1: BaseId,
 }
 
-static_assertions::const_assert_eq!(core::mem::size_of::<CanMsgBuf>(), 0x20);
+static_assertions::const_assert_eq!(core::mem::size_of::<CanMessageBuffer>(), 0x20);
 
-impl MmioCanMsgBuf<'_> {
+impl MmioCanMessageBuffer<'_> {
     pub fn reset(&mut self) {
         self.write_stat_ctrl(BufStatusAndControl::new_with_raw_value(0));
         self.write_timestamp(Timestamp::new(0));
@@ -104,6 +102,7 @@ impl MmioCanMsgBuf<'_> {
 
 #[bitbybit::bitenum(u1, exhaustive = true)]
 #[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum PinLogicLevel {
     DominantIsZero = 0b0,
     DominantIsOne = 0b1,
@@ -111,6 +110,7 @@ pub enum PinLogicLevel {
 
 #[bitbybit::bitenum(u1, exhaustive = true)]
 #[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum ErrorInterruptType {
     /// EIPND bit is set on every error.
     EveryError = 0b0,
@@ -121,12 +121,13 @@ pub enum ErrorInterruptType {
 
 #[bitbybit::bitenum(u1, exhaustive = true)]
 #[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum DataDirection {
     FirstByteAtHighestAddr = 0b0,
     LastByteAtHighestAddr = 0b1,
 }
 
-#[bitbybit::bitfield(u32)]
+#[bitbybit::bitfield(u32, debug, defmt_fields(feature = "defmt"))]
 pub struct Control {
     #[bit(11, rw)]
     error_interrupt_type: ErrorInterruptType,
@@ -160,8 +161,7 @@ pub struct Control {
     enable: bool,
 }
 
-#[bitbybit::bitfield(u32, default = 0x0)]
-#[derive(Debug)]
+#[bitbybit::bitfield(u32, default = 0x0, debug, defmt_bitfields(feature = "defmt"))]
 pub struct TimingConfig {
     #[bits(0..=2, rw)]
     tseg2: u3,
@@ -209,9 +209,7 @@ pub enum CanInterruptId {
     Buffer(usize),
 }
 
-#[bitbybit::bitfield(u32)]
-#[derive(Debug)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[bitbybit::bitfield(u32, debug, defmt_bitfields(feature = "defmt"))]
 pub struct StatusPending {
     #[bits(5..=7, r)]
     ns: u3,
@@ -237,8 +235,7 @@ impl StatusPending {
     }
 }
 
-#[bitbybit::bitfield(u32)]
-#[derive(Debug)]
+#[bitbybit::bitfield(u32, debug, defmt_bitfields(feature = "defmt"))]
 pub struct ErrorCounter {
     #[bits(0..=7, r)]
     transmit: u8,
@@ -247,8 +244,7 @@ pub struct ErrorCounter {
 }
 
 /// This register is unused for standard frames.
-#[bitbybit::bitfield(u32, default = 0x0)]
-#[derive(Debug)]
+#[bitbybit::bitfield(u32, default = 0x0, debug, defmt_bitfields(feature = "defmt"))]
 pub struct ExtendedId {
     /// Mask for ID bits \[14:0\] of extended frames.
     #[bits(1..=15, rw)]
@@ -258,8 +254,7 @@ pub struct ExtendedId {
     xrtr: bool,
 }
 
-#[bitbybit::bitfield(u32, default = 0x0)]
-#[derive(Debug)]
+#[bitbybit::bitfield(u32, default = 0x0, debug, defmt_bitfields(feature = "defmt"))]
 pub struct BaseId {
     /// This will contain ID\[10:0\] for standard frames and bits \[28:18\] for extended frames.
     #[bits(5..=15, rw)]
@@ -297,7 +292,7 @@ pub enum ErrorFieldId {
     Crc = 0b1111,
 }
 
-#[bitbybit::bitfield(u32)]
+#[bitbybit::bitfield(u32, debug, defmt_bitfields(feature = "defmt"))]
 pub struct DiagnosticRegister {
     /// Shows the output value on the CAN TX pin at the time of the error.
     #[bit(14, r)]
@@ -322,46 +317,15 @@ pub struct DiagnosticRegister {
     efid: ErrorFieldId,
 }
 
-impl core::fmt::Debug for DiagnosticRegister {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        f.debug_struct("DiagnosticRegister")
-            .field("efid", &self.efid())
-            .field("ebid", &self.ebid())
-            .field("txe", &self.txe())
-            .field("stuff", &self.stuff())
-            .field("crc", &self.crc())
-            .field("mon", &self.mon())
-            .field("drive", &self.drive())
-            .finish()
-    }
-}
-
-#[cfg(feature = "defmt")]
-impl defmt::Format for DiagnosticRegister {
-    fn format(&self, fmt: defmt::Formatter) {
-        defmt::write!(
-            fmt,
-            "DiagnosticRegister {{ efid: {}, ebid: {}, txe: {}, stuff: {}, crc: {}, mon: {}, drive: {} }}",
-            self.efid(),
-            self.ebid(),
-            self.txe(),
-            self.stuff(),
-            self.crc(),
-            self.mon(),
-            self.drive()
-        )
-    }
-}
-
 #[derive(derive_mmio::Mmio)]
 #[mmio(const_inner)]
 #[repr(C)]
 pub struct Can {
     #[mmio(Inner)]
-    cmbs: [CanMsgBuf; 15],
+    cmbs: [CanMessageBuffer; 15],
     /// Hidden CAN message buffer. Only allowed to be used internally by the peripheral.
     #[mmio(Inner)]
-    _hcmb: CanMsgBuf,
+    _hcmb: CanMessageBuffer,
     control: Control,
     timing: TimingConfig,
     /// Global mask extension used for buffers 0 to 13.

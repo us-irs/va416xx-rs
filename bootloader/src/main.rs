@@ -10,7 +10,7 @@ use crc::{Crc, CRC_32_ISO_HDLC};
 use defmt_rtt as _;
 use panic_probe as _;
 use va416xx_hal::{
-    clock::{pll_setup_delay, ClkDivSel, ClkselSys, ClockConfigurator},
+    clock::{pll_setup_delay, ClockConfigurator, ClockDivisorSelect, ClockSelect},
     edac,
     nvm::Nvm,
     pac::{self, interrupt},
@@ -266,11 +266,11 @@ fn boot_app(app_sel: AppSel, cp: &cortex_m::Peripherals) -> ! {
     let clkgen = unsafe { pac::Clkgen::steal() };
     clkgen
         .ctrl0()
-        .modify(|_, w| unsafe { w.clksel_sys().bits(ClkselSys::Hbo as u8) });
+        .modify(|_, w| unsafe { w.clksel_sys().bits(ClockSelect::Hbo as u8) });
     pll_setup_delay();
     clkgen
         .ctrl0()
-        .modify(|_, w| unsafe { w.clk_div_sel().bits(ClkDivSel::Div1 as u8) });
+        .modify(|_, w| unsafe { w.clk_div_sel().bits(ClockDivisorSelect::Div1 as u8) });
     // Clear all interrupts set.
     unsafe {
         cp.NVIC.icer[0].write(0xFFFFFFFF);

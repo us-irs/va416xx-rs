@@ -13,7 +13,7 @@ use cortex_m_rt::entry;
 use embedded_hal::spi::{Mode, SpiBus, MODE_0};
 use simple_examples::peb1;
 use va416xx_hal::clock::ClockConfigurator;
-use va416xx_hal::spi::{Spi, SpiClkConfig};
+use va416xx_hal::spi::{Spi, SpiClockConfig};
 use va416xx_hal::timer::CountdownTimer;
 use va416xx_hal::{
     pac,
@@ -52,7 +52,7 @@ fn main() -> ! {
 
     let mut spi_cfg = SpiConfig::default()
         .clk_cfg(
-            SpiClkConfig::from_clks(&clocks, Hertz::from_raw(SPI_SPEED_KHZ))
+            SpiClockConfig::from_clks(&clocks, Hertz::from_raw(SPI_SPEED_KHZ))
                 .expect("invalid target clock"),
         )
         .mode(SPI_MODE)

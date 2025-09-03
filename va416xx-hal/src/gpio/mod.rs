@@ -17,4 +17,4 @@
 //!
 //! - [Blinky example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/simple/examples/blinky.rs)
 //! - [Async GPIO example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/embassy/src/bin/async-gpio.rs)
-pub use vorago_shared_periphs::gpio::*;
+pub use vorago_shared_hal::gpio::*;

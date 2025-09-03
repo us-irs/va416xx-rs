@@ -59,10 +59,10 @@ pub mod adc;
 #[cfg(not(feature = "va41628"))]
 pub mod dac;
 
-pub use vorago_shared_periphs::{
+pub use vorago_shared_hal::{
     assert_peripheral_reset, deassert_peripheral_reset, disable_nvic_interrupt,
     disable_peripheral_clock, enable_nvic_interrupt, enable_peripheral_clock,
-    reset_peripheral_for_cycles, FunSel, PeripheralSelect,
+    reset_peripheral_for_cycles, FunctionSelect, PeripheralSelect,
 };
 
 #[derive(Debug, PartialEq, Eq, thiserror::Error)]
@@ -80,19 +80,19 @@ pub fn port_function_select(
     ioconfig: &mut pac::Ioconfig,
     port: Port,
     pin: u8,
-    funsel: FunSel,
+    funsel: FunctionSelect,
 ) -> Result<(), InvalidPinError> {
     if (port == Port::G && pin >= 8) || pin >= 16 {
         return Err(InvalidPinError(pin));
     }
     let reg_block = match port {
         Port::A => ioconfig.porta(pin as usize),
-        Port::B => ioconfig.portb0(pin as usize),
-        Port::C => ioconfig.portc0(pin as usize),
-        Port::D => ioconfig.portd0(pin as usize),
-        Port::E => ioconfig.porte0(pin as usize),
-        Port::F => ioconfig.portf0(pin as usize),
-        Port::G => ioconfig.portg0(pin as usize),
+        Port::B => ioconfig.portb(pin as usize),
+        Port::C => ioconfig.portc(pin as usize),
+        Port::D => ioconfig.portd(pin as usize),
+        Port::E => ioconfig.porte(pin as usize),
+        Port::F => ioconfig.portf(pin as usize),
+        Port::G => ioconfig.portg(pin as usize),
     };
 
     reg_block.modify(|_, w| unsafe { w.funsel().bits(funsel as u8) });

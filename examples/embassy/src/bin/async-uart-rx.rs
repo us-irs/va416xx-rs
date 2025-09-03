@@ -42,7 +42,7 @@ use va416xx_hal::{
 
 static QUEUE_UART_A: static_cell::ConstStaticCell<Queue<u8, 256>> =
     static_cell::ConstStaticCell::new(Queue::new());
-static PRODUCER_UART_A: Mutex<RefCell<Option<Producer<u8, 256>>>> = Mutex::new(RefCell::new(None));
+static PRODUCER_UART_A: Mutex<RefCell<Option<Producer<u8>>>> = Mutex::new(RefCell::new(None));
 
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {

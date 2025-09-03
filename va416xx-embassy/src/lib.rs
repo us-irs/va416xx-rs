@@ -42,9 +42,9 @@ use va416xx_hal::{
     clock::Clocks,
     irq_router::enable_and_init_irq_router,
     pac::{self, interrupt},
-    timer::{TimMarker, TIM_IRQ_OFFSET},
+    timer::{TimInstance, TIM_IRQ_OFFSET},
 };
-use vorago_shared_periphs::embassy::time_driver;
+use vorago_shared_hal::embassy::time_driver;
 
 /// Macro to define the IRQ handlers for the time driver.
 ///
@@ -95,7 +95,7 @@ embassy_time_driver_irqs!(timekeeper_irq = TIM23, alarm_irq = TIM22);
 /// used TIM peripherals has to match the ID of the passed timer peripherals. Currently, this
 /// can only be checked at run-time, and a run-time assertion will panic on the embassy
 /// initialization in case of a missmatch.
-pub fn init<TimekeeperTim: TimMarker, AlarmTim: TimMarker>(
+pub fn init<TimekeeperTim: TimInstance, AlarmTim: TimInstance>(
     timekeeper: TimekeeperTim,
     alarm: AlarmTim,
     clocks: &Clocks,

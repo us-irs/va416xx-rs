@@ -11,7 +11,7 @@ keywords = ["no-std", "hal", "cortex-m", "vorago", "va416xx"]
 categories = ["aerospace", "embedded", "no-std", "hardware-support"]
 
 [dependencies]
-vorago-shared-hal = { git = "https://egit.irs.uni-stuttgart.de/rust/vorago-shared-hal.git", features = ["vor4x"] }
+vorago-shared-hal = { version = "0.2", features = ["vor4x"] }
 va416xx-hal = { path = "../va416xx-hal" }
 
 [features]

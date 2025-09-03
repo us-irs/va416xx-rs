@@ -56,10 +56,27 @@ cp -rT vscode .vscode
 
 You can then adapt the files in `.vscode` to your needs.
 
+## Building projects
+
+Building an application requires the `thumbv7em-none-eabihf` cross-compiler toolchain.
+If you have not installed it yet, you can do so with
+
+```sh
+rustup target add thumbv7em-none-eabihf
+```
+
+After that, you can use `cargo build` to build the development version of the crate.
+For example, you can use
+
+```sh
+cargo build --example blinky
+```
+
+to build a simple blinky app.
+
 ## Flashing, running and debugging the software
 
-You can use CLI or VS Code for flashing, running and debugging. In any case, take
-care of installing the pre-requisites first.
+You can use CLI or VS Code for flashing, running and debugging.
 
 ### Using CLI with probe-rs
 
@@ -80,16 +97,13 @@ available for persistent flashing.
 Runner configuration is available in the `.cargo/def-config.toml` file to use `probe-rs` for
 convenience. `probe-rs` is also able to process and display `defmt` strings directly.
 
-### Pre-Requisites
+### Using VS Code
+
+Following tools are required:
 
 1. [SEGGER J-Link tools](https://www.segger.com/downloads/jlink/) installed
 2. [gdb-multiarch](https://packages.debian.org/sid/gdb-multiarch) or similar
    cross-architecture debugger installed. All commands here assume `gdb-multiarch`.
-
-### Using CLI
-
-
-### Using VS Code
 
 Assuming a working debug connection to your VA416xx board, you can debug using VS Code with
 the [`Cortex-Debug` plugin](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug).
@@ -114,7 +128,7 @@ work properly, `objdump-multiarch` and `nm-multiarch` need to be installed.
 
 ### Using CLI with GDB and Segger J-Link Tools
 
-Install the following two tools first:
+Following tools are required:
 
 1. [SEGGER J-Link tools](https://www.segger.com/downloads/jlink/) installed
 2. [gdb-multiarch](https://packages.debian.org/sid/gdb-multiarch) or similar

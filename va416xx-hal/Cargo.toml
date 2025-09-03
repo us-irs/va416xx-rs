@@ -1,6 +1,6 @@
 [package]
 name = "va416xx-hal"
-version = "0.5.1"
+version = "0.6.0"
 authors = ["Robin Mueller <muellerr@irs.uni-stuttgart.de>"]
 edition = "2021"
 description = "HAL for the Vorago VA416xx family of MCUs"
@@ -12,10 +12,10 @@ categories = ["embedded", "no-std", "hardware-support"]
 
 [dependencies]
 cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
-va416xx = { version = "0.4", features = ["critical-section"], default-features = false }
-derive-mmio = { git = "https://github.com/knurling-rs/derive-mmio.git",  version = "0.6" }
+va416xx = { version = "0.5", features = ["critical-section"], default-features = false }
+derive-mmio =  { git = "https://github.com/knurling-rs/derive-mmio.git", version = "0.6"}
 static_assertions = "1.1"
-vorago-shared-periphs = { git = "https://egit.irs.uni-stuttgart.de/rust/vorago-shared-periphs.git", rev = "c8e475cbba820a4b235b46f3d284e23d72396855", features = ["vor4x"] }
+vorago-shared-hal = { git = "https://egit.irs.uni-stuttgart.de/rust/vorago-shared-hal.git", features = ["vor4x"] }
 
 libm = "0.2"
 nb = "1"
@@ -23,7 +23,7 @@ embedded-hal = "1"
 num_enum = { version = "0.7", default-features = false }
 bitflags = "2"
 bitbybit = "1.3"
-arbitrary-int = "1.3"
+arbitrary-int = "2"
 fugit = "0.3"
 embedded-can = "0.4"
 embassy-sync = "0.7"
@@ -35,13 +35,13 @@ defmt = { version = "1", optional = true }
 default = ["rt", "revb"]
 rt = ["va416xx/rt"]
 alloc = []
-defmt = ["dep:defmt", "fugit/defmt", "vorago-shared-periphs/defmt"]
+defmt = ["dep:defmt", "fugit/defmt", "vorago-shared-hal/defmt"]
 
 va41630 = ["device-selected"]
 va41620 = ["device-selected"]
 
 va41629 = ["device-selected"]
-va41628 = ["device-selected", "vorago-shared-periphs/va41628"]
+va41628 = ["device-selected", "vorago-shared-hal/va41628"]
 
 device-selected = []
 revb = []

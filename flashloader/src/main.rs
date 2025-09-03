@@ -108,7 +108,7 @@ mod app {
     };
     use va416xx_hal::clock::ClockConfigurator;
     use va416xx_hal::irq_router::enable_and_init_irq_router;
-    use va416xx_hal::uart::IrqContextTimeoutOrMaxSize;
+    use va416xx_hal::uart::InterruptContextTimeoutOrMaxSize;
     use va416xx_hal::{
         edac,
         nvm::Nvm,
@@ -131,7 +131,7 @@ mod app {
     struct Local {
         uart_rx: uart::RxWithInterrupt,
         uart_tx: uart::Tx,
-        rx_context: IrqContextTimeoutOrMaxSize,
+        rx_context: InterruptContextTimeoutOrMaxSize,
         rom_spi: Option<pac::Spi3>,
         // We handle all TM in one task.
         tm_cons: DataConsumer<BUF_RB_SIZE_TM, SIZES_RB_SIZE_TM>,
@@ -195,7 +195,7 @@ mod app {
         CLOCKS.set(clocks).unwrap();
 
         let mut rx = rx.into_rx_with_irq();
-        let mut rx_context = IrqContextTimeoutOrMaxSize::new(MAX_TC_FRAME_SIZE);
+        let mut rx_context = InterruptContextTimeoutOrMaxSize::new(MAX_TC_FRAME_SIZE);
         rx.read_fixed_len_or_timeout_based_using_irq(&mut rx_context)
             .expect("initiating UART RX failed");
         pus_tc_handler::spawn().unwrap();

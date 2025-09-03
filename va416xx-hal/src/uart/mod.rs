@@ -14,4 +14,4 @@
 //! - [Flashloader exposing a CCSDS interface via UART](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/flashloader)
 //! - [Async UART RX example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/embassy/src/bin/async-uart-rx.rs)
 //! - [Async UART TX example](https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/src/branch/main/examples/embassy/src/bin/async-uart-tx.rs)
-pub use vorago_shared_periphs::uart::*;
+pub use vorago_shared_hal::uart::*;

@@ -1,7 +1,7 @@
 //! Custom register definitions for the CAN register block to circumvent PAC API / SVD
 //! shortcomings.
 
-use arbitrary_int::{u11, u15, u2, u3, u4, u6, u7, Number};
+use arbitrary_int::{prelude::*, u11, u15, u2, u3, u4, u6, u7};
 
 pub const CAN_0_BASE: usize = 0x4001_4000;
 pub const CAN_1_BASE: usize = 0x4001_4400;

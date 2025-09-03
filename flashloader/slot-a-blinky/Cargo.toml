@@ -7,8 +7,8 @@ edition = "2021"
 
 [dependencies]
 cortex-m-rt = "0.7"
-panic-rtt-target = { version = "0.1.3" }
-rtt-target = { version = "0.5" }
+panic-rtt-target = { version = "0.2" }
+rtt-target = { version = "0.6" }
 cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
 embedded-hal = "1"
 va416xx-hal = { path = "0.4", features = ["va41630"] }

@@ -1,4 +1,4 @@
-use arbitrary_int::{u11, u15, u3, u4, Number};
+use arbitrary_int::{prelude::*, u11, u15, u3, u4};
 use embedded_can::Frame;
 
 use super::{

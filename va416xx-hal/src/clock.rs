@@ -15,8 +15,8 @@ use crate::adc::ADC_MAX_CLK;
 use crate::pac;
 
 use crate::time::Hertz;
-pub use vorago_shared_periphs::clock::{Clocks, HBO_FREQ};
-use vorago_shared_periphs::{enable_peripheral_clock, PeripheralSelect};
+pub use vorago_shared_hal::clock::{Clocks, HBO_FREQ};
+use vorago_shared_hal::{enable_peripheral_clock, PeripheralSelect};
 
 pub const XTAL_OSC_TSTART_MS: u32 = 15;
 

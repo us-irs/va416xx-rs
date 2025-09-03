@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [unreleased]
 
+# [v0.6.0] 2025-09-03
+
+- Use `vorago-shared-hal` dependency to provide shared peripherals.
+- Bump `va416xx` to v0.5
+
 # [v0.5.1] 2025-03-10
 
 ## Fixed
@@ -118,7 +123,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Initial release with basic HAL drivers
 
-[unreleased]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.5.0...HEAD
+[unreleased]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.6.0...HEAD
+[v0.6.0]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.5.1...va416xx-hal-v0.6.0
 [v0.5.1]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.5.0...va416xx-hal-v0.5.1
 [v0.5.0]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.4.1...va416xx-hal-v0.5.0
 [v0.4.1]: https://egit.irs.uni-stuttgart.de/rust/va416xx-rs/compare/va416xx-hal-v0.4.0...va416xx-hal-v0.4.1

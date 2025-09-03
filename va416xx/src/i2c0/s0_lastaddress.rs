@@ -24,6 +24,4 @@ impl crate::RegisterSpec for S0LastaddressSpec {
 #[doc = "`read()` method returns [`s0_lastaddress::R`](R) reader structure"]
 impl crate::Readable for S0LastaddressSpec {}
 #[doc = "`reset()` method sets S0_LASTADDRESS to value 0"]
-impl crate::Resettable for S0LastaddressSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for S0LastaddressSpec {}

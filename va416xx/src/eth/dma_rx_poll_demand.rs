@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Receive Poll Demand (Read Only and Write Trigger)"]
     #[inline(always)]
-    pub fn rpd(&mut self) -> RpdW<DmaRxPollDemandSpec> {
+    pub fn rpd(&mut self) -> RpdW<'_, DmaRxPollDemandSpec> {
         RpdW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for DmaRxPollDemandSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_rx_poll_demand::W`](W) writer structure"]
 impl crate::Writable for DmaRxPollDemandSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_RX_POLL_DEMAND to value 0"]
-impl crate::Resettable for DmaRxPollDemandSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DmaRxPollDemandSpec {}

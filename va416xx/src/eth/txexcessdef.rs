@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxexcessdefSpec {
 #[doc = "`read()` method returns [`txexcessdef::R`](R) reader structure"]
 impl crate::Readable for TxexcessdefSpec {}
 #[doc = "`reset()` method sets TXEXCESSDEF to value 0"]
-impl crate::Resettable for TxexcessdefSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxexcessdefSpec {}

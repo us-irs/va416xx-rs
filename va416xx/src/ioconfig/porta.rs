@@ -215,57 +215,57 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Input Filter Selectoin"]
     #[inline(always)]
-    pub fn flttype(&mut self) -> FlttypeW<PortaSpec> {
+    pub fn flttype(&mut self) -> FlttypeW<'_, PortaSpec> {
         FlttypeW::new(self, 0)
     }
     #[doc = "Bits 3:5 - Input Filter Clock Selection"]
     #[inline(always)]
-    pub fn fltclk(&mut self) -> FltclkW<PortaSpec> {
+    pub fn fltclk(&mut self) -> FltclkW<'_, PortaSpec> {
         FltclkW::new(self, 3)
     }
     #[doc = "Bit 6 - Input Invert Selection"]
     #[inline(always)]
-    pub fn invinp(&mut self) -> InvinpW<PortaSpec> {
+    pub fn invinp(&mut self) -> InvinpW<'_, PortaSpec> {
         InvinpW::new(self, 6)
     }
     #[doc = "Bit 7 - Input Enable While Output enabled"]
     #[inline(always)]
-    pub fn iewo(&mut self) -> IewoW<PortaSpec> {
+    pub fn iewo(&mut self) -> IewoW<'_, PortaSpec> {
         IewoW::new(self, 7)
     }
     #[doc = "Bit 8 - Output Open Drain Mode"]
     #[inline(always)]
-    pub fn opendrn(&mut self) -> OpendrnW<PortaSpec> {
+    pub fn opendrn(&mut self) -> OpendrnW<'_, PortaSpec> {
         OpendrnW::new(self, 8)
     }
     #[doc = "Bit 9 - Output Invert Selection"]
     #[inline(always)]
-    pub fn invout(&mut self) -> InvoutW<PortaSpec> {
+    pub fn invout(&mut self) -> InvoutW<'_, PortaSpec> {
         InvoutW::new(self, 9)
     }
     #[doc = "Bit 10 - Internal Pull up/down level"]
     #[inline(always)]
-    pub fn plevel(&mut self) -> PlevelW<PortaSpec> {
+    pub fn plevel(&mut self) -> PlevelW<'_, PortaSpec> {
         PlevelW::new(self, 10)
     }
     #[doc = "Bit 11 - Enable Internal Pull up/down"]
     #[inline(always)]
-    pub fn pen(&mut self) -> PenW<PortaSpec> {
+    pub fn pen(&mut self) -> PenW<'_, PortaSpec> {
         PenW::new(self, 11)
     }
     #[doc = "Bit 12 - Enable Pull when output active"]
     #[inline(always)]
-    pub fn pwoa(&mut self) -> PwoaW<PortaSpec> {
+    pub fn pwoa(&mut self) -> PwoaW<'_, PortaSpec> {
         PwoaW::new(self, 12)
     }
     #[doc = "Bits 13:15 - Pin Function Selection"]
     #[inline(always)]
-    pub fn funsel(&mut self) -> FunselW<PortaSpec> {
+    pub fn funsel(&mut self) -> FunselW<'_, PortaSpec> {
         FunselW::new(self, 13)
     }
     #[doc = "Bit 16 - IO Pin Disable"]
     #[inline(always)]
-    pub fn iodis(&mut self) -> IodisW<PortaSpec> {
+    pub fn iodis(&mut self) -> IodisW<'_, PortaSpec> {
         IodisW::new(self, 16)
     }
 }
@@ -279,11 +279,6 @@ impl crate::Readable for PortaSpec {}
 #[doc = "`write(|w| ..)` method takes [`porta::W`](W) writer structure"]
 impl crate::Writable for PortaSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
-#[doc = "`reset()` method sets PORTA[%s]
-to value 0"]
-impl crate::Resettable for PortaSpec {
-    const RESET_VALUE: u32 = 0;
-}
+#[doc = "`reset()` method sets PORTA[%s] to value 0"]
+impl crate::Resettable for PortaSpec {}

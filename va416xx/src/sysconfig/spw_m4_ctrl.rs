@@ -34,17 +34,17 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - Fuse-analog register writes enabled when key = 0xfeed"]
     #[inline(always)]
-    pub fn reg_wr_key(&mut self) -> RegWrKeyW<SpwM4CtrlSpec> {
+    pub fn reg_wr_key(&mut self) -> RegWrKeyW<'_, SpwM4CtrlSpec> {
         RegWrKeyW::new(self, 0)
     }
     #[doc = "Bit 16 - SPW pad enable"]
     #[inline(always)]
-    pub fn spw_pad_en(&mut self) -> SpwPadEnW<SpwM4CtrlSpec> {
+    pub fn spw_pad_en(&mut self) -> SpwPadEnW<'_, SpwM4CtrlSpec> {
         SpwPadEnW::new(self, 16)
     }
     #[doc = "Bit 17 - Lockup reset enable"]
     #[inline(always)]
-    pub fn lren(&mut self) -> LrenW<SpwM4CtrlSpec> {
+    pub fn lren(&mut self) -> LrenW<'_, SpwM4CtrlSpec> {
         LrenW::new(self, 17)
     }
 }
@@ -58,8 +58,6 @@ impl crate::Readable for SpwM4CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`spw_m4_ctrl::W`](W) writer structure"]
 impl crate::Writable for SpwM4CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SPW_M4_CTRL to value 0x0003_0000"]
 impl crate::Resettable for SpwM4CtrlSpec {

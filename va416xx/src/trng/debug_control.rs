@@ -34,17 +34,17 @@ impl R {
 impl W {
     #[doc = "Bit 1 - The Von Neumann balancer is bypassed"]
     #[inline(always)]
-    pub fn vnc_pypass(&mut self) -> VncPypassW<DebugControlSpec> {
+    pub fn vnc_pypass(&mut self) -> VncPypassW<'_, DebugControlSpec> {
         VncPypassW::new(self, 1)
     }
     #[doc = "Bit 2 - The CRNGT test in the TRNG is bypassed"]
     #[inline(always)]
-    pub fn crngt_bypass(&mut self) -> CrngtBypassW<DebugControlSpec> {
+    pub fn crngt_bypass(&mut self) -> CrngtBypassW<'_, DebugControlSpec> {
         CrngtBypassW::new(self, 2)
     }
     #[doc = "Bit 3 - The autocorrelation test in the TRNG module is bypassed"]
     #[inline(always)]
-    pub fn auto_correlate_bypass(&mut self) -> AutoCorrelateBypassW<DebugControlSpec> {
+    pub fn auto_correlate_bypass(&mut self) -> AutoCorrelateBypassW<'_, DebugControlSpec> {
         AutoCorrelateBypassW::new(self, 3)
     }
 }
@@ -58,10 +58,6 @@ impl crate::Readable for DebugControlSpec {}
 #[doc = "`write(|w| ..)` method takes [`debug_control::W`](W) writer structure"]
 impl crate::Writable for DebugControlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DEBUG_CONTROL to value 0"]
-impl crate::Resettable for DebugControlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DebugControlSpec {}

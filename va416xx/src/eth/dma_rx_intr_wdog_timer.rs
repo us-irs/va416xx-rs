@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - These bits indicate the number of system clock cycles x 256 for which the watchdog timer is set."]
     #[inline(always)]
-    pub fn riwt(&mut self) -> RiwtW<DmaRxIntrWdogTimerSpec> {
+    pub fn riwt(&mut self) -> RiwtW<'_, DmaRxIntrWdogTimerSpec> {
         RiwtW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for DmaRxIntrWdogTimerSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_rx_intr_wdog_timer::W`](W) writer structure"]
 impl crate::Writable for DmaRxIntrWdogTimerSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_RX_INTR_WDOG_TIMER to value 0"]
-impl crate::Resettable for DmaRxIntrWdogTimerSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DmaRxIntrWdogTimerSpec {}

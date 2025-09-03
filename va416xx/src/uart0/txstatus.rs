@@ -45,6 +45,4 @@ impl crate::RegisterSpec for TxstatusSpec {
 #[doc = "`read()` method returns [`txstatus::R`](R) reader structure"]
 impl crate::Readable for TxstatusSpec {}
 #[doc = "`reset()` method sets TXSTATUS to value 0"]
-impl crate::Resettable for TxstatusSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxstatusSpec {}

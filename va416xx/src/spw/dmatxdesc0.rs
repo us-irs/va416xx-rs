@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 4:9 - Offset into the descriptor table"]
     #[inline(always)]
-    pub fn descsel(&mut self) -> DescselW<Dmatxdesc0Spec> {
+    pub fn descsel(&mut self) -> DescselW<'_, Dmatxdesc0Spec> {
         DescselW::new(self, 4)
     }
     #[doc = "Bits 10:31 - Sets the base address of the descriptor table"]
     #[inline(always)]
-    pub fn descbaseaddr(&mut self) -> DescbaseaddrW<Dmatxdesc0Spec> {
+    pub fn descbaseaddr(&mut self) -> DescbaseaddrW<'_, Dmatxdesc0Spec> {
         DescbaseaddrW::new(self, 10)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for Dmatxdesc0Spec {}
 #[doc = "`write(|w| ..)` method takes [`dmatxdesc0::W`](W) writer structure"]
 impl crate::Writable for Dmatxdesc0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMATXDESC0 to value 0"]
-impl crate::Resettable for Dmatxdesc0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Dmatxdesc0Spec {}

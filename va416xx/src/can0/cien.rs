@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:14 - Buffer Interrupt Enable\\[14:0\\]"]
     #[inline(always)]
-    pub fn ien(&mut self) -> IenW<CienSpec> {
+    pub fn ien(&mut self) -> IenW<'_, CienSpec> {
         IenW::new(self, 0)
     }
     #[doc = "Bit 15 - Error Interrupt Enable"]
     #[inline(always)]
-    pub fn eien(&mut self) -> EienW<CienSpec> {
+    pub fn eien(&mut self) -> EienW<'_, CienSpec> {
         EienW::new(self, 15)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for CienSpec {}
 #[doc = "`write(|w| ..)` method takes [`cien::W`](W) writer structure"]
 impl crate::Writable for CienSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CIEN to value 0"]
-impl crate::Resettable for CienSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CienSpec {}

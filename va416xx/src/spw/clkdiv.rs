@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - 8-bit Clock divisor value used for the clock-divider when the link-interface is in the run-state"]
     #[inline(always)]
-    pub fn clkdivrun(&mut self) -> ClkdivrunW<ClkdivSpec> {
+    pub fn clkdivrun(&mut self) -> ClkdivrunW<'_, ClkdivSpec> {
         ClkdivrunW::new(self, 0)
     }
     #[doc = "Bits 8:15 - 8-bit Clock divisor value used for the clock-divider during startup"]
     #[inline(always)]
-    pub fn clkdivstart(&mut self) -> ClkdivstartW<ClkdivSpec> {
+    pub fn clkdivstart(&mut self) -> ClkdivstartW<'_, ClkdivSpec> {
         ClkdivstartW::new(self, 8)
     }
 }
@@ -44,8 +44,6 @@ impl crate::Readable for ClkdivSpec {}
 #[doc = "`write(|w| ..)` method takes [`clkdiv::W`](W) writer structure"]
 impl crate::Writable for ClkdivSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CLKDIV to value 0x0909"]
 impl crate::Resettable for ClkdivSpec {

@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - Half of CAN Frame ID. Format Varies for Standard or Extended Frames"]
     #[inline(always)]
-    pub fn id0(&mut self) -> Id0W<Id0Cmb9Spec> {
+    pub fn id0(&mut self) -> Id0W<'_, Id0Cmb9Spec> {
         Id0W::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for Id0Cmb9Spec {}
 #[doc = "`write(|w| ..)` method takes [`id0_cmb9::W`](W) writer structure"]
 impl crate::Writable for Id0Cmb9Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ID0_CMB9 to value 0"]
-impl crate::Resettable for Id0Cmb9Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Id0Cmb9Spec {}

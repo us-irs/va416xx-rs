@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Channel Enable clear"]
     #[inline(always)]
-    pub fn ch0(&mut self) -> Ch0W<ChnlEnableClrSpec> {
+    pub fn ch0(&mut self) -> Ch0W<'_, ChnlEnableClrSpec> {
         Ch0W::new(self, 0)
     }
     #[doc = "Bit 1 - Channel Enable clear"]
     #[inline(always)]
-    pub fn ch1(&mut self) -> Ch1W<ChnlEnableClrSpec> {
+    pub fn ch1(&mut self) -> Ch1W<'_, ChnlEnableClrSpec> {
         Ch1W::new(self, 1)
     }
     #[doc = "Bit 2 - Channel Enable clear"]
     #[inline(always)]
-    pub fn ch2(&mut self) -> Ch2W<ChnlEnableClrSpec> {
+    pub fn ch2(&mut self) -> Ch2W<'_, ChnlEnableClrSpec> {
         Ch2W::new(self, 2)
     }
     #[doc = "Bit 3 - Channel Enable clear"]
     #[inline(always)]
-    pub fn ch3(&mut self) -> Ch3W<ChnlEnableClrSpec> {
+    pub fn ch3(&mut self) -> Ch3W<'_, ChnlEnableClrSpec> {
         Ch3W::new(self, 3)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for ChnlEnableClrSpec {}
 #[doc = "`write(|w| ..)` method takes [`chnl_enable_clr::W`](W) writer structure"]
 impl crate::Writable for ChnlEnableClrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CHNL_ENABLE_CLR to value 0"]
-impl crate::Resettable for ChnlEnableClrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChnlEnableClrSpec {}

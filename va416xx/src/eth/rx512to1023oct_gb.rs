@@ -17,6 +17,4 @@ impl crate::RegisterSpec for Rx512to1023octGbSpec {
 #[doc = "`read()` method returns [`rx512to1023oct_gb::R`](R) reader structure"]
 impl crate::Readable for Rx512to1023octGbSpec {}
 #[doc = "`reset()` method sets RX512TO1023OCT_GB to value 0"]
-impl crate::Resettable for Rx512to1023octGbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Rx512to1023octGbSpec {}

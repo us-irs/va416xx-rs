@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bit 0 - The entropy source, ring oscillator, is enabled"]
     #[inline(always)]
-    pub fn rnd_src_en(&mut self) -> RndSrcEnW<RndSourceEnableSpec> {
+    pub fn rnd_src_en(&mut self) -> RndSrcEnW<'_, RndSourceEnableSpec> {
         RndSrcEnW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for RndSourceEnableSpec {}
 #[doc = "`write(|w| ..)` method takes [`rnd_source_enable::W`](W) writer structure"]
 impl crate::Writable for RndSourceEnableSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets RND_SOURCE_ENABLE to value 0"]
-impl crate::Resettable for RndSourceEnableSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RndSourceEnableSpec {}

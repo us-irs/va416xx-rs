@@ -17,6 +17,4 @@ impl crate::RegisterSpec for S0TxcountSpec {
 #[doc = "`read()` method returns [`s0_txcount::R`](R) reader structure"]
 impl crate::Readable for S0TxcountSpec {}
 #[doc = "`reset()` method sets S0_TXCOUNT to value 0"]
-impl crate::Resettable for S0TxcountSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for S0TxcountSpec {}

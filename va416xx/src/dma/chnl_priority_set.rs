@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Channel PRIORITY set"]
     #[inline(always)]
-    pub fn ch0(&mut self) -> Ch0W<ChnlPrioritySetSpec> {
+    pub fn ch0(&mut self) -> Ch0W<'_, ChnlPrioritySetSpec> {
         Ch0W::new(self, 0)
     }
     #[doc = "Bit 1 - Channel PRIORITY set"]
     #[inline(always)]
-    pub fn ch1(&mut self) -> Ch1W<ChnlPrioritySetSpec> {
+    pub fn ch1(&mut self) -> Ch1W<'_, ChnlPrioritySetSpec> {
         Ch1W::new(self, 1)
     }
     #[doc = "Bit 2 - Channel PRIORITY set"]
     #[inline(always)]
-    pub fn ch2(&mut self) -> Ch2W<ChnlPrioritySetSpec> {
+    pub fn ch2(&mut self) -> Ch2W<'_, ChnlPrioritySetSpec> {
         Ch2W::new(self, 2)
     }
     #[doc = "Bit 3 - Channel PRIORITY set"]
     #[inline(always)]
-    pub fn ch3(&mut self) -> Ch3W<ChnlPrioritySetSpec> {
+    pub fn ch3(&mut self) -> Ch3W<'_, ChnlPrioritySetSpec> {
         Ch3W::new(self, 3)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for ChnlPrioritySetSpec {}
 #[doc = "`write(|w| ..)` method takes [`chnl_priority_set::W`](W) writer structure"]
 impl crate::Writable for ChnlPrioritySetSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CHNL_PRIORITY_SET to value 0"]
-impl crate::Resettable for ChnlPrioritySetSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChnlPrioritySetSpec {}

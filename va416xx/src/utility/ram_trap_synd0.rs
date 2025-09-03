@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:5 - 6-bit syndrome value for bits 15-0"]
     #[inline(always)]
-    pub fn ram_synd_7_0(&mut self) -> RamSynd7_0W<RamTrapSynd0Spec> {
+    pub fn ram_synd_7_0(&mut self) -> RamSynd7_0W<'_, RamTrapSynd0Spec> {
         RamSynd7_0W::new(self, 0)
     }
     #[doc = "Bits 6:11 - 6-bit syndrome value for bits 31-16"]
     #[inline(always)]
-    pub fn ram_synd_31_16(&mut self) -> RamSynd31_16W<RamTrapSynd0Spec> {
+    pub fn ram_synd_31_16(&mut self) -> RamSynd31_16W<'_, RamTrapSynd0Spec> {
         RamSynd31_16W::new(self, 6)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for RamTrapSynd0Spec {}
 #[doc = "`write(|w| ..)` method takes [`ram_trap_synd0::W`](W) writer structure"]
 impl crate::Writable for RamTrapSynd0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets RAM_TRAP_SYND0 to value 0"]
-impl crate::Resettable for RamTrapSynd0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RamTrapSynd0Spec {}

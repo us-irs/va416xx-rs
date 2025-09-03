@@ -45,6 +45,4 @@ impl crate::RegisterSpec for MacIntrStatSpec {
 #[doc = "`read()` method returns [`mac_intr_stat::R`](R) reader structure"]
 impl crate::Readable for MacIntrStatSpec {}
 #[doc = "`reset()` method sets MAC_INTR_STAT to value 0"]
-impl crate::Resettable for MacIntrStatSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MacIntrStatSpec {}

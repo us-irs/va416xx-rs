@@ -241,132 +241,132 @@ impl R {
 impl W {
     #[doc = "Bit 0 - MMC Receive Good Bad Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxgbfrmim(&mut self) -> RxgbfrmimW<MmcIntrMaskRxSpec> {
+    pub fn rxgbfrmim(&mut self) -> RxgbfrmimW<'_, MmcIntrMaskRxSpec> {
         RxgbfrmimW::new(self, 0)
     }
     #[doc = "Bit 1 - MMC Receive Good Bad Octet Counter Interrupt Mask."]
     #[inline(always)]
-    pub fn rxgboctim(&mut self) -> RxgboctimW<MmcIntrMaskRxSpec> {
+    pub fn rxgboctim(&mut self) -> RxgboctimW<'_, MmcIntrMaskRxSpec> {
         RxgboctimW::new(self, 1)
     }
     #[doc = "Bit 2 - MMC Receive Good Octet Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxgoctim(&mut self) -> RxgoctimW<MmcIntrMaskRxSpec> {
+    pub fn rxgoctim(&mut self) -> RxgoctimW<'_, MmcIntrMaskRxSpec> {
         RxgoctimW::new(self, 2)
     }
     #[doc = "Bit 3 - MMC Receive Broadcast Good Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxbcgfim(&mut self) -> RxbcgfimW<MmcIntrMaskRxSpec> {
+    pub fn rxbcgfim(&mut self) -> RxbcgfimW<'_, MmcIntrMaskRxSpec> {
         RxbcgfimW::new(self, 3)
     }
     #[doc = "Bit 4 - MMC Receive Multicast Good Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxmcgfim(&mut self) -> RxmcgfimW<MmcIntrMaskRxSpec> {
+    pub fn rxmcgfim(&mut self) -> RxmcgfimW<'_, MmcIntrMaskRxSpec> {
         RxmcgfimW::new(self, 4)
     }
     #[doc = "Bit 5 - MMC Receive CRC Error Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxcrcerfim(&mut self) -> RxcrcerfimW<MmcIntrMaskRxSpec> {
+    pub fn rxcrcerfim(&mut self) -> RxcrcerfimW<'_, MmcIntrMaskRxSpec> {
         RxcrcerfimW::new(self, 5)
     }
     #[doc = "Bit 6 - MMC Receive Alignment Error Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxalgnerfim(&mut self) -> RxalgnerfimW<MmcIntrMaskRxSpec> {
+    pub fn rxalgnerfim(&mut self) -> RxalgnerfimW<'_, MmcIntrMaskRxSpec> {
         RxalgnerfimW::new(self, 6)
     }
     #[doc = "Bit 7 - MMC Receive Runt Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxruntfim(&mut self) -> RxruntfimW<MmcIntrMaskRxSpec> {
+    pub fn rxruntfim(&mut self) -> RxruntfimW<'_, MmcIntrMaskRxSpec> {
         RxruntfimW::new(self, 7)
     }
     #[doc = "Bit 8 - MMC Receive Jabber Error Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxjaberfim(&mut self) -> RxjaberfimW<MmcIntrMaskRxSpec> {
+    pub fn rxjaberfim(&mut self) -> RxjaberfimW<'_, MmcIntrMaskRxSpec> {
         RxjaberfimW::new(self, 8)
     }
     #[doc = "Bit 9 - MMC Receive Undersize Good Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxusizegfim(&mut self) -> RxusizegfimW<MmcIntrMaskRxSpec> {
+    pub fn rxusizegfim(&mut self) -> RxusizegfimW<'_, MmcIntrMaskRxSpec> {
         RxusizegfimW::new(self, 9)
     }
     #[doc = "Bit 10 - MMC Receive Oversize Good Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxosizegfim(&mut self) -> RxosizegfimW<MmcIntrMaskRxSpec> {
+    pub fn rxosizegfim(&mut self) -> RxosizegfimW<'_, MmcIntrMaskRxSpec> {
         RxosizegfimW::new(self, 10)
     }
     #[doc = "Bit 11 - MMC Receive 64 Octet Good Bad Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rx64octgbfim(&mut self) -> Rx64octgbfimW<MmcIntrMaskRxSpec> {
+    pub fn rx64octgbfim(&mut self) -> Rx64octgbfimW<'_, MmcIntrMaskRxSpec> {
         Rx64octgbfimW::new(self, 11)
     }
     #[doc = "Bit 12 - MMC Receive 65 to 127 Octet Good Bad Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rx65t127octgbfim(&mut self) -> Rx65t127octgbfimW<MmcIntrMaskRxSpec> {
+    pub fn rx65t127octgbfim(&mut self) -> Rx65t127octgbfimW<'_, MmcIntrMaskRxSpec> {
         Rx65t127octgbfimW::new(self, 12)
     }
     #[doc = "Bit 13 - MMC Receive 128 to 255 Octet Good Bad Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rx128t255octgbfim(&mut self) -> Rx128t255octgbfimW<MmcIntrMaskRxSpec> {
+    pub fn rx128t255octgbfim(&mut self) -> Rx128t255octgbfimW<'_, MmcIntrMaskRxSpec> {
         Rx128t255octgbfimW::new(self, 13)
     }
     #[doc = "Bit 14 - MMC Receive 256 to 511 Octet Good Bad Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rx256t511octgbfim(&mut self) -> Rx256t511octgbfimW<MmcIntrMaskRxSpec> {
+    pub fn rx256t511octgbfim(&mut self) -> Rx256t511octgbfimW<'_, MmcIntrMaskRxSpec> {
         Rx256t511octgbfimW::new(self, 14)
     }
     #[doc = "Bit 15 - MMC Receive 512 to 1023 Octet Good Bad Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rx512t1023octgbfim(&mut self) -> Rx512t1023octgbfimW<MmcIntrMaskRxSpec> {
+    pub fn rx512t1023octgbfim(&mut self) -> Rx512t1023octgbfimW<'_, MmcIntrMaskRxSpec> {
         Rx512t1023octgbfimW::new(self, 15)
     }
     #[doc = "Bit 16 - MMC Receive 1024 to Maximum Octet Good Bad Frame Counter Interrupt Mask."]
     #[inline(always)]
-    pub fn rx1024tmaxoctgbfim(&mut self) -> Rx1024tmaxoctgbfimW<MmcIntrMaskRxSpec> {
+    pub fn rx1024tmaxoctgbfim(&mut self) -> Rx1024tmaxoctgbfimW<'_, MmcIntrMaskRxSpec> {
         Rx1024tmaxoctgbfimW::new(self, 16)
     }
     #[doc = "Bit 17 - MMC Receive Unicast Good Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxucgfim(&mut self) -> RxucgfimW<MmcIntrMaskRxSpec> {
+    pub fn rxucgfim(&mut self) -> RxucgfimW<'_, MmcIntrMaskRxSpec> {
         RxucgfimW::new(self, 17)
     }
     #[doc = "Bit 18 - MMC Receive Length Error Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxlenerfim(&mut self) -> RxlenerfimW<MmcIntrMaskRxSpec> {
+    pub fn rxlenerfim(&mut self) -> RxlenerfimW<'_, MmcIntrMaskRxSpec> {
         RxlenerfimW::new(self, 18)
     }
     #[doc = "Bit 19 - MMC Receive Out Of Range Error Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxorangefim(&mut self) -> RxorangefimW<MmcIntrMaskRxSpec> {
+    pub fn rxorangefim(&mut self) -> RxorangefimW<'_, MmcIntrMaskRxSpec> {
         RxorangefimW::new(self, 19)
     }
     #[doc = "Bit 20 - MMC Receive Pause Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxpausfim(&mut self) -> RxpausfimW<MmcIntrMaskRxSpec> {
+    pub fn rxpausfim(&mut self) -> RxpausfimW<'_, MmcIntrMaskRxSpec> {
         RxpausfimW::new(self, 20)
     }
     #[doc = "Bit 21 - MMC Receive FIFO Overflow Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxfovfim(&mut self) -> RxfovfimW<MmcIntrMaskRxSpec> {
+    pub fn rxfovfim(&mut self) -> RxfovfimW<'_, MmcIntrMaskRxSpec> {
         RxfovfimW::new(self, 21)
     }
     #[doc = "Bit 22 - MMC Receive VLAN Good Bad Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxvlangbfim(&mut self) -> RxvlangbfimW<MmcIntrMaskRxSpec> {
+    pub fn rxvlangbfim(&mut self) -> RxvlangbfimW<'_, MmcIntrMaskRxSpec> {
         RxvlangbfimW::new(self, 22)
     }
     #[doc = "Bit 23 - MMC Receive Watchdog Error Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxwdogfim(&mut self) -> RxwdogfimW<MmcIntrMaskRxSpec> {
+    pub fn rxwdogfim(&mut self) -> RxwdogfimW<'_, MmcIntrMaskRxSpec> {
         RxwdogfimW::new(self, 23)
     }
     #[doc = "Bit 24 - MMC Receive Error Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxrcverrfim(&mut self) -> RxrcverrfimW<MmcIntrMaskRxSpec> {
+    pub fn rxrcverrfim(&mut self) -> RxrcverrfimW<'_, MmcIntrMaskRxSpec> {
         RxrcverrfimW::new(self, 24)
     }
     #[doc = "Bit 25 - MMC Receive Control Frame Counter Interrupt Mask"]
     #[inline(always)]
-    pub fn rxctrlfim(&mut self) -> RxctrlfimW<MmcIntrMaskRxSpec> {
+    pub fn rxctrlfim(&mut self) -> RxctrlfimW<'_, MmcIntrMaskRxSpec> {
         RxctrlfimW::new(self, 25)
     }
 }
@@ -380,10 +380,6 @@ impl crate::Readable for MmcIntrMaskRxSpec {}
 #[doc = "`write(|w| ..)` method takes [`mmc_intr_mask_rx::W`](W) writer structure"]
 impl crate::Writable for MmcIntrMaskRxSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MMC_INTR_MASK_RX to value 0"]
-impl crate::Resettable for MmcIntrMaskRxSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MmcIntrMaskRxSpec {}

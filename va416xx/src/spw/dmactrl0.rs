@@ -228,117 +228,117 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Write a one to this bit each time new descriptors are activated in the table"]
     #[inline(always)]
-    pub fn te(&mut self) -> TeW<Dmactrl0Spec> {
+    pub fn te(&mut self) -> TeW<'_, Dmactrl0Spec> {
         TeW::new(self, 0)
     }
     #[doc = "Bit 1 - Packets are allowed to be received to this channel"]
     #[inline(always)]
-    pub fn re(&mut self) -> ReW<Dmactrl0Spec> {
+    pub fn re(&mut self) -> ReW<'_, Dmactrl0Spec> {
         ReW::new(self, 1)
     }
     #[doc = "Bit 2 - An interrupt will be generated each time a packet is transmitted"]
     #[inline(always)]
-    pub fn ti(&mut self) -> TiW<Dmactrl0Spec> {
+    pub fn ti(&mut self) -> TiW<'_, Dmactrl0Spec> {
         TiW::new(self, 2)
     }
     #[doc = "Bit 3 - An interrupt will be generated each time a packet has been received"]
     #[inline(always)]
-    pub fn ri(&mut self) -> RiW<Dmactrl0Spec> {
+    pub fn ri(&mut self) -> RiW<'_, Dmactrl0Spec> {
         RiW::new(self, 3)
     }
     #[doc = "Bit 4 - An interrupt will be generated each time an AHB error occurs when this DMA channel is accessing the bus"]
     #[inline(always)]
-    pub fn ai(&mut self) -> AiW<Dmactrl0Spec> {
+    pub fn ai(&mut self) -> AiW<'_, Dmactrl0Spec> {
         AiW::new(self, 4)
     }
     #[doc = "Bit 5 - Set each time a packet has been sent"]
     #[inline(always)]
-    pub fn ps(&mut self) -> PsW<Dmactrl0Spec> {
+    pub fn ps(&mut self) -> PsW<'_, Dmactrl0Spec> {
         PsW::new(self, 5)
     }
     #[doc = "Bit 6 - Set each time a packet has been received"]
     #[inline(always)]
-    pub fn pr(&mut self) -> PrW<Dmactrl0Spec> {
+    pub fn pr(&mut self) -> PrW<'_, Dmactrl0Spec> {
         PrW::new(self, 6)
     }
     #[doc = "Bit 7 - An error response was detected on the AHB bus - DMA transmit"]
     #[inline(always)]
-    pub fn ta(&mut self) -> TaW<Dmactrl0Spec> {
+    pub fn ta(&mut self) -> TaW<'_, Dmactrl0Spec> {
         TaW::new(self, 7)
     }
     #[doc = "Bit 8 - An error response was detected on the AHB bus - DMA receive"]
     #[inline(always)]
-    pub fn ra(&mut self) -> RaW<Dmactrl0Spec> {
+    pub fn ra(&mut self) -> RaW<'_, Dmactrl0Spec> {
         RaW::new(self, 8)
     }
     #[doc = "Bit 11 - Indicates to the GRSPW that there are enabled descriptors in the descriptor table"]
     #[inline(always)]
-    pub fn rd(&mut self) -> RdW<Dmactrl0Spec> {
+    pub fn rd(&mut self) -> RdW<'_, Dmactrl0Spec> {
         RdW::new(self, 11)
     }
     #[doc = "Bit 12 - If cleared, packets will be discarded when a packet is arriving and there are no active descriptors. If set, the GRSPW will wait for a descriptor to be activated"]
     #[inline(always)]
-    pub fn ns(&mut self) -> NsW<Dmactrl0Spec> {
+    pub fn ns(&mut self) -> NsW<'_, Dmactrl0Spec> {
         NsW::new(self, 12)
     }
     #[doc = "Bit 13 - Enable Address"]
     #[inline(always)]
-    pub fn en(&mut self) -> EnW<Dmactrl0Spec> {
+    pub fn en(&mut self) -> EnW<'_, Dmactrl0Spec> {
         EnW::new(self, 13)
     }
     #[doc = "Bit 14 - Strip Address"]
     #[inline(always)]
-    pub fn sa(&mut self) -> SaW<Dmactrl0Spec> {
+    pub fn sa(&mut self) -> SaW<'_, Dmactrl0Spec> {
         SaW::new(self, 14)
     }
     #[doc = "Bit 15 - Strip PID"]
     #[inline(always)]
-    pub fn sp(&mut self) -> SpW<Dmactrl0Spec> {
+    pub fn sp(&mut self) -> SpW<'_, Dmactrl0Spec> {
         SpW::new(self, 15)
     }
     #[doc = "Bit 16 - Disable transmitter when a link error occurs"]
     #[inline(always)]
-    pub fn le(&mut self) -> LeW<Dmactrl0Spec> {
+    pub fn le(&mut self) -> LeW<'_, Dmactrl0Spec> {
         LeW::new(self, 16)
     }
     #[doc = "Bit 17 - Transmit Enable Lock"]
     #[inline(always)]
-    pub fn tl(&mut self) -> TlW<Dmactrl0Spec> {
+    pub fn tl(&mut self) -> TlW<'_, Dmactrl0Spec> {
         TlW::new(self, 17)
     }
     #[doc = "Bit 18 - Transmit Packet IRQ"]
     #[inline(always)]
-    pub fn tp(&mut self) -> TpW<Dmactrl0Spec> {
+    pub fn tp(&mut self) -> TpW<'_, Dmactrl0Spec> {
         TpW::new(self, 18)
     }
     #[doc = "Bit 19 - Receive Packet IRQ"]
     #[inline(always)]
-    pub fn rp(&mut self) -> RpW<Dmactrl0Spec> {
+    pub fn rp(&mut self) -> RpW<'_, Dmactrl0Spec> {
         RpW::new(self, 19)
     }
     #[doc = "Bit 20 - Interrupt code transmit enable on truncation"]
     #[inline(always)]
-    pub fn it(&mut self) -> ItW<Dmactrl0Spec> {
+    pub fn it(&mut self) -> ItW<'_, Dmactrl0Spec> {
         ItW::new(self, 20)
     }
     #[doc = "Bit 21 - Interrupt code transmit enable on EEP"]
     #[inline(always)]
-    pub fn ie(&mut self) -> IeW<Dmactrl0Spec> {
+    pub fn ie(&mut self) -> IeW<'_, Dmactrl0Spec> {
         IeW::new(self, 21)
     }
     #[doc = "Bit 22 - Truncated"]
     #[inline(always)]
-    pub fn tr(&mut self) -> TrW<Dmactrl0Spec> {
+    pub fn tr(&mut self) -> TrW<'_, Dmactrl0Spec> {
         TrW::new(self, 22)
     }
     #[doc = "Bit 23 - EEP Termination"]
     #[inline(always)]
-    pub fn ep(&mut self) -> EpW<Dmactrl0Spec> {
+    pub fn ep(&mut self) -> EpW<'_, Dmactrl0Spec> {
         EpW::new(self, 23)
     }
     #[doc = "Bits 26:31 - Interrupt number used for this channel"]
     #[inline(always)]
-    pub fn intnum(&mut self) -> IntnumW<Dmactrl0Spec> {
+    pub fn intnum(&mut self) -> IntnumW<'_, Dmactrl0Spec> {
         IntnumW::new(self, 26)
     }
 }
@@ -352,10 +352,6 @@ impl crate::Readable for Dmactrl0Spec {}
 #[doc = "`write(|w| ..)` method takes [`dmactrl0::W`](W) writer structure"]
 impl crate::Writable for Dmactrl0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMACTRL0 to value 0"]
-impl crate::Resettable for Dmactrl0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Dmactrl0Spec {}

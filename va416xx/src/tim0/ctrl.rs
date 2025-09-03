@@ -199,37 +199,37 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Counter Enable"]
     #[inline(always)]
-    pub fn enable(&mut self) -> EnableW<CtrlSpec> {
+    pub fn enable(&mut self) -> EnableW<'_, CtrlSpec> {
         EnableW::new(self, 0)
     }
     #[doc = "Bit 2 - Auto Disables the counter (set ENABLE to 0) when the count reaches 0"]
     #[inline(always)]
-    pub fn auto_disable(&mut self) -> AutoDisableW<CtrlSpec> {
+    pub fn auto_disable(&mut self) -> AutoDisableW<'_, CtrlSpec> {
         AutoDisableW::new(self, 2)
     }
     #[doc = "Bit 3 - Auto Deactivate the counter (set ACTIVE to 0) when the count reaches 0"]
     #[inline(always)]
-    pub fn auto_deactivate(&mut self) -> AutoDeactivateW<CtrlSpec> {
+    pub fn auto_deactivate(&mut self) -> AutoDeactivateW<'_, CtrlSpec> {
         AutoDeactivateW::new(self, 3)
     }
     #[doc = "Bit 4 - Interrupt Enable"]
     #[inline(always)]
-    pub fn irq_enb(&mut self) -> IrqEnbW<CtrlSpec> {
+    pub fn irq_enb(&mut self) -> IrqEnbW<'_, CtrlSpec> {
         IrqEnbW::new(self, 4)
     }
     #[doc = "Bits 5:7 - Counter Status Selection"]
     #[inline(always)]
-    pub fn status_sel(&mut self) -> StatusSelW<CtrlSpec> {
+    pub fn status_sel(&mut self) -> StatusSelW<'_, CtrlSpec> {
         StatusSelW::new(self, 5)
     }
     #[doc = "Bit 8 - Invert the Output Status"]
     #[inline(always)]
-    pub fn status_inv(&mut self) -> StatusInvW<CtrlSpec> {
+    pub fn status_inv(&mut self) -> StatusInvW<'_, CtrlSpec> {
         StatusInvW::new(self, 8)
     }
     #[doc = "Bit 9 - Stop Request"]
     #[inline(always)]
-    pub fn req_stop(&mut self) -> ReqStopW<CtrlSpec> {
+    pub fn req_stop(&mut self) -> ReqStopW<'_, CtrlSpec> {
         ReqStopW::new(self, 9)
     }
 }
@@ -243,10 +243,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlSpec {}

@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Timestamp Addend Register"]
     #[inline(always)]
-    pub fn tsar(&mut self) -> TsarW<TimestampaddendSpec> {
+    pub fn tsar(&mut self) -> TsarW<'_, TimestampaddendSpec> {
         TsarW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for TimestampaddendSpec {}
 #[doc = "`write(|w| ..)` method takes [`timestampaddend::W`](W) writer structure"]
 impl crate::Writable for TimestampaddendSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TIMESTAMPADDEND to value 0"]
-impl crate::Resettable for TimestampaddendSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TimestampaddendSpec {}

@@ -11,22 +11,22 @@ pub type Ch3W<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Channel PRIORITY clear"]
     #[inline(always)]
-    pub fn ch0(&mut self) -> Ch0W<ChnlPriorityClrSpec> {
+    pub fn ch0(&mut self) -> Ch0W<'_, ChnlPriorityClrSpec> {
         Ch0W::new(self, 0)
     }
     #[doc = "Bit 1 - Channel PRIORITY clear"]
     #[inline(always)]
-    pub fn ch1(&mut self) -> Ch1W<ChnlPriorityClrSpec> {
+    pub fn ch1(&mut self) -> Ch1W<'_, ChnlPriorityClrSpec> {
         Ch1W::new(self, 1)
     }
     #[doc = "Bit 2 - Channel PRIORITY clear"]
     #[inline(always)]
-    pub fn ch2(&mut self) -> Ch2W<ChnlPriorityClrSpec> {
+    pub fn ch2(&mut self) -> Ch2W<'_, ChnlPriorityClrSpec> {
         Ch2W::new(self, 2)
     }
     #[doc = "Bit 3 - Channel PRIORITY clear"]
     #[inline(always)]
-    pub fn ch3(&mut self) -> Ch3W<ChnlPriorityClrSpec> {
+    pub fn ch3(&mut self) -> Ch3W<'_, ChnlPriorityClrSpec> {
         Ch3W::new(self, 3)
     }
 }
@@ -38,10 +38,6 @@ impl crate::RegisterSpec for ChnlPriorityClrSpec {
 #[doc = "`write(|w| ..)` method takes [`chnl_priority_clr::W`](W) writer structure"]
 impl crate::Writable for ChnlPriorityClrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CHNL_PRIORITY_CLR to value 0"]
-impl crate::Resettable for ChnlPriorityClrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChnlPriorityClrSpec {}

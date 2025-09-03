@@ -19,10 +19,6 @@ impl crate::Readable for PwmaValueSpec {}
 #[doc = "`write(|w| ..)` method takes [`pwma_value::W`](W) writer structure"]
 impl crate::Writable for PwmaValueSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PWMA_VALUE to value 0"]
-impl crate::Resettable for PwmaValueSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PwmaValueSpec {}

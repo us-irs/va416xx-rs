@@ -142,77 +142,77 @@ impl R {
 impl W {
     #[doc = "Bit 0 - I2C bus is idle"]
     #[inline(always)]
-    pub fn i2cidle(&mut self) -> I2cidleW<StatusSpec> {
+    pub fn i2cidle(&mut self) -> I2cidleW<'_, StatusSpec> {
         I2cidleW::new(self, 0)
     }
     #[doc = "Bit 1 - I2C controller is Idle"]
     #[inline(always)]
-    pub fn idle(&mut self) -> IdleW<StatusSpec> {
+    pub fn idle(&mut self) -> IdleW<'_, StatusSpec> {
         IdleW::new(self, 1)
     }
     #[doc = "Bit 2 - Controller is Waiting"]
     #[inline(always)]
-    pub fn waiting(&mut self) -> WaitingW<StatusSpec> {
+    pub fn waiting(&mut self) -> WaitingW<'_, StatusSpec> {
         WaitingW::new(self, 2)
     }
     #[doc = "Bit 3 - Controller is Stalled"]
     #[inline(always)]
-    pub fn stalled(&mut self) -> StalledW<StatusSpec> {
+    pub fn stalled(&mut self) -> StalledW<'_, StatusSpec> {
         StalledW::new(self, 3)
     }
     #[doc = "Bit 4 - I2C Arbitration was lost"]
     #[inline(always)]
-    pub fn arblost(&mut self) -> ArblostW<StatusSpec> {
+    pub fn arblost(&mut self) -> ArblostW<'_, StatusSpec> {
         ArblostW::new(self, 4)
     }
     #[doc = "Bit 5 - I2C Address was not Acknowledged"]
     #[inline(always)]
-    pub fn nackaddr(&mut self) -> NackaddrW<StatusSpec> {
+    pub fn nackaddr(&mut self) -> NackaddrW<'_, StatusSpec> {
         NackaddrW::new(self, 5)
     }
     #[doc = "Bit 6 - I2C Data was not Acknowledged"]
     #[inline(always)]
-    pub fn nackdata(&mut self) -> NackdataW<StatusSpec> {
+    pub fn nackdata(&mut self) -> NackdataW<'_, StatusSpec> {
         NackdataW::new(self, 6)
     }
     #[doc = "Bit 8 - RX FIFO is Not Empty"]
     #[inline(always)]
-    pub fn rxnempty(&mut self) -> RxnemptyW<StatusSpec> {
+    pub fn rxnempty(&mut self) -> RxnemptyW<'_, StatusSpec> {
         RxnemptyW::new(self, 8)
     }
     #[doc = "Bit 9 - RX FIFO is Full"]
     #[inline(always)]
-    pub fn rxfull(&mut self) -> RxfullW<StatusSpec> {
+    pub fn rxfull(&mut self) -> RxfullW<'_, StatusSpec> {
         RxfullW::new(self, 9)
     }
     #[doc = "Bit 11 - RX FIFO Above Trigger Level"]
     #[inline(always)]
-    pub fn rxtrigger(&mut self) -> RxtriggerW<StatusSpec> {
+    pub fn rxtrigger(&mut self) -> RxtriggerW<'_, StatusSpec> {
         RxtriggerW::new(self, 11)
     }
     #[doc = "Bit 12 - TX FIFO is Empty"]
     #[inline(always)]
-    pub fn txempty(&mut self) -> TxemptyW<StatusSpec> {
+    pub fn txempty(&mut self) -> TxemptyW<'_, StatusSpec> {
         TxemptyW::new(self, 12)
     }
     #[doc = "Bit 13 - TX FIFO is Full"]
     #[inline(always)]
-    pub fn txnfull(&mut self) -> TxnfullW<StatusSpec> {
+    pub fn txnfull(&mut self) -> TxnfullW<'_, StatusSpec> {
         TxnfullW::new(self, 13)
     }
     #[doc = "Bit 15 - TX FIFO Below Trigger Level"]
     #[inline(always)]
-    pub fn txtrigger(&mut self) -> TxtriggerW<StatusSpec> {
+    pub fn txtrigger(&mut self) -> TxtriggerW<'_, StatusSpec> {
         TxtriggerW::new(self, 15)
     }
     #[doc = "Bit 30 - I2C Raw SDA value"]
     #[inline(always)]
-    pub fn raw_sda(&mut self) -> RawSdaW<StatusSpec> {
+    pub fn raw_sda(&mut self) -> RawSdaW<'_, StatusSpec> {
         RawSdaW::new(self, 30)
     }
     #[doc = "Bit 31 - I2C Raw SCL value"]
     #[inline(always)]
-    pub fn raw_scl(&mut self) -> RawSclW<StatusSpec> {
+    pub fn raw_scl(&mut self) -> RawSclW<'_, StatusSpec> {
         RawSclW::new(self, 31)
     }
 }
@@ -226,10 +226,6 @@ impl crate::Readable for StatusSpec {}
 #[doc = "`write(|w| ..)` method takes [`status::W`](W) writer structure"]
 impl crate::Writable for StatusSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets STATUS to value 0"]
-impl crate::Resettable for StatusSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for StatusSpec {}

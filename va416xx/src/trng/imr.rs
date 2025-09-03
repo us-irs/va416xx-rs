@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Mask when the TRNG has collected 192 bits"]
     #[inline(always)]
-    pub fn ehr_valid_int_mask(&mut self) -> EhrValidIntMaskW<ImrSpec> {
+    pub fn ehr_valid_int_mask(&mut self) -> EhrValidIntMaskW<'_, ImrSpec> {
         EhrValidIntMaskW::new(self, 0)
     }
     #[doc = "Bit 1 - Mask the Autocorrelation error"]
     #[inline(always)]
-    pub fn autocorr_err_int_mask(&mut self) -> AutocorrErrIntMaskW<ImrSpec> {
+    pub fn autocorr_err_int_mask(&mut self) -> AutocorrErrIntMaskW<'_, ImrSpec> {
         AutocorrErrIntMaskW::new(self, 1)
     }
     #[doc = "Bit 2 - Mask the CRNGT error"]
     #[inline(always)]
-    pub fn crngt_err_int_mask(&mut self) -> CrngtErrIntMaskW<ImrSpec> {
+    pub fn crngt_err_int_mask(&mut self) -> CrngtErrIntMaskW<'_, ImrSpec> {
         CrngtErrIntMaskW::new(self, 2)
     }
     #[doc = "Bit 3 - Mask the Von Neumann error"]
     #[inline(always)]
-    pub fn vn_err_int_mask(&mut self) -> VnErrIntMaskW<ImrSpec> {
+    pub fn vn_err_int_mask(&mut self) -> VnErrIntMaskW<'_, ImrSpec> {
         VnErrIntMaskW::new(self, 3)
     }
 }
@@ -72,8 +72,6 @@ impl crate::Readable for ImrSpec {}
 #[doc = "`write(|w| ..)` method takes [`imr::W`](W) writer structure"]
 impl crate::Writable for ImrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IMR to value 0x0f"]
 impl crate::Resettable for ImrSpec {

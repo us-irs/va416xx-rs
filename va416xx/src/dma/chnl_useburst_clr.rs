@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Channel use burst clear"]
     #[inline(always)]
-    pub fn ch0(&mut self) -> Ch0W<ChnlUseburstClrSpec> {
+    pub fn ch0(&mut self) -> Ch0W<'_, ChnlUseburstClrSpec> {
         Ch0W::new(self, 0)
     }
     #[doc = "Bit 1 - Channel use burst clear"]
     #[inline(always)]
-    pub fn ch1(&mut self) -> Ch1W<ChnlUseburstClrSpec> {
+    pub fn ch1(&mut self) -> Ch1W<'_, ChnlUseburstClrSpec> {
         Ch1W::new(self, 1)
     }
     #[doc = "Bit 2 - Channel use burst clear"]
     #[inline(always)]
-    pub fn ch2(&mut self) -> Ch2W<ChnlUseburstClrSpec> {
+    pub fn ch2(&mut self) -> Ch2W<'_, ChnlUseburstClrSpec> {
         Ch2W::new(self, 2)
     }
     #[doc = "Bit 3 - Channel use burst clear"]
     #[inline(always)]
-    pub fn ch3(&mut self) -> Ch3W<ChnlUseburstClrSpec> {
+    pub fn ch3(&mut self) -> Ch3W<'_, ChnlUseburstClrSpec> {
         Ch3W::new(self, 3)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for ChnlUseburstClrSpec {}
 #[doc = "`write(|w| ..)` method takes [`chnl_useburst_clr::W`](W) writer structure"]
 impl crate::Writable for ChnlUseburstClrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CHNL_USEBURST_CLR to value 0"]
-impl crate::Resettable for ChnlUseburstClrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChnlUseburstClrSpec {}

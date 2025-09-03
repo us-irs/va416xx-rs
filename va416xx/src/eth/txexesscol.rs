@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxexesscolSpec {
 #[doc = "`read()` method returns [`txexesscol::R`](R) reader structure"]
 impl crate::Readable for TxexesscolSpec {}
 #[doc = "`reset()` method sets TXEXESSCOL to value 0"]
-impl crate::Resettable for TxexesscolSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxexesscolSpec {}

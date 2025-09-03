@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - Timestamp"]
     #[inline(always)]
-    pub fn timestamp(&mut self) -> TimestampW<TstpCmb4Spec> {
+    pub fn timestamp(&mut self) -> TimestampW<'_, TstpCmb4Spec> {
         TimestampW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for TstpCmb4Spec {}
 #[doc = "`write(|w| ..)` method takes [`tstp_cmb4::W`](W) writer structure"]
 impl crate::Writable for TstpCmb4Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TSTP_CMB4 to value 0"]
-impl crate::Resettable for TstpCmb4Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TstpCmb4Spec {}

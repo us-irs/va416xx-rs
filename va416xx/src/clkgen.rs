@@ -22,20 +22,17 @@ impl RegisterBlock {
         &self.ctrl1
     }
 }
-#[doc = "CTRL0 (rw) register accessor: Clock Generation Module Control Register 0\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl0`]
-module"]
+#[doc = "CTRL0 (rw) register accessor: Clock Generation Module Control Register 0\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl0`] module"]
 #[doc(alias = "CTRL0")]
 pub type Ctrl0 = crate::Reg<ctrl0::Ctrl0Spec>;
 #[doc = "Clock Generation Module Control Register 0"]
 pub mod ctrl0;
-#[doc = "STAT (r) register accessor: Clock Generation Module Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`stat::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@stat`]
-module"]
+#[doc = "STAT (r) register accessor: Clock Generation Module Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`stat::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@stat`] module"]
 #[doc(alias = "STAT")]
 pub type Stat = crate::Reg<stat::StatSpec>;
 #[doc = "Clock Generation Module Status Register"]
 pub mod stat;
-#[doc = "CTRL1 (rw) register accessor: Clock Generation Module Control Register 1\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl1`]
-module"]
+#[doc = "CTRL1 (rw) register accessor: Clock Generation Module Control Register 1\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl1`] module"]
 #[doc(alias = "CTRL1")]
 pub type Ctrl1 = crate::Reg<ctrl1::Ctrl1Spec>;
 #[doc = "Clock Generation Module Control Register 1"]

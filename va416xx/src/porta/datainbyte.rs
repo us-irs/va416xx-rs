@@ -13,8 +13,5 @@ impl crate::RegisterSpec for DatainbyteSpec {
 }
 #[doc = "`read()` method returns [`datainbyte::R`](R) reader structure"]
 impl crate::Readable for DatainbyteSpec {}
-#[doc = "`reset()` method sets DATAINBYTE[%s]
-to value 0"]
-impl crate::Resettable for DatainbyteSpec {
-    const RESET_VALUE: u8 = 0;
-}
+#[doc = "`reset()` method sets DATAINBYTE[%s] to value 0"]
+impl crate::Resettable for DatainbyteSpec {}

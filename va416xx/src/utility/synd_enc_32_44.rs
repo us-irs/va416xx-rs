@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:5 - Computed syndrome value for bits 15-0"]
     #[inline(always)]
-    pub fn synd_enc_7_0(&mut self) -> SyndEnc7_0W<SyndEnc32_44Spec> {
+    pub fn synd_enc_7_0(&mut self) -> SyndEnc7_0W<'_, SyndEnc32_44Spec> {
         SyndEnc7_0W::new(self, 0)
     }
     #[doc = "Bits 6:11 - Computed syndrome value for bits 31-16"]
     #[inline(always)]
-    pub fn synd_enc_31_16(&mut self) -> SyndEnc31_16W<SyndEnc32_44Spec> {
+    pub fn synd_enc_31_16(&mut self) -> SyndEnc31_16W<'_, SyndEnc32_44Spec> {
         SyndEnc31_16W::new(self, 6)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for SyndEnc32_44Spec {}
 #[doc = "`write(|w| ..)` method takes [`synd_enc_32_44::W`](W) writer structure"]
 impl crate::Writable for SyndEnc32_44Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SYND_ENC_32_44 to value 0"]
-impl crate::Resettable for SyndEnc32_44Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SyndEnc32_44Spec {}

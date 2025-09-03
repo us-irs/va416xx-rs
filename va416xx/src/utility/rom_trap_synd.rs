@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:5 - 6-bit syndrome value for bits 15-0"]
     #[inline(always)]
-    pub fn rom_synd_7_0(&mut self) -> RomSynd7_0W<RomTrapSyndSpec> {
+    pub fn rom_synd_7_0(&mut self) -> RomSynd7_0W<'_, RomTrapSyndSpec> {
         RomSynd7_0W::new(self, 0)
     }
     #[doc = "Bits 6:11 - 6-bit syndrome value for bits 31-16"]
     #[inline(always)]
-    pub fn r0m_synd_31_16(&mut self) -> R0mSynd31_16W<RomTrapSyndSpec> {
+    pub fn r0m_synd_31_16(&mut self) -> R0mSynd31_16W<'_, RomTrapSyndSpec> {
         R0mSynd31_16W::new(self, 6)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for RomTrapSyndSpec {}
 #[doc = "`write(|w| ..)` method takes [`rom_trap_synd::W`](W) writer structure"]
 impl crate::Writable for RomTrapSyndSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ROM_TRAP_SYND to value 0"]
-impl crate::Resettable for RomTrapSyndSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RomTrapSyndSpec {}

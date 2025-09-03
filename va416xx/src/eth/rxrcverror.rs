@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxrcverrorSpec {
 #[doc = "`read()` method returns [`rxrcverror::R`](R) reader structure"]
 impl crate::Readable for RxrcverrorSpec {}
 #[doc = "`reset()` method sets RXRCVERROR to value 0"]
-impl crate::Resettable for RxrcverrorSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxrcverrorSpec {}

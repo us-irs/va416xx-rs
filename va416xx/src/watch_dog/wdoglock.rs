@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Register write enable status"]
     #[inline(always)]
-    pub fn reg_wr_en(&mut self) -> RegWrEnW<WdoglockSpec> {
+    pub fn reg_wr_en(&mut self) -> RegWrEnW<'_, WdoglockSpec> {
         RegWrEnW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for WdoglockSpec {}
 #[doc = "`write(|w| ..)` method takes [`wdoglock::W`](W) writer structure"]
 impl crate::Writable for WdoglockSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets WDOGLOCK to value 0"]
-impl crate::Resettable for WdoglockSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for WdoglockSpec {}

@@ -15,10 +15,6 @@ impl crate::RegisterSpec for DataoutSpec {
 #[doc = "`write(|w| ..)` method takes [`dataout::W`](W) writer structure"]
 impl crate::Writable for DataoutSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DATAOUT to value 0"]
-impl crate::Resettable for DataoutSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DataoutSpec {}

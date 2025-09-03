@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Rx Enable"]
     #[inline(always)]
-    pub fn rxenable(&mut self) -> RxenableW<EnableSpec> {
+    pub fn rxenable(&mut self) -> RxenableW<'_, EnableSpec> {
         RxenableW::new(self, 0)
     }
     #[doc = "Bit 1 - Tx Enable"]
     #[inline(always)]
-    pub fn txenable(&mut self) -> TxenableW<EnableSpec> {
+    pub fn txenable(&mut self) -> TxenableW<'_, EnableSpec> {
         TxenableW::new(self, 1)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for EnableSpec {}
 #[doc = "`write(|w| ..)` method takes [`enable::W`](W) writer structure"]
 impl crate::Writable for EnableSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ENABLE to value 0"]
-impl crate::Resettable for EnableSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for EnableSpec {}

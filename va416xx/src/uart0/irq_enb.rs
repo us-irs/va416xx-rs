@@ -70,37 +70,37 @@ impl R {
 impl W {
     #[doc = "Bit 0 - RX Interrupt"]
     #[inline(always)]
-    pub fn irq_rx(&mut self) -> IrqRxW<IrqEnbSpec> {
+    pub fn irq_rx(&mut self) -> IrqRxW<'_, IrqEnbSpec> {
         IrqRxW::new(self, 0)
     }
     #[doc = "Bit 1 - RX Status Interrupt"]
     #[inline(always)]
-    pub fn irq_rx_status(&mut self) -> IrqRxStatusW<IrqEnbSpec> {
+    pub fn irq_rx_status(&mut self) -> IrqRxStatusW<'_, IrqEnbSpec> {
         IrqRxStatusW::new(self, 1)
     }
     #[doc = "Bit 2 - RX Timeout Interrupt"]
     #[inline(always)]
-    pub fn irq_rx_to(&mut self) -> IrqRxToW<IrqEnbSpec> {
+    pub fn irq_rx_to(&mut self) -> IrqRxToW<'_, IrqEnbSpec> {
         IrqRxToW::new(self, 2)
     }
     #[doc = "Bit 4 - TX Interrupt"]
     #[inline(always)]
-    pub fn irq_tx(&mut self) -> IrqTxW<IrqEnbSpec> {
+    pub fn irq_tx(&mut self) -> IrqTxW<'_, IrqEnbSpec> {
         IrqTxW::new(self, 4)
     }
     #[doc = "Bit 5 - TX Status Interrupt"]
     #[inline(always)]
-    pub fn irq_tx_status(&mut self) -> IrqTxStatusW<IrqEnbSpec> {
+    pub fn irq_tx_status(&mut self) -> IrqTxStatusW<'_, IrqEnbSpec> {
         IrqTxStatusW::new(self, 5)
     }
     #[doc = "Bit 6 - TX Empty Interrupt"]
     #[inline(always)]
-    pub fn irq_tx_empty(&mut self) -> IrqTxEmptyW<IrqEnbSpec> {
+    pub fn irq_tx_empty(&mut self) -> IrqTxEmptyW<'_, IrqEnbSpec> {
         IrqTxEmptyW::new(self, 6)
     }
     #[doc = "Bit 7 - TX CTS Change Interrupt"]
     #[inline(always)]
-    pub fn irq_tx_cts(&mut self) -> IrqTxCtsW<IrqEnbSpec> {
+    pub fn irq_tx_cts(&mut self) -> IrqTxCtsW<'_, IrqEnbSpec> {
         IrqTxCtsW::new(self, 7)
     }
 }
@@ -114,10 +114,6 @@ impl crate::Readable for IrqEnbSpec {}
 #[doc = "`write(|w| ..)` method takes [`irq_enb::W`](W) writer structure"]
 impl crate::Writable for IrqEnbSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IRQ_ENB to value 0"]
-impl crate::Resettable for IrqEnbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IrqEnbSpec {}

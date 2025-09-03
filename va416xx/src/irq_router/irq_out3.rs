@@ -17,6 +17,4 @@ impl crate::RegisterSpec for IrqOut3Spec {
 #[doc = "`read()` method returns [`irq_out3::R`](R) reader structure"]
 impl crate::Readable for IrqOut3Spec {}
 #[doc = "`reset()` method sets IRQ_OUT3 to value 0"]
-impl crate::Resettable for IrqOut3Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IrqOut3Spec {}

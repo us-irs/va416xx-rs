@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - I2C data value"]
     #[inline(always)]
-    pub fn value(&mut self) -> ValueW<S0DataSpec> {
+    pub fn value(&mut self) -> ValueW<'_, S0DataSpec> {
         ValueW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for S0DataSpec {}
 #[doc = "`write(|w| ..)` method takes [`s0_data::W`](W) writer structure"]
 impl crate::Writable for S0DataSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets S0_DATA to value 0"]
-impl crate::Resettable for S0DataSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for S0DataSpec {}

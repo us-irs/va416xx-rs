@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Sets the number of clk cycles between two consecutive ring oscillator samples"]
     #[inline(always)]
-    pub fn sample_cntr1(&mut self) -> SampleCntr1W<SampleCnt1Spec> {
+    pub fn sample_cntr1(&mut self) -> SampleCntr1W<'_, SampleCnt1Spec> {
         SampleCntr1W::new(self, 0)
     }
 }
@@ -30,8 +30,6 @@ impl crate::Readable for SampleCnt1Spec {}
 #[doc = "`write(|w| ..)` method takes [`sample_cnt1::W`](W) writer structure"]
 impl crate::Writable for SampleCnt1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SAMPLE_CNT1 to value 0xffff"]
 impl crate::Resettable for SampleCnt1Spec {

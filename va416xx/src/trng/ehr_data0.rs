@@ -17,6 +17,4 @@ impl crate::RegisterSpec for EhrData0Spec {
 #[doc = "`read()` method returns [`ehr_data0::R`](R) reader structure"]
 impl crate::Readable for EhrData0Spec {}
 #[doc = "`reset()` method sets EHR_DATA0 to value 0"]
-impl crate::Resettable for EhrData0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for EhrData0Spec {}

@@ -34,17 +34,17 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Interrupt Source portion of Interrupt Code"]
     #[inline(always)]
-    pub fn ist(&mut self) -> IstW<CstpndSpec> {
+    pub fn ist(&mut self) -> IstW<'_, CstpndSpec> {
         IstW::new(self, 0)
     }
     #[doc = "Bit 4 - Interrupt Request portion of Interrupt Code"]
     #[inline(always)]
-    pub fn irq(&mut self) -> IrqW<CstpndSpec> {
+    pub fn irq(&mut self) -> IrqW<'_, CstpndSpec> {
         IrqW::new(self, 4)
     }
     #[doc = "Bits 5:7 - CAN Node Status"]
     #[inline(always)]
-    pub fn ns(&mut self) -> NsW<CstpndSpec> {
+    pub fn ns(&mut self) -> NsW<'_, CstpndSpec> {
         NsW::new(self, 5)
     }
 }
@@ -58,10 +58,6 @@ impl crate::Readable for CstpndSpec {}
 #[doc = "`write(|w| ..)` method takes [`cstpnd::W`](W) writer structure"]
 impl crate::Writable for CstpndSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CSTPND to value 0"]
-impl crate::Resettable for CstpndSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CstpndSpec {}

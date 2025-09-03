@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxdeferredSpec {
 #[doc = "`read()` method returns [`txdeferred::R`](R) reader structure"]
 impl crate::Readable for TxdeferredSpec {}
 #[doc = "`reset()` method sets TXDEFERRED to value 0"]
-impl crate::Resettable for TxdeferredSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxdeferredSpec {}

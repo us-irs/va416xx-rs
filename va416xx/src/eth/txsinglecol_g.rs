@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxsinglecolGSpec {
 #[doc = "`read()` method returns [`txsinglecol_g::R`](R) reader structure"]
 impl crate::Readable for TxsinglecolGSpec {}
 #[doc = "`reset()` method sets TXSINGLECOL_G to value 0"]
-impl crate::Resettable for TxsinglecolGSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxsinglecolGSpec {}

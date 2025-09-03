@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:30 - Timestamp Sub Seconds"]
     #[inline(always)]
-    pub fn tsss(&mut self) -> TsssW<SystimeNsecupSpec> {
+    pub fn tsss(&mut self) -> TsssW<'_, SystimeNsecupSpec> {
         TsssW::new(self, 0)
     }
     #[doc = "Bit 31 - Add or Subtract Time"]
     #[inline(always)]
-    pub fn addsub(&mut self) -> AddsubW<SystimeNsecupSpec> {
+    pub fn addsub(&mut self) -> AddsubW<'_, SystimeNsecupSpec> {
         AddsubW::new(self, 31)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for SystimeNsecupSpec {}
 #[doc = "`write(|w| ..)` method takes [`systime_nsecup::W`](W) writer structure"]
 impl crate::Writable for SystimeNsecupSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SYSTIME_NSECUP to value 0"]
-impl crate::Resettable for SystimeNsecupSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SystimeNsecupSpec {}

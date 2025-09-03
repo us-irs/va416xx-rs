@@ -17,6 +17,4 @@ impl crate::RegisterSpec for AdcCalSpec {
 #[doc = "`read()` method returns [`adc_cal::R`](R) reader structure"]
 impl crate::Readable for AdcCalSpec {}
 #[doc = "`reset()` method sets ADC_CAL to value 0"]
-impl crate::Resettable for AdcCalSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for AdcCalSpec {}

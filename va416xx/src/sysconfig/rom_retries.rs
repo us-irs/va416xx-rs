@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RomRetriesSpec {
 #[doc = "`read()` method returns [`rom_retries::R`](R) reader structure"]
 impl crate::Readable for RomRetriesSpec {}
 #[doc = "`reset()` method sets ROM_RETRIES to value 0"]
-impl crate::Resettable for RomRetriesSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RomRetriesSpec {}

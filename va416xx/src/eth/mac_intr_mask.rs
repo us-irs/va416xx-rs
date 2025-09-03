@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bit 9 - Timestamp Interrupt Mask"]
     #[inline(always)]
-    pub fn tsim(&mut self) -> TsimW<MacIntrMaskSpec> {
+    pub fn tsim(&mut self) -> TsimW<'_, MacIntrMaskSpec> {
         TsimW::new(self, 9)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for MacIntrMaskSpec {}
 #[doc = "`write(|w| ..)` method takes [`mac_intr_mask::W`](W) writer structure"]
 impl crate::Writable for MacIntrMaskSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MAC_INTR_MASK to value 0"]
-impl crate::Resettable for MacIntrMaskSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MacIntrMaskSpec {}

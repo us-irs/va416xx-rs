@@ -234,97 +234,97 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Disable the SpaceWire CODEC"]
     #[inline(always)]
-    pub fn ld(&mut self) -> LdW<CtrlSpec> {
+    pub fn ld(&mut self) -> LdW<'_, CtrlSpec> {
         LdW::new(self, 0)
     }
     #[doc = "Bit 1 - Start the link"]
     #[inline(always)]
-    pub fn ls(&mut self) -> LsW<CtrlSpec> {
+    pub fn ls(&mut self) -> LsW<'_, CtrlSpec> {
         LsW::new(self, 1)
     }
     #[doc = "Bit 2 - Automatically start the link when a NULL has been received"]
     #[inline(always)]
-    pub fn as_(&mut self) -> AsW<CtrlSpec> {
+    pub fn as_(&mut self) -> AsW<'_, CtrlSpec> {
         AsW::new(self, 2)
     }
     #[doc = "Bit 3 - If set, an interrupt is generated when one or both of bit 8 to 9 is set and its corresponding event occurs"]
     #[inline(always)]
-    pub fn ie(&mut self) -> IeW<CtrlSpec> {
+    pub fn ie(&mut self) -> IeW<'_, CtrlSpec> {
         IeW::new(self, 3)
     }
     #[doc = "Bit 4 - The host can generate a tick by writing a one to this field"]
     #[inline(always)]
-    pub fn ti(&mut self) -> TiW<CtrlSpec> {
+    pub fn ti(&mut self) -> TiW<'_, CtrlSpec> {
         TiW::new(self, 4)
     }
     #[doc = "Bit 5 - Enable Promiscuous mode"]
     #[inline(always)]
-    pub fn pm(&mut self) -> PmW<CtrlSpec> {
+    pub fn pm(&mut self) -> PmW<'_, CtrlSpec> {
         PmW::new(self, 5)
     }
     #[doc = "Bit 6 - Make complete reset of the SpaceWire node. Self-clearing"]
     #[inline(always)]
-    pub fn rs(&mut self) -> RsW<CtrlSpec> {
+    pub fn rs(&mut self) -> RsW<'_, CtrlSpec> {
         RsW::new(self, 6)
     }
     #[doc = "Bit 8 - Generate interrupt when a valid time-code is received"]
     #[inline(always)]
-    pub fn tq(&mut self) -> TqW<CtrlSpec> {
+    pub fn tq(&mut self) -> TqW<'_, CtrlSpec> {
         TqW::new(self, 8)
     }
     #[doc = "Bit 9 - Generate interrupt when link error occurs"]
     #[inline(always)]
-    pub fn li(&mut self) -> LiW<CtrlSpec> {
+    pub fn li(&mut self) -> LiW<'_, CtrlSpec> {
         LiW::new(self, 9)
     }
     #[doc = "Bit 10 - Enable time-code transmissions"]
     #[inline(always)]
-    pub fn tt(&mut self) -> TtW<CtrlSpec> {
+    pub fn tt(&mut self) -> TtW<'_, CtrlSpec> {
         TtW::new(self, 10)
     }
     #[doc = "Bit 11 - Enable time-code receptions"]
     #[inline(always)]
-    pub fn tr(&mut self) -> TrW<CtrlSpec> {
+    pub fn tr(&mut self) -> TrW<'_, CtrlSpec> {
         TrW::new(self, 11)
     }
     #[doc = "Bit 12 - Time-code Flag Filter"]
     #[inline(always)]
-    pub fn tf(&mut self) -> TfW<CtrlSpec> {
+    pub fn tf(&mut self) -> TfW<'_, CtrlSpec> {
         TfW::new(self, 12)
     }
     #[doc = "Bit 13 - Transmitter Enable Lock Control"]
     #[inline(always)]
-    pub fn tl(&mut self) -> TlW<CtrlSpec> {
+    pub fn tl(&mut self) -> TlW<'_, CtrlSpec> {
         TlW::new(self, 13)
     }
     #[doc = "Bit 15 - SpW Plug-and-Play Enable"]
     #[inline(always)]
-    pub fn pe(&mut self) -> PeW<CtrlSpec> {
+    pub fn pe(&mut self) -> PeW<'_, CtrlSpec> {
         PeW::new(self, 15)
     }
     #[doc = "Bit 16 - Enable RMAP command handler"]
     #[inline(always)]
-    pub fn re(&mut self) -> ReW<CtrlSpec> {
+    pub fn re(&mut self) -> ReW<'_, CtrlSpec> {
         ReW::new(self, 16)
     }
     #[doc = "Bit 17 - If set only one RMAP buffer is used"]
     #[inline(always)]
-    pub fn rd(&mut self) -> RdW<CtrlSpec> {
+    pub fn rd(&mut self) -> RdW<'_, CtrlSpec> {
         RdW::new(self, 17)
     }
     #[doc = "Bit 20 - Disable port force"]
     #[inline(always)]
-    pub fn np(&mut self) -> NpW<CtrlSpec> {
+    pub fn np(&mut self) -> NpW<'_, CtrlSpec> {
         NpW::new(self, 20)
     }
     #[doc = "Bit 21 - Selects the active port when the no port force bit is zero"]
     #[inline(always)]
-    pub fn ps(&mut self) -> PsW<CtrlSpec> {
+    pub fn ps(&mut self) -> PsW<'_, CtrlSpec> {
         PsW::new(self, 21)
     }
     #[doc = "Bit 22 - Loop-back Enable"]
     #[inline(always)]
-    pub fn le(&mut self) -> LeW<CtrlSpec> {
+    pub fn le(&mut self) -> LeW<'_, CtrlSpec> {
         LeW::new(self, 22)
     }
 }
@@ -338,8 +338,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0xa201_0004"]
 impl crate::Resettable for CtrlSpec {

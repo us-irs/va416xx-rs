@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Channel Request Mask clear"]
     #[inline(always)]
-    pub fn ch0(&mut self) -> Ch0W<ChnlReqMaskClrSpec> {
+    pub fn ch0(&mut self) -> Ch0W<'_, ChnlReqMaskClrSpec> {
         Ch0W::new(self, 0)
     }
     #[doc = "Bit 1 - Channel Request Mask clear"]
     #[inline(always)]
-    pub fn ch1(&mut self) -> Ch1W<ChnlReqMaskClrSpec> {
+    pub fn ch1(&mut self) -> Ch1W<'_, ChnlReqMaskClrSpec> {
         Ch1W::new(self, 1)
     }
     #[doc = "Bit 2 - Channel Request Mask clear"]
     #[inline(always)]
-    pub fn ch2(&mut self) -> Ch2W<ChnlReqMaskClrSpec> {
+    pub fn ch2(&mut self) -> Ch2W<'_, ChnlReqMaskClrSpec> {
         Ch2W::new(self, 2)
     }
     #[doc = "Bit 3 - Channel Request Mask clear"]
     #[inline(always)]
-    pub fn ch3(&mut self) -> Ch3W<ChnlReqMaskClrSpec> {
+    pub fn ch3(&mut self) -> Ch3W<'_, ChnlReqMaskClrSpec> {
         Ch3W::new(self, 3)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for ChnlReqMaskClrSpec {}
 #[doc = "`write(|w| ..)` method takes [`chnl_req_mask_clr::W`](W) writer structure"]
 impl crate::Writable for ChnlReqMaskClrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CHNL_REQ_MASK_CLR to value 0"]
-impl crate::Resettable for ChnlReqMaskClrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChnlReqMaskClrSpec {}

@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Write any value to clear interrupt"]
     #[inline(always)]
-    pub fn clear(&mut self) -> ClearW<WdogintclrSpec> {
+    pub fn clear(&mut self) -> ClearW<'_, WdogintclrSpec> {
         ClearW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for WdogintclrSpec {}
 #[doc = "`write(|w| ..)` method takes [`wdogintclr::W`](W) writer structure"]
 impl crate::Writable for WdogintclrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets WDOGINTCLR to value 0"]
-impl crate::Resettable for WdogintclrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for WdogintclrSpec {}

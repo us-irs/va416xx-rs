@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:11 - Provides bits 11:0 for syndrome, 2x6-bit"]
     #[inline(always)]
-    pub fn synd_synd(&mut self) -> SyndSyndW<SyndSyndSpec> {
+    pub fn synd_synd(&mut self) -> SyndSyndW<'_, SyndSyndSpec> {
         SyndSyndW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for SyndSyndSpec {}
 #[doc = "`write(|w| ..)` method takes [`synd_synd::W`](W) writer structure"]
 impl crate::Writable for SyndSyndSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SYND_SYND to value 0"]
-impl crate::Resettable for SyndSyndSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SyndSyndSpec {}

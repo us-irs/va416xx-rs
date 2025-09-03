@@ -133,72 +133,72 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Test Mode"]
     #[inline(always)]
-    pub fn tmosc(&mut self) -> TmoscW<AnalogCntlSpec> {
+    pub fn tmosc(&mut self) -> TmoscW<'_, AnalogCntlSpec> {
         TmoscW::new(self, 0)
     }
     #[doc = "Bit 1 - Test Mode"]
     #[inline(always)]
-    pub fn tmpokdis(&mut self) -> TmpokdisW<AnalogCntlSpec> {
+    pub fn tmpokdis(&mut self) -> TmpokdisW<'_, AnalogCntlSpec> {
         TmpokdisW::new(self, 1)
     }
     #[doc = "Bit 2 - Test Mode"]
     #[inline(always)]
-    pub fn tm_adcmux_n(&mut self) -> TmAdcmuxNW<AnalogCntlSpec> {
+    pub fn tm_adcmux_n(&mut self) -> TmAdcmuxNW<'_, AnalogCntlSpec> {
         TmAdcmuxNW::new(self, 2)
     }
     #[doc = "Bit 3 - Test Mode"]
     #[inline(always)]
-    pub fn tm_adcmux_p(&mut self) -> TmAdcmuxPW<AnalogCntlSpec> {
+    pub fn tm_adcmux_p(&mut self) -> TmAdcmuxPW<'_, AnalogCntlSpec> {
         TmAdcmuxPW::new(self, 3)
     }
     #[doc = "Bit 4 - Test Mode"]
     #[inline(always)]
-    pub fn tmratio(&mut self) -> TmratioW<AnalogCntlSpec> {
+    pub fn tmratio(&mut self) -> TmratioW<'_, AnalogCntlSpec> {
         TmratioW::new(self, 4)
     }
     #[doc = "Bits 5:6 - Test Mode"]
     #[inline(always)]
-    pub fn tmatomux(&mut self) -> TmatomuxW<AnalogCntlSpec> {
+    pub fn tmatomux(&mut self) -> TmatomuxW<'_, AnalogCntlSpec> {
         TmatomuxW::new(self, 5)
     }
     #[doc = "Bits 9:12 - Number of clocks for sample time"]
     #[inline(always)]
-    pub fn adc_stest(&mut self) -> AdcStestW<AnalogCntlSpec> {
+    pub fn adc_stest(&mut self) -> AdcStestW<'_, AnalogCntlSpec> {
         AdcStestW::new(self, 9)
     }
     #[doc = "Bit 14 - Enable normal test clock"]
     #[inline(always)]
-    pub fn rclk_pos_en(&mut self) -> RclkPosEnW<AnalogCntlSpec> {
+    pub fn rclk_pos_en(&mut self) -> RclkPosEnW<'_, AnalogCntlSpec> {
         RclkPosEnW::new(self, 14)
     }
     #[doc = "Bit 15 - Enable inverted test clock"]
     #[inline(always)]
-    pub fn rclk_neg_en(&mut self) -> RclkNegEnW<AnalogCntlSpec> {
+    pub fn rclk_neg_en(&mut self) -> RclkNegEnW<'_, AnalogCntlSpec> {
         RclkNegEnW::new(self, 15)
     }
     #[doc = "Bit 16 - Enable normal APB2CLK for test output"]
     #[inline(always)]
-    pub fn apb2clk_pos_en(&mut self) -> Apb2clkPosEnW<AnalogCntlSpec> {
+    pub fn apb2clk_pos_en(&mut self) -> Apb2clkPosEnW<'_, AnalogCntlSpec> {
         Apb2clkPosEnW::new(self, 16)
     }
     #[doc = "Bit 17 - Enable inverted APB2CLK for test output"]
     #[inline(always)]
-    pub fn apb2clk_neg_en(&mut self) -> Apb2clkNegEnW<AnalogCntlSpec> {
+    pub fn apb2clk_neg_en(&mut self) -> Apb2clkNegEnW<'_, AnalogCntlSpec> {
         Apb2clkNegEnW::new(self, 17)
     }
     #[doc = "Bit 18 - Enables pull down on analog pads"]
     #[inline(always)]
-    pub fn tm_analog_pd_en(&mut self) -> TmAnalogPdEnW<AnalogCntlSpec> {
+    pub fn tm_analog_pd_en(&mut self) -> TmAnalogPdEnW<'_, AnalogCntlSpec> {
         TmAnalogPdEnW::new(self, 18)
     }
     #[doc = "Bit 19 - Enables a skip of all delay counters and eFuse read"]
     #[inline(always)]
-    pub fn jmp2boot(&mut self) -> Jmp2bootW<AnalogCntlSpec> {
+    pub fn jmp2boot(&mut self) -> Jmp2bootW<'_, AnalogCntlSpec> {
         Jmp2bootW::new(self, 19)
     }
     #[doc = "Bit 20 - Enables a skip of all delay counters, eFuse read, and boot"]
     #[inline(always)]
-    pub fn skipboot(&mut self) -> SkipbootW<AnalogCntlSpec> {
+    pub fn skipboot(&mut self) -> SkipbootW<'_, AnalogCntlSpec> {
         SkipbootW::new(self, 20)
     }
 }
@@ -212,10 +212,6 @@ impl crate::Readable for AnalogCntlSpec {}
 #[doc = "`write(|w| ..)` method takes [`analog_cntl::W`](W) writer structure"]
 impl crate::Writable for AnalogCntlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ANALOG_CNTL to value 0"]
-impl crate::Resettable for AnalogCntlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for AnalogCntlSpec {}

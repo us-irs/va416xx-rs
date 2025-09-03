@@ -14,6 +14,4 @@ impl crate::RegisterSpec for IrqRawSpec {
 #[doc = "`read()` method returns [`irq_raw::R`](R) reader structure"]
 impl crate::Readable for IrqRawSpec {}
 #[doc = "`reset()` method sets IRQ_RAW to value 0"]
-impl crate::Resettable for IrqRawSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IrqRawSpec {}

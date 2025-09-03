@@ -286,157 +286,157 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Resetn of SPI0"]
     #[inline(always)]
-    pub fn spi0(&mut self) -> Spi0W<PeripheralResetSpec> {
+    pub fn spi0(&mut self) -> Spi0W<'_, PeripheralResetSpec> {
         Spi0W::new(self, 0)
     }
     #[doc = "Bit 1 - Resetn of SPI1"]
     #[inline(always)]
-    pub fn spi1(&mut self) -> Spi1W<PeripheralResetSpec> {
+    pub fn spi1(&mut self) -> Spi1W<'_, PeripheralResetSpec> {
         Spi1W::new(self, 1)
     }
     #[doc = "Bit 2 - Resetn of SPI2"]
     #[inline(always)]
-    pub fn spi2(&mut self) -> Spi2W<PeripheralResetSpec> {
+    pub fn spi2(&mut self) -> Spi2W<'_, PeripheralResetSpec> {
         Spi2W::new(self, 2)
     }
     #[doc = "Bit 3 - Resetn of SPI3"]
     #[inline(always)]
-    pub fn spi3(&mut self) -> Spi3W<PeripheralResetSpec> {
+    pub fn spi3(&mut self) -> Spi3W<'_, PeripheralResetSpec> {
         Spi3W::new(self, 3)
     }
     #[doc = "Bit 4 - Resetn of UART0"]
     #[inline(always)]
-    pub fn uart0(&mut self) -> Uart0W<PeripheralResetSpec> {
+    pub fn uart0(&mut self) -> Uart0W<'_, PeripheralResetSpec> {
         Uart0W::new(self, 4)
     }
     #[doc = "Bit 5 - Resetn of UART1"]
     #[inline(always)]
-    pub fn uart1(&mut self) -> Uart1W<PeripheralResetSpec> {
+    pub fn uart1(&mut self) -> Uart1W<'_, PeripheralResetSpec> {
         Uart1W::new(self, 5)
     }
     #[doc = "Bit 6 - Resetn of UART2"]
     #[inline(always)]
-    pub fn uart2(&mut self) -> Uart2W<PeripheralResetSpec> {
+    pub fn uart2(&mut self) -> Uart2W<'_, PeripheralResetSpec> {
         Uart2W::new(self, 6)
     }
     #[doc = "Bit 7 - Resetn of I2C0"]
     #[inline(always)]
-    pub fn i2c0(&mut self) -> I2c0W<PeripheralResetSpec> {
+    pub fn i2c0(&mut self) -> I2c0W<'_, PeripheralResetSpec> {
         I2c0W::new(self, 7)
     }
     #[doc = "Bit 8 - Resetn of I2C1"]
     #[inline(always)]
-    pub fn i2c1(&mut self) -> I2c1W<PeripheralResetSpec> {
+    pub fn i2c1(&mut self) -> I2c1W<'_, PeripheralResetSpec> {
         I2c1W::new(self, 8)
     }
     #[doc = "Bit 9 - Resetn of I2C2"]
     #[inline(always)]
-    pub fn i2c2(&mut self) -> I2c2W<PeripheralResetSpec> {
+    pub fn i2c2(&mut self) -> I2c2W<'_, PeripheralResetSpec> {
         I2c2W::new(self, 9)
     }
     #[doc = "Bit 10 - Resetn of CAN0"]
     #[inline(always)]
-    pub fn can0(&mut self) -> Can0W<PeripheralResetSpec> {
+    pub fn can0(&mut self) -> Can0W<'_, PeripheralResetSpec> {
         Can0W::new(self, 10)
     }
     #[doc = "Bit 11 - Resetn of CAN1"]
     #[inline(always)]
-    pub fn can1(&mut self) -> Can1W<PeripheralResetSpec> {
+    pub fn can1(&mut self) -> Can1W<'_, PeripheralResetSpec> {
         Can1W::new(self, 11)
     }
     #[doc = "Bit 12 - Resetn of TRNG"]
     #[inline(always)]
-    pub fn trng(&mut self) -> TrngW<PeripheralResetSpec> {
+    pub fn trng(&mut self) -> TrngW<'_, PeripheralResetSpec> {
         TrngW::new(self, 12)
     }
     #[doc = "Bit 13 - Resetn of ADC"]
     #[inline(always)]
-    pub fn adc(&mut self) -> AdcW<PeripheralResetSpec> {
+    pub fn adc(&mut self) -> AdcW<'_, PeripheralResetSpec> {
         AdcW::new(self, 13)
     }
     #[doc = "Bit 14 - Resetn of DAC"]
     #[inline(always)]
-    pub fn dac(&mut self) -> DacW<PeripheralResetSpec> {
+    pub fn dac(&mut self) -> DacW<'_, PeripheralResetSpec> {
         DacW::new(self, 14)
     }
     #[doc = "Bit 15 - Resetn of DMA"]
     #[inline(always)]
-    pub fn dma(&mut self) -> DmaW<PeripheralResetSpec> {
+    pub fn dma(&mut self) -> DmaW<'_, PeripheralResetSpec> {
         DmaW::new(self, 15)
     }
     #[doc = "Bit 16 - Resetn of EBI"]
     #[inline(always)]
-    pub fn ebi(&mut self) -> EbiW<PeripheralResetSpec> {
+    pub fn ebi(&mut self) -> EbiW<'_, PeripheralResetSpec> {
         EbiW::new(self, 16)
     }
     #[doc = "Bit 17 - Resetn of Ethernet"]
     #[inline(always)]
-    pub fn eth(&mut self) -> EthW<PeripheralResetSpec> {
+    pub fn eth(&mut self) -> EthW<'_, PeripheralResetSpec> {
         EthW::new(self, 17)
     }
     #[doc = "Bit 18 - Resetn of SpaceWire"]
     #[inline(always)]
-    pub fn spw(&mut self) -> SpwW<PeripheralResetSpec> {
+    pub fn spw(&mut self) -> SpwW<'_, PeripheralResetSpec> {
         SpwW::new(self, 18)
     }
     #[doc = "Bit 19 - RESETn of PLL in Clock Generation Module"]
     #[inline(always)]
-    pub fn clkgen(&mut self) -> ClkgenW<PeripheralResetSpec> {
+    pub fn clkgen(&mut self) -> ClkgenW<'_, PeripheralResetSpec> {
         ClkgenW::new(self, 19)
     }
     #[doc = "Bit 20 - Resetn of IRQ Router"]
     #[inline(always)]
-    pub fn irq(&mut self) -> IrqW<PeripheralResetSpec> {
+    pub fn irq(&mut self) -> IrqW<'_, PeripheralResetSpec> {
         IrqW::new(self, 20)
     }
     #[doc = "Bit 21 - Resetn of IO CONFIG"]
     #[inline(always)]
-    pub fn ioconfig(&mut self) -> IoconfigW<PeripheralResetSpec> {
+    pub fn ioconfig(&mut self) -> IoconfigW<'_, PeripheralResetSpec> {
         IoconfigW::new(self, 21)
     }
     #[doc = "Bit 22 - Resetn of UTILITY peripheral"]
     #[inline(always)]
-    pub fn utility(&mut self) -> UtilityW<PeripheralResetSpec> {
+    pub fn utility(&mut self) -> UtilityW<'_, PeripheralResetSpec> {
         UtilityW::new(self, 22)
     }
     #[doc = "Bit 23 - Resetn of WDOG"]
     #[inline(always)]
-    pub fn wdog(&mut self) -> WdogW<PeripheralResetSpec> {
+    pub fn wdog(&mut self) -> WdogW<'_, PeripheralResetSpec> {
         WdogW::new(self, 23)
     }
     #[doc = "Bit 24 - Resetn of PORTA"]
     #[inline(always)]
-    pub fn porta(&mut self) -> PortaW<PeripheralResetSpec> {
+    pub fn porta(&mut self) -> PortaW<'_, PeripheralResetSpec> {
         PortaW::new(self, 24)
     }
     #[doc = "Bit 25 - Resetn of PORTB"]
     #[inline(always)]
-    pub fn portb(&mut self) -> PortbW<PeripheralResetSpec> {
+    pub fn portb(&mut self) -> PortbW<'_, PeripheralResetSpec> {
         PortbW::new(self, 25)
     }
     #[doc = "Bit 26 - Resetn of PORTC"]
     #[inline(always)]
-    pub fn portc(&mut self) -> PortcW<PeripheralResetSpec> {
+    pub fn portc(&mut self) -> PortcW<'_, PeripheralResetSpec> {
         PortcW::new(self, 26)
     }
     #[doc = "Bit 27 - Resetn of PORTD"]
     #[inline(always)]
-    pub fn portd(&mut self) -> PortdW<PeripheralResetSpec> {
+    pub fn portd(&mut self) -> PortdW<'_, PeripheralResetSpec> {
         PortdW::new(self, 27)
     }
     #[doc = "Bit 28 - Resetn of PORTE"]
     #[inline(always)]
-    pub fn porte(&mut self) -> PorteW<PeripheralResetSpec> {
+    pub fn porte(&mut self) -> PorteW<'_, PeripheralResetSpec> {
         PorteW::new(self, 28)
     }
     #[doc = "Bit 29 - Resetn of PORTF"]
     #[inline(always)]
-    pub fn portf(&mut self) -> PortfW<PeripheralResetSpec> {
+    pub fn portf(&mut self) -> PortfW<'_, PeripheralResetSpec> {
         PortfW::new(self, 29)
     }
     #[doc = "Bit 30 - Resetn of PORTG"]
     #[inline(always)]
-    pub fn portg(&mut self) -> PortgW<PeripheralResetSpec> {
+    pub fn portg(&mut self) -> PortgW<'_, PeripheralResetSpec> {
         PortgW::new(self, 30)
     }
 }
@@ -450,8 +450,6 @@ impl crate::Readable for PeripheralResetSpec {}
 #[doc = "`write(|w| ..)` method takes [`peripheral_reset::W`](W) writer structure"]
 impl crate::Writable for PeripheralResetSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PERIPHERAL_RESET to value 0x7f7b_efff"]
 impl crate::Resettable for PeripheralResetSpec {

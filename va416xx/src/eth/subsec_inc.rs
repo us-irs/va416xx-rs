@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Sub-Second Increment Valuee"]
     #[inline(always)]
-    pub fn ssinc(&mut self) -> SsincW<SubsecIncSpec> {
+    pub fn ssinc(&mut self) -> SsincW<'_, SubsecIncSpec> {
         SsincW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for SubsecIncSpec {}
 #[doc = "`write(|w| ..)` method takes [`subsec_inc::W`](W) writer structure"]
 impl crate::Writable for SubsecIncSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SUBSEC_INC to value 0"]
-impl crate::Resettable for SubsecIncSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SubsecIncSpec {}

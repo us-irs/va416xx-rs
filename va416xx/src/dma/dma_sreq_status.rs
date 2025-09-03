@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bit 0 - DMA SRequest Status for this CH"]
     #[inline(always)]
-    pub fn ch0(&mut self) -> Ch0W<DmaSreqStatusSpec> {
+    pub fn ch0(&mut self) -> Ch0W<'_, DmaSreqStatusSpec> {
         Ch0W::new(self, 0)
     }
     #[doc = "Bit 1 - DMA SRequest Status for this CH"]
     #[inline(always)]
-    pub fn ch1(&mut self) -> Ch1W<DmaSreqStatusSpec> {
+    pub fn ch1(&mut self) -> Ch1W<'_, DmaSreqStatusSpec> {
         Ch1W::new(self, 1)
     }
     #[doc = "Bit 2 - DMA SRequest Status for this CH"]
     #[inline(always)]
-    pub fn ch2(&mut self) -> Ch2W<DmaSreqStatusSpec> {
+    pub fn ch2(&mut self) -> Ch2W<'_, DmaSreqStatusSpec> {
         Ch2W::new(self, 2)
     }
     #[doc = "Bit 3 - DMA SRequest Status for this CH"]
     #[inline(always)]
-    pub fn ch3(&mut self) -> Ch3W<DmaSreqStatusSpec> {
+    pub fn ch3(&mut self) -> Ch3W<'_, DmaSreqStatusSpec> {
         Ch3W::new(self, 3)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for DmaSreqStatusSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_sreq_status::W`](W) writer structure"]
 impl crate::Writable for DmaSreqStatusSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_SREQ_STATUS to value 0"]
-impl crate::Resettable for DmaSreqStatusSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DmaSreqStatusSpec {}

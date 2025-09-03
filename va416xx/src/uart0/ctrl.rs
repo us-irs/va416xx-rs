@@ -106,57 +106,57 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Parity Enable"]
     #[inline(always)]
-    pub fn paren(&mut self) -> ParenW<CtrlSpec> {
+    pub fn paren(&mut self) -> ParenW<'_, CtrlSpec> {
         ParenW::new(self, 0)
     }
     #[doc = "Bit 1 - Parity Even/Odd(1/0)"]
     #[inline(always)]
-    pub fn pareven(&mut self) -> ParevenW<CtrlSpec> {
+    pub fn pareven(&mut self) -> ParevenW<'_, CtrlSpec> {
         ParevenW::new(self, 1)
     }
     #[doc = "Bit 2 - Parity Sticky"]
     #[inline(always)]
-    pub fn parstk(&mut self) -> ParstkW<CtrlSpec> {
+    pub fn parstk(&mut self) -> ParstkW<'_, CtrlSpec> {
         ParstkW::new(self, 2)
     }
     #[doc = "Bit 3 - Stop Bits 1/2(0/1)"]
     #[inline(always)]
-    pub fn stopbits(&mut self) -> StopbitsW<CtrlSpec> {
+    pub fn stopbits(&mut self) -> StopbitsW<'_, CtrlSpec> {
         StopbitsW::new(self, 3)
     }
     #[doc = "Bits 4:5 - Word Size in Bits 5/6/7/8(00/01/10/11)"]
     #[inline(always)]
-    pub fn wordsize(&mut self) -> WordsizeW<CtrlSpec> {
+    pub fn wordsize(&mut self) -> WordsizeW<'_, CtrlSpec> {
         WordsizeW::new(self, 4)
     }
     #[doc = "Bit 6 - Loopback Enable"]
     #[inline(always)]
-    pub fn loopback(&mut self) -> LoopbackW<CtrlSpec> {
+    pub fn loopback(&mut self) -> LoopbackW<'_, CtrlSpec> {
         LoopbackW::new(self, 6)
     }
     #[doc = "Bit 7 - Loopback Block"]
     #[inline(always)]
-    pub fn loopbackblk(&mut self) -> LoopbackblkW<CtrlSpec> {
+    pub fn loopbackblk(&mut self) -> LoopbackblkW<'_, CtrlSpec> {
         LoopbackblkW::new(self, 7)
     }
     #[doc = "Bit 8 - Enable Auto CTS mode"]
     #[inline(always)]
-    pub fn autocts(&mut self) -> AutoctsW<CtrlSpec> {
+    pub fn autocts(&mut self) -> AutoctsW<'_, CtrlSpec> {
         AutoctsW::new(self, 8)
     }
     #[doc = "Bit 9 - Default RTSn value"]
     #[inline(always)]
-    pub fn defrts(&mut self) -> DefrtsW<CtrlSpec> {
+    pub fn defrts(&mut self) -> DefrtsW<'_, CtrlSpec> {
         DefrtsW::new(self, 9)
     }
     #[doc = "Bit 10 - Enable Auto RTS mode"]
     #[inline(always)]
-    pub fn autorts(&mut self) -> AutortsW<CtrlSpec> {
+    pub fn autorts(&mut self) -> AutortsW<'_, CtrlSpec> {
         AutortsW::new(self, 10)
     }
     #[doc = "Bit 11 - Enable BAUD8 mode"]
     #[inline(always)]
-    pub fn baud8(&mut self) -> Baud8W<CtrlSpec> {
+    pub fn baud8(&mut self) -> Baud8W<'_, CtrlSpec> {
         Baud8W::new(self, 11)
     }
 }
@@ -170,10 +170,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlSpec {}

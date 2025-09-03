@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:14 - Buffer Interrupt Code Enable\\[14:0\\]"]
     #[inline(always)]
-    pub fn icen(&mut self) -> IcenW<CicenSpec> {
+    pub fn icen(&mut self) -> IcenW<'_, CicenSpec> {
         IcenW::new(self, 0)
     }
     #[doc = "Bit 15 - Error Interrupt Code Enable"]
     #[inline(always)]
-    pub fn eicen(&mut self) -> EicenW<CicenSpec> {
+    pub fn eicen(&mut self) -> EicenW<'_, CicenSpec> {
         EicenW::new(self, 15)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for CicenSpec {}
 #[doc = "`write(|w| ..)` method takes [`cicen::W`](W) writer structure"]
 impl crate::Writable for CicenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CICEN to value 0"]
-impl crate::Resettable for CicenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CicenSpec {}

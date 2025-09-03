@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enable test mode of WDOGINT and WDOGRES"]
     #[inline(always)]
-    pub fn test_mode_en(&mut self) -> TestModeEnW<WdogitcrSpec> {
+    pub fn test_mode_en(&mut self) -> TestModeEnW<'_, WdogitcrSpec> {
         TestModeEnW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for WdogitcrSpec {}
 #[doc = "`write(|w| ..)` method takes [`wdogitcr::W`](W) writer structure"]
 impl crate::Writable for WdogitcrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets WDOGITCR to value 0"]
-impl crate::Resettable for WdogitcrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for WdogitcrSpec {}

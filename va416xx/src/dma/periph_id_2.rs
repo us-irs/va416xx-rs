@@ -34,17 +34,17 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - JEP106"]
     #[inline(always)]
-    pub fn jep106_id_6_4(&mut self) -> Jep106Id6_4W<PeriphId2Spec> {
+    pub fn jep106_id_6_4(&mut self) -> Jep106Id6_4W<'_, PeriphId2Spec> {
         Jep106Id6_4W::new(self, 0)
     }
     #[doc = "Bit 3 - JEDEC"]
     #[inline(always)]
-    pub fn jedec_used(&mut self) -> JedecUsedW<PeriphId2Spec> {
+    pub fn jedec_used(&mut self) -> JedecUsedW<'_, PeriphId2Spec> {
         JedecUsedW::new(self, 3)
     }
     #[doc = "Bits 4:7 - Revision"]
     #[inline(always)]
-    pub fn revision(&mut self) -> RevisionW<PeriphId2Spec> {
+    pub fn revision(&mut self) -> RevisionW<'_, PeriphId2Spec> {
         RevisionW::new(self, 4)
     }
 }
@@ -58,8 +58,6 @@ impl crate::Readable for PeriphId2Spec {}
 #[doc = "`write(|w| ..)` method takes [`periph_id_2::W`](W) writer structure"]
 impl crate::Writable for PeriphId2Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PERIPH_ID_2 to value 0xbc"]
 impl crate::Resettable for PeriphId2Spec {

@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 5:7 - Sets the the amount of time in microseconds the control FSM waits for the DAC settling time"]
     #[inline(always)]
-    pub fn dac_settling(&mut self) -> DacSettlingW<Ctrl1Spec> {
+    pub fn dac_settling(&mut self) -> DacSettlingW<'_, Ctrl1Spec> {
         DacSettlingW::new(self, 5)
     }
     #[doc = "Bit 8 - Enables the DAC analog block"]
     #[inline(always)]
-    pub fn dac_en(&mut self) -> DacEnW<Ctrl1Spec> {
+    pub fn dac_en(&mut self) -> DacEnW<'_, Ctrl1Spec> {
         DacEnW::new(self, 8)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for Ctrl1Spec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl1::W`](W) writer structure"]
 impl crate::Writable for Ctrl1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL1 to value 0"]
-impl crate::Resettable for Ctrl1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ctrl1Spec {}

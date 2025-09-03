@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 7:31 - Base Pointer for DMA Control Registers"]
     #[inline(always)]
-    pub fn ctrl_base_ptr(&mut self) -> CtrlBasePtrW<CtrlBasePtrSpec> {
+    pub fn ctrl_base_ptr(&mut self) -> CtrlBasePtrW<'_, CtrlBasePtrSpec> {
         CtrlBasePtrW::new(self, 7)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for CtrlBasePtrSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl_base_ptr::W`](W) writer structure"]
 impl crate::Writable for CtrlBasePtrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL_BASE_PTR to value 0"]
-impl crate::Resettable for CtrlBasePtrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlBasePtrSpec {}

@@ -19,10 +19,6 @@ impl crate::Readable for Clkdiv7Spec {}
 #[doc = "`write(|w| ..)` method takes [`clkdiv7::W`](W) writer structure"]
 impl crate::Writable for Clkdiv7Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CLKDIV7 to value 0"]
-impl crate::Resettable for Clkdiv7Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Clkdiv7Spec {}

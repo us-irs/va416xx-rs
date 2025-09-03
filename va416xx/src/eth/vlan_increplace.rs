@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - VLAN Tag for Transmit Frames"]
     #[inline(always)]
-    pub fn vlt(&mut self) -> VltW<VlanIncreplaceSpec> {
+    pub fn vlt(&mut self) -> VltW<'_, VlanIncreplaceSpec> {
         VltW::new(self, 0)
     }
     #[doc = "Bits 16:17 - VLAN Tag Control in Transmit Frames"]
     #[inline(always)]
-    pub fn vlc(&mut self) -> VlcW<VlanIncreplaceSpec> {
+    pub fn vlc(&mut self) -> VlcW<'_, VlanIncreplaceSpec> {
         VlcW::new(self, 16)
     }
     #[doc = "Bit 18 - VLAN Priority Control"]
     #[inline(always)]
-    pub fn vlp(&mut self) -> VlpW<VlanIncreplaceSpec> {
+    pub fn vlp(&mut self) -> VlpW<'_, VlanIncreplaceSpec> {
         VlpW::new(self, 18)
     }
     #[doc = "Bit 19 - C-VLAN or S-VLAN"]
     #[inline(always)]
-    pub fn csvl(&mut self) -> CsvlW<VlanIncreplaceSpec> {
+    pub fn csvl(&mut self) -> CsvlW<'_, VlanIncreplaceSpec> {
         CsvlW::new(self, 19)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for VlanIncreplaceSpec {}
 #[doc = "`write(|w| ..)` method takes [`vlan_increplace::W`](W) writer structure"]
 impl crate::Writable for VlanIncreplaceSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets VLAN_INCREPLACE to value 0"]
-impl crate::Resettable for VlanIncreplaceSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for VlanIncreplaceSpec {}

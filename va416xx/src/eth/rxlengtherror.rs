@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxlengtherrorSpec {
 #[doc = "`read()` method returns [`rxlengtherror::R`](R) reader structure"]
 impl crate::Readable for RxlengtherrorSpec {}
 #[doc = "`reset()` method sets RXLENGTHERROR to value 0"]
-impl crate::Resettable for RxlengtherrorSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxlengtherrorSpec {}

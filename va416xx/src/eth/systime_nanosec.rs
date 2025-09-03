@@ -17,6 +17,4 @@ impl crate::RegisterSpec for SystimeNanosecSpec {
 #[doc = "`read()` method returns [`systime_nanosec::R`](R) reader structure"]
 impl crate::Readable for SystimeNanosecSpec {}
 #[doc = "`reset()` method sets SYSTIME_NANOSEC to value 0"]
-impl crate::Resettable for SystimeNanosecSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SystimeNanosecSpec {}

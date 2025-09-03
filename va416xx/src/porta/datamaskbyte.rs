@@ -19,11 +19,6 @@ impl crate::Readable for DatamaskbyteSpec {}
 #[doc = "`write(|w| ..)` method takes [`datamaskbyte::W`](W) writer structure"]
 impl crate::Writable for DatamaskbyteSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u8 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u8 = 0;
 }
-#[doc = "`reset()` method sets DATAMASKBYTE[%s]
-to value 0"]
-impl crate::Resettable for DatamaskbyteSpec {
-    const RESET_VALUE: u8 = 0;
-}
+#[doc = "`reset()` method sets DATAMASKBYTE[%s] to value 0"]
+impl crate::Resettable for DatamaskbyteSpec {}

@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:30 - Target Timestamp Low Register"]
     #[inline(always)]
-    pub fn ttslo(&mut self) -> TtsloW<TargetTimeNsecSpec> {
+    pub fn ttslo(&mut self) -> TtsloW<'_, TargetTimeNsecSpec> {
         TtsloW::new(self, 0)
     }
     #[doc = "Bit 31 - 32 Bits of Hash Table"]
     #[inline(always)]
-    pub fn trgtbusy(&mut self) -> TrgtbusyW<TargetTimeNsecSpec> {
+    pub fn trgtbusy(&mut self) -> TrgtbusyW<'_, TargetTimeNsecSpec> {
         TrgtbusyW::new(self, 31)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for TargetTimeNsecSpec {}
 #[doc = "`write(|w| ..)` method takes [`target_time_nsec::W`](W) writer structure"]
 impl crate::Writable for TargetTimeNsecSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TARGET_TIME_NSEC to value 0"]
-impl crate::Resettable for TargetTimeNsecSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TargetTimeNsecSpec {}

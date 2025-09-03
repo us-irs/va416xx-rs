@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxfifooverflowSpec {
 #[doc = "`read()` method returns [`rxfifooverflow::R`](R) reader structure"]
 impl crate::Readable for RxfifooverflowSpec {}
 #[doc = "`reset()` method sets RXFIFOOVERFLOW to value 0"]
-impl crate::Resettable for RxfifooverflowSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxfifooverflowSpec {}

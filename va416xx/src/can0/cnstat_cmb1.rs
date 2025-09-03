@@ -34,17 +34,17 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Buffer Status"]
     #[inline(always)]
-    pub fn st(&mut self) -> StW<CnstatCmb1Spec> {
+    pub fn st(&mut self) -> StW<'_, CnstatCmb1Spec> {
         StW::new(self, 0)
     }
     #[doc = "Bits 4:7 - Transmit Priority Code"]
     #[inline(always)]
-    pub fn pri(&mut self) -> PriW<CnstatCmb1Spec> {
+    pub fn pri(&mut self) -> PriW<'_, CnstatCmb1Spec> {
         PriW::new(self, 4)
     }
     #[doc = "Bits 12:15 - Data Length Code"]
     #[inline(always)]
-    pub fn dlc(&mut self) -> DlcW<CnstatCmb1Spec> {
+    pub fn dlc(&mut self) -> DlcW<'_, CnstatCmb1Spec> {
         DlcW::new(self, 12)
     }
 }
@@ -58,10 +58,6 @@ impl crate::Readable for CnstatCmb1Spec {}
 #[doc = "`write(|w| ..)` method takes [`cnstat_cmb1::W`](W) writer structure"]
 impl crate::Writable for CnstatCmb1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CNSTAT_CMB1 to value 0"]
-impl crate::Resettable for CnstatCmb1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CnstatCmb1Spec {}

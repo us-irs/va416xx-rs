@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enable watchdog interrupt"]
     #[inline(always)]
-    pub fn inten(&mut self) -> IntenW<WdogcontrolSpec> {
+    pub fn inten(&mut self) -> IntenW<'_, WdogcontrolSpec> {
         IntenW::new(self, 0)
     }
     #[doc = "Bit 1 - Enable watchdog reset output"]
     #[inline(always)]
-    pub fn resen(&mut self) -> ResenW<WdogcontrolSpec> {
+    pub fn resen(&mut self) -> ResenW<'_, WdogcontrolSpec> {
         ResenW::new(self, 1)
     }
 }
@@ -44,10 +44,6 @@ impl crate::Readable for WdogcontrolSpec {}
 #[doc = "`write(|w| ..)` method takes [`wdogcontrol::W`](W) writer structure"]
 impl crate::Writable for WdogcontrolSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets WDOGCONTROL to value 0"]
-impl crate::Resettable for WdogcontrolSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for WdogcontrolSpec {}

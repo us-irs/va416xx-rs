@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Defines the initial value for the SpW clock, defaults to divide by ten"]
     #[inline(always)]
-    pub fn sw_clkdiv10(&mut self) -> SwClkdiv10W<SwClkdiv10Spec> {
+    pub fn sw_clkdiv10(&mut self) -> SwClkdiv10W<'_, SwClkdiv10Spec> {
         SwClkdiv10W::new(self, 0)
     }
 }
@@ -30,8 +30,6 @@ impl crate::Readable for SwClkdiv10Spec {}
 #[doc = "`write(|w| ..)` method takes [`sw_clkdiv10::W`](W) writer structure"]
 impl crate::Writable for SwClkdiv10Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SW_CLKDIV10 to value 0x09"]
 impl crate::Resettable for SwClkdiv10Spec {

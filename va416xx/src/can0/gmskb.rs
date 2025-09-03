@@ -2,13 +2,9 @@
 pub type R = crate::R<GmskbSpec>;
 #[doc = "Register `GMSKB` writer"]
 pub type W = crate::W<GmskbSpec>;
-#[doc = "Field `GM0` reader - GM\\[17:15\\]
-- Unused in standard, ID\\[17:15\\]
-in extended"]
+#[doc = "Field `GM0` reader - GM\\[17:15\\] - Unused in standard, ID\\[17:15\\] in extended"]
 pub type Gm0R = crate::FieldReader;
-#[doc = "Field `GM0` writer - GM\\[17:15\\]
-- Unused in standard, ID\\[17:15\\]
-in extended"]
+#[doc = "Field `GM0` writer - GM\\[17:15\\] - Unused in standard, ID\\[17:15\\] in extended"]
 pub type Gm0W<'a, REG> = crate::FieldWriter<'a, REG, 3>;
 #[doc = "Field `IDE` reader - Identifier Extension Bit"]
 pub type IdeR = crate::BitReader;
@@ -18,20 +14,12 @@ pub type IdeW<'a, REG> = crate::BitWriter<'a, REG>;
 pub type RtrR = crate::BitReader;
 #[doc = "Field `RTR` writer - Remote Transmission Request in Standard, Substitute Remote Request (SRR) in extended"]
 pub type RtrW<'a, REG> = crate::BitWriter<'a, REG>;
-#[doc = "Field `GM1` reader - GM\\[28:18\\]
-- ID\\[10:0\\]
-in standard, ID\\[28:18\\]
-in extended"]
+#[doc = "Field `GM1` reader - GM\\[28:18\\] - ID\\[10:0\\] in standard, ID\\[28:18\\] in extended"]
 pub type Gm1R = crate::FieldReader<u16>;
-#[doc = "Field `GM1` writer - GM\\[28:18\\]
-- ID\\[10:0\\]
-in standard, ID\\[28:18\\]
-in extended"]
+#[doc = "Field `GM1` writer - GM\\[28:18\\] - ID\\[10:0\\] in standard, ID\\[28:18\\] in extended"]
 pub type Gm1W<'a, REG> = crate::FieldWriter<'a, REG, 11, u16>;
 impl R {
-    #[doc = "Bits 0:2 - GM\\[17:15\\]
-- Unused in standard, ID\\[17:15\\]
-in extended"]
+    #[doc = "Bits 0:2 - GM\\[17:15\\] - Unused in standard, ID\\[17:15\\] in extended"]
     #[inline(always)]
     pub fn gm0(&self) -> Gm0R {
         Gm0R::new((self.bits & 7) as u8)
@@ -46,39 +34,31 @@ in extended"]
     pub fn rtr(&self) -> RtrR {
         RtrR::new(((self.bits >> 4) & 1) != 0)
     }
-    #[doc = "Bits 5:15 - GM\\[28:18\\]
-- ID\\[10:0\\]
-in standard, ID\\[28:18\\]
-in extended"]
+    #[doc = "Bits 5:15 - GM\\[28:18\\] - ID\\[10:0\\] in standard, ID\\[28:18\\] in extended"]
     #[inline(always)]
     pub fn gm1(&self) -> Gm1R {
         Gm1R::new(((self.bits >> 5) & 0x07ff) as u16)
     }
 }
 impl W {
-    #[doc = "Bits 0:2 - GM\\[17:15\\]
-- Unused in standard, ID\\[17:15\\]
-in extended"]
+    #[doc = "Bits 0:2 - GM\\[17:15\\] - Unused in standard, ID\\[17:15\\] in extended"]
     #[inline(always)]
-    pub fn gm0(&mut self) -> Gm0W<GmskbSpec> {
+    pub fn gm0(&mut self) -> Gm0W<'_, GmskbSpec> {
         Gm0W::new(self, 0)
     }
     #[doc = "Bit 3 - Identifier Extension Bit"]
     #[inline(always)]
-    pub fn ide(&mut self) -> IdeW<GmskbSpec> {
+    pub fn ide(&mut self) -> IdeW<'_, GmskbSpec> {
         IdeW::new(self, 3)
     }
     #[doc = "Bit 4 - Remote Transmission Request in Standard, Substitute Remote Request (SRR) in extended"]
     #[inline(always)]
-    pub fn rtr(&mut self) -> RtrW<GmskbSpec> {
+    pub fn rtr(&mut self) -> RtrW<'_, GmskbSpec> {
         RtrW::new(self, 4)
     }
-    #[doc = "Bits 5:15 - GM\\[28:18\\]
-- ID\\[10:0\\]
-in standard, ID\\[28:18\\]
-in extended"]
+    #[doc = "Bits 5:15 - GM\\[28:18\\] - ID\\[10:0\\] in standard, ID\\[28:18\\] in extended"]
     #[inline(always)]
-    pub fn gm1(&mut self) -> Gm1W<GmskbSpec> {
+    pub fn gm1(&mut self) -> Gm1W<'_, GmskbSpec> {
         Gm1W::new(self, 5)
     }
 }
@@ -92,10 +72,6 @@ impl crate::Readable for GmskbSpec {}
 #[doc = "`write(|w| ..)` method takes [`gmskb::W`](W) writer structure"]
 impl crate::Writable for GmskbSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets GMSKB to value 0"]
-impl crate::Resettable for GmskbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for GmskbSpec {}

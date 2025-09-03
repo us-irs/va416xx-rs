@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxframecountGbSpec {
 #[doc = "`read()` method returns [`rxframecount_gb::R`](R) reader structure"]
 impl crate::Readable for RxframecountGbSpec {}
 #[doc = "`reset()` method sets RXFRAMECOUNT_GB to value 0"]
-impl crate::Resettable for RxframecountGbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxframecountGbSpec {}

@@ -17,6 +17,4 @@ impl crate::RegisterSpec for BusySpec {
 #[doc = "`read()` method returns [`busy::R`](R) reader structure"]
 impl crate::Readable for BusySpec {}
 #[doc = "`reset()` method sets BUSY to value 0"]
-impl crate::Resettable for BusySpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for BusySpec {}

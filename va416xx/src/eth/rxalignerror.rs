@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxalignerrorSpec {
 #[doc = "`read()` method returns [`rxalignerror::R`](R) reader structure"]
 impl crate::Readable for RxalignerrorSpec {}
 #[doc = "`reset()` method sets RXALIGNERROR to value 0"]
-impl crate::Resettable for RxalignerrorSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxalignerrorSpec {}

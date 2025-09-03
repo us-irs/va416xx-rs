@@ -61,32 +61,32 @@ impl R {
 impl W {
     #[doc = "Bit 0 - ROM Multi Bit Interrupt"]
     #[inline(always)]
-    pub fn rommbe(&mut self) -> RommbeW<IrqEnbSpec> {
+    pub fn rommbe(&mut self) -> RommbeW<'_, IrqEnbSpec> {
         RommbeW::new(self, 0)
     }
     #[doc = "Bit 1 - ROM Single Bit Interrupt"]
     #[inline(always)]
-    pub fn romsbe(&mut self) -> RomsbeW<IrqEnbSpec> {
+    pub fn romsbe(&mut self) -> RomsbeW<'_, IrqEnbSpec> {
         RomsbeW::new(self, 1)
     }
     #[doc = "Bit 2 - RAM0 Multi Bit Interrupt"]
     #[inline(always)]
-    pub fn ram0mbe(&mut self) -> Ram0mbeW<IrqEnbSpec> {
+    pub fn ram0mbe(&mut self) -> Ram0mbeW<'_, IrqEnbSpec> {
         Ram0mbeW::new(self, 2)
     }
     #[doc = "Bit 3 - RAM0 Single Bit Interrupt"]
     #[inline(always)]
-    pub fn ram0sbe(&mut self) -> Ram0sbeW<IrqEnbSpec> {
+    pub fn ram0sbe(&mut self) -> Ram0sbeW<'_, IrqEnbSpec> {
         Ram0sbeW::new(self, 3)
     }
     #[doc = "Bit 4 - RAM1 Multi Bit Interrupt"]
     #[inline(always)]
-    pub fn ram1mbe(&mut self) -> Ram1mbeW<IrqEnbSpec> {
+    pub fn ram1mbe(&mut self) -> Ram1mbeW<'_, IrqEnbSpec> {
         Ram1mbeW::new(self, 4)
     }
     #[doc = "Bit 5 - RAM1 Single Bit Interrupt"]
     #[inline(always)]
-    pub fn ram1sbe(&mut self) -> Ram1sbeW<IrqEnbSpec> {
+    pub fn ram1sbe(&mut self) -> Ram1sbeW<'_, IrqEnbSpec> {
         Ram1sbeW::new(self, 5)
     }
 }
@@ -100,10 +100,6 @@ impl crate::Readable for IrqEnbSpec {}
 #[doc = "`write(|w| ..)` method takes [`irq_enb::W`](W) writer structure"]
 impl crate::Writable for IrqEnbSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IRQ_ENB to value 0"]
-impl crate::Resettable for IrqEnbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IrqEnbSpec {}

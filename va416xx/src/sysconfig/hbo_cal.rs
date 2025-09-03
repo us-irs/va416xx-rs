@@ -24,6 +24,4 @@ impl crate::RegisterSpec for HboCalSpec {
 #[doc = "`read()` method returns [`hbo_cal::R`](R) reader structure"]
 impl crate::Readable for HboCalSpec {}
 #[doc = "`reset()` method sets HBO_CAL to value 0"]
-impl crate::Resettable for HboCalSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for HboCalSpec {}

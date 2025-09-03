@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Used to set a time to wake up the processor after the device has been put in a low power state"]
     #[inline(always)]
-    pub fn wkup_cnt(&mut self) -> WkupCntW<WakeupCntSpec> {
+    pub fn wkup_cnt(&mut self) -> WkupCntW<'_, WakeupCntSpec> {
         WkupCntW::new(self, 0)
     }
     #[doc = "Bit 3 - Launch SLP mode in analog block"]
     #[inline(always)]
-    pub fn cntstrt(&mut self) -> CntstrtW<WakeupCntSpec> {
+    pub fn cntstrt(&mut self) -> CntstrtW<'_, WakeupCntSpec> {
         CntstrtW::new(self, 3)
     }
 }
@@ -44,8 +44,6 @@ impl crate::Readable for WakeupCntSpec {}
 #[doc = "`write(|w| ..)` method takes [`wakeup_cnt::W`](W) writer structure"]
 impl crate::Writable for WakeupCntSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets WAKEUP_CNT to value 0x07"]
 impl crate::Resettable for WakeupCntSpec {

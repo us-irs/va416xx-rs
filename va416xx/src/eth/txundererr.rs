@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxundererrSpec {
 #[doc = "`read()` method returns [`txundererr::R`](R) reader structure"]
 impl crate::Readable for TxundererrSpec {}
 #[doc = "`reset()` method sets TXUNDERERR to value 0"]
-impl crate::Resettable for TxundererrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxundererrSpec {}

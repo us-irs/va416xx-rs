@@ -196,107 +196,107 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Timestamp Enable"]
     #[inline(always)]
-    pub fn tsena(&mut self) -> TsenaW<TimestampCtrlSpec> {
+    pub fn tsena(&mut self) -> TsenaW<'_, TimestampCtrlSpec> {
         TsenaW::new(self, 0)
     }
     #[doc = "Bit 1 - Timestamp Fine or Coarse Update"]
     #[inline(always)]
-    pub fn tscfupdt(&mut self) -> TscfupdtW<TimestampCtrlSpec> {
+    pub fn tscfupdt(&mut self) -> TscfupdtW<'_, TimestampCtrlSpec> {
         TscfupdtW::new(self, 1)
     }
     #[doc = "Bit 2 - Timestamp Initialize"]
     #[inline(always)]
-    pub fn tsinit(&mut self) -> TsinitW<TimestampCtrlSpec> {
+    pub fn tsinit(&mut self) -> TsinitW<'_, TimestampCtrlSpec> {
         TsinitW::new(self, 2)
     }
     #[doc = "Bit 3 - Timestamp Update"]
     #[inline(always)]
-    pub fn tsupdt(&mut self) -> TsupdtW<TimestampCtrlSpec> {
+    pub fn tsupdt(&mut self) -> TsupdtW<'_, TimestampCtrlSpec> {
         TsupdtW::new(self, 3)
     }
     #[doc = "Bit 4 - Timestamp Interrupt Trigger Enable"]
     #[inline(always)]
-    pub fn tstrig(&mut self) -> TstrigW<TimestampCtrlSpec> {
+    pub fn tstrig(&mut self) -> TstrigW<'_, TimestampCtrlSpec> {
         TstrigW::new(self, 4)
     }
     #[doc = "Bit 5 - Addend Reg Update"]
     #[inline(always)]
-    pub fn tsaddrreg(&mut self) -> TsaddrregW<TimestampCtrlSpec> {
+    pub fn tsaddrreg(&mut self) -> TsaddrregW<'_, TimestampCtrlSpec> {
         TsaddrregW::new(self, 5)
     }
     #[doc = "Bit 8 - Enable Timestamp for All Frames"]
     #[inline(always)]
-    pub fn tsenall(&mut self) -> TsenallW<TimestampCtrlSpec> {
+    pub fn tsenall(&mut self) -> TsenallW<'_, TimestampCtrlSpec> {
         TsenallW::new(self, 8)
     }
     #[doc = "Bit 9 - Timestamp Digital or Binary Rollover Control"]
     #[inline(always)]
-    pub fn tsctrlssr(&mut self) -> TsctrlssrW<TimestampCtrlSpec> {
+    pub fn tsctrlssr(&mut self) -> TsctrlssrW<'_, TimestampCtrlSpec> {
         TsctrlssrW::new(self, 9)
     }
     #[doc = "Bit 10 - Enable PTP packet Processing for Version 2 Format"]
     #[inline(always)]
-    pub fn tsver2ena(&mut self) -> Tsver2enaW<TimestampCtrlSpec> {
+    pub fn tsver2ena(&mut self) -> Tsver2enaW<'_, TimestampCtrlSpec> {
         Tsver2enaW::new(self, 10)
     }
     #[doc = "Bit 11 - Enable Processing of PTP over Ethernet Frames"]
     #[inline(always)]
-    pub fn tsipena(&mut self) -> TsipenaW<TimestampCtrlSpec> {
+    pub fn tsipena(&mut self) -> TsipenaW<'_, TimestampCtrlSpec> {
         TsipenaW::new(self, 11)
     }
     #[doc = "Bit 12 - Enable Processing of PTP Frames Sent over IPv6-UDP"]
     #[inline(always)]
-    pub fn tsipv6ena(&mut self) -> Tsipv6enaW<TimestampCtrlSpec> {
+    pub fn tsipv6ena(&mut self) -> Tsipv6enaW<'_, TimestampCtrlSpec> {
         Tsipv6enaW::new(self, 12)
     }
     #[doc = "Bit 13 - Enable Processing of PTP Frames Sent over IPv4-UDP"]
     #[inline(always)]
-    pub fn tsipv4ena(&mut self) -> Tsipv4enaW<TimestampCtrlSpec> {
+    pub fn tsipv4ena(&mut self) -> Tsipv4enaW<'_, TimestampCtrlSpec> {
         Tsipv4enaW::new(self, 13)
     }
     #[doc = "Bit 14 - Enable Timestamp Snapshot for Event Messages"]
     #[inline(always)]
-    pub fn tsevntena(&mut self) -> TsevntenaW<TimestampCtrlSpec> {
+    pub fn tsevntena(&mut self) -> TsevntenaW<'_, TimestampCtrlSpec> {
         TsevntenaW::new(self, 14)
     }
     #[doc = "Bit 15 - Enable Snapshot for Messages Relevant to Master"]
     #[inline(always)]
-    pub fn tsmstrena(&mut self) -> TsmstrenaW<TimestampCtrlSpec> {
+    pub fn tsmstrena(&mut self) -> TsmstrenaW<'_, TimestampCtrlSpec> {
         TsmstrenaW::new(self, 15)
     }
     #[doc = "Bits 16:17 - Select PTP packets for Taking Snapshots"]
     #[inline(always)]
-    pub fn snaptypsel(&mut self) -> SnaptypselW<TimestampCtrlSpec> {
+    pub fn snaptypsel(&mut self) -> SnaptypselW<'_, TimestampCtrlSpec> {
         SnaptypselW::new(self, 16)
     }
     #[doc = "Bit 18 - Enable MAC address for PTP Frame Filtering"]
     #[inline(always)]
-    pub fn tsenmacaddr(&mut self) -> TsenmacaddrW<TimestampCtrlSpec> {
+    pub fn tsenmacaddr(&mut self) -> TsenmacaddrW<'_, TimestampCtrlSpec> {
         TsenmacaddrW::new(self, 18)
     }
     #[doc = "Bit 24 - Auxiliary Snapshot FIFO Clear"]
     #[inline(always)]
-    pub fn atsfc(&mut self) -> AtsfcW<TimestampCtrlSpec> {
+    pub fn atsfc(&mut self) -> AtsfcW<'_, TimestampCtrlSpec> {
         AtsfcW::new(self, 24)
     }
     #[doc = "Bit 25 - Auxiliary Snapshot 0 Enable"]
     #[inline(always)]
-    pub fn atsen0(&mut self) -> Atsen0W<TimestampCtrlSpec> {
+    pub fn atsen0(&mut self) -> Atsen0W<'_, TimestampCtrlSpec> {
         Atsen0W::new(self, 25)
     }
     #[doc = "Bit 26 - Auxiliary Snapshot 1 Enable"]
     #[inline(always)]
-    pub fn atsen1(&mut self) -> Atsen1W<TimestampCtrlSpec> {
+    pub fn atsen1(&mut self) -> Atsen1W<'_, TimestampCtrlSpec> {
         Atsen1W::new(self, 26)
     }
     #[doc = "Bit 27 - Auxiliary Snapshot 2 Enable"]
     #[inline(always)]
-    pub fn atsen2(&mut self) -> Atsen2W<TimestampCtrlSpec> {
+    pub fn atsen2(&mut self) -> Atsen2W<'_, TimestampCtrlSpec> {
         Atsen2W::new(self, 27)
     }
     #[doc = "Bit 28 - Auxiliary Snapshot 3 Enable"]
     #[inline(always)]
-    pub fn atsen3(&mut self) -> Atsen3W<TimestampCtrlSpec> {
+    pub fn atsen3(&mut self) -> Atsen3W<'_, TimestampCtrlSpec> {
         Atsen3W::new(self, 28)
     }
 }
@@ -310,10 +310,6 @@ impl crate::Readable for TimestampCtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`timestamp_ctrl::W`](W) writer structure"]
 impl crate::Writable for TimestampCtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TIMESTAMP_CTRL to value 0"]
-impl crate::Resettable for TimestampCtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TimestampCtrlSpec {}

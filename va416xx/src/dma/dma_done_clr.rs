@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bit 0 - DMA Done clear for this CH"]
     #[inline(always)]
-    pub fn ch0(&mut self) -> Ch0W<DmaDoneClrSpec> {
+    pub fn ch0(&mut self) -> Ch0W<'_, DmaDoneClrSpec> {
         Ch0W::new(self, 0)
     }
     #[doc = "Bit 1 - DMA Done clear for this CH"]
     #[inline(always)]
-    pub fn ch1(&mut self) -> Ch1W<DmaDoneClrSpec> {
+    pub fn ch1(&mut self) -> Ch1W<'_, DmaDoneClrSpec> {
         Ch1W::new(self, 1)
     }
     #[doc = "Bit 2 - DMA Done clear for this CH"]
     #[inline(always)]
-    pub fn ch2(&mut self) -> Ch2W<DmaDoneClrSpec> {
+    pub fn ch2(&mut self) -> Ch2W<'_, DmaDoneClrSpec> {
         Ch2W::new(self, 2)
     }
     #[doc = "Bit 3 - DMA Done clear for this CH"]
     #[inline(always)]
-    pub fn ch3(&mut self) -> Ch3W<DmaDoneClrSpec> {
+    pub fn ch3(&mut self) -> Ch3W<'_, DmaDoneClrSpec> {
         Ch3W::new(self, 3)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for DmaDoneClrSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_done_clr::W`](W) writer structure"]
 impl crate::Writable for DmaDoneClrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_DONE_CLR to value 0"]
-impl crate::Resettable for DmaDoneClrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DmaDoneClrSpec {}

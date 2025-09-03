@@ -17,6 +17,4 @@ impl crate::RegisterSpec for S0RxcountSpec {
 #[doc = "`read()` method returns [`s0_rxcount::R`](R) reader structure"]
 impl crate::Readable for S0RxcountSpec {}
 #[doc = "`reset()` method sets S0_RXCOUNT to value 0"]
-impl crate::Resettable for S0RxcountSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for S0RxcountSpec {}

@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxframecountGSpec {
 #[doc = "`read()` method returns [`txframecount_g::R`](R) reader structure"]
 impl crate::Readable for TxframecountGSpec {}
 #[doc = "`reset()` method sets TXFRAMECOUNT_G to value 0"]
-impl crate::Resettable for TxframecountGSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxframecountGSpec {}

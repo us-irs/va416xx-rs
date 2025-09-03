@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxjabbererrorSpec {
 #[doc = "`read()` method returns [`rxjabbererror::R`](R) reader structure"]
 impl crate::Readable for RxjabbererrorSpec {}
 #[doc = "`reset()` method sets RXJABBERERROR to value 0"]
-impl crate::Resettable for RxjabbererrorSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxjabbererrorSpec {}

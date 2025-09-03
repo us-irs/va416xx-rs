@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - RAM0 EDAC Single Bit Errors"]
     #[inline(always)]
-    pub fn count(&mut self) -> CountW<Ram0SbeSpec> {
+    pub fn count(&mut self) -> CountW<'_, Ram0SbeSpec> {
         CountW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for Ram0SbeSpec {}
 #[doc = "`write(|w| ..)` method takes [`ram0_sbe::W`](W) writer structure"]
 impl crate::Writable for Ram0SbeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets RAM0_SBE to value 0"]
-impl crate::Resettable for Ram0SbeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ram0SbeSpec {}

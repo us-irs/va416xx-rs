@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxlanframesGSpec {
 #[doc = "`read()` method returns [`txlanframes_g::R`](R) reader structure"]
 impl crate::Readable for TxlanframesGSpec {}
 #[doc = "`reset()` method sets TXLANFRAMES_G to value 0"]
-impl crate::Resettable for TxlanframesGSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxlanframesGSpec {}

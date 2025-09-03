@@ -2,11 +2,9 @@
 pub type R = crate::R<IcrSpec>;
 #[doc = "Register `ICR` writer"]
 pub type W = crate::W<IcrSpec>;
-#[doc = "Field `EHR_VALID` reader - Set to 1 after the EHR_DATA\\[0,1,2,3,4,5\\]
-registers have been read"]
+#[doc = "Field `EHR_VALID` reader - Set to 1 after the EHR_DATA\\[0,1,2,3,4,5\\] registers have been read"]
 pub type EhrValidR = crate::BitReader;
-#[doc = "Field `EHR_VALID` writer - Set to 1 after the EHR_DATA\\[0,1,2,3,4,5\\]
-registers have been read"]
+#[doc = "Field `EHR_VALID` writer - Set to 1 after the EHR_DATA\\[0,1,2,3,4,5\\] registers have been read"]
 pub type EhrValidW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `AUTOCORR_ERR` reader - Software cannot clear this bit. Only a TRNG reset can clear this bit"]
 pub type AutocorrErrR = crate::BitReader;
@@ -21,8 +19,7 @@ pub type VnErrR = crate::BitReader;
 #[doc = "Field `VN_ERR` writer - Clears a Von Neumann error"]
 pub type VnErrW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bit 0 - Set to 1 after the EHR_DATA\\[0,1,2,3,4,5\\]
-registers have been read"]
+    #[doc = "Bit 0 - Set to 1 after the EHR_DATA\\[0,1,2,3,4,5\\] registers have been read"]
     #[inline(always)]
     pub fn ehr_valid(&self) -> EhrValidR {
         EhrValidR::new((self.bits & 1) != 0)
@@ -44,25 +41,24 @@ registers have been read"]
     }
 }
 impl W {
-    #[doc = "Bit 0 - Set to 1 after the EHR_DATA\\[0,1,2,3,4,5\\]
-registers have been read"]
+    #[doc = "Bit 0 - Set to 1 after the EHR_DATA\\[0,1,2,3,4,5\\] registers have been read"]
     #[inline(always)]
-    pub fn ehr_valid(&mut self) -> EhrValidW<IcrSpec> {
+    pub fn ehr_valid(&mut self) -> EhrValidW<'_, IcrSpec> {
         EhrValidW::new(self, 0)
     }
     #[doc = "Bit 1 - Software cannot clear this bit. Only a TRNG reset can clear this bit"]
     #[inline(always)]
-    pub fn autocorr_err(&mut self) -> AutocorrErrW<IcrSpec> {
+    pub fn autocorr_err(&mut self) -> AutocorrErrW<'_, IcrSpec> {
         AutocorrErrW::new(self, 1)
     }
     #[doc = "Bit 2 - Clear a Continuous Random Number Generation Testing (CRNGT) error"]
     #[inline(always)]
-    pub fn crngt_err(&mut self) -> CrngtErrW<IcrSpec> {
+    pub fn crngt_err(&mut self) -> CrngtErrW<'_, IcrSpec> {
         CrngtErrW::new(self, 2)
     }
     #[doc = "Bit 3 - Clears a Von Neumann error"]
     #[inline(always)]
-    pub fn vn_err(&mut self) -> VnErrW<IcrSpec> {
+    pub fn vn_err(&mut self) -> VnErrW<'_, IcrSpec> {
         VnErrW::new(self, 3)
     }
 }
@@ -76,10 +72,6 @@ impl crate::Readable for IcrSpec {}
 #[doc = "`write(|w| ..)` method takes [`icr::W`](W) writer structure"]
 impl crate::Writable for IcrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ICR to value 0"]
-impl crate::Resettable for IcrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IcrSpec {}

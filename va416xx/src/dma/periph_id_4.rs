@@ -25,12 +25,12 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - JEP106"]
     #[inline(always)]
-    pub fn jep106_c_code(&mut self) -> Jep106CCodeW<PeriphId4Spec> {
+    pub fn jep106_c_code(&mut self) -> Jep106CCodeW<'_, PeriphId4Spec> {
         Jep106CCodeW::new(self, 0)
     }
     #[doc = "Bits 4:7 - The Number of 4k Address Blocks Required"]
     #[inline(always)]
-    pub fn block_count(&mut self) -> BlockCountW<PeriphId4Spec> {
+    pub fn block_count(&mut self) -> BlockCountW<'_, PeriphId4Spec> {
         BlockCountW::new(self, 4)
     }
 }
@@ -44,8 +44,6 @@ impl crate::Readable for PeriphId4Spec {}
 #[doc = "`write(|w| ..)` method takes [`periph_id_4::W`](W) writer structure"]
 impl crate::Writable for PeriphId4Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PERIPH_ID_4 to value 0x04"]
 impl crate::Resettable for PeriphId4Spec {

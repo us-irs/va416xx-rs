@@ -52,27 +52,27 @@ impl R {
 impl W {
     #[doc = "Bit 0 - GMII Busy"]
     #[inline(always)]
-    pub fn gb(&mut self) -> GbW<MacGmiiAddrSpec> {
+    pub fn gb(&mut self) -> GbW<'_, MacGmiiAddrSpec> {
         GbW::new(self, 0)
     }
     #[doc = "Bit 1 - GMII Write/Read"]
     #[inline(always)]
-    pub fn gw(&mut self) -> GwW<MacGmiiAddrSpec> {
+    pub fn gw(&mut self) -> GwW<'_, MacGmiiAddrSpec> {
         GwW::new(self, 1)
     }
     #[doc = "Bits 2:5 - CSR Clock Range"]
     #[inline(always)]
-    pub fn cr(&mut self) -> CrW<MacGmiiAddrSpec> {
+    pub fn cr(&mut self) -> CrW<'_, MacGmiiAddrSpec> {
         CrW::new(self, 2)
     }
     #[doc = "Bits 6:10 - GMII Register"]
     #[inline(always)]
-    pub fn gr(&mut self) -> GrW<MacGmiiAddrSpec> {
+    pub fn gr(&mut self) -> GrW<'_, MacGmiiAddrSpec> {
         GrW::new(self, 6)
     }
     #[doc = "Bits 11:15 - Physical Layer Address"]
     #[inline(always)]
-    pub fn pa(&mut self) -> PaW<MacGmiiAddrSpec> {
+    pub fn pa(&mut self) -> PaW<'_, MacGmiiAddrSpec> {
         PaW::new(self, 11)
     }
 }
@@ -86,10 +86,6 @@ impl crate::Readable for MacGmiiAddrSpec {}
 #[doc = "`write(|w| ..)` method takes [`mac_gmii_addr::W`](W) writer structure"]
 impl crate::Writable for MacGmiiAddrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MAC_GMII_ADDR to value 0"]
-impl crate::Resettable for MacGmiiAddrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MacGmiiAddrSpec {}

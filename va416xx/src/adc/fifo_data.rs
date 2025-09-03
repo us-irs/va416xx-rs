@@ -24,6 +24,4 @@ impl crate::RegisterSpec for FifoDataSpec {
 #[doc = "`read()` method returns [`fifo_data::R`](R) reader structure"]
 impl crate::Readable for FifoDataSpec {}
 #[doc = "`reset()` method sets FIFO_DATA to value 0"]
-impl crate::Resettable for FifoDataSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for FifoDataSpec {}

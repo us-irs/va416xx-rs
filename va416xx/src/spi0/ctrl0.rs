@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Data Size(0x3=>4, 0xf=>16)"]
     #[inline(always)]
-    pub fn size(&mut self) -> SizeW<Ctrl0Spec> {
+    pub fn size(&mut self) -> SizeW<'_, Ctrl0Spec> {
         SizeW::new(self, 0)
     }
     #[doc = "Bit 6 - SPI Clock Polarity"]
     #[inline(always)]
-    pub fn spo(&mut self) -> SpoW<Ctrl0Spec> {
+    pub fn spo(&mut self) -> SpoW<'_, Ctrl0Spec> {
         SpoW::new(self, 6)
     }
     #[doc = "Bit 7 - SPI Clock Phase"]
     #[inline(always)]
-    pub fn sph(&mut self) -> SphW<Ctrl0Spec> {
+    pub fn sph(&mut self) -> SphW<'_, Ctrl0Spec> {
         SphW::new(self, 7)
     }
     #[doc = "Bits 8:15 - Serial Clock Rate divide+1 value"]
     #[inline(always)]
-    pub fn scrdv(&mut self) -> ScrdvW<Ctrl0Spec> {
+    pub fn scrdv(&mut self) -> ScrdvW<'_, Ctrl0Spec> {
         ScrdvW::new(self, 8)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for Ctrl0Spec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl0::W`](W) writer structure"]
 impl crate::Writable for Ctrl0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL0 to value 0"]
-impl crate::Resettable for Ctrl0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ctrl0Spec {}

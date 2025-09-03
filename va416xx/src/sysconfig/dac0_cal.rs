@@ -17,6 +17,4 @@ impl crate::RegisterSpec for Dac0CalSpec {
 #[doc = "`read()` method returns [`dac0_cal::R`](R) reader structure"]
 impl crate::Readable for Dac0CalSpec {}
 #[doc = "`reset()` method sets DAC0_CAL to value 0"]
-impl crate::Resettable for Dac0CalSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Dac0CalSpec {}

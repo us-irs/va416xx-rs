@@ -151,82 +151,82 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Controller Complted a Transaction"]
     #[inline(always)]
-    pub fn completed(&mut self) -> CompletedW<S0IrqEnbSpec> {
+    pub fn completed(&mut self) -> CompletedW<'_, S0IrqEnbSpec> {
         CompletedW::new(self, 0)
     }
     #[doc = "Bit 1 - Controller is Idle"]
     #[inline(always)]
-    pub fn idle(&mut self) -> IdleW<S0IrqEnbSpec> {
+    pub fn idle(&mut self) -> IdleW<'_, S0IrqEnbSpec> {
         IdleW::new(self, 1)
     }
     #[doc = "Bit 2 - Controller is Waiting"]
     #[inline(always)]
-    pub fn waiting(&mut self) -> WaitingW<S0IrqEnbSpec> {
+    pub fn waiting(&mut self) -> WaitingW<'_, S0IrqEnbSpec> {
         WaitingW::new(self, 2)
     }
     #[doc = "Bit 3 - Controller is Tx Stalled"]
     #[inline(always)]
-    pub fn txstalled(&mut self) -> TxstalledW<S0IrqEnbSpec> {
+    pub fn txstalled(&mut self) -> TxstalledW<'_, S0IrqEnbSpec> {
         TxstalledW::new(self, 3)
     }
     #[doc = "Bit 4 - Controller is Rx Stalled"]
     #[inline(always)]
-    pub fn rxstalled(&mut self) -> RxstalledW<S0IrqEnbSpec> {
+    pub fn rxstalled(&mut self) -> RxstalledW<'_, S0IrqEnbSpec> {
         RxstalledW::new(self, 4)
     }
     #[doc = "Bit 5 - I2C Address Match"]
     #[inline(always)]
-    pub fn addressmatch(&mut self) -> AddressmatchW<S0IrqEnbSpec> {
+    pub fn addressmatch(&mut self) -> AddressmatchW<'_, S0IrqEnbSpec> {
         AddressmatchW::new(self, 5)
     }
     #[doc = "Bit 6 - I2C Data was not Acknowledged"]
     #[inline(always)]
-    pub fn nackdata(&mut self) -> NackdataW<S0IrqEnbSpec> {
+    pub fn nackdata(&mut self) -> NackdataW<'_, S0IrqEnbSpec> {
         NackdataW::new(self, 6)
     }
     #[doc = "Bit 7 - Pending Data is first Byte following Address"]
     #[inline(always)]
-    pub fn rxdatafirst(&mut self) -> RxdatafirstW<S0IrqEnbSpec> {
+    pub fn rxdatafirst(&mut self) -> RxdatafirstW<'_, S0IrqEnbSpec> {
         RxdatafirstW::new(self, 7)
     }
     #[doc = "Bit 8 - I2C Start Condition"]
     #[inline(always)]
-    pub fn i2c_start(&mut self) -> I2cStartW<S0IrqEnbSpec> {
+    pub fn i2c_start(&mut self) -> I2cStartW<'_, S0IrqEnbSpec> {
         I2cStartW::new(self, 8)
     }
     #[doc = "Bit 9 - I2C Stop Condition"]
     #[inline(always)]
-    pub fn i2c_stop(&mut self) -> I2cStopW<S0IrqEnbSpec> {
+    pub fn i2c_stop(&mut self) -> I2cStopW<'_, S0IrqEnbSpec> {
         I2cStopW::new(self, 9)
     }
     #[doc = "Bit 10 - TX FIFO Underflowed"]
     #[inline(always)]
-    pub fn txunderflow(&mut self) -> TxunderflowW<S0IrqEnbSpec> {
+    pub fn txunderflow(&mut self) -> TxunderflowW<'_, S0IrqEnbSpec> {
         TxunderflowW::new(self, 10)
     }
     #[doc = "Bit 11 - TX FIFO Overflowed"]
     #[inline(always)]
-    pub fn rxoverflow(&mut self) -> RxoverflowW<S0IrqEnbSpec> {
+    pub fn rxoverflow(&mut self) -> RxoverflowW<'_, S0IrqEnbSpec> {
         RxoverflowW::new(self, 11)
     }
     #[doc = "Bit 12 - TX FIFO Ready"]
     #[inline(always)]
-    pub fn txready(&mut self) -> TxreadyW<S0IrqEnbSpec> {
+    pub fn txready(&mut self) -> TxreadyW<'_, S0IrqEnbSpec> {
         TxreadyW::new(self, 12)
     }
     #[doc = "Bit 13 - RX FIFO Ready"]
     #[inline(always)]
-    pub fn rxready(&mut self) -> RxreadyW<S0IrqEnbSpec> {
+    pub fn rxready(&mut self) -> RxreadyW<'_, S0IrqEnbSpec> {
         RxreadyW::new(self, 13)
     }
     #[doc = "Bit 14 - TX FIFO Empty"]
     #[inline(always)]
-    pub fn txempty(&mut self) -> TxemptyW<S0IrqEnbSpec> {
+    pub fn txempty(&mut self) -> TxemptyW<'_, S0IrqEnbSpec> {
         TxemptyW::new(self, 14)
     }
     #[doc = "Bit 15 - RX FIFO Full"]
     #[inline(always)]
-    pub fn rxfull(&mut self) -> RxfullW<S0IrqEnbSpec> {
+    pub fn rxfull(&mut self) -> RxfullW<'_, S0IrqEnbSpec> {
         RxfullW::new(self, 15)
     }
 }
@@ -240,10 +240,6 @@ impl crate::Readable for S0IrqEnbSpec {}
 #[doc = "`write(|w| ..)` method takes [`s0_irq_enb::W`](W) writer structure"]
 impl crate::Writable for S0IrqEnbSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets S0_IRQ_ENB to value 0"]
-impl crate::Resettable for S0IrqEnbSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for S0IrqEnbSpec {}

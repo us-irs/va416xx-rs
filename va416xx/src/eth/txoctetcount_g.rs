@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TxoctetcountGSpec {
 #[doc = "`read()` method returns [`txoctetcount_g::R`](R) reader structure"]
 impl crate::Readable for TxoctetcountGSpec {}
 #[doc = "`reset()` method sets TXOCTETCOUNT_G to value 0"]
-impl crate::Resettable for TxoctetcountGSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxoctetcountGSpec {}

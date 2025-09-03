@@ -102,7 +102,7 @@ pub fn on_interrupt_can(
         super::regs::CanInterruptId::Buffer(idx) => {
             let mut channel = unsafe { CanChannelLowLevel::steal_unchecked(id, idx) };
             let status = channel.read_state();
-            if status.is_err() {
+            if let Err(e) = status {
                 let mut clr = InterruptClear::new_with_raw_value(0);
                 clr.set_buffer(idx, true);
                 regs.write_iclr(clr);
@@ -110,7 +110,7 @@ pub fn on_interrupt_can(
                     val.set_buffer(idx, false);
                     val
                 });
-                return Err(InterruptError::InvalidStatus(status.unwrap_err()));
+                return Err(InterruptError::InvalidStatus(e));
             }
             let buf_state = status.unwrap();
             if buf_state == BufferState::TxNotActive {

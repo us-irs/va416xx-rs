@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxucastframesGSpec {
 #[doc = "`read()` method returns [`rxucastframes_g::R`](R) reader structure"]
 impl crate::Readable for RxucastframesGSpec {}
 #[doc = "`reset()` method sets RXUCASTFRAMES_G to value 0"]
-impl crate::Resettable for RxucastframesGSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxucastframesGSpec {}

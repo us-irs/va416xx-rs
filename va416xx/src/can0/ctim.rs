@@ -43,22 +43,22 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Time Segment 2"]
     #[inline(always)]
-    pub fn tseg2(&mut self) -> Tseg2W<CtimSpec> {
+    pub fn tseg2(&mut self) -> Tseg2W<'_, CtimSpec> {
         Tseg2W::new(self, 0)
     }
     #[doc = "Bits 3:6 - Time Segment 1"]
     #[inline(always)]
-    pub fn tseg1(&mut self) -> Tseg1W<CtimSpec> {
+    pub fn tseg1(&mut self) -> Tseg1W<'_, CtimSpec> {
         Tseg1W::new(self, 3)
     }
     #[doc = "Bits 7:8 - Synchronization Jump Width"]
     #[inline(always)]
-    pub fn sjw(&mut self) -> SjwW<CtimSpec> {
+    pub fn sjw(&mut self) -> SjwW<'_, CtimSpec> {
         SjwW::new(self, 7)
     }
     #[doc = "Bits 9:15 - Prescaler Configuration"]
     #[inline(always)]
-    pub fn psc(&mut self) -> PscW<CtimSpec> {
+    pub fn psc(&mut self) -> PscW<'_, CtimSpec> {
         PscW::new(self, 9)
     }
 }
@@ -72,10 +72,6 @@ impl crate::Readable for CtimSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctim::W`](W) writer structure"]
 impl crate::Writable for CtimSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTIM to value 0"]
-impl crate::Resettable for CtimSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtimSpec {}

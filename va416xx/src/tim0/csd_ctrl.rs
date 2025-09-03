@@ -97,52 +97,52 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Cascade 0 Enable"]
     #[inline(always)]
-    pub fn csden0(&mut self) -> Csden0W<CsdCtrlSpec> {
+    pub fn csden0(&mut self) -> Csden0W<'_, CsdCtrlSpec> {
         Csden0W::new(self, 0)
     }
     #[doc = "Bit 1 - Cascade 0 Invert"]
     #[inline(always)]
-    pub fn csdinv0(&mut self) -> Csdinv0W<CsdCtrlSpec> {
+    pub fn csdinv0(&mut self) -> Csdinv0W<'_, CsdCtrlSpec> {
         Csdinv0W::new(self, 1)
     }
     #[doc = "Bit 2 - Cascade 1 Enable"]
     #[inline(always)]
-    pub fn csden1(&mut self) -> Csden1W<CsdCtrlSpec> {
+    pub fn csden1(&mut self) -> Csden1W<'_, CsdCtrlSpec> {
         Csden1W::new(self, 2)
     }
     #[doc = "Bit 3 - Cascade 1 Invert"]
     #[inline(always)]
-    pub fn csdinv1(&mut self) -> Csdinv1W<CsdCtrlSpec> {
+    pub fn csdinv1(&mut self) -> Csdinv1W<'_, CsdCtrlSpec> {
         Csdinv1W::new(self, 3)
     }
     #[doc = "Bit 4 - Dual Cascade Operation (0:AND, 1:OR)"]
     #[inline(always)]
-    pub fn dcasop(&mut self) -> DcasopW<CsdCtrlSpec> {
+    pub fn dcasop(&mut self) -> DcasopW<'_, CsdCtrlSpec> {
         DcasopW::new(self, 4)
     }
     #[doc = "Bit 6 - Cascade 0 Enabled as Trigger"]
     #[inline(always)]
-    pub fn csdtrg0(&mut self) -> Csdtrg0W<CsdCtrlSpec> {
+    pub fn csdtrg0(&mut self) -> Csdtrg0W<'_, CsdCtrlSpec> {
         Csdtrg0W::new(self, 6)
     }
     #[doc = "Bit 7 - Cascade 1 Enabled as Trigger"]
     #[inline(always)]
-    pub fn csdtrg1(&mut self) -> Csdtrg1W<CsdCtrlSpec> {
+    pub fn csdtrg1(&mut self) -> Csdtrg1W<'_, CsdCtrlSpec> {
         Csdtrg1W::new(self, 7)
     }
     #[doc = "Bit 8 - Cascade 2 Enable"]
     #[inline(always)]
-    pub fn csden2(&mut self) -> Csden2W<CsdCtrlSpec> {
+    pub fn csden2(&mut self) -> Csden2W<'_, CsdCtrlSpec> {
         Csden2W::new(self, 8)
     }
     #[doc = "Bit 9 - Cascade 2 Invert"]
     #[inline(always)]
-    pub fn csdinv2(&mut self) -> Csdinv2W<CsdCtrlSpec> {
+    pub fn csdinv2(&mut self) -> Csdinv2W<'_, CsdCtrlSpec> {
         Csdinv2W::new(self, 9)
     }
     #[doc = "Bit 10 - Cascade 2 Trigger mode"]
     #[inline(always)]
-    pub fn csdtrg2(&mut self) -> Csdtrg2W<CsdCtrlSpec> {
+    pub fn csdtrg2(&mut self) -> Csdtrg2W<'_, CsdCtrlSpec> {
         Csdtrg2W::new(self, 10)
     }
 }
@@ -156,10 +156,6 @@ impl crate::Readable for CsdCtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`csd_ctrl::W`](W) writer structure"]
 impl crate::Writable for CsdCtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CSD_CTRL to value 0"]
-impl crate::Resettable for CsdCtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CsdCtrlSpec {}

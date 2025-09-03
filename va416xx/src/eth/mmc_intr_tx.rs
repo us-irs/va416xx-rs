@@ -241,132 +241,132 @@ impl R {
 impl W {
     #[doc = "Bit 0 - MMC Transmit Good Bad Octet Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txgboctis(&mut self) -> TxgboctisW<MmcIntrTxSpec> {
+    pub fn txgboctis(&mut self) -> TxgboctisW<'_, MmcIntrTxSpec> {
         TxgboctisW::new(self, 0)
     }
     #[doc = "Bit 1 - MMC Transmit Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txgbfrmis(&mut self) -> TxgbfrmisW<MmcIntrTxSpec> {
+    pub fn txgbfrmis(&mut self) -> TxgbfrmisW<'_, MmcIntrTxSpec> {
         TxgbfrmisW::new(self, 1)
     }
     #[doc = "Bit 2 - MMC Transmit Broadcast Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txbcgfis(&mut self) -> TxbcgfisW<MmcIntrTxSpec> {
+    pub fn txbcgfis(&mut self) -> TxbcgfisW<'_, MmcIntrTxSpec> {
         TxbcgfisW::new(self, 2)
     }
     #[doc = "Bit 3 - MMC Transmit Multicast Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txmcgfis(&mut self) -> TxmcgfisW<MmcIntrTxSpec> {
+    pub fn txmcgfis(&mut self) -> TxmcgfisW<'_, MmcIntrTxSpec> {
         TxmcgfisW::new(self, 3)
     }
     #[doc = "Bit 4 - MMC Transmit 64 Octet Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn tx64octgbfis(&mut self) -> Tx64octgbfisW<MmcIntrTxSpec> {
+    pub fn tx64octgbfis(&mut self) -> Tx64octgbfisW<'_, MmcIntrTxSpec> {
         Tx64octgbfisW::new(self, 4)
     }
     #[doc = "Bit 5 - MMC Transmit 65 to 127 Octet Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn tx65t127octgbfis(&mut self) -> Tx65t127octgbfisW<MmcIntrTxSpec> {
+    pub fn tx65t127octgbfis(&mut self) -> Tx65t127octgbfisW<'_, MmcIntrTxSpec> {
         Tx65t127octgbfisW::new(self, 5)
     }
     #[doc = "Bit 6 - MMC Transmit 128 to 255 Octet Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn tx128t255octgbfis(&mut self) -> Tx128t255octgbfisW<MmcIntrTxSpec> {
+    pub fn tx128t255octgbfis(&mut self) -> Tx128t255octgbfisW<'_, MmcIntrTxSpec> {
         Tx128t255octgbfisW::new(self, 6)
     }
     #[doc = "Bit 7 - MMC Transmit 256 to 511 Octet Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn tx256t511octgbfis(&mut self) -> Tx256t511octgbfisW<MmcIntrTxSpec> {
+    pub fn tx256t511octgbfis(&mut self) -> Tx256t511octgbfisW<'_, MmcIntrTxSpec> {
         Tx256t511octgbfisW::new(self, 7)
     }
     #[doc = "Bit 8 - MMC Transmit 512 to 1023 Octet Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn tx512t1023octgbfis(&mut self) -> Tx512t1023octgbfisW<MmcIntrTxSpec> {
+    pub fn tx512t1023octgbfis(&mut self) -> Tx512t1023octgbfisW<'_, MmcIntrTxSpec> {
         Tx512t1023octgbfisW::new(self, 8)
     }
     #[doc = "Bit 9 - MMC Transmit 1024 to Maximum Octet Good Bad Frame Counter"]
     #[inline(always)]
-    pub fn tx1024tmaxoctgbfis(&mut self) -> Tx1024tmaxoctgbfisW<MmcIntrTxSpec> {
+    pub fn tx1024tmaxoctgbfis(&mut self) -> Tx1024tmaxoctgbfisW<'_, MmcIntrTxSpec> {
         Tx1024tmaxoctgbfisW::new(self, 9)
     }
     #[doc = "Bit 10 - MMC Transmit Unicast Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txucgbfis(&mut self) -> TxucgbfisW<MmcIntrTxSpec> {
+    pub fn txucgbfis(&mut self) -> TxucgbfisW<'_, MmcIntrTxSpec> {
         TxucgbfisW::new(self, 10)
     }
     #[doc = "Bit 11 - MMC Transmit Multicast Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txmcgbfis(&mut self) -> TxmcgbfisW<MmcIntrTxSpec> {
+    pub fn txmcgbfis(&mut self) -> TxmcgbfisW<'_, MmcIntrTxSpec> {
         TxmcgbfisW::new(self, 11)
     }
     #[doc = "Bit 12 - MMC Transmit Broadcast Good Bad Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txbcgbfis(&mut self) -> TxbcgbfisW<MmcIntrTxSpec> {
+    pub fn txbcgbfis(&mut self) -> TxbcgbfisW<'_, MmcIntrTxSpec> {
         TxbcgbfisW::new(self, 12)
     }
     #[doc = "Bit 13 - MMC Transmit Underflow Error Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txuflowerfis(&mut self) -> TxuflowerfisW<MmcIntrTxSpec> {
+    pub fn txuflowerfis(&mut self) -> TxuflowerfisW<'_, MmcIntrTxSpec> {
         TxuflowerfisW::new(self, 13)
     }
     #[doc = "Bit 14 - MMC Transmit Single Collision Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txscolgfis(&mut self) -> TxscolgfisW<MmcIntrTxSpec> {
+    pub fn txscolgfis(&mut self) -> TxscolgfisW<'_, MmcIntrTxSpec> {
         TxscolgfisW::new(self, 14)
     }
     #[doc = "Bit 15 - MMC Transmit Multiple Collision Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txmcolgfis(&mut self) -> TxmcolgfisW<MmcIntrTxSpec> {
+    pub fn txmcolgfis(&mut self) -> TxmcolgfisW<'_, MmcIntrTxSpec> {
         TxmcolgfisW::new(self, 15)
     }
     #[doc = "Bit 16 - MMC Transmit Deferred Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txdeffis(&mut self) -> TxdeffisW<MmcIntrTxSpec> {
+    pub fn txdeffis(&mut self) -> TxdeffisW<'_, MmcIntrTxSpec> {
         TxdeffisW::new(self, 16)
     }
     #[doc = "Bit 17 - MMC Transmit Late Collision Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txlatcolfis(&mut self) -> TxlatcolfisW<MmcIntrTxSpec> {
+    pub fn txlatcolfis(&mut self) -> TxlatcolfisW<'_, MmcIntrTxSpec> {
         TxlatcolfisW::new(self, 17)
     }
     #[doc = "Bit 18 - MMC Transmit Excessive Collision Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txexcolfis(&mut self) -> TxexcolfisW<MmcIntrTxSpec> {
+    pub fn txexcolfis(&mut self) -> TxexcolfisW<'_, MmcIntrTxSpec> {
         TxexcolfisW::new(self, 18)
     }
     #[doc = "Bit 19 - MMC Transmit Carrier Error Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txcarerfis(&mut self) -> TxcarerfisW<MmcIntrTxSpec> {
+    pub fn txcarerfis(&mut self) -> TxcarerfisW<'_, MmcIntrTxSpec> {
         TxcarerfisW::new(self, 19)
     }
     #[doc = "Bit 20 - MMC Transmit Good Octet Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txgoctis(&mut self) -> TxgoctisW<MmcIntrTxSpec> {
+    pub fn txgoctis(&mut self) -> TxgoctisW<'_, MmcIntrTxSpec> {
         TxgoctisW::new(self, 20)
     }
     #[doc = "Bit 21 - MMC Transmit Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txgfrmis(&mut self) -> TxgfrmisW<MmcIntrTxSpec> {
+    pub fn txgfrmis(&mut self) -> TxgfrmisW<'_, MmcIntrTxSpec> {
         TxgfrmisW::new(self, 21)
     }
     #[doc = "Bit 22 - MMC Transmit Excessive Deferral Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txexdeffis(&mut self) -> TxexdeffisW<MmcIntrTxSpec> {
+    pub fn txexdeffis(&mut self) -> TxexdeffisW<'_, MmcIntrTxSpec> {
         TxexdeffisW::new(self, 22)
     }
     #[doc = "Bit 23 - MMC Transmit Pause Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txpausfis(&mut self) -> TxpausfisW<MmcIntrTxSpec> {
+    pub fn txpausfis(&mut self) -> TxpausfisW<'_, MmcIntrTxSpec> {
         TxpausfisW::new(self, 23)
     }
     #[doc = "Bit 24 - MMC Transmit VLAN Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txvlangfis(&mut self) -> TxvlangfisW<MmcIntrTxSpec> {
+    pub fn txvlangfis(&mut self) -> TxvlangfisW<'_, MmcIntrTxSpec> {
         TxvlangfisW::new(self, 24)
     }
     #[doc = "Bit 25 - MMC Transmit Oversize Good Frame Counter Interrupt Status"]
     #[inline(always)]
-    pub fn txosizegfis(&mut self) -> TxosizegfisW<MmcIntrTxSpec> {
+    pub fn txosizegfis(&mut self) -> TxosizegfisW<'_, MmcIntrTxSpec> {
         TxosizegfisW::new(self, 25)
     }
 }
@@ -380,10 +380,6 @@ impl crate::Readable for MmcIntrTxSpec {}
 #[doc = "`write(|w| ..)` method takes [`mmc_intr_tx::W`](W) writer structure"]
 impl crate::Writable for MmcIntrTxSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MMC_INTR_TX to value 0"]
-impl crate::Resettable for MmcIntrTxSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MmcIntrTxSpec {}

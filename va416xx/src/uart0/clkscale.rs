@@ -27,17 +27,17 @@ impl R {
 impl W {
     #[doc = "Bits 0:5 - Fractional Divide (64ths)"]
     #[inline(always)]
-    pub fn frac(&mut self) -> FracW<ClkscaleSpec> {
+    pub fn frac(&mut self) -> FracW<'_, ClkscaleSpec> {
         FracW::new(self, 0)
     }
     #[doc = "Bits 6:23 - Integer Divide"]
     #[inline(always)]
-    pub fn int(&mut self) -> IntW<ClkscaleSpec> {
+    pub fn int(&mut self) -> IntW<'_, ClkscaleSpec> {
         IntW::new(self, 6)
     }
     #[doc = "Bit 31 - Reset Baud Counter"]
     #[inline(always)]
-    pub fn reset(&mut self) -> ResetW<ClkscaleSpec> {
+    pub fn reset(&mut self) -> ResetW<'_, ClkscaleSpec> {
         ResetW::new(self, 31)
     }
 }
@@ -51,10 +51,6 @@ impl crate::Readable for ClkscaleSpec {}
 #[doc = "`write(|w| ..)` method takes [`clkscale::W`](W) writer structure"]
 impl crate::Writable for ClkscaleSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CLKSCALE to value 0"]
-impl crate::Resettable for ClkscaleSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ClkscaleSpec {}

@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxundersizeGSpec {
 #[doc = "`read()` method returns [`rxundersize_g::R`](R) reader structure"]
 impl crate::Readable for RxundersizeGSpec {}
 #[doc = "`reset()` method sets RXUNDERSIZE_G to value 0"]
-impl crate::Resettable for RxundersizeGSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxundersizeGSpec {}

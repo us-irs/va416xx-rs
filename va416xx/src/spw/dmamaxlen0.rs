@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 2:24 - Receiver packet maximum length in bytes"]
     #[inline(always)]
-    pub fn rxmaxlen(&mut self) -> RxmaxlenW<Dmamaxlen0Spec> {
+    pub fn rxmaxlen(&mut self) -> RxmaxlenW<'_, Dmamaxlen0Spec> {
         RxmaxlenW::new(self, 2)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for Dmamaxlen0Spec {}
 #[doc = "`write(|w| ..)` method takes [`dmamaxlen0::W`](W) writer structure"]
 impl crate::Writable for Dmamaxlen0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMAMAXLEN0 to value 0"]
-impl crate::Resettable for Dmamaxlen0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Dmamaxlen0Spec {}

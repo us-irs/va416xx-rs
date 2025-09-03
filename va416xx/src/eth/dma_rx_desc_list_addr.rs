@@ -16,7 +16,7 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Start of Receive List"]
     #[inline(always)]
-    pub fn rdesla(&mut self) -> RdeslaW<DmaRxDescListAddrSpec> {
+    pub fn rdesla(&mut self) -> RdeslaW<'_, DmaRxDescListAddrSpec> {
         RdeslaW::new(self, 0)
     }
 }
@@ -30,10 +30,6 @@ impl crate::Readable for DmaRxDescListAddrSpec {}
 #[doc = "`write(|w| ..)` method takes [`dma_rx_desc_list_addr::W`](W) writer structure"]
 impl crate::Writable for DmaRxDescListAddrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMA_RX_DESC_LIST_ADDR to value 0"]
-impl crate::Resettable for DmaRxDescListAddrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DmaRxDescListAddrSpec {}

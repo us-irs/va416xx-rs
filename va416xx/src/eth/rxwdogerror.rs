@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxwdogerrorSpec {
 #[doc = "`read()` method returns [`rxwdogerror::R`](R) reader structure"]
 impl crate::Readable for RxwdogerrorSpec {}
 #[doc = "`reset()` method sets RXWDOGERROR to value 0"]
-impl crate::Resettable for RxwdogerrorSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxwdogerrorSpec {}

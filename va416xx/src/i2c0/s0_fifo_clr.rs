@@ -7,12 +7,12 @@ pub type TxfifoW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Clear Rx FIFO"]
     #[inline(always)]
-    pub fn rxfifo(&mut self) -> RxfifoW<S0FifoClrSpec> {
+    pub fn rxfifo(&mut self) -> RxfifoW<'_, S0FifoClrSpec> {
         RxfifoW::new(self, 0)
     }
     #[doc = "Bit 1 - Clear Tx FIFO"]
     #[inline(always)]
-    pub fn txfifo(&mut self) -> TxfifoW<S0FifoClrSpec> {
+    pub fn txfifo(&mut self) -> TxfifoW<'_, S0FifoClrSpec> {
         TxfifoW::new(self, 1)
     }
 }
@@ -24,10 +24,6 @@ impl crate::RegisterSpec for S0FifoClrSpec {
 #[doc = "`write(|w| ..)` method takes [`s0_fifo_clr::W`](W) writer structure"]
 impl crate::Writable for S0FifoClrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets S0_FIFO_CLR to value 0"]
-impl crate::Resettable for S0FifoClrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for S0FifoClrSpec {}

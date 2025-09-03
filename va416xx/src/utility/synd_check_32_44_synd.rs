@@ -31,6 +31,4 @@ impl crate::RegisterSpec for SyndCheck32_44SyndSpec {
 #[doc = "`read()` method returns [`synd_check_32_44_synd::R`](R) reader structure"]
 impl crate::Readable for SyndCheck32_44SyndSpec {}
 #[doc = "`reset()` method sets SYND_CHECK_32_44_SYND to value 0"]
-impl crate::Resettable for SyndCheck32_44SyndSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SyndCheck32_44SyndSpec {}
